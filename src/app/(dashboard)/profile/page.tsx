@@ -1,9 +1,7 @@
-const Page = () => {
-  return (
-    <div>
-      <h1>Profile page!</h1>
-    </div>
-  )
+import UserProfile from '@views/pages/user-profile'
+
+const ProfilePage = async () => {
+  return <UserProfile />
 }
 
-export default Page
+export default ProfilePage

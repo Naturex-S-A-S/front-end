@@ -14,6 +14,7 @@ import SessionProvider from '@/components/provider/SessionProvider'
 import { AbilityProvider } from '@/components/provider/AbilityProvider'
 
 import { Toaster } from 'react-hot-toast'
+import ReactQueryProvider from '@/components/provider/ReactQuery'
 
 export const metadata = {
   title: 'Naturex Admin Dashboard',
@@ -30,8 +31,10 @@ const RootLayout = ({ children }: ChildrenType) => {
       <body className='flex is-full min-bs-full flex-auto flex-col'>
         <SessionProvider>
           <AbilityProvider>
-            {children}
-            <Toaster position='top-right' />
+            <ReactQueryProvider>
+              {children}
+              <Toaster position='top-right' />
+            </ReactQueryProvider>
           </AbilityProvider>
         </SessionProvider>
       </body>

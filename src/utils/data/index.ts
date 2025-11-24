@@ -1,6 +1,6 @@
 export const documentTypeOptions = [
     {
-        value: 'cedula de Ciudadanía',
+        value: 'cedula',
         label: 'Cédula de Ciudadanía'
     },
     {

@@ -94,7 +94,7 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
       documentType: {
         value: undefined
       },
-      document: '121',
+      document: '126',
       password: 'Camilo'
     },
     mode: 'onBlur',

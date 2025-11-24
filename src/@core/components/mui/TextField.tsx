@@ -259,6 +259,7 @@ const CustomTextField = forwardRef((props: TextFieldProps, ref) => {
       {...rest}
       variant='filled'
       InputLabelProps={{ ...InputLabelProps, shrink: true }}
+      className='w-full'
     />
   )
 })

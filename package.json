@@ -25,6 +25,7 @@
     "@mui/lab": "5.0.0-alpha.170",
     "@mui/material": "5.15.20",
     "@mui/material-nextjs": "5.15.11",
+    "@tanstack/react-query": "^5.90.10",
     "axios": "^1.13.2",
     "classnames": "2.5.1",
     "jose": "^6.1.2",
