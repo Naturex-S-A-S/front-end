@@ -8,8 +8,6 @@ export const defaultUserValues = {
     email: '',
     address: '',
     phone: '',
-    password: '',
-    confirmPassword: '',
     roleId: {
         value: 27
     }

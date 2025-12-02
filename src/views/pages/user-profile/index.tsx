@@ -27,13 +27,20 @@ const tabs = [
     value: 'account',
     label: 'Cuenta',
     icon: 'tabler-user-check'
+  },
+  {
+    value: 'change-password',
+    label: 'Contraseña',
+    icon: 'tabler-key'
   }
 ]
 
 const AccountsTab = dynamic(() => import('@views/pages/user-profile/account'))
+const ChangePasswordTab = dynamic(() => import('@views/pages/user-profile/password'))
 
 const tabContentList = (data: ProfileData): { [key: string]: ReactElement } => ({
-  account: <AccountsTab data={data} />
+  account: <AccountsTab data={data} />,
+  'change-password': <ChangePasswordTab />
 })
 
 const UserProfile = () => {

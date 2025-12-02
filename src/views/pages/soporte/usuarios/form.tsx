@@ -16,7 +16,7 @@ type Props = {
 const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
   const {
     register,
-    formState: { errors },
+    formState: { errors, defaultValues },
     setValue
   }: any = useFormContext()
 
@@ -28,6 +28,7 @@ const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
             <CustomAutocomplete
               {...register('dniType')}
               disabled={isEdit}
+              defaultValue={isEdit ? defaultValues.dniType : null}
               options={documentTypeOptions}
               onChange={(e, value: any) => {
                 if (!value) return
@@ -148,21 +149,24 @@ const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
           )}
         />
       </Grid>
-      <Grid item xs={12}>
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={4}>
-            <TextFieldPassword register={register} errors={errors} name='password' label='Contraseña' />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <TextFieldPassword
-              register={register}
-              errors={errors}
-              name='confirmPassword'
-              label='Confirmar Contraseña'
-            />
+
+      {!isEdit && (
+        <Grid item xs={12}>
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={4}>
+              <TextFieldPassword register={register} errors={errors} name='password' label='Contraseña' />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextFieldPassword
+                register={register}
+                errors={errors}
+                name='confirmPassword'
+                label='Confirmar Contraseña'
+              />
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      )}
 
       <Grid item xs={12} className='flex justify-center'>
         <CustomButton text='Guardar' type='submit' isLoading={isPending} />

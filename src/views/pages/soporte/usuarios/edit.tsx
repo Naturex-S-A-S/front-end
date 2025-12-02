@@ -18,6 +18,7 @@ import { createUserSchema } from '@/utils/schemas/user'
 import { defaultUserValues } from '@/utils/defaultValues/user'
 import { putUser } from '@/api/user'
 import Form from './form'
+import { documentTypeOptions } from '@/utils/data'
 
 type Props = {
   open: boolean
@@ -35,7 +36,9 @@ const Edit: React.FC<Props> = ({ open, toogleDialog, defaultValues }) => {
     resolver: yupResolver(createUserSchema)
   })
 
-  const { handleSubmit } = methods
+  const { handleSubmit, watch } = methods
+
+  console.log(watch())
 
   const { mutate, isPending } = useMutation({
     mutationFn: putUser,
@@ -58,10 +61,15 @@ const Edit: React.FC<Props> = ({ open, toogleDialog, defaultValues }) => {
   }
 
   useEffect(() => {
-    methods.reset(defaultValues)
-  }, [defaultValues, methods])
+    if (!open) return
 
-  if (!ability.can('create', 'Usuarios')) return null
+    methods.reset({
+      ...defaultValues,
+      dniType: documentTypeOptions.find(option => option.value === defaultValues.dniType)
+    })
+  }, [defaultValues, methods, open])
+
+  if (!ability.can('update', 'Usuarios')) return null
 
   return (
     <Box>
