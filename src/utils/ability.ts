@@ -4,16 +4,12 @@ import type { Actions, IPermissions } from "@/types/next-auth";
 
 export type AppAbility = Ability<[Actions, any]>;
 
-export default function defineAbilityFor(permissions: IPermissions[]) {
+export default function defineAbilityFor(permissions: IPermissions[], role: string): AppAbility {
     const { can, build } = new AbilityBuilder<AppAbility>(Ability);
 
-    /*
-        if (user.role === 'admin') {
-            can('manage', 'all'); // Con esto tiene permiso a todo el sistema
-        } else {
-            can('read', 'all');
-        }
-    */
+    if (role === 'admin') {
+        can('manage', 'all');
+    }
 
     const processNode = (node: IPermissions | any, parentName?: string) => {
         const subject = node.name || parentName || "all";

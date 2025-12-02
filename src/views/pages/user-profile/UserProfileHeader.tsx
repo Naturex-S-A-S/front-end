@@ -2,14 +2,13 @@
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
 
 // import CardMedia from '@mui/material/CardMedia'
 
 // Type Imports
-import type { ProfileHeaderType } from '@/types/pages/profileTypes'
+import type { ProfileData } from '@/types/pages/profile'
 
-const UserProfileHeader = ({ data }: { data?: ProfileHeaderType }) => {
+const UserProfileHeader = ({ data }: { data?: ProfileData }) => {
   return (
     <Card>
       <CardContent className='flex gap-5 justify-center flex-col items-center md:items-end md:flex-row !pt-16 md:justify-start'>
@@ -18,26 +17,24 @@ const UserProfileHeader = ({ data }: { data?: ProfileHeaderType }) => {
         </div>
         <div className='flex is-full justify-start self-end flex-col items-center gap-6 sm-gap-0 sm:flex-row sm:justify-between sm:items-end '>
           <div className='flex flex-col items-center sm:items-start gap-2'>
-            <Typography variant='h4'>{data?.fullName}</Typography>
+            <Typography variant='h4'>
+              {data?.name} {data?.lastName}
+            </Typography>
             <div className='flex flex-wrap gap-6 justify-center sm:justify-normal'>
               <div className='flex items-center gap-2'>
-                {<i className={'tabler-briefcase'} />}
-                <Typography className='font-medium'>{data?.designation}</Typography>
-              </div>
-              <div className='flex items-center gap-2'>
                 <i className='tabler-map-pin' />
-                <Typography className='font-medium'>{data?.location}</Typography>
+                <Typography className='font-medium'>{data?.address}</Typography>
               </div>
               <div className='flex items-center gap-2'>
                 <i className='tabler-calendar' />
-                <Typography className='font-medium'>{data?.joiningDate}</Typography>
+                <Typography className='font-medium'>{new Date().toDateString()}</Typography>
               </div>
             </div>
           </div>
-          <Button variant='contained' className='flex gap-2'>
+          {/*<Button variant='contained' className='flex gap-2'>
             <i className='tabler-user-check !text-base'></i>
             <span>Connected</span>
-          </Button>
+          </Button>*/}
         </div>
       </CardContent>
     </Card>

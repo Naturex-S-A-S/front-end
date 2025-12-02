@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
 
 // Third-party Imports
 import classnames from 'classnames'
@@ -21,8 +20,6 @@ import { useForm } from 'react-hook-form'
 import { signIn } from 'next-auth/react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-
-import { CircularProgress, IconButton, InputAdornment } from '@mui/material'
 
 import type { SystemMode } from '@core/types'
 
@@ -40,6 +37,8 @@ import { useSettings } from '@core/hooks/useSettings'
 import { loginSchema } from '@/utils/schemas/login'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 import { documentTypeOptions } from '@/utils/data'
+import CustomButton from '@/@core/components/mui/Button'
+import TextFieldPassword from '@/components/layout/shared/TextFieldPassword'
 
 // Styled Custom Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -67,7 +66,6 @@ const MaskImg = styled('img')({
 
 const LoginV2 = ({ mode }: { mode: SystemMode }) => {
   const router = useRouter()
-  const [isPasswordShown, setIsPasswordShown] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   // Vars
@@ -95,7 +93,7 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
         value: undefined
       },
       document: '126',
-      password: 'Camilo'
+      password: '123456'
     },
     mode: 'onBlur',
     resolver: yupResolver(loginSchema)
@@ -108,8 +106,6 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
     borderedLightIllustration,
     borderedDarkIllustration
   )
-
-  const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
   const handleOnSubmit = async (values: any) => {
     try {
@@ -195,25 +191,7 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
               helperText={errors.document?.message}
             />
 
-            <CustomTextField
-              {...register('password')}
-              fullWidth
-              label='Contraseña'
-              placeholder='············'
-              id='outlined-adornment-password'
-              type={isPasswordShown ? 'text' : 'password'}
-              error={!!errors.password}
-              helperText={errors.password?.message}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
-                      <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }}
-            />
+            <TextFieldPassword register={register} errors={errors} name='password' label='Contraseña' />
 
             {/*<CustomTextField
               autoFocus
@@ -228,9 +206,7 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
                 Recuperar contraseña
               </Typography>
             </div>
-            <Button fullWidth variant='contained' type='submit' disabled={isLoading}>
-              {isLoading ? <CircularProgress size={20} color='inherit' /> : 'Iniciar sesión'}
-            </Button>
+            <CustomButton isLoading={isLoading} text='Iniciar sesión' type='submit' />
             {/*<div className='flex justify-center items-center flex-wrap gap-2'>
               <Typography>¿No tienes una cuenta?</Typography>
               <Typography component={Link} color='primary'>

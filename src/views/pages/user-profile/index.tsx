@@ -15,12 +15,12 @@ import TabPanel from '@mui/lab/TabPanel'
 // Type Imports
 import { useQuery } from '@tanstack/react-query'
 
-import type { Data } from '@/types/pages/profileTypes'
-
 // Component Imports
 import UserProfileHeader from './UserProfileHeader'
 import CustomTabList from '@core/components/mui/TabList'
 import { getProfile } from '@/api/user'
+import type { ProfileData } from '@/types/pages/profile'
+import Loader from '@/@core/components/react-spinners'
 
 const tabs = [
   {
@@ -28,67 +28,32 @@ const tabs = [
     label: 'Cuenta',
     icon: 'tabler-user-check'
   }
-
-  /* {
-    value: 'profile',
-    label: 'Profile',
-    icon: 'tabler-user-check'
-  },
-
-   {
-    value: 'teams',
-    label: 'Teams',
-    icon: 'tabler-users'
-  },
-  {
-    value: 'projects',
-    label: 'Projects',
-    icon: 'tabler-layout-grid'
-  },
-  {
-    value: 'connections',
-    label: 'Connections',
-    icon: 'tabler-link'
-  } */
 ]
 
-const ProfileTab = dynamic(() => import('@views/pages/user-profile/profile'))
-const TeamsTab = dynamic(() => import('@views/pages/user-profile/teams'))
-const ProjectsTab = dynamic(() => import('@views/pages/user-profile/projects'))
-const ConnectionsTab = dynamic(() => import('@views/pages/user-profile/connections'))
 const AccountsTab = dynamic(() => import('@views/pages/user-profile/account'))
 
-// Vars
-const tabContentList = (data?: Data): { [key: string]: ReactElement } => ({
-  profile: <ProfileTab data={data?.users.profile} />,
-  teams: <TeamsTab data={data?.users.teams} />,
-  projects: <ProjectsTab data={data?.users.projects} />,
-  connections: <ConnectionsTab data={data?.users.connections} />,
-  account: <AccountsTab />
+const tabContentList = (data: ProfileData): { [key: string]: ReactElement } => ({
+  account: <AccountsTab data={data} />
 })
 
-const UserProfile = ({ data }: { data?: Data }) => {
+const UserProfile = () => {
   const [activeTab, setActiveTab] = useState('account')
 
-  const { data: profile, isLoading } = useQuery({
+  const { data: profile, isLoading } = useQuery<ProfileData>({
     queryKey: ['getProfile'],
     queryFn: getProfile
   })
-
-  console.log(profile)
 
   const handleChange = (event: SyntheticEvent, value: string) => {
     setActiveTab(value)
   }
 
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
+  if (isLoading) return <Loader />
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <UserProfileHeader data={data?.profileHeader} />
+        <UserProfileHeader data={profile} />
       </Grid>
       {activeTab === undefined ? null : (
         <Grid item xs={12} className='flex flex-col gap-6'>
@@ -109,7 +74,7 @@ const UserProfile = ({ data }: { data?: Data }) => {
             </CustomTabList>
 
             <TabPanel value={activeTab} className='p-0'>
-              {tabContentList(data)[activeTab]}
+              {profile && tabContentList(profile)[activeTab]}
             </TabPanel>
           </TabContext>
         </Grid>

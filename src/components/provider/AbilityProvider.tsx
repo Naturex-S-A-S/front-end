@@ -12,7 +12,7 @@ export const AbilityContext = createContext<AppAbility | null>(null)
 export function AbilityProvider({ children }: { children: React.ReactNode }) {
   const { data: session }: any = useSession()
 
-  const ability = defineAbilityFor(session?.permissions)
+  const ability = defineAbilityFor(session?.permissions, session?.role)
 
   return <AbilityContext.Provider value={ability}>{children}</AbilityContext.Provider>
 }

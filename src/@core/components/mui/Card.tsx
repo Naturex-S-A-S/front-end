@@ -5,13 +5,13 @@ interface Props {
   children: React.ReactNode
 }
 
-const CardComponent: React.FC<Props> = ({ title, children }) => {
+const CustomCard: React.FC<Props> = ({ title, children }) => {
   return (
-    <Card>
+    <Card className='w-full'>
       <CardHeader title={title} />
       <CardContent>{children}</CardContent>
     </Card>
   )
 }
 
-export default CardComponent
+export default CustomCard

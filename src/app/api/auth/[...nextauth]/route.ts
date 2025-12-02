@@ -50,67 +50,12 @@ const handler = NextAuth({
 
                     // User
                     token.user = {
-                        id: payload.id,
-                        name: payload?.name || 'Sin nombre',
-                        email: payload?.email || 'Sin correo',
+                        id: payload.userId,
+                        name: payload?.userName || 'Sin nombre',
+                        email: payload?.email || '',
                     };
 
-                    token.permissions = [
-                        {
-                            "name": "Inventario",
-                            "path": null,
-                            "children": [
-                                {
-                                    "name": "Materia prima",
-                                    "path": null,
-                                    "children": [
-                                        {
-                                            "name": "Listado de Inventario",
-                                            "path": "/inventario/listado",
-                                            "actions": {
-                                                "view": true
-                                            }
-                                        },
-                                        {
-                                            "name": "Control de Salidas",
-                                            "path": "/inventory/output-control",
-                                            "actions": {
-                                                "view": true,
-                                                "update": true
-                                            }
-                                        },
-                                        {
-                                            "name": "Control de Entradas",
-                                            "path": "/inventory/input-control",
-                                            "actions": {
-                                                "view": true,
-                                                "update": true
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "name": "Produccion",
-                            "path": null,
-                            "children": [
-                                {
-                                    "name": "Listado de Inventario",
-                                    "path": "/inventario/listado",
-                                    "actions": {
-                                        "view": true,
-                                        "delete": true
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "name": "Alertas",
-                            "path": "/alerts",
-                            "children": null
-                        }
-                    ];
+                    token.permissions = payload.modules
 
                     token.role = payload.role ?? '';
                 } catch (e) {
