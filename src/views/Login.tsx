@@ -92,8 +92,8 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
       documentType: {
         value: undefined
       },
-      document: '126',
-      password: '123456'
+      document: undefined,
+      password: undefined
     },
     mode: 'onBlur',
     resolver: yupResolver(loginSchema)

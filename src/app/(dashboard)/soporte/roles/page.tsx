@@ -1,8 +1,18 @@
+import List from '@/views/pages/soporte/roles/list'
+import CustomBox from '@/@core/components/mui/Box'
+import Create from '@/views/pages/soporte/roles/create'
+
+export const metadata = {
+  title: 'Roles - Naturex',
+  description: ''
+}
+
 const Page = () => {
   return (
-    <div>
-      <h1>Roles</h1>
-    </div>
+    <CustomBox title='Roles'>
+      <Create />
+      <List />
+    </CustomBox>
   )
 }
 

@@ -48,7 +48,7 @@ export const columns = ({ handleEdit, handleDelete }: params): GridColDef[] => {
         return `${params.row.name} ${params.row.lastName}`
       }
     },
-    { field: 'role', headerName: 'Rol', width: 150 },
+    { field: 'role', headerName: 'Rol', width: 150, renderCell: params => params.row.role.name },
     { field: 'dni', headerName: 'DNI', width: 100 },
     { field: 'dniType', headerName: 'Tipo DNI', width: 100 },
     { field: 'email', headerName: 'Correo Electrónico', width: 200 },

@@ -6,24 +6,47 @@ import { useForm } from 'react-hook-form'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 
+import { useMutation } from '@tanstack/react-query'
+
+import toast from 'react-hot-toast'
+
 import CustomCard from '@/@core/components/mui/Card'
 import TextFieldPassword from '@/components/layout/shared/TextFieldPassword'
 import CustomButton from '@/@core/components/mui/Button'
 import { changePasswordSchema } from '@/utils/schemas/user'
+import { putPassword } from '@/api/user/profile'
 
 const ChangePassword = () => {
   const {
     register,
     formState: { errors },
-    handleSubmit
+    handleSubmit,
+    reset
   } = useForm({
     mode: 'onChange',
     reValidateMode: 'onChange',
     resolver: yupResolver(changePasswordSchema)
   })
 
+  const { mutate: updatePassword, isPending } = useMutation({
+    mutationFn: putPassword,
+    onSuccess: () => {
+      toast.success('Contraseña actualizada con éxito')
+      reset()
+    },
+    onError: () => {
+      toast.error('Error al actualizar la contraseña')
+    }
+  })
+
   const handleOnSubmit = (data: any) => {
-    console.log(data)
+    const payload = {
+      oldPassword: data.password,
+      newPassword1: data.newPassword,
+      newPassword2: data.newConfirmPassword
+    }
+
+    updatePassword(payload)
   }
 
   return (
@@ -58,7 +81,7 @@ const ChangePassword = () => {
           </Grid>
           <Grid item xs={12}>
             <Grid item xs={12} className='flex justify-center'>
-              <CustomButton text='Guardar' type='submit' isLoading={false} />
+              <CustomButton text='Actualizar' type='submit' isLoading={isPending} />
             </Grid>
           </Grid>
         </Grid>

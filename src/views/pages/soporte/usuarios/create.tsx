@@ -14,7 +14,7 @@ import toast from 'react-hot-toast'
 import CreateButton from '@/components/layout/shared/CreateButton'
 import { useAbility } from '@/hooks/casl/useAbility'
 import CustomDialog from '@/@core/components/mui/Dialog'
-import { createUserSchema } from '@/utils/schemas/user'
+import { userSchema } from '@/utils/schemas/user'
 import { defaultUserValues } from '@/utils/defaultValues/user'
 import { postUser } from '@/api/user'
 import Form from './form'
@@ -30,20 +30,21 @@ const Create = () => {
 
   const methods = useForm({
     defaultValues: defaultUserValues,
-    resolver: yupResolver(createUserSchema)
+    resolver: yupResolver(userSchema)
   })
 
-  const { handleSubmit } = methods
+  const { handleSubmit, reset } = methods
 
   const { mutate, isPending } = useMutation({
     mutationFn: postUser,
     onSuccess: () => {
       toast.success('Usuario creado con éxito')
       queryClient.invalidateQueries({ queryKey: ['getUsers'] })
+      reset()
       toogleDialog()
     },
-    onError: () => {
-      toast.error('Error al crear el usuario')
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || 'Error al crear el usuario')
     }
   })
 

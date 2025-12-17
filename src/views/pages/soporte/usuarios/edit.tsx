@@ -14,7 +14,7 @@ import toast from 'react-hot-toast'
 
 import { useAbility } from '@/hooks/casl/useAbility'
 import CustomDialog from '@/@core/components/mui/Dialog'
-import { createUserSchema } from '@/utils/schemas/user'
+import { updateUserSchema } from '@/utils/schemas/user'
 import { defaultUserValues } from '@/utils/defaultValues/user'
 import { putUser } from '@/api/user'
 import Form from './form'
@@ -33,12 +33,10 @@ const Edit: React.FC<Props> = ({ open, toogleDialog, defaultValues }) => {
   const methods = useForm({
     defaultValues: defaultUserValues,
     reValidateMode: 'onChange',
-    resolver: yupResolver(createUserSchema)
+    resolver: yupResolver(updateUserSchema)
   })
 
-  const { handleSubmit, watch } = methods
-
-  console.log(watch())
+  const { handleSubmit } = methods
 
   const { mutate, isPending } = useMutation({
     mutationFn: putUser,
@@ -47,8 +45,8 @@ const Edit: React.FC<Props> = ({ open, toogleDialog, defaultValues }) => {
       queryClient.invalidateQueries({ queryKey: ['getUsers'] })
       toogleDialog()
     },
-    onError: () => {
-      toast.error('Error al actualizar usuario')
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || 'Error al actualizar usuario')
     }
   })
 
@@ -65,7 +63,12 @@ const Edit: React.FC<Props> = ({ open, toogleDialog, defaultValues }) => {
 
     methods.reset({
       ...defaultValues,
-      dniType: documentTypeOptions.find(option => option.value === defaultValues.dniType)
+      dniType: documentTypeOptions.find(option => option.value === defaultValues.dniType),
+      roleId: {
+        value: defaultValues.role.id,
+        label: defaultValues.role.name,
+        roleName: defaultValues.role.name
+      }
     })
   }, [defaultValues, methods, open])
 

@@ -1,22 +1,9 @@
-import type { UpdateProfilePayload } from "@/types/pages/profile"
 import { API } from "../instances"
 import type { IAuthenticationData } from "./types"
 import type { IUser } from "@/types/pages/user"
 
 export const authentication = async (data: IAuthenticationData) => {
     const response = await API().post("/auth/login", data)
-
-    return response.data
-}
-
-export const getProfile = async () => {
-    const response = await API().get("/profile/me")
-
-    return response.data
-}
-
-export const putProfile = async (data: UpdateProfilePayload) => {
-    const response = await API().put("/profile/me", data)
 
     return response.data
 }

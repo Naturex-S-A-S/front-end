@@ -25,6 +25,15 @@ export type Module = {
 export type UpdateProfilePayload = Pick<ProfileData, 'name' | 'lastName' | 'email' | 'phone' | 'address'> & {
     dni?: string | null;
     dniType?: string | null;
-    role?: string | null;
+    role: {
+        id: number;
+        name: string;
+    };
     password?: string | null;
 };
+
+export type UpdatePasswordPayload = {
+    oldPassword: string;
+    newPassword1: string;
+    newPassword2: string;
+}

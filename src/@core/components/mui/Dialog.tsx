@@ -2,16 +2,17 @@ import { Icon } from '@iconify/react'
 import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
 
 type Props = {
+  maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   title: string
   children?: React.ReactNode
   open: boolean
   toogleDialog: () => void
 }
 
-const CustomDialog: React.FC<Props> = ({ open, toogleDialog, children, title }) => {
+const CustomDialog: React.FC<Props> = ({ open, toogleDialog, children, title, maxWidth = 'md' }) => {
   return (
-    <Dialog open={open} onClose={toogleDialog} fullWidth maxWidth='md'>
-      <DialogTitle>{title}</DialogTitle>
+    <Dialog open={open} onClose={toogleDialog} fullWidth maxWidth={maxWidth}>
+      <DialogTitle textAlign={'center'}>{title}</DialogTitle>
       <IconButton
         aria-label='close'
         onClick={toogleDialog}

@@ -18,7 +18,7 @@ import { useQuery } from '@tanstack/react-query'
 // Component Imports
 import UserProfileHeader from './UserProfileHeader'
 import CustomTabList from '@core/components/mui/TabList'
-import { getProfile } from '@/api/user'
+import { getProfile } from '@/api/user/profile'
 import type { ProfileData } from '@/types/pages/profile'
 import Loader from '@/@core/components/react-spinners'
 

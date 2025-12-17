@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
 import { Grid } from '@mui/material'
 
@@ -13,35 +13,50 @@ import toast from 'react-hot-toast'
 import CustomTextField from '@/@core/components/mui/TextField'
 import CustomCard from '@/@core/components/mui/Card'
 import type { UpdateProfilePayload } from '@/types/pages/profile'
-import { putProfile } from '@/api/user'
+import { putProfile } from '@/api/user/profile'
 import CustomButton from '@/@core/components/mui/Button'
 import { updateProfileSchema } from '@/utils/schemas/profile'
+import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 
 const Account = ({ data }: { data: UpdateProfilePayload }) => {
   const queryClient = useQueryClient()
 
-  const defaultValues = useMemo(() => {
-    return {
-      name: data.name,
-      lastName: data.lastName,
-      email: data.email,
-      phone: data.phone,
-      role: data.role,
-      address: data.address,
-      dni: data.dni,
-      dniType: data.dniType
-    }
-  }, [data])
-
-  const { handleSubmit, register, reset } = useForm({
-    defaultValues: defaultValues,
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { defaultValues },
+    control
+  } = useForm({
+    defaultValues: {
+      name: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      role: { value: undefined, label: '' },
+      address: '',
+      dni: '',
+      dniType: ''
+    },
     mode: 'onChange',
     resolver: yupResolver(updateProfileSchema)
   })
 
   useEffect(() => {
-    reset(defaultValues)
-  }, [defaultValues, reset])
+    reset({
+      name: data.name,
+      lastName: data.lastName,
+      email: data.email,
+      phone: data.phone,
+      role: {
+        value: data.role?.id,
+        label: data.role?.name
+      },
+      address: data.address,
+      dni: data.dni,
+      dniType: data.dniType
+    })
+  }, [reset, data])
 
   const { mutate, isPending } = useMutation({
     mutationFn: putProfile,
@@ -55,10 +70,9 @@ const Account = ({ data }: { data: UpdateProfilePayload }) => {
     }
   })
 
-  const onSubmit = (values: UpdateProfilePayload) => {
+  const onSubmit = (values: any) => {
     mutate({
-      ...values,
-      password: '123456'
+      ...values
     })
   }
 
@@ -79,7 +93,20 @@ const Account = ({ data }: { data: UpdateProfilePayload }) => {
             <CustomTextField {...register('phone')} name='phone' label='Teléfono' />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <CustomTextField {...register('role')} name='role' label='Rol' disabled />
+            <Controller
+              name='role'
+              control={control}
+              render={({ field }) => (
+                <CustomAutocomplete
+                  {...field}
+                  disabled={true}
+                  options={defaultValues?.role ? [defaultValues.role] : []}
+                  getOptionLabel={(option: any) => option?.label ?? ''}
+                  renderInput={params => <CustomTextField {...params} label='Rol' placeholder='Seleccione un rol' />}
+                  onChange={(_, value) => field.onChange(value)}
+                />
+              )}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
             <CustomTextField {...register('address')} name='address' label='Dirección' />

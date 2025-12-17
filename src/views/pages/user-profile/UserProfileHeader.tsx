@@ -22,12 +22,10 @@ const UserProfileHeader = ({ data }: { data?: ProfileData }) => {
             </Typography>
             <div className='flex flex-wrap gap-6 justify-center sm:justify-normal'>
               <div className='flex items-center gap-2'>
-                <i className='tabler-map-pin' />
-                <Typography className='font-medium'>{data?.address}</Typography>
-              </div>
-              <div className='flex items-center gap-2'>
-                <i className='tabler-calendar' />
-                <Typography className='font-medium'>{new Date().toDateString()}</Typography>
+                <i className='tabler-user' />
+                <Typography className='font-medium'>
+                  {data?.dniType}: {data?.dni}
+                </Typography>
               </div>
             </div>
           </div>

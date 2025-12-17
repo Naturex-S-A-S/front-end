@@ -7,6 +7,7 @@ import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 import { documentTypeOptions } from '@/utils/data'
 import CustomButton from '@/@core/components/mui/Button'
 import TextFieldPassword from '@/components/layout/shared/TextFieldPassword'
+import useGetRoles from '@/hooks/role/useGetRoles'
 
 type Props = {
   isPending: boolean
@@ -14,6 +15,8 @@ type Props = {
 }
 
 const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
+  const { data: roles } = useGetRoles()
+
   const {
     register,
     formState: { errors, defaultValues },
@@ -121,16 +124,8 @@ const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
       <Grid item xs={12} md={4}>
         <CustomAutocomplete
           {...register('roleId')}
-          options={[
-            {
-              value: 27,
-              label: 'Administrador'
-            },
-            {
-              value: 2,
-              label: 'Soporte'
-            }
-          ]}
+          options={roles?.map(role => ({ label: role.name, value: role.id })) ?? []}
+          defaultValue={isEdit ? defaultValues.roleId : null}
           onChange={(e, value: any) => {
             if (!value) return
 
