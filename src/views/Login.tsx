@@ -36,7 +36,7 @@ import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useSettings } from '@core/hooks/useSettings'
 import { loginSchema } from '@/utils/schemas/login'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import { documentTypeOptions } from '@/utils/data'
+import { mockDocumentTypes } from '@/utils/mocks'
 import CustomButton from '@/@core/components/mui/Button'
 import TextFieldPassword from '@/components/layout/shared/TextFieldPassword'
 
@@ -111,15 +111,21 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
     try {
       setIsLoading(true)
 
+      const params = new URLSearchParams(window.location.search)
+      const callbackUrl = params.get('callbackUrl') ?? '/'
+
       const res = await signIn('credentials', {
         document: values.document,
         password: values.password,
         documentType: values.documentType.value,
-        redirect: false
+        redirect: false,
+        callbackUrl
       })
 
-      if (res?.ok) {
-        router.replace('/')
+      const redirectTo = res?.url ?? (res?.ok ? callbackUrl : null)
+
+      if (redirectTo) {
+        router.replace(redirectTo)
       } else {
         toast.error('Credenciales incorrectas', {
           duration: 5000
@@ -163,7 +169,7 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
           <form noValidate autoComplete='off' onSubmit={handleSubmit(handleOnSubmit)} className='flex flex-col gap-5'>
             <CustomAutocomplete
               {...register('documentType')}
-              options={documentTypeOptions}
+              options={mockDocumentTypes}
               onChange={(e, value) => {
                 if (!value) return
 

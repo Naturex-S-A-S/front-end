@@ -42,8 +42,8 @@ const List = () => {
   const { data: roles, isLoading, isRefetching, isFetching } = useGetRoles()
   const ability = useAbility()
 
-  const canEdit = ability.can('update', 'Roles')
-  const canDelete = ability.can('delete', 'Roles')
+  const canEdit = ability.can('update', 'Soporte', 'Roles')
+  const canDelete = ability.can('delete', 'Soporte', 'Roles')
 
   const toogleDialog = () => {
     setOpen(!open)
@@ -95,7 +95,8 @@ const List = () => {
     })
   }
 
-  if (!ability.can('read', 'Roles')) return
+  if (!ability.can('read', 'Soporte', 'Roles'))
+    return <span className='text-textSecondary'>No tienes permisos de lectura</span>
 
   if (isLoading || isRefetching || isFetching) return <Loader type='component' />
 

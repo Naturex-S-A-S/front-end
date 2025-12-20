@@ -15,7 +15,15 @@ export default withAuth(
             // Use only the expected params for authorized (token). Avoid using req here.
             authorized: ({ token }) => {
                 try {
-                    console.log("Middleware authorized callback. Token existe:", !!token);
+                    if (!token?.tokenExpires) return false
+
+                    const currentTime = Math.floor(Date.now() / 1000);
+
+                    if (token.tokenExpires < currentTime) {
+                        console.log("Token expired. Current time:", currentTime, "Token exp:", token.exp);
+
+                        return false;
+                    }
 
                     return !!token;
                 } catch (err) {

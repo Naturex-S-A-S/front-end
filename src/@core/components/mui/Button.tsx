@@ -3,13 +3,14 @@ import { Button, CircularProgress } from '@mui/material'
 
 type Props = ButtonProps & {
   isLoading: boolean
-  text: string
+  text?: string
+  children?: React.ReactNode
 }
 
-const CustomButton: React.FC<Props> = ({ isLoading, text, ...props }) => {
+const CustomButton: React.FC<Props> = ({ isLoading, text, children, ...props }) => {
   return (
     <Button {...props} variant='contained' disabled={isLoading}>
-      {isLoading ? <CircularProgress size={20} color='inherit' /> : text}
+      {isLoading ? <CircularProgress size={20} color='inherit' /> : children || text}
     </Button>
   )
 }

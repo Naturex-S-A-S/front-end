@@ -1,7 +1,4 @@
-'use client'
-import { useState } from 'react'
-
-import { Box } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 
 import { FormProvider, useForm } from 'react-hook-form'
 
@@ -12,64 +9,69 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 
 import CreateButton from '@/components/layout/shared/CreateButton'
-import { useAbility } from '@/hooks/casl/useAbility'
 import CustomDialog from '@/@core/components/mui/Dialog'
-import { userSchema } from '@/utils/schemas/user'
-import { defaultUserValues } from '@/utils/defaultValues/user'
-import { postUser } from '@/api/user'
 import Form from './form'
+import { rawMaterialSchema } from '@/utils/schemas/inventory/rawMaterial'
+import { postFeedstock } from '@/api/feedstock'
 
 const Create = () => {
   const [open, setOpen] = useState(false)
+
   const queryClient = useQueryClient()
-  const ability = useAbility()
 
   const toogleDialog = () => {
     setOpen(!open)
   }
 
   const methods = useForm({
-    defaultValues: defaultUserValues,
-    resolver: yupResolver(userSchema)
+    defaultValues: {
+      name: '',
+      minimumStandard: 0,
+      allergen: false
+    },
+
+    resolver: yupResolver(rawMaterialSchema)
   })
 
   const { handleSubmit, reset } = methods
 
+  useEffect(() => {
+    if (!open) {
+      reset()
+    }
+  }, [open, reset])
+
   const { mutate, isPending } = useMutation({
-    mutationFn: postUser,
+    mutationFn: postFeedstock,
     onSuccess: () => {
-      toast.success('Usuario creado con éxito')
-      queryClient.invalidateQueries({ queryKey: ['getUsers'] })
+      toast.success('Materia prima creada con éxito')
+      queryClient.invalidateQueries({ queryKey: ['getFeedstock'] })
       reset()
       toogleDialog()
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || 'Error al crear el usuario')
+      toast.error(error?.response?.data?.message || 'Error al crear la materia prima')
     }
   })
 
   const onSubmit = (values: any) => {
     mutate({
-      ...values,
-      dniType: values.dniType.value,
-      roleId: values.roleId.value
+      ...values
     })
   }
 
-  if (!ability.can('create', 'Soporte', 'Usuarios')) return null
-
   return (
-    <Box>
+    <div>
       <CreateButton onClick={toogleDialog} />
 
-      <CustomDialog open={open} toogleDialog={toogleDialog} title='Crear Usuario'>
+      <CustomDialog open={open} toogleDialog={toogleDialog} title='Crear Materia Prima'>
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Form isPending={isPending} />
           </form>
         </FormProvider>
       </CustomDialog>
-    </Box>
+    </div>
   )
 }
 

@@ -16,6 +16,8 @@ import { AbilityProvider } from '@/components/provider/AbilityProvider'
 import { Toaster } from 'react-hot-toast'
 import ReactQueryProvider from '@/components/provider/ReactQuery'
 
+import 'react-datepicker/dist/react-datepicker.css'
+
 export const metadata = {
   title: 'Naturex Admin Dashboard',
   description:

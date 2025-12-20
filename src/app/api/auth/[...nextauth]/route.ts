@@ -58,6 +58,8 @@ const handler = NextAuth({
                     token.permissions = payload.modules
 
                     token.role = payload.role ?? '';
+
+                    token.tokenExpires = payload.exp
                 } catch (e) {
                     console.error("Failed to decode access_token", e);
                 }
@@ -73,6 +75,7 @@ const handler = NextAuth({
             session.user = token.user;
             session.permissions = token.permissions;
             session.role = token.role;
+            session.tokenExpires = token.tokenExpires;
 
             return session;
         },

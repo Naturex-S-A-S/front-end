@@ -22,12 +22,12 @@ export const columns = ({ handleEdit, handleDelete }: params): GridColDef[] => {
       renderCell: params => {
         return (
           <>
-            {ability.can('update', 'Usuarios') && (
+            {ability.can('update', 'Soporte', 'Usuarios') && (
               <IconButton onClick={() => handleEdit(params.row)}>
                 <Icon icon='mdi:pencil-outline' width={20} height={20} />
               </IconButton>
             )}
-            {ability.can('delete', 'Usuarios') && (
+            {ability.can('delete', 'Soporte', 'Usuarios') && (
               <IconButton
                 onClick={() => {
                   handleDelete(params.row.id)

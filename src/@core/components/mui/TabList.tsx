@@ -63,7 +63,13 @@ const CustomTabList = (props: CustomTabListProps) => {
   // Props
   const { color = 'primary', ...rest } = props
 
-  return <TabList color={color} {...rest} />
+  return (
+    <TabList
+      color={color}
+      {...rest}
+      sx={props.centered ? { '& .MuiTabs-flexContainer': { justifyContent: 'center' } } : {}}
+    />
+  )
 }
 
 export default CustomTabList

@@ -11,19 +11,29 @@ export default function defineAbilityFor(permissions: IPermissions[], role: stri
         can('manage', 'all');
     }
 
-    const processNode = (node: IPermissions | any, parentName?: string) => {
-        const subject = node.name || parentName || "all";
+    const processNode = (node: IPermissions | any, parentSubject?: string) => {
+        const nodeName = node.name ?? ''
+
+        const subject = nodeName || 'all'
 
         if ((node as any).actions) {
-            const actions = Object.keys((node as any).actions);
+            const enabledActions = Object.keys((node as any).actions).filter((a: string) => (node as any).actions[a])
 
-            actions.forEach((action: any) => can(action, subject));
+            if (enabledActions.length === 0) return
 
-            return;
+            if (parentSubject) {
+                can(enabledActions as Actions[], parentSubject, nodeName)
+
+                return
+            }
+
+            can(enabledActions as Actions[], nodeName)
+
+            return
         }
 
         if (node.children && Array.isArray(node.children) && node.children.length > 0) {
-            node.children.forEach((child: any) => processNode(child, subject));
+            node.children.forEach((child: any) => processNode(child, subject))
         }
     };
 

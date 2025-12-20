@@ -19,6 +19,7 @@ export interface IChild {
 declare module 'next-auth' {
     interface Session {
         access_token?: string
+        tokenExpires: number
         user?: {
             id?: string
             name?: string
@@ -33,6 +34,7 @@ declare module 'next-auth' {
 declare module 'next-auth/jwt' {
     interface JWT {
         access_token?: string
+        tokenExpires: number
         user?: {
             id?: string
             name?: string

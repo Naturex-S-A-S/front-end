@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form'
 
 import CustomTextField from '@/@core/components/mui/TextField'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import { documentTypeOptions } from '@/utils/data'
+import { mockDocumentTypes } from '@/utils/mocks'
 import CustomButton from '@/@core/components/mui/Button'
 import TextFieldPassword from '@/components/layout/shared/TextFieldPassword'
 import useGetRoles from '@/hooks/role/useGetRoles'
@@ -32,7 +32,7 @@ const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
               {...register('dniType')}
               disabled={isEdit}
               defaultValue={isEdit ? defaultValues.dniType : null}
-              options={documentTypeOptions}
+              options={mockDocumentTypes}
               onChange={(e, value: any) => {
                 if (!value) return
 

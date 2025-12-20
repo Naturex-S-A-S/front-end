@@ -61,25 +61,27 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
       )
     }
 
-    const renderChild = (child: IChild, key: string, basePath?: string): JSX.Element => {
+    const renderChild = (child: IChild, key: string): JSX.Element => {
       const name = child.name || key
 
-      const resolvedPath = child.path
-        ? child.path.startsWith('/')
-          ? child.path
-          : `${(basePath || '').replace(/\/$/, '')}/${child.path}`
-        : basePath || '/'
+      const resolvedPath = Object.hasOwn(child, 'children')
+        ? child.children?.find(c => c.name === 'Listado')?.path
+        : child.path
+          ? child.path.startsWith('/')
+            ? child.path
+            : `/${child.path}`
+          : '/'
 
-      if (child.children && child.children.length > 0) {
+      /* if (child.children && child.children.length > 0 && !child.path) {
         return (
           <SubMenu key={key} label={name} icon={<i className='tabler-folder' />}>
-            {child.children.map((c, i) => renderChild(c, `${key}-${i}`, resolvedPath))}
+            {child.children.map((c, i) => renderChild(c, `${key}-${i}`))}
           </SubMenu>
         )
-      }
+      } */
 
       return (
-        <MenuItem key={key} href={resolvedPath}>
+        <MenuItem key={key} href={resolvedPath || '/'}>
           {name}
         </MenuItem>
       )
@@ -95,7 +97,7 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
           if (module.children && module.children.length > 0) {
             return (
               <SubMenu key={`${idx}-${moduleKey}`} label={moduleName} icon={<i className='tabler-folder' />}>
-                {module.children.map((child, i) => renderChild(child, `${idx}-${moduleKey}-${i}`, modulePath))}
+                {module.children.map((child, i) => renderChild(child, `${idx}-${moduleKey}-${i}`))}
               </SubMenu>
             )
           }
@@ -129,7 +131,7 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
         renderExpandedMenuItemIcon={{ icon: <i className='tabler-circle text-xs' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
-        {session?.permissions && <GenerateVerticalMenu permissions={session?.permissions} />}
+        {session?.permissions && <GenerateVerticalMenu permissions={session.permissions} />}
       </Menu>
     </ScrollWrapper>
   )

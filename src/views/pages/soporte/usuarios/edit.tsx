@@ -18,7 +18,7 @@ import { updateUserSchema } from '@/utils/schemas/user'
 import { defaultUserValues } from '@/utils/defaultValues/user'
 import { putUser } from '@/api/user'
 import Form from './form'
-import { documentTypeOptions } from '@/utils/data'
+import { mockDocumentTypes } from '@/utils/mocks'
 
 type Props = {
   open: boolean
@@ -63,7 +63,7 @@ const Edit: React.FC<Props> = ({ open, toogleDialog, defaultValues }) => {
 
     methods.reset({
       ...defaultValues,
-      dniType: documentTypeOptions.find(option => option.value === defaultValues.dniType),
+      dniType: mockDocumentTypes.find(option => option.value === defaultValues.dniType),
       roleId: {
         value: defaultValues.role.id,
         label: defaultValues.role.name,
@@ -72,7 +72,7 @@ const Edit: React.FC<Props> = ({ open, toogleDialog, defaultValues }) => {
     })
   }, [defaultValues, methods, open])
 
-  if (!ability.can('update', 'Usuarios')) return null
+  if (!ability.can('update', 'Soporte', 'Usuarios')) return null
 
   return (
     <Box>
