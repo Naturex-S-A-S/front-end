@@ -7,22 +7,25 @@ export const mockMaterial = [{
 }]
 
 export const mockProviders = [{
-    label: 'Proveedor 1',
+    label: 'Deiby Moreno',
     value: 1
 }, {
-    label: 'Proveedor 2',
+    label: 'Andres Perez',
     value: 2
+}, {
+    label: 'Luis Perez',
+    value: 3
 }]
 
 export const mockUnitWeight = [{
-    label: 'Kilogramo',
+    label: 'Kilogramos',
     value: 'kg'
 }, {
-    label: 'Gramo',
+    label: 'Gramos',
     value: 'g'
 }, {
-    label: 'Libra',
-    value: 'lb'
+    label: 'Toneladas',
+    value: 't'
 }]
 
 export const mockDocumentTypes = [{

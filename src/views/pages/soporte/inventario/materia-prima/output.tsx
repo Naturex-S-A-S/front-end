@@ -2,75 +2,114 @@ import { Controller, useForm } from 'react-hook-form'
 
 import { Grid } from '@mui/material'
 
-import { Icon } from '@iconify/react'
+import { yupResolver } from '@hookform/resolvers/yup'
 
-import CustomButton from '@/@core/components/mui/Button'
-import { useAbility } from '@/hooks/casl/useAbility'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 import CustomTextField from '@/@core/components/mui/TextField'
+import { outputKardexSchema } from '@/utils/schemas/inventory/output'
+import useFeedstock from '@/hooks/feedstock/useFeedstock'
+import { mockUnitWeight } from '@/utils/mocks'
+import CustomButton from '@/@core/components/mui/Button'
+import { useAbility } from '@/hooks/casl/useAbility'
+import useKardexOutput from '@/hooks/feedstock/kardex/useKardexOutput'
 
 const Output = () => {
+  const { mutateAsync, isPending } = useKardexOutput()
+  const { feedstock } = useFeedstock()
+
   const ability = useAbility()
 
-  const canReadEntradas = ability.can('create', 'Materia prima', 'Entradas')
+  // const canReadEntradas = ability.can('create', 'Materia prima', 'Entradas')
   const canReadSalidas = ability.can('create', 'Materia prima', 'Control de salidas')
 
   const methods = useForm({
     defaultValues: {
-      product: {
-        value: ''
-      },
-      quantity: ''
-    }
+      material: undefined,
+      quantity: undefined,
+      unit: undefined,
+      batch: undefined
+    },
+    mode: 'onBlur',
+    resolver: yupResolver(outputKardexSchema)
   })
 
   const {
     handleSubmit,
     register,
     control,
-    setValue,
-    formState: { errors }
+    formState: { errors },
+    reset
   } = methods
 
-  const onSubmit = (data: any) => {
-    console.log(data)
+  const onSubmit = (values: any) => {
+    const req = {
+      batch: values.batch,
+      idMaterial: values.material.id,
+      quantity: Number(values.quantity),
+      unit: values.unit.value
+    }
+
+    mutateAsync(req).then(() => {
+      reset()
+    })
   }
 
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} sm={6} lg={4}>
             <Controller
-              name='product'
+              name='material'
               control={control}
-              render={() => (
+              render={({ field: { value, onChange } }: any) => (
                 <CustomAutocomplete
-                  {...register('product')}
-                  options={[
-                    {
-                      label: 'Materia Prima 1',
-                      value: '1'
-                    },
-                    {
-                      label: 'Materia Prima 2',
-                      value: '2'
-                    }
-                  ]}
+                  value={value}
+                  options={feedstock || []}
                   onChange={(e, value: any) => {
-                    if (!value) return
-
-                    setValue('product', {
-                      value: value.value
-                    })
+                    onChange(value)
                   }}
                   renderInput={params => (
                     <CustomTextField
                       {...params}
-                      label='Producto'
-                      placeholder='Seleccione un producto'
-                      error={!!errors.product}
-                      helperText={errors.product?.value?.message}
+                      label='Material'
+                      placeholder='Seleccione un material'
+                      error={!!errors.material?.id}
+                      helperText={errors.material?.id?.message}
+                    />
+                  )}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} lg={4}>
+            <CustomTextField
+              {...register('batch')}
+              label='Lote'
+              placeholder='Ingrese el lote'
+              error={!!errors.batch}
+              helperText={errors.batch?.message}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6} lg={2}>
+            <Controller
+              name='unit'
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <CustomAutocomplete
+                  value={value}
+                  options={mockUnitWeight}
+                  onChange={(e, value: any) => {
+                    onChange(value)
+                  }}
+                  renderInput={params => (
+                    <CustomTextField
+                      {...params}
+                      label='Unidad de medida'
+                      placeholder='Seleccione una unidad de medida'
+                      error={!!errors.unit?.value}
+                      helperText={errors.unit?.value?.message}
                     />
                   )}
                 />
@@ -78,10 +117,9 @@ const Output = () => {
             />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} sm={6} lg={2}>
             <CustomTextField
               {...register('quantity')}
-              autoFocus
               fullWidth
               label='Cantidad'
               placeholder='Ingrese la cantidad'
@@ -89,25 +127,17 @@ const Output = () => {
               helperText={errors.quantity?.message}
             />
           </Grid>
-          <Grid item xs={12} md={12} className='flex justify-center'>
-            {canReadEntradas || canReadSalidas ? (
+
+          <Grid item xs={12} className='flex justify-center'>
+            {canReadSalidas ? (
               <div className='mt-4'>
-                {canReadEntradas && (
-                  <CustomButton
-                    startIcon={<Icon icon='ic:baseline-plus' width='24' height='24' />}
-                    className='mr-2 px-4 py-2 text-white rounded d-flex align-middle'
-                    isLoading={false}
-                  >
-                    Registrar Entrada
-                  </CustomButton>
-                )}
                 {canReadSalidas && (
                   <CustomButton
-                    startIcon={<Icon icon='ic:baseline-minus' width='24' height='24' />}
-                    className='px-4 py-2 bg-red-500 text-white rounded d-flex align-middle'
-                    isLoading={false}
+                    className='mr-2 px-4 py-2 text-white rounded d-flex align-middle'
+                    isLoading={isPending}
+                    type='submit'
                   >
-                    Registrar Salida
+                    Registrar
                   </CustomButton>
                 )}
               </div>

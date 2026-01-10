@@ -12,13 +12,15 @@ interface Props {
   control: any
   errors?: any
   minDate?: any
+  name: string
+  label: string
 }
 
-const CustomDatePicker: React.FC<Props> = ({ control, errors, minDate }) => {
+const CustomDatePicker: React.FC<Props> = ({ control, errors, minDate, label, name }) => {
   return (
     <DatePickerWrapper>
       <Controller
-        name='expirationDate1'
+        name={name}
         control={control}
         rules={{ required: true }}
         render={({ field: { value, onChange } }) => (
@@ -34,7 +36,7 @@ const CustomDatePicker: React.FC<Props> = ({ control, errors, minDate }) => {
               <CustomTextField
                 value={value}
                 onChange={onChange}
-                label='Fecha de expiración'
+                label={label}
                 error={Boolean(errors)}
                 aria-describedby='validation-basic-expirationDate1'
                 {...(errors && { helperText: 'This field is required' })}
