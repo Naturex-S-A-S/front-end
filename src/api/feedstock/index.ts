@@ -23,6 +23,7 @@ export const getFeedstock = async (params?: any) => {
         params: {
             active: params?.active,
             allergen: params?.allergen,
+            category: params?.category
         }
     })
 
@@ -40,3 +41,10 @@ export const patchFeedstock = async (id: number, data: any) => {
 
     return response.data
 }
+
+export const getCategories = async () => {
+    const response = await API().get("/feedstock/category")
+
+    return response.data
+}
+

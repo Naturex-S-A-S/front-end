@@ -9,17 +9,23 @@ import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 import { mockUnitWeight } from '@/utils/mocks'
 import usePatchFeedstock from '@/hooks/feedstock/usePatchFeedstock'
 import type { IFeedstock } from '@/hooks/feedstock/useGetFeedstockById'
+import useGetCategory from '@/hooks/feedstock/useGetCategory'
+import useGetProviders from '@/hooks/provider/useGetProviders'
 
 interface Props {
   feedstock: IFeedstock
 }
 
 const Detail: React.FC<Props> = ({ feedstock }) => {
+  const { categories } = useGetCategory()
+  const { providers } = useGetProviders()
   const { mutate, isPending } = usePatchFeedstock()
 
   const methods = useForm({
     defaultValues: {
       name: feedstock.name,
+      categories: feedstock.categories,
+      providers: feedstock.providers,
       allergen: feedstock.allergen,
       measureUnit: {
         label: 'Gramo',
@@ -43,10 +49,10 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
     control
   } = methods
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (values: any) => {
     const req = {
-      name: data.name,
-      allergen: data.allergen
+      name: values.name,
+      allergen: values.allergen
     }
 
     mutate({
@@ -71,7 +77,44 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
                 helperText={errors.name?.message}
               />
             </Grid>
-
+            <Grid item xs={12} md={6} lg={3}>
+              <Controller
+                name='categories'
+                control={control}
+                render={({ field: { value, onChange } }: any) => (
+                  <CustomAutocomplete
+                    value={value}
+                    multiple
+                    options={categories}
+                    onChange={(e, value: any) => {
+                      onChange(value)
+                    }}
+                    renderInput={params => (
+                      <CustomTextField {...params} label='Categorias' placeholder='Seleccione una categoria' />
+                    )}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}>
+              <Controller
+                name='providers'
+                control={control}
+                render={({ field: { value, onChange } }: any) => (
+                  <CustomAutocomplete
+                    value={value}
+                    multiple
+                    options={providers}
+                    onChange={(e, value: any) => {
+                      onChange(value)
+                    }}
+                    renderInput={params => (
+                      <CustomTextField {...params} label='Proveedores' placeholder='Seleccione un proveedor' />
+                    )}
+                  />
+                )}
+              />
+            </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <CustomTextField
                 {...register('minimumStandard')}

@@ -8,7 +8,7 @@ import CustomCard from '@/@core/components/mui/Card'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 import CustomTextField from '@/@core/components/mui/TextField'
 import CustomButton from '@/@core/components/mui/Button'
-import { mockUnitWeight } from '@/utils/mocks'
+import useGetCategory from '@/hooks/packaging/useGetCategory'
 
 type Filters = {
   category?: string
@@ -29,6 +29,8 @@ type Props = {
 }
 
 const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
+  const { categories } = useGetCategory()
+
   const { control, handleSubmit, reset } = useForm<FormValues>({
     defaultValues
   })
@@ -37,8 +39,7 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
     onApplyFilters?.({
       category: data.category || undefined,
       allergen: data.allergen || undefined,
-      active: data.active,
-      measureUnit: data.measureUnit || undefined
+      active: data.active
     })
   }
 
@@ -51,18 +52,14 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
     <CustomCard title='Filtros'>
       <form onSubmit={handleSubmit(submit)}>
         <Grid container spacing={2} alignItems={'end'}>
-          <Grid item xs={12} md={6} lg={3}>
+          <Grid item xs={12} md={4} lg={4}>
             <Controller
               name='category'
               control={control}
               render={({ field: { value, onChange } }: any) => (
                 <CustomAutocomplete
                   value={value}
-                  options={[
-                    { label: 'Fruta', value: 'Fruta' },
-                    { label: 'Verdura', value: 'Verdura' },
-                    { label: 'Cereal', value: 'Cereal' }
-                  ]}
+                  options={categories}
                   onChange={(e, value: any) => {
                     onChange(value)
                   }}
@@ -74,30 +71,7 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={3}>
-            <Controller
-              name='measureUnit'
-              control={control}
-              render={({ field: { value, onChange } }: any) => (
-                <CustomAutocomplete
-                  value={value}
-                  options={mockUnitWeight}
-                  onChange={(e, value: any) => {
-                    onChange(value)
-                  }}
-                  renderInput={params => (
-                    <CustomTextField
-                      {...params}
-                      label='Unidad de medida'
-                      placeholder='Seleccione una unidad de medida'
-                    />
-                  )}
-                />
-              )}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={3}>
+          <Grid item xs={12} md={4} lg={4}>
             <Controller
               name='active'
               control={control}
@@ -110,7 +84,7 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={3} height={'min-content'} display={'flex'} gap={1} justifyContent={'center'}>
+          <Grid item xs={12} md={4} lg={4} height={'min-content'} display={'flex'} gap={1} justifyContent={'center'}>
             <CustomButton type='submit' variant='contained' size='small'>
               Aplicar
             </CustomButton>

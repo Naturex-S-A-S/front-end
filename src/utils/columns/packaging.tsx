@@ -13,11 +13,10 @@ import { PATHS } from '../paths'
 
 type params = {
   handleActive: (id: any, name: string, active: boolean) => void
-  filters: any
   isPending: boolean
 }
 
-export const columns = ({ handleActive, filters, isPending }: params): GridColDef[] => {
+export const columns = ({ handleActive, isPending }: params): GridColDef[] => {
   const ability = useAbility()
   const router = useRouter()
 
@@ -40,45 +39,22 @@ export const columns = ({ handleActive, filters, isPending }: params): GridColDe
     },
     { field: 'name', headerName: 'Nombre', width: 150 },
     {
-      field: 'quantityG',
-      headerName: `Cantidad (${filters?.measureUnit?.value})`,
-      width: 100,
-      renderCell: params => {
-        switch (filters?.measureUnit?.value) {
-          case 't':
-            return Number(params.row.quantityT).toFixed(2)
-          case 'kg':
-            return Number(params.row.quantityK).toFixed(2)
-          case 'g':
-            return Number(params.row.quantityG).toFixed(2)
-          default:
-            return Number(params.row.quantityG).toFixed(2)
-        }
-      }
+      field: 'quantityTotal',
+      headerName: `Cantidad`,
+      width: 100
     },
     {
-      field: 'chargeG',
+      field: 'chargeU',
       headerName: 'Valor unitario',
       width: 150,
       minWidth: 150,
-      renderCell: params => {
-        switch (filters?.measureUnit?.value) {
-          case 't':
-            return Number(params.row.chargeT).toFixed(2)
-          case 'kg':
-            return Number(params.row.chargeKg).toFixed(2)
-          case 'g':
-            return Number(params.row.chargeG).toFixed(2)
-          default:
-            return Number(params.row.chargeG).toFixed(2)
-        }
-      }
+      renderCell: params => Number(params.row.chargeU).toFixed(2)
     },
     {
-      field: 'charge',
+      field: 'chargeTotal',
       headerName: 'Valor total',
       width: 100,
-      renderCell: params => Number(params.row.charge).toFixed(2)
+      renderCell: params => Number(params.row.chargeTotal).toFixed(2)
     },
     {
       field: 'color',
@@ -89,28 +65,9 @@ export const columns = ({ handleActive, filters, isPending }: params): GridColDe
       field: 'categories',
       headerName: 'Categorias',
       width: 150,
-      renderCell: () => {
-        const categories = [
-          {
-            id: 1,
-            name: 'Fruta'
-          },
-          {
-            id: 2,
-            name: 'Verdura'
-          },
-          {
-            id: 3,
-            name: 'Carnes'
-          },
-          {
-            id: 4,
-            name: 'Lacteos'
-          }
-        ]
-
-        const visible = categories.slice(0, 1)
-        const remaining = categories.slice(1)
+      renderCell: params => {
+        const visible = params.row.categories?.slice(0, 1)
+        const remaining = params.row.categories?.slice(1)
 
         return (
           <div className='flex gap-2 justify-center items-center' style={{ height: '100%' }}>

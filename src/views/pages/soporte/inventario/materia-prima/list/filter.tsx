@@ -9,6 +9,7 @@ import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 import CustomTextField from '@/@core/components/mui/TextField'
 import CustomButton from '@/@core/components/mui/Button'
 import { mockUnitWeight } from '@/utils/mocks'
+import useGetCategory from '@/hooks/feedstock/useGetCategory'
 
 type Filters = {
   category?: string
@@ -29,6 +30,8 @@ type Props = {
 }
 
 const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
+  const { categories } = useGetCategory()
+
   const { control, handleSubmit, reset } = useForm<FormValues>({
     defaultValues
   })
@@ -58,11 +61,7 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
               render={({ field: { value, onChange } }: any) => (
                 <CustomAutocomplete
                   value={value}
-                  options={[
-                    { label: 'Fruta', value: 'Fruta' },
-                    { label: 'Verdura', value: 'Verdura' },
-                    { label: 'Cereal', value: 'Cereal' }
-                  ]}
+                  options={categories}
                   onChange={(e, value: any) => {
                     onChange(value)
                   }}

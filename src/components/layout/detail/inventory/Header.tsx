@@ -37,13 +37,11 @@ const Header: React.FC<Props> = ({
         {createdAt && <p className='text-textSecondary'>Fecha de creación: {createdAt}</p>}
       </div>
       <div className='flex items-center gap-4'>
-        {quantity !== undefined && (
-          <Chip
-            label={quantity > 0 ? `${quantity} en stock` : 'Sin stock'}
-            size='medium'
-            color={quantity > 0 ? 'success' : 'error'}
-          />
-        )}
+        <Chip
+          label={quantity && quantity > 0 ? `${quantity} en stock` : 'Sin stock'}
+          size='medium'
+          color={quantity && quantity > 0 ? 'success' : 'error'}
+        />
 
         {active !== undefined &&
           canUpdate &&

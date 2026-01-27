@@ -9,52 +9,20 @@ import TabPanel from '@mui/lab/TabPanel'
 import CustomTabList from '@/@core/components/mui/TabList'
 import CustomCard from '@/@core/components/mui/Card'
 import { useAbility } from '@/hooks/casl/useAbility'
-import Create from './create'
-import List from './list'
-import Input from './input'
-import Output from './output'
-
-const ABILITY_SUBJECT = 'Material de empaque'
-
-const ABILITY_FIELDS = {
-  LISTADO: 'Listado',
-  ENTRADAS: 'Control de entradas',
-  SALIDAS: 'Control de salidas',
-  MOVIMIENTOS: 'Historial de movimientos'
-}
+import Category from './category'
 
 const Tabs = () => {
   const [activeTab, setActiveTab] = useState('1')
 
   const ability = useAbility()
 
-  const canCreate = ability.can('create', ABILITY_SUBJECT, ABILITY_FIELDS.LISTADO)
-
   const tabs = useMemo(() => {
     return [
       {
         value: '1',
-        label: ABILITY_FIELDS.LISTADO,
-        icon: 'tabler-list',
-        allow: ability.can('read', ABILITY_SUBJECT, ABILITY_FIELDS.LISTADO)
-      },
-      {
-        value: '2',
-        label: 'Entradas',
-        icon: 'tabler-plus',
-        allow: ability.can('create', ABILITY_SUBJECT, ABILITY_FIELDS.ENTRADAS)
-      },
-      {
-        value: '3',
-        label: 'Salidas',
-        icon: 'tabler-minus',
-        allow: ability.can('create', ABILITY_SUBJECT, ABILITY_FIELDS.SALIDAS)
-      },
-      {
-        value: '4',
-        label: 'Movimientos',
-        icon: 'tabler-history',
-        allow: ability.can('read', ABILITY_SUBJECT, ABILITY_FIELDS.MOVIMIENTOS)
+        label: 'Categorias',
+        icon: 'tabler:category',
+        allow: ability.can('read', 'Materia prima', 'Listado')
       }
     ]
   }, [ability])
@@ -75,7 +43,6 @@ const Tabs = () => {
 
   return (
     <>
-      {canCreate && <Create />}
       <CustomCard title=''>
         <TabContext value={activeTab}>
           <CustomTabList onChange={handleChange} variant='standard' centered pill='true' sx={{ width: '100%' }}>
@@ -97,15 +64,11 @@ const Tabs = () => {
             })}
           </CustomTabList>
           <TabPanel value='1'>
-            <List />
+            <Category />
           </TabPanel>
-          <TabPanel value='2'>
-            <Input />
-          </TabPanel>
-          <TabPanel value='3'>
-            <Output />
-          </TabPanel>
-          <TabPanel value='4'>movimientos</TabPanel>
+          <TabPanel value='2'>test</TabPanel>
+          <TabPanel value='3'>dd</TabPanel>
+          <TabPanel value='4'>gg</TabPanel>
         </TabContext>
       </CustomCard>
     </>

@@ -2,46 +2,39 @@ import { Controller, useForm } from 'react-hook-form'
 
 import { Grid } from '@mui/material'
 
-import moment from 'moment'
-
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import CustomButton from '@/@core/components/mui/Button'
 import { useAbility } from '@/hooks/casl/useAbility'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 import CustomTextField from '@/@core/components/mui/TextField'
-import { mockUnitWeight } from '@/utils/mocks'
 import DatePickerWrapper from '@/@core/styles/libs/react-datepicker'
-import CustomDatePicker from '@/@core/components/react-datepicker'
-import { kardexFeedstockInputSchema } from '@/utils/schemas/inventory/input'
-import useFeedstock from '@/hooks/feedstock/useFeedstock'
+import { kardexPackagingInputSchema } from '@/utils/schemas/inventory/input'
 import useGetProviders from '@/hooks/provider/useGetProviders'
-import useKardexInput from '@/hooks/feedstock/kardex/useKardexInput'
+import useKardexInput from '@/hooks/packaging/kardex/useKardexInput'
+import useGetPackaging from '@/hooks/packaging/useGetPackaging'
 
 const Input = () => {
   const { mutateAsync, isPending } = useKardexInput()
   const { providers } = useGetProviders()
-  const { feedstock } = useFeedstock()
+  const { packaging } = useGetPackaging()
   const ability = useAbility()
 
-  const canReadEntradas = ability.can('create', 'Materia prima', 'Entradas')
+  const canReadEntradas = ability.can('create', 'Material de empaque', 'Control de entradas')
 
   const methods = useForm({
     defaultValues: {
       material: undefined,
       provider: undefined,
       quantity: undefined,
-      unit: undefined,
       charge: undefined,
       document: undefined,
       batch: undefined,
       location: undefined,
-      rack: undefined,
-      expirationDate1: undefined,
-      expirationDate2: undefined
+      rack: undefined
     },
     mode: 'onBlur',
-    resolver: yupResolver(kardexFeedstockInputSchema)
+    resolver: yupResolver(kardexPackagingInputSchema)
   })
 
   const {
@@ -54,17 +47,14 @@ const Input = () => {
 
   const onSubmit = (values: any) => {
     const req = {
-      batch: values.batch,
       idMaterial: values.material.id,
       idProvider: values.provider.id,
       quantity: Number(values.quantity),
-      unit: values.unit.value,
       charge: Number(values.charge),
       document: values.document,
+      batch: values.batch,
       location: values.location,
-      rack: values.rack,
-      expirationDate1: moment(values.expirationDate1).format('YYYY-MM-DD'),
-      expirationDate2: moment(values.expirationDate2).format('YYYY-MM-DD')
+      rack: values.rack
     }
 
     mutateAsync(req).then(() => {
@@ -84,7 +74,7 @@ const Input = () => {
                 render={({ field: { value, onChange } }: any) => (
                   <CustomAutocomplete
                     value={value}
-                    options={feedstock || []}
+                    options={packaging || []}
                     onChange={(e, value: any) => {
                       onChange(value)
                     }}
@@ -170,31 +160,6 @@ const Input = () => {
             </Grid>
 
             <Grid item xs={12} md={6} lg={2}>
-              <Controller
-                name='unit'
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <CustomAutocomplete
-                    value={value}
-                    options={mockUnitWeight}
-                    onChange={(e, value: any) => {
-                      onChange(value)
-                    }}
-                    renderInput={params => (
-                      <CustomTextField
-                        {...params}
-                        label='Unidad de medida'
-                        placeholder='Seleccione una unidad de medida'
-                        error={!!errors.unit?.value}
-                        helperText={errors.unit?.value?.message}
-                      />
-                    )}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6} lg={2}>
               <CustomTextField
                 {...register('quantity')}
                 fullWidth
@@ -216,27 +181,7 @@ const Input = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={6} lg={4}>
-              <CustomDatePicker
-                control={control}
-                errors={errors.expirationDate1}
-                minDate={moment().add(1, 'day').toDate()}
-                name='expirationDate1'
-                label='Fecha de vencimiento 1'
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6} lg={4}>
-              <CustomDatePicker
-                control={control}
-                errors={errors.expirationDate2}
-                minDate={moment().add(1, 'day').toDate()}
-                name='expirationDate2'
-                label='Fecha de vencimiento 2'
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6} lg={12} className='flex justify-center'>
+            <Grid item xs={12} className='flex justify-center'>
               {canReadEntradas ? (
                 <div className='mt-4'>
                   {canReadEntradas && (
@@ -250,7 +195,9 @@ const Input = () => {
                   )}
                 </div>
               ) : (
-                <div className='mt-4 text-red-500'>No tienes permisos para registrar movimientos de materia prima.</div>
+                <div className='mt-4 text-red-500'>
+                  No tienes permisos para registrar movimientos de material de empaque.
+                </div>
               )}
             </Grid>
           </Grid>

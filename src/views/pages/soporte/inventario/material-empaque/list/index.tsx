@@ -19,14 +19,16 @@ const List = () => {
   const { handleActive, isPending } = usePatchPackaging()
 
   const onApplyFilters = (filters: any) => {
-    setFilters(filters)
+    setFilters({
+      ...filters,
+      category: filters.category?.id
+    })
   }
 
   return (
     <div className='flex flex-col gap-2'>
-      {/*<Edit open={open} toogleDialog={handleDialog} defaultValues={userEdit} />*/}
       <Filter onApplyFilters={onApplyFilters} defaultValues={defaultFilters} />
-      <CustomDataGrid columns={columns({ handleActive, filters, isPending })} data={packaging} isLoading={isLoading} />
+      <CustomDataGrid columns={columns({ handleActive, isPending })} data={packaging} isLoading={isLoading} />
     </div>
   )
 }

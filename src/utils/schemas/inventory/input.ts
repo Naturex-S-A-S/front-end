@@ -1,6 +1,6 @@
 import * as yup from "yup"
 
-export const inputKardexSchema = yup
+export const kardexFeedstockInputSchema = yup
     .object({
         material: yup.object().shape({
             id: yup.string().required('El material es requerido'),
@@ -22,5 +22,24 @@ export const inputKardexSchema = yup
         rack: yup.string().optional(),
         expirationDate1: yup.date().required('La fecha de expiración es requerida'),
         expirationDate2: yup.date().optional()
+    })
+    .required()
+
+export const kardexPackagingInputSchema = yup
+    .object({
+        material: yup.object().shape({
+            id: yup.string().required('El material es requerido'),
+            name: yup.string().required('El label es requerido')
+        }),
+        provider: yup.object().shape({
+            id: yup.string().required('El proveedor es requerido'),
+            name: yup.string().required('El label es requerido')
+        }),
+        quantity: yup.string().min(1, 'La cantidad debe ser mayor o igual a 1').typeError('La cantidad debe ser un número').required('La cantidad es requerida'),
+        charge: yup.string().typeError('El cargo debe ser un número').required('El cargo es requerido'),
+        document: yup.string().optional(),
+        batch: yup.string().required('El lote es requerido'),
+        location: yup.string().optional(),
+        rack: yup.string().optional()
     })
     .required()

@@ -98,28 +98,9 @@ export const columns = ({ handleActive, filters, isPending }: params): GridColDe
       field: 'categories',
       headerName: 'Categorias',
       width: 150,
-      renderCell: () => {
-        const categories = [
-          {
-            id: 1,
-            name: 'Fruta'
-          },
-          {
-            id: 2,
-            name: 'Verdura'
-          },
-          {
-            id: 3,
-            name: 'Carnes'
-          },
-          {
-            id: 4,
-            name: 'Lacteos'
-          }
-        ]
-
-        const visible = categories.slice(0, 1)
-        const remaining = categories.slice(1)
+      renderCell: params => {
+        const visible = params.row.categories.slice(0, 1)
+        const remaining = params.row.categories.slice(1)
 
         return (
           <div className='flex gap-2 justify-center items-center' style={{ height: '100%' }}>

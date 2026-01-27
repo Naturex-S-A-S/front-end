@@ -9,17 +9,23 @@ import CustomButton from '@/@core/components/mui/Button'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 import { mockUnitWeight } from '@/utils/mocks'
 import usePatchPackaging from '@/hooks/packaging/usePatchPackaging'
+import useGetCategory from '@/hooks/packaging/useGetCategory'
+import useGetProviders from '@/hooks/provider/useGetProviders'
 
 interface Props {
   packaging: IPackaging
 }
 
 const Detail: React.FC<Props> = ({ packaging }) => {
+  const { categories } = useGetCategory()
+  const { providers } = useGetProviders()
   const { mutate, isPending } = usePatchPackaging()
 
   const methods = useForm({
     defaultValues: {
       name: packaging.name,
+      categories: packaging.categories,
+      providers: packaging.providers,
       color: packaging.color,
       measureUnit: {
         label: 'Gramo',
@@ -39,10 +45,10 @@ const Detail: React.FC<Props> = ({ packaging }) => {
     control
   } = methods
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (values: any) => {
     const req = {
-      name: data.name,
-      color: data.color
+      name: values.name,
+      color: values.color
     }
 
     mutate({
@@ -59,7 +65,6 @@ const Detail: React.FC<Props> = ({ packaging }) => {
             <Grid item xs={12} md={6} lg={3}>
               <CustomTextField
                 {...register('name')}
-                autoFocus
                 fullWidth
                 label='Nombre'
                 placeholder='Ingrese el nombre'
@@ -68,9 +73,46 @@ const Detail: React.FC<Props> = ({ packaging }) => {
               />
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
+              <Controller
+                name='categories'
+                control={control}
+                render={({ field: { value, onChange } }: any) => (
+                  <CustomAutocomplete
+                    value={value}
+                    multiple
+                    options={categories}
+                    onChange={(e, value: any) => {
+                      onChange(value)
+                    }}
+                    renderInput={params => (
+                      <CustomTextField {...params} label='Categorias' placeholder='Seleccione una categoria' />
+                    )}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}>
+              <Controller
+                name='providers'
+                control={control}
+                render={({ field: { value, onChange } }: any) => (
+                  <CustomAutocomplete
+                    value={value}
+                    multiple
+                    options={providers}
+                    onChange={(e, value: any) => {
+                      onChange(value)
+                    }}
+                    renderInput={params => (
+                      <CustomTextField {...params} label='Proveedores' placeholder='Seleccione un proveedor' />
+                    )}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}>
               <CustomTextField
                 {...register('color')}
-                autoFocus
                 fullWidth
                 label='Color'
                 placeholder='Ingrese el color'
@@ -82,7 +124,6 @@ const Detail: React.FC<Props> = ({ packaging }) => {
               <CustomTextField
                 {...register('minimumStandard')}
                 disabled
-                autoFocus
                 fullWidth
                 type='number'
                 label='Stock mínimo'
@@ -115,7 +156,6 @@ const Detail: React.FC<Props> = ({ packaging }) => {
               <CustomTextField
                 {...register('quantity')}
                 disabled
-                autoFocus
                 fullWidth
                 type='number'
                 label='Cantidad'
@@ -126,7 +166,6 @@ const Detail: React.FC<Props> = ({ packaging }) => {
               <CustomTextField
                 {...register('charge')}
                 disabled
-                autoFocus
                 fullWidth
                 type='number'
                 label='Valor unitario'
@@ -134,15 +173,7 @@ const Detail: React.FC<Props> = ({ packaging }) => {
               />
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
-              <CustomTextField
-                {...register('total')}
-                disabled
-                autoFocus
-                fullWidth
-                type='number'
-                label='Total'
-                placeholder=''
-              />
+              <CustomTextField {...register('total')} disabled fullWidth type='number' label='Total' placeholder='' />
             </Grid>
 
             <Grid item xs={12} className='flex justify-center'>

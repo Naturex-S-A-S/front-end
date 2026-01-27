@@ -1,9 +1,11 @@
 import { Grid } from '@mui/material'
 
-import { useFormContext } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 
 import CustomButton from '@/@core/components/mui/Button'
 import CustomTextField from '@/@core/components/mui/TextField'
+import useGetCategory from '@/hooks/packaging/useGetCategory'
+import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 
 type Props = {
   isPending: boolean
@@ -11,9 +13,12 @@ type Props = {
 }
 
 const Form: React.FC<Props> = ({ isPending }) => {
+  const { categories } = useGetCategory()
+
   const {
     register,
-    formState: { errors }
+    formState: { errors },
+    control
   }: any = useFormContext()
 
   return (
@@ -27,6 +32,25 @@ const Form: React.FC<Props> = ({ isPending }) => {
           placeholder='Ingrese el nombre'
           error={!!errors.name}
           helperText={errors.name?.message}
+        />
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <Controller
+          name='category'
+          control={control}
+          render={({ field: { value, onChange } }: any) => (
+            <CustomAutocomplete
+              value={value}
+              multiple
+              options={categories}
+              onChange={(e, value: any) => {
+                onChange(value)
+              }}
+              renderInput={params => (
+                <CustomTextField {...params} label='Categoria' placeholder='Seleccione una categoria' />
+              )}
+            />
+          )}
         />
       </Grid>
       <Grid item xs={12} md={6}>
