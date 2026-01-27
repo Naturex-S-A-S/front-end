@@ -189,7 +189,6 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
             />
             <CustomTextField
               {...register('document')}
-              autoFocus
               fullWidth
               label='Documento de identidad'
               placeholder='Ingrese su documento de identidad'
@@ -200,7 +199,6 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
             <TextFieldPassword register={register} errors={errors} name='password' label='Contraseña' />
 
             {/*<CustomTextField
-              autoFocus
               fullWidth
               label='Correo electrónico'
               placeholder='Ingrese su correo electrónico'
