@@ -32,7 +32,7 @@ const Tabs = () => {
         value: '2',
         label: 'Entradas',
         icon: 'tabler-plus',
-        allow: ability.can('create', 'Materia prima', 'Entradas')
+        allow: ability.can('create', 'Materia prima', 'Control de entradas')
       },
       {
         value: '3',
