@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material'
 
-import { useFormContext } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 
 import CustomTextField from '@/@core/components/mui/TextField'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
@@ -19,8 +19,8 @@ const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
 
   const {
     register,
-    formState: { errors, defaultValues },
-    setValue
+    formState: { errors },
+    control
   }: any = useFormContext()
 
   return (
@@ -28,25 +28,25 @@ const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
       <Grid item xs={12}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={4}>
-            <CustomAutocomplete
-              {...register('dniType')}
-              disabled={isEdit}
-              defaultValue={isEdit ? defaultValues.dniType : null}
-              options={mockDocumentTypes}
-              onChange={(e, value: any) => {
-                if (!value) return
-
-                setValue('dniType', {
-                  value: value.value
-                })
-              }}
-              renderInput={params => (
-                <CustomTextField
-                  {...params}
-                  label='Tipo de documento'
-                  placeholder='Seleccione un tipo de documento'
-                  error={!!errors.dniType}
-                  helperText={errors.dniType?.value?.message}
+            <Controller
+              name='dniType'
+              control={control}
+              render={({ field: { value, onChange } }: any) => (
+                <CustomAutocomplete
+                  value={value}
+                  options={mockDocumentTypes || []}
+                  onChange={(e, value: any) => {
+                    onChange(value)
+                  }}
+                  renderInput={params => (
+                    <CustomTextField
+                      {...params}
+                      label='Tipo de documento'
+                      placeholder='Seleccione un tipo de documento'
+                      error={!!errors.dniType}
+                      helperText={errors.dniType?.message}
+                    />
+                  )}
                 />
               )}
             />
@@ -122,24 +122,25 @@ const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
         />
       </Grid>
       <Grid item xs={12} md={4}>
-        <CustomAutocomplete
-          {...register('roleId')}
-          options={roles?.map(role => ({ label: role.name, value: role.id })) ?? []}
-          defaultValue={isEdit ? defaultValues.roleId : null}
-          onChange={(e, value: any) => {
-            if (!value) return
-
-            setValue('roleId', {
-              value: value.value
-            })
-          }}
-          renderInput={params => (
-            <CustomTextField
-              {...params}
-              label='Rol'
-              placeholder='Seleccione un rol'
-              error={!!errors.roleId}
-              helperText={errors.roleId?.value?.message}
+        <Controller
+          name='roleId'
+          control={control}
+          render={({ field: { value, onChange } }: any) => (
+            <CustomAutocomplete
+              value={value}
+              options={roles?.map(role => ({ label: role.name, value: role.id })) || []}
+              onChange={(e, value: any) => {
+                onChange(value)
+              }}
+              renderInput={params => (
+                <CustomTextField
+                  {...params}
+                  label='Rol'
+                  placeholder='Seleccione un rol'
+                  error={!!errors.roleId}
+                  helperText={errors.roleId?.value?.message}
+                />
+              )}
             />
           )}
         />
