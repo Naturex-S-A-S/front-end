@@ -1,10 +1,9 @@
 import type { UpdatePasswordPayload, UpdateProfilePayload } from "@/types/pages/profile"
 import { API } from "../instances"
+import { ApiServer } from "../server"
 
-export const getProfile = async () => {
-    const response = await API().get("/profile/me")
-
-    return response.data
+export const getProfileServer = async (): Promise<any> => {
+    return ApiServer('profile/me')
 }
 
 export const putProfile = async (data: UpdateProfilePayload) => {

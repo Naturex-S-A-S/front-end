@@ -1,13 +1,9 @@
-import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { withAuth } from "next-auth/middleware";
 
 export default withAuth(
-    function middleware(req: NextRequest) {
-        // Debugging info
-        console.log("Middleware hit:", req.nextUrl.pathname);
-
+    function middleware() {
         return NextResponse.next();
     },
     {
@@ -20,15 +16,11 @@ export default withAuth(
                     const currentTime = Math.floor(Date.now() / 1000);
 
                     if (token.tokenExpires < currentTime) {
-                        console.log("Token expired. Current time:", currentTime, "Token exp:", token.exp);
-
                         return false;
                     }
 
                     return !!token;
                 } catch (err) {
-                    console.error("Middleware authorized error:", err);
-
                     return false;
                 }
             },

@@ -4,7 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 import { authentication } from "@/api/user";
 
-const handler = NextAuth({
+const authOptions = {
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -68,7 +68,7 @@ const handler = NextAuth({
             return token;
         },
 
-        async session({ session, token }) {
+        async session({ session, token }: any) {
             // Send properties to the client
 
             session.access_token = token.access_token;
@@ -85,9 +85,11 @@ const handler = NextAuth({
         signIn: "/login",
     },
 
-    session: {
+    /*session: {
         strategy: "jwt",
-    },
-});
+    },*/
+};
 
-export { handler as GET, handler as POST };
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST, authOptions };

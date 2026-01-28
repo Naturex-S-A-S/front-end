@@ -7,14 +7,9 @@ import type { ChildrenType } from '@core/types'
 
 // Style Imports
 import '@/app/globals.css'
-
-// Generated Icon CSS Imports
 import '@assets/iconify-icons/generated-icons.css'
-import SessionProvider from '@/components/provider/SessionProvider'
-import { AbilityProvider } from '@/components/provider/AbilityProvider'
 
 import { Toaster } from 'react-hot-toast'
-import ReactQueryProvider from '@/components/provider/ReactQuery'
 
 import 'react-datepicker/dist/react-datepicker.css'
 
@@ -31,14 +26,8 @@ const RootLayout = ({ children }: ChildrenType) => {
   return (
     <html id='__next' lang='en' dir={direction}>
       <body className='flex is-full min-bs-full flex-auto flex-col'>
-        <SessionProvider>
-          <AbilityProvider>
-            <ReactQueryProvider>
-              {children}
-              <Toaster position='top-right' />
-            </ReactQueryProvider>
-          </AbilityProvider>
-        </SessionProvider>
+        {children}
+        <Toaster position='top-right' />
       </body>
     </html>
   )

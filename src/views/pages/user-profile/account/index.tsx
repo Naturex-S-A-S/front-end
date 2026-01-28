@@ -12,13 +12,13 @@ import toast from 'react-hot-toast'
 
 import CustomTextField from '@/@core/components/mui/TextField'
 import CustomCard from '@/@core/components/mui/Card'
-import type { UpdateProfilePayload } from '@/types/pages/profile'
+import type { ProfileData } from '@/types/pages/profile'
 import { putProfile } from '@/api/user/profile'
 import CustomButton from '@/@core/components/mui/Button'
 import { updateProfileSchema } from '@/utils/schemas/profile'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 
-const Account = ({ data }: { data: UpdateProfilePayload }) => {
+const Account = ({ data }: { data: ProfileData }) => {
   const queryClient = useQueryClient()
 
   const {

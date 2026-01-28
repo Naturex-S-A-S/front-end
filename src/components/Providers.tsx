@@ -6,6 +6,10 @@ import { VerticalNavProvider } from '@menu/contexts/verticalNavContext'
 import { SettingsProvider } from '@core/contexts/settingsContext'
 import ThemeProvider from '@components/theme'
 
+import SessionProvider from '@/components/provider/SessionProvider'
+import { AbilityProvider } from '@/components/provider/AbilityProvider'
+import ReactQueryProvider from '@/components/provider/ReactQuery'
+
 // Util Imports
 import { getMode, getSettingsFromCookie, getSystemMode } from '@core/utils/serverHelpers'
 
@@ -23,13 +27,19 @@ const Providers = (props: Props) => {
   const systemMode = getSystemMode()
 
   return (
-    <VerticalNavProvider>
-      <SettingsProvider settingsCookie={settingsCookie} mode={mode}>
-        <ThemeProvider direction={direction} systemMode={systemMode}>
-          {children}
-        </ThemeProvider>
-      </SettingsProvider>
-    </VerticalNavProvider>
+    <SessionProvider>
+      <AbilityProvider>
+        <ReactQueryProvider>
+          <VerticalNavProvider>
+            <SettingsProvider settingsCookie={settingsCookie} mode={mode}>
+              <ThemeProvider direction={direction} systemMode={systemMode}>
+                {children}
+              </ThemeProvider>
+            </SettingsProvider>
+          </VerticalNavProvider>
+        </ReactQueryProvider>
+      </AbilityProvider>
+    </SessionProvider>
   )
 }
 

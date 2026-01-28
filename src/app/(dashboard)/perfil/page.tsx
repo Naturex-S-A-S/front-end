@@ -1,3 +1,4 @@
+import { getProfileServer } from '@/api/user/profile'
 import UserProfile from '@views/pages/user-profile'
 
 export const metadata = {
@@ -6,7 +7,9 @@ export const metadata = {
 }
 
 const ProfilePage = async () => {
-  return <UserProfile />
+  const profile = await getProfileServer()
+
+  return <UserProfile profile={profile} />
 }
 
 export default ProfilePage

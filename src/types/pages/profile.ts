@@ -6,7 +6,10 @@ export type ProfileData = {
     email: string;
     address: string;
     phone: string;
-    role: string;
+    role: {
+        id: number;
+        name: string;
+    };
     modules: Module[];
 }
 
