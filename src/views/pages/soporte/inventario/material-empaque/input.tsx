@@ -13,6 +13,7 @@ import { kardexPackagingInputSchema } from '@/utils/schemas/inventory/input'
 import useGetProviders from '@/hooks/provider/useGetProviders'
 import useKardexInput from '@/hooks/packaging/kardex/useKardexInput'
 import useGetPackaging from '@/hooks/packaging/useGetPackaging'
+import { ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
 
 const Input = () => {
   const { mutateAsync, isPending } = useKardexInput()
@@ -20,7 +21,8 @@ const Input = () => {
   const { packaging } = useGetPackaging()
   const ability = useAbility()
 
-  const canReadEntradas = ability.can('create', 'Material de empaque', 'Control de entradas')
+  const canReadEntradas = ability.can('create', ABILITY_SUBJECT.PACKAGING, ABILITY_FIELDS.ENTRADAS)
+  const canReadListado = ability.can('read', ABILITY_SUBJECT.PACKAGING, ABILITY_FIELDS.LISTADO)
 
   const methods = useForm({
     defaultValues: {
@@ -81,8 +83,8 @@ const Input = () => {
                     renderInput={params => (
                       <CustomTextField
                         {...params}
-                        label='Material'
-                        placeholder='Seleccione un material'
+                        label='Material de empaque'
+                        placeholder='Seleccione un material de empaque'
                         error={!!errors.material?.id}
                         helperText={errors.material?.id?.message}
                       />
@@ -182,6 +184,10 @@ const Input = () => {
             </Grid>
 
             <Grid item xs={12} className='flex justify-center'>
+              {!canReadListado && (
+                <div className='mt-4 text-red-500'>No tienes permisos para ver el listado de material de empaque.</div>
+              )}
+
               {canReadEntradas ? (
                 <div className='mt-4'>
                   {canReadEntradas && (

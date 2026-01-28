@@ -12,6 +12,7 @@ import { mockUnitWeight } from '@/utils/mocks'
 import CustomButton from '@/@core/components/mui/Button'
 import { useAbility } from '@/hooks/casl/useAbility'
 import useKardexOutput from '@/hooks/feedstock/kardex/useKardexOutput'
+import { ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
 
 const Output = () => {
   const { mutateAsync, isPending } = useKardexOutput()
@@ -19,8 +20,8 @@ const Output = () => {
 
   const ability = useAbility()
 
-  // const canReadEntradas = ability.can('create', 'Materia prima', 'Entradas')
-  const canReadSalidas = ability.can('create', 'Materia prima', 'Control de salidas')
+  const canReadSalidas = ability.can('create', ABILITY_SUBJECT.FEEDSTOCK, ABILITY_FIELDS.SALIDAS)
+  const canReadListado = ability.can('read', ABILITY_SUBJECT.FEEDSTOCK, ABILITY_FIELDS.LISTADO)
 
   const methods = useForm({
     defaultValues: {
@@ -72,8 +73,8 @@ const Output = () => {
                   renderInput={params => (
                     <CustomTextField
                       {...params}
-                      label='Material'
-                      placeholder='Seleccione un material'
+                      label='Materia prima'
+                      placeholder='Seleccione una materia prima'
                       error={!!errors.material?.id}
                       helperText={errors.material?.id?.message}
                     />
@@ -128,7 +129,11 @@ const Output = () => {
             />
           </Grid>
 
-          <Grid item xs={12} className='flex justify-center'>
+          <Grid item xs={12} className='flex flex-col justify-center text-center'>
+            {!canReadListado && (
+              <div className='mt-4 text-red-500'>No tienes permisos para ver el listado de materia prima.</div>
+            )}
+
             {canReadSalidas ? (
               <div className='mt-4'>
                 {canReadSalidas && (

@@ -17,6 +17,7 @@ import { kardexFeedstockInputSchema } from '@/utils/schemas/inventory/input'
 import useFeedstock from '@/hooks/feedstock/useFeedstock'
 import useGetProviders from '@/hooks/provider/useGetProviders'
 import useKardexInput from '@/hooks/feedstock/kardex/useKardexInput'
+import { ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
 
 const Input = () => {
   const { mutateAsync, isPending } = useKardexInput()
@@ -24,7 +25,8 @@ const Input = () => {
   const { feedstock } = useFeedstock()
   const ability = useAbility()
 
-  const canReadEntradas = ability.can('create', 'Materia prima', 'Control de entradas')
+  const canReadEntradas = ability.can('create', ABILITY_SUBJECT.FEEDSTOCK, ABILITY_FIELDS.ENTRADAS)
+  const canReadListado = ability.can('read', ABILITY_SUBJECT.FEEDSTOCK, ABILITY_FIELDS.LISTADO)
 
   const methods = useForm({
     defaultValues: {
@@ -91,8 +93,8 @@ const Input = () => {
                     renderInput={params => (
                       <CustomTextField
                         {...params}
-                        label='Material'
-                        placeholder='Seleccione un material'
+                        label='Materia prima'
+                        placeholder='Seleccione una materia prima'
                         error={!!errors.material?.id}
                         helperText={errors.material?.id?.message}
                       />
@@ -236,7 +238,11 @@ const Input = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={6} lg={12} className='flex justify-center'>
+            <Grid item xs={12} md={6} lg={12} className='flex flex-col justify-center text-center'>
+              {!canReadListado && (
+                <div className='mt-4 text-red-500'>No tienes permisos para ver el listado de materia prima.</div>
+              )}
+
               {canReadEntradas ? (
                 <div className='mt-4'>
                   {canReadEntradas && (

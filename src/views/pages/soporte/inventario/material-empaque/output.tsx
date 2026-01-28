@@ -11,6 +11,7 @@ import CustomButton from '@/@core/components/mui/Button'
 import { useAbility } from '@/hooks/casl/useAbility'
 import useKardexOutput from '@/hooks/packaging/kardex/useKardexOutput'
 import useGetPackaging from '@/hooks/packaging/useGetPackaging'
+import { ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
 
 const Output = () => {
   const { mutateAsync, isPending } = useKardexOutput()
@@ -18,7 +19,8 @@ const Output = () => {
 
   const ability = useAbility()
 
-  const canReadSalidas = ability.can('create', 'Material de empaque', 'Control de salidas')
+  const canReadSalidas = ability.can('create', ABILITY_SUBJECT.PACKAGING, ABILITY_FIELDS.SALIDAS)
+  const canReadListado = ability.can('read', ABILITY_SUBJECT.PACKAGING, ABILITY_FIELDS.LISTADO)
 
   const methods = useForm({
     defaultValues: {
@@ -68,8 +70,8 @@ const Output = () => {
                   renderInput={params => (
                     <CustomTextField
                       {...params}
-                      label='Material'
-                      placeholder='Seleccione un material'
+                      label='Material de empaque'
+                      placeholder='Seleccione un material de empaque'
                       error={!!errors.material?.id}
                       helperText={errors.material?.id?.message}
                     />
@@ -100,6 +102,10 @@ const Output = () => {
           </Grid>
 
           <Grid item xs={12} className='flex justify-center'>
+            {!canReadListado && (
+              <div className='mt-4 text-red-500'>No tienes permisos para ver el listado de material de empaque.</div>
+            )}
+
             {canReadSalidas ? (
               <div className='mt-4'>
                 {canReadSalidas && (
@@ -113,7 +119,9 @@ const Output = () => {
                 )}
               </div>
             ) : (
-              <div className='mt-4 text-red-500'>No tienes permisos para registrar movimientos de materia prima.</div>
+              <div className='mt-4 text-red-500'>
+                No tienes permisos para registrar movimientos de material de empaque.
+              </div>
             )}
           </Grid>
         </Grid>

@@ -13,7 +13,7 @@ export const outputKardexSchema = yup
             value: yup.string().required('La unidad es requerida'),
             label: yup.string().required('El label es requerido')
         }).required('La unidad es requerida'),
-        batch: yup.string().required('El lote es requerido'),
+        batch: yup.string().optional(),
     })
     .required()
 
@@ -25,5 +25,5 @@ export const kardexPackagingOutputSchema = yup.object({
         })
         .required('El material es requerido'),
     quantity: yup.string().min(1, 'La cantidad debe ser mayor o igual a 1').typeError('La cantidad debe ser un número').required('La cantidad es requerida'),
-    batch: yup.string().required('El lote es requerido'),
+    batch: yup.string().optional(),
 })

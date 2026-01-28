@@ -1,6 +1,6 @@
 'use client'
 import type { SyntheticEvent } from 'react'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
@@ -53,21 +53,19 @@ const Tabs = () => {
     setActiveTab(value)
   }
 
-  useEffect(() => {
-    if (activeTab !== '1') return
+  const allowedTabs = useMemo(() => tabs.filter(t => t.allow), [tabs])
 
-    const firstAllowedTab = tabs.find(tab => tab.allow)
+  const validActive = useMemo(() => {
+    if (allowedTabs.some(t => t.value === activeTab)) return activeTab
 
-    if (firstAllowedTab) {
-      setActiveTab(firstAllowedTab.value)
-    }
-  }, [tabs, activeTab])
+    return allowedTabs[0]?.value ?? ''
+  }, [allowedTabs, activeTab])
 
   return (
     <>
       <Create />
       <CustomCard title=''>
-        <TabContext value={activeTab}>
+        <TabContext value={validActive}>
           <CustomTabList onChange={handleChange} variant='standard' centered pill='true' sx={{ width: '100%' }}>
             {tabs.map(tab => {
               if (!tab.allow) return null

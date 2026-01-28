@@ -1,6 +1,6 @@
 'use client'
 import type { SyntheticEvent } from 'react'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
@@ -13,22 +13,14 @@ import Create from './create'
 import List from './list'
 import Input from './input'
 import Output from './output'
-
-const ABILITY_SUBJECT = 'Material de empaque'
-
-const ABILITY_FIELDS = {
-  LISTADO: 'Listado',
-  ENTRADAS: 'Control de entradas',
-  SALIDAS: 'Control de salidas',
-  MOVIMIENTOS: 'Historial de movimientos'
-}
+import { ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
 
 const Tabs = () => {
   const [activeTab, setActiveTab] = useState('1')
 
   const ability = useAbility()
 
-  const canCreate = ability.can('create', ABILITY_SUBJECT, ABILITY_FIELDS.LISTADO)
+  const canCreate = ability.can('create', ABILITY_SUBJECT.PACKAGING, ABILITY_FIELDS.LISTADO)
 
   const tabs = useMemo(() => {
     return [
@@ -36,19 +28,19 @@ const Tabs = () => {
         value: '1',
         label: ABILITY_FIELDS.LISTADO,
         icon: 'tabler-list',
-        allow: ability.can('read', ABILITY_SUBJECT, ABILITY_FIELDS.LISTADO)
+        allow: ability.can('read', ABILITY_SUBJECT.PACKAGING, ABILITY_FIELDS.LISTADO)
       },
       {
         value: '2',
         label: 'Entradas',
         icon: 'tabler-plus',
-        allow: ability.can('create', ABILITY_SUBJECT, ABILITY_FIELDS.ENTRADAS)
+        allow: ability.can('create', ABILITY_SUBJECT.PACKAGING, ABILITY_FIELDS.ENTRADAS)
       },
       {
         value: '3',
         label: 'Salidas',
         icon: 'tabler-minus',
-        allow: ability.can('create', ABILITY_SUBJECT, ABILITY_FIELDS.SALIDAS)
+        allow: ability.can('create', ABILITY_SUBJECT.PACKAGING, ABILITY_FIELDS.SALIDAS)
       },
       {
         value: '4',
@@ -63,21 +55,19 @@ const Tabs = () => {
     setActiveTab(value)
   }
 
-  useEffect(() => {
-    if (activeTab !== '1') return
+  const allowedTabs = useMemo(() => tabs.filter(t => t.allow), [tabs])
 
-    const firstAllowedTab = tabs.find(tab => tab.allow)
+  const validActive = useMemo(() => {
+    if (allowedTabs.some(t => t.value === activeTab)) return activeTab
 
-    if (firstAllowedTab) {
-      setActiveTab(firstAllowedTab.value)
-    }
-  }, [tabs, activeTab])
+    return allowedTabs[0]?.value ?? ''
+  }, [allowedTabs, activeTab])
 
   return (
     <>
       {canCreate && <Create />}
       <CustomCard title=''>
-        <TabContext value={activeTab}>
+        <TabContext value={validActive}>
           <CustomTabList onChange={handleChange} variant='standard' centered pill='true' sx={{ width: '100%' }}>
             {tabs.map(tab => {
               if (!tab.allow) return null
