@@ -15,7 +15,7 @@ import classnames from 'classnames'
 import toast from 'react-hot-toast'
 
 // Type Imports
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
 import { signIn } from 'next-auth/react'
 
@@ -86,7 +86,7 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
     handleSubmit,
     formState: { errors },
     register,
-    setValue
+    control
   } = useForm({
     defaultValues: {
       documentType: {
@@ -95,7 +95,6 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
       document: undefined,
       password: undefined
     },
-    mode: 'onBlur',
     resolver: yupResolver(loginSchema)
   })
 
@@ -167,26 +166,29 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
             <Typography>Por favor, inicia sesión en tu cuenta</Typography>
           </div>
           <form noValidate autoComplete='off' onSubmit={handleSubmit(handleOnSubmit)} className='flex flex-col gap-5'>
-            <CustomAutocomplete
-              {...register('documentType')}
-              options={mockDocumentTypes}
-              onChange={(e, value) => {
-                if (!value) return
-
-                setValue('documentType', {
-                  value: value.value
-                })
-              }}
-              renderInput={params => (
-                <CustomTextField
-                  {...params}
-                  label='Tipo de documento'
-                  placeholder='Seleccione un tipo de documento'
-                  error={!!errors.documentType}
-                  helperText={errors.documentType?.value?.message}
+            <Controller
+              name='documentType'
+              control={control}
+              render={({ field: { value, onChange } }: any) => (
+                <CustomAutocomplete
+                  value={value}
+                  options={mockDocumentTypes || []}
+                  onChange={(e, value: any) => {
+                    onChange(value)
+                  }}
+                  renderInput={params => (
+                    <CustomTextField
+                      {...params}
+                      label='Tipo de documento'
+                      placeholder='Seleccione un tipo de documento'
+                      error={!!errors.documentType}
+                      helperText={errors.documentType?.value?.message}
+                    />
+                  )}
                 />
               )}
             />
+
             <CustomTextField
               {...register('document')}
               fullWidth
