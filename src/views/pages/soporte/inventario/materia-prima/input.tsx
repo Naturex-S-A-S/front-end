@@ -24,7 +24,7 @@ const Input = () => {
   const { feedstock } = useFeedstock()
   const ability = useAbility()
 
-  const canReadEntradas = ability.can('create', 'Materia prima', 'Entradas')
+  const canReadEntradas = ability.can('create', 'Materia prima', 'Control de entradas')
 
   const methods = useForm({
     defaultValues: {
