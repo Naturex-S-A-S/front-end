@@ -9,23 +9,21 @@ import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 import { mockUnitWeight } from '@/utils/mocks'
 import usePatchFeedstock from '@/hooks/feedstock/usePatchFeedstock'
 import type { IFeedstock } from '@/hooks/feedstock/useGetFeedstockById'
+import Categories from '../../../../../../@core/components/inventory/categories'
+import Providers from '../../../../../../@core/components/inventory/providers'
 import useGetCategory from '@/hooks/feedstock/useGetCategory'
-import useGetProviders from '@/hooks/provider/useGetProviders'
 
 interface Props {
   feedstock: IFeedstock
 }
 
 const Detail: React.FC<Props> = ({ feedstock }) => {
-  const { categories } = useGetCategory()
-  const { providers } = useGetProviders()
   const { mutate, isPending } = usePatchFeedstock()
+  const { categories } = useGetCategory()
 
   const methods = useForm({
     defaultValues: {
       name: feedstock.name,
-      categories: feedstock.categories,
-      providers: feedstock.providers,
       allergen: feedstock.allergen,
       measureUnit: {
         label: 'Gramo',
@@ -61,144 +59,129 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
     })
   }
 
+  const updateCategories = (newCategories: any) => {
+    mutate({
+      id: feedstock.id,
+      data: {
+        category: newCategories
+      }
+    })
+  }
+
   return (
-    <CustomCard title='Información'>
-      <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={6} lg={3}>
-              <CustomTextField
-                {...register('name')}
-                autoFocus
-                fullWidth
-                label='Nombre'
-                placeholder='Ingrese el nombre'
-                error={!!errors.name}
-                helperText={errors.name?.message}
-              />
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <Controller
-                name='categories'
-                control={control}
-                render={({ field: { value, onChange } }: any) => (
-                  <CustomAutocomplete
-                    value={value}
-                    multiple
-                    options={categories}
-                    onChange={(e, value: any) => {
-                      onChange(value)
-                    }}
-                    renderInput={params => (
-                      <CustomTextField {...params} label='Categorias' placeholder='Seleccione una categoria' />
-                    )}
+    <Grid container spacing={2}>
+      <Grid item xs={12} sm={8}>
+        <CustomCard title='Información'>
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Grid container spacing={4}>
+                <Grid item xs={12} md={6} lg={3}>
+                  <CustomTextField
+                    {...register('name')}
+                    fullWidth
+                    label='Nombre'
+                    placeholder='Ingrese el nombre'
+                    error={!!errors.name}
+                    helperText={errors.name?.message}
                   />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <Controller
-                name='providers'
-                control={control}
-                render={({ field: { value, onChange } }: any) => (
-                  <CustomAutocomplete
-                    value={value}
-                    multiple
-                    options={providers}
-                    onChange={(e, value: any) => {
-                      onChange(value)
-                    }}
-                    renderInput={params => (
-                      <CustomTextField {...params} label='Proveedores' placeholder='Seleccione un proveedor' />
-                    )}
+                </Grid>
+                <Grid item xs={12} md={6} lg={3}>
+                  <CustomTextField
+                    {...register('minimumStandard')}
+                    disabled
+                    fullWidth
+                    type='number'
+                    label='Stock mínimo'
+                    placeholder=''
                   />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <CustomTextField
-                {...register('minimumStandard')}
-                disabled
-                autoFocus
-                fullWidth
-                type='number'
-                label='Stock mínimo'
-                placeholder=''
-              />
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <Controller
-                name='measureUnit'
-                control={control}
-                render={({ field: { value, onChange } }: any) => (
-                  <CustomAutocomplete
-                    value={value}
-                    options={mockUnitWeight}
-                    onChange={(e, value: any) => {
-                      onChange(value)
-                    }}
-                    renderInput={params => (
-                      <CustomTextField
-                        {...params}
-                        label='Unidad de medida'
-                        placeholder='Seleccione una unidad de medida'
+                </Grid>
+                <Grid item xs={12} md={6} lg={3}>
+                  <Controller
+                    name='measureUnit'
+                    control={control}
+                    render={({ field: { value, onChange } }: any) => (
+                      <CustomAutocomplete
+                        value={value}
+                        options={mockUnitWeight}
+                        onChange={(e, value: any) => {
+                          onChange(value)
+                        }}
+                        renderInput={params => (
+                          <CustomTextField
+                            {...params}
+                            label='Unidad de medida'
+                            placeholder='Seleccione una unidad de medida'
+                          />
+                        )}
                       />
                     )}
                   />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <CustomTextField
-                {...register('quantity')}
-                disabled
-                autoFocus
-                fullWidth
-                type='number'
-                label='Cantidad'
-                placeholder=''
-              />
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <CustomTextField
-                {...register('charge')}
-                disabled
-                autoFocus
-                fullWidth
-                type='number'
-                label='Valor unitario'
-                placeholder=''
-              />
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <CustomTextField
-                {...register('total')}
-                disabled
-                autoFocus
-                fullWidth
-                type='number'
-                label='Total'
-                placeholder=''
-              />
-            </Grid>
+                </Grid>
+                <Grid item xs={12} md={6} lg={3}>
+                  <CustomTextField
+                    {...register('quantity')}
+                    disabled
+                    fullWidth
+                    type='number'
+                    label='Cantidad'
+                    placeholder=''
+                  />
+                </Grid>
+                <Grid item xs={12} md={6} lg={3}>
+                  <CustomTextField
+                    {...register('charge')}
+                    disabled
+                    fullWidth
+                    type='number'
+                    label='Valor unitario'
+                    placeholder=''
+                  />
+                </Grid>
+                <Grid item xs={12} md={6} lg={3}>
+                  <CustomTextField
+                    {...register('total')}
+                    disabled
+                    fullWidth
+                    type='number'
+                    label='Total'
+                    placeholder=''
+                  />
+                </Grid>
 
-            <Grid item xs={12} md={12}>
-              <Controller
-                name='allergen'
-                control={control}
-                render={({ field: { value } }: any) => (
-                  <FormControlLabel control={<Checkbox {...register('allergen')} checked={value} />} label='Alérgeno' />
-                )}
-              />
-            </Grid>
+                <Grid item xs={12} md={12}>
+                  <Controller
+                    name='allergen'
+                    control={control}
+                    render={({ field: { value } }: any) => (
+                      <FormControlLabel
+                        control={<Checkbox {...register('allergen')} checked={value} />}
+                        label='Alérgeno'
+                      />
+                    )}
+                  />
+                </Grid>
 
-            <Grid item xs={12} className='flex justify-center'>
-              <CustomButton text='Actualizar' type='submit' isLoading={isPending} />
-            </Grid>
+                <Grid item xs={12} className='flex justify-center'>
+                  <CustomButton text='Actualizar' type='submit' isLoading={isPending} />
+                </Grid>
+              </Grid>
+            </form>
+          </FormProvider>
+        </CustomCard>
+      </Grid>
+
+      <Grid item xs={12} md={4}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Categories data={feedstock.categories} list={categories} update={updateCategories} isPending={isPending} />
           </Grid>
-        </form>
-      </FormProvider>
-    </CustomCard>
+
+          <Grid item xs={12}>
+            <Providers data={feedstock.providers} />
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
   )
 }
 

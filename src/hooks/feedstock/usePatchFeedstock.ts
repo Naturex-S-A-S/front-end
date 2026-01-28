@@ -15,6 +15,9 @@ const usePatchFeedstock = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['getFeedstock'] });
             toast.success('Materia prima actualizado con éxito');
+        },
+        onError: (error: any) => {
+            toast.error(error?.response?.data?.message || 'Error al actualizar la materia prima');
         }
     })
 

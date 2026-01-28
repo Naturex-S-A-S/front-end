@@ -15,6 +15,9 @@ const usePatchPackaging = () => {
             queryClient.invalidateQueries({ queryKey: ['getPackaging'] });
             queryClient.invalidateQueries({ queryKey: ['getPackagingById'] });
             toast.success('Material de empaque actualizado con éxito');
+        },
+        onError: (error: any) => {
+            toast.error(error?.response?.data?.message || 'Error al actualizar el material de empaque');
         }
     })
 
