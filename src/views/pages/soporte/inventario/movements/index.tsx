@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 
@@ -24,9 +24,15 @@ const defaultFilters = {
 
 const Movements: React.FC<IProps> = ({ materialType }) => {
   const [filters, setFilters] = useState({
-    ...defaultFilters,
-    materialType
+    ...defaultFilters
   })
+
+  useEffect(() => {
+    setFilters(prev => ({
+      ...prev,
+      materialType
+    }))
+  }, [materialType])
 
   const { data, isLoading } = useQuery({
     queryKey: ['getKardexMovements', filters],
@@ -34,7 +40,10 @@ const Movements: React.FC<IProps> = ({ materialType }) => {
   })
 
   const onApplyFilters = (filters: any) => {
-    setFilters(filters)
+    setFilters({
+      ...filters,
+      materialType
+    })
   }
 
   const handleEdit = (id: string) => {

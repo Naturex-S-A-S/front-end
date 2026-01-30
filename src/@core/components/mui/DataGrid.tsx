@@ -90,7 +90,7 @@ const CustomDataGrid: React.FC<Props> = ({ columns, data, getRowClassName, isLoa
             onChange: (e: ChangeEvent<HTMLInputElement>) => handleSearch(e.target.value),
             clearSearch: () => handleSearch(''),
             data
-          }
+          } as any
         }}
       />
     </Card>

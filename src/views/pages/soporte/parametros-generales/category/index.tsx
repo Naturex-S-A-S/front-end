@@ -30,7 +30,7 @@ const Category = () => {
         <CustomDataGrid columns={columns({ handleEdit, handleDelete })} data={data} />
       </div>
       <Grid container spacing={2}>
-        {data?.map(category => (
+        {data?.map((category: any) => (
           <Grid item xs={12} sm={6} md={4} key={category.id}>
             <Paper elevation={2} className='p-4'>
               <ListItem
@@ -50,7 +50,7 @@ const Category = () => {
         <Grid item xs={12} sm={6} md={4}>
           <Paper elevation={2} className='w-full p-4'>
             <List>
-              {data?.map(category => (
+              {data?.map((category: any) => (
                 <ListItem
                   key={category.id}
                   secondaryAction={

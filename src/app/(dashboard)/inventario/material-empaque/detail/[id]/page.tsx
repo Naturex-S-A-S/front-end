@@ -41,7 +41,7 @@ const Page: React.FC<Props> = ({ params }) => {
         handleActive={handleActive}
         canUpdate={canUpdate}
         isPending={isPending}
-        quantity={packaging.quantityG}
+        quantity={packaging.quantityTotal}
       />
       <Detail packaging={packaging} />
     </Box>
