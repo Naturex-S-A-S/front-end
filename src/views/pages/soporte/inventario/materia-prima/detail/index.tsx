@@ -1,4 +1,6 @@
-import { Controller, FormProvider, useForm } from 'react-hook-form'
+import { useEffect } from 'react'
+
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 
 import { Checkbox, FormControlLabel, Grid } from '@mui/material'
 
@@ -44,7 +46,8 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
     handleSubmit,
     register,
     formState: { errors },
-    control
+    control,
+    setValue
   } = methods
 
   const onSubmit = (values: any) => {
@@ -67,6 +70,39 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
       }
     })
   }
+
+  const measureUnitWatch = useWatch({
+    control,
+    name: 'measureUnit'
+  })
+
+  useEffect(() => {
+    if (measureUnitWatch) {
+      switch (measureUnitWatch.value) {
+        case 'g':
+          setValue('quantity', feedstock.quantityG)
+          setValue('charge', feedstock.chargeG)
+          break
+        case 'kg':
+          setValue('quantity', feedstock.quantityK)
+          setValue('charge', feedstock.chargeKg)
+          break
+        case 't':
+          setValue('quantity', feedstock.quantityT)
+          setValue('charge', feedstock.chargeT)
+          break
+      }
+    }
+  }, [
+    feedstock.chargeG,
+    feedstock.chargeKg,
+    feedstock.chargeT,
+    feedstock.quantityG,
+    feedstock.quantityK,
+    feedstock.quantityT,
+    measureUnitWatch,
+    setValue
+  ])
 
   return (
     <Grid container spacing={2}>

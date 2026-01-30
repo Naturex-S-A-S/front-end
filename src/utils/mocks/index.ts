@@ -18,11 +18,11 @@ export const mockProviders = [{
 }]
 
 export const mockUnitWeight = [{
-    label: 'Kilogramos',
-    value: 'kg'
-}, {
     label: 'Gramos',
     value: 'g'
+}, {
+    label: 'Kilogramos',
+    value: 'kg'
 }, {
     label: 'Toneladas',
     value: 't'
