@@ -1,3 +1,4 @@
 export enum MaterialType {
-    FEEDSTOCK = 'FEEDSTOCK'
+    FEEDSTOCK = 'FEEDSTOCK',
+    PACKAGING = 'PACKAGING'
 }

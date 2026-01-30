@@ -14,6 +14,8 @@ import List from './list'
 import Input from './input'
 import Output from './output'
 import { ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
+import Movements from '../movements'
+import { MaterialType } from '@/utils/enum'
 
 const Tabs = () => {
   const [activeTab, setActiveTab] = useState('1')
@@ -46,7 +48,7 @@ const Tabs = () => {
         value: '4',
         label: 'Movimientos',
         icon: 'tabler-history',
-        allow: ability.can('read', ABILITY_SUBJECT, ABILITY_FIELDS.MOVIMIENTOS)
+        allow: ability.can('read', ABILITY_SUBJECT.PACKAGING, ABILITY_FIELDS.MOVIMIENTOS)
       }
     ]
   }, [ability])
@@ -95,7 +97,9 @@ const Tabs = () => {
           <TabPanel value='3'>
             <Output />
           </TabPanel>
-          <TabPanel value='4'>movimientos</TabPanel>
+          <TabPanel value='4'>
+            <Movements materialType={MaterialType.PACKAGING} />
+          </TabPanel>
         </TabContext>
       </CustomCard>
     </>

@@ -10,6 +10,10 @@ import Filter from './filter'
 import { getKardexMovements } from '@/api/kardex'
 import { MaterialType } from '@/utils/enum'
 
+interface IProps {
+  materialType: MaterialType
+}
+
 const defaultFilters = {
   kardexType: null,
   providerId: null,
@@ -18,8 +22,11 @@ const defaultFilters = {
   measureUnit: { label: 'Gramo', value: 'g' }
 }
 
-const Movements = () => {
-  const [filters, setFilters] = useState(defaultFilters)
+const Movements: React.FC<IProps> = ({ materialType }) => {
+  const [filters, setFilters] = useState({
+    ...defaultFilters,
+    materialType
+  })
 
   const { data, isLoading } = useQuery({
     queryKey: ['getKardexMovements', filters],
