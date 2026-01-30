@@ -41,3 +41,9 @@ export const getCategories = async () => {
 
     return response.data
 }
+
+export const getPackagingList = async () => {
+    const response = await API().get("/packaging/list")
+
+    return response.data
+}

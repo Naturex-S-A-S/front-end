@@ -14,19 +14,18 @@ import { mockUnitWeight } from '@/utils/mocks'
 import DatePickerWrapper from '@/@core/styles/libs/react-datepicker'
 import CustomDatePicker from '@/@core/components/react-datepicker'
 import { kardexFeedstockInputSchema } from '@/utils/schemas/inventory/input'
-import useFeedstock from '@/hooks/feedstock/useFeedstock'
-import useGetProviders from '@/hooks/provider/useGetProviders'
 import useKardexInput from '@/hooks/feedstock/kardex/useKardexInput'
 import { ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
+import useGetFeedstockList from '@/hooks/feedstock/useGetFeedstockList'
+import useGetProvidersList from '@/hooks/provider/useGetProvidersList'
 
 const Input = () => {
   const { mutateAsync, isPending } = useKardexInput()
-  const { providers } = useGetProviders()
-  const { feedstock } = useFeedstock()
+  const { providersList } = useGetProvidersList()
+  const { feedstockList } = useGetFeedstockList()
   const ability = useAbility()
 
   const canReadEntradas = ability.can('create', ABILITY_SUBJECT.FEEDSTOCK, ABILITY_FIELDS.ENTRADAS)
-  const canReadListado = ability.can('read', ABILITY_SUBJECT.FEEDSTOCK, ABILITY_FIELDS.LISTADO)
 
   const methods = useForm({
     defaultValues: {
@@ -86,7 +85,7 @@ const Input = () => {
                 render={({ field: { value, onChange } }: any) => (
                   <CustomAutocomplete
                     value={value}
-                    options={feedstock || []}
+                    options={feedstockList || []}
                     onChange={(e, value: any) => {
                       onChange(value)
                     }}
@@ -111,7 +110,7 @@ const Input = () => {
                 render={({ field: { value, onChange } }: any) => (
                   <CustomAutocomplete
                     value={value}
-                    options={providers || []}
+                    options={providersList || []}
                     onChange={(e, value: any) => {
                       onChange(value)
                     }}
@@ -239,10 +238,6 @@ const Input = () => {
             </Grid>
 
             <Grid item xs={12} md={6} lg={12} className='flex flex-col justify-center text-center'>
-              {!canReadListado && (
-                <div className='mt-4 text-red-500'>No tienes permisos para ver el listado de materia prima.</div>
-              )}
-
               {canReadEntradas ? (
                 <div className='mt-4'>
                   {canReadEntradas && (

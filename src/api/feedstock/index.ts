@@ -48,3 +48,8 @@ export const getCategories = async () => {
     return response.data
 }
 
+export const getFeedstockList = async () => {
+    const response = await API().get("/feedstock/list")
+
+    return response.data
+}

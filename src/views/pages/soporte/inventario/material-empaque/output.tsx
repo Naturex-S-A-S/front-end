@@ -10,17 +10,16 @@ import { kardexPackagingOutputSchema } from '@/utils/schemas/inventory/output'
 import CustomButton from '@/@core/components/mui/Button'
 import { useAbility } from '@/hooks/casl/useAbility'
 import useKardexOutput from '@/hooks/packaging/kardex/useKardexOutput'
-import useGetPackaging from '@/hooks/packaging/useGetPackaging'
 import { ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
+import useGetPackagingList from '@/hooks/packaging/useGetPackagingList'
 
 const Output = () => {
   const { mutateAsync, isPending } = useKardexOutput()
-  const { packaging } = useGetPackaging()
+  const { packagingList } = useGetPackagingList()
 
   const ability = useAbility()
 
   const canReadSalidas = ability.can('create', ABILITY_SUBJECT.PACKAGING, ABILITY_FIELDS.SALIDAS)
-  const canReadListado = ability.can('read', ABILITY_SUBJECT.PACKAGING, ABILITY_FIELDS.LISTADO)
 
   const methods = useForm({
     defaultValues: {
@@ -63,7 +62,7 @@ const Output = () => {
               render={({ field: { value, onChange } }: any) => (
                 <CustomAutocomplete
                   value={value}
-                  options={packaging || []}
+                  options={packagingList || []}
                   onChange={(e, value: any) => {
                     onChange(value)
                   }}
@@ -102,10 +101,6 @@ const Output = () => {
           </Grid>
 
           <Grid item xs={12} className='flex justify-center'>
-            {!canReadListado && (
-              <div className='mt-4 text-red-500'>No tienes permisos para ver el listado de material de empaque.</div>
-            )}
-
             {canReadSalidas ? (
               <div className='mt-4'>
                 {canReadSalidas && (

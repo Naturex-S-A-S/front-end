@@ -29,3 +29,9 @@ export const getRoleModules = async () => {
 
     return response.data.data
 }
+
+export const updateRole = async (id: number, data: any) => {
+    const response = await API().put(`/roles/${id}/privileges`, data)
+
+    return response.data
+}

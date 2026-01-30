@@ -7,21 +7,20 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 import CustomTextField from '@/@core/components/mui/TextField'
 import { outputKardexSchema } from '@/utils/schemas/inventory/output'
-import useFeedstock from '@/hooks/feedstock/useFeedstock'
 import { mockUnitWeight } from '@/utils/mocks'
 import CustomButton from '@/@core/components/mui/Button'
 import { useAbility } from '@/hooks/casl/useAbility'
 import useKardexOutput from '@/hooks/feedstock/kardex/useKardexOutput'
 import { ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
+import useGetFeedstockList from '@/hooks/feedstock/useGetFeedstockList'
 
 const Output = () => {
   const { mutateAsync, isPending } = useKardexOutput()
-  const { feedstock } = useFeedstock()
+  const { feedstockList } = useGetFeedstockList()
 
   const ability = useAbility()
 
   const canReadSalidas = ability.can('create', ABILITY_SUBJECT.FEEDSTOCK, ABILITY_FIELDS.SALIDAS)
-  const canReadListado = ability.can('read', ABILITY_SUBJECT.FEEDSTOCK, ABILITY_FIELDS.LISTADO)
 
   const methods = useForm({
     defaultValues: {
@@ -66,7 +65,7 @@ const Output = () => {
               render={({ field: { value, onChange } }: any) => (
                 <CustomAutocomplete
                   value={value}
-                  options={feedstock || []}
+                  options={feedstockList || []}
                   onChange={(e, value: any) => {
                     onChange(value)
                   }}
@@ -130,10 +129,6 @@ const Output = () => {
           </Grid>
 
           <Grid item xs={12} className='flex flex-col justify-center text-center'>
-            {!canReadListado && (
-              <div className='mt-4 text-red-500'>No tienes permisos para ver el listado de materia prima.</div>
-            )}
-
             {canReadSalidas ? (
               <div className='mt-4'>
                 {canReadSalidas && (

@@ -6,13 +6,9 @@ export interface IPackaging {
     id: number;
     name: string;
     minimumStandard: number;
-    charge: number;
-    quantityG: number;
-    quantityK: number;
-    quantityT: number;
-    chargeG: number;
-    chargeKg: number;
-    chargeT: number;
+    chargeTotal: number;
+    quantityTotal: number;
+    chargeU: number;
     active: boolean;
     dateCreated: string;
     color: string;

@@ -10,15 +10,15 @@ import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 import CustomTextField from '@/@core/components/mui/TextField'
 import DatePickerWrapper from '@/@core/styles/libs/react-datepicker'
 import { kardexPackagingInputSchema } from '@/utils/schemas/inventory/input'
-import useGetProviders from '@/hooks/provider/useGetProviders'
 import useKardexInput from '@/hooks/packaging/kardex/useKardexInput'
-import useGetPackaging from '@/hooks/packaging/useGetPackaging'
 import { ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
+import useGetPackagingList from '@/hooks/packaging/useGetPackagingList'
+import useGetProvidersList from '@/hooks/provider/useGetProvidersList'
 
 const Input = () => {
   const { mutateAsync, isPending } = useKardexInput()
-  const { providers } = useGetProviders()
-  const { packaging } = useGetPackaging()
+  const { packagingList } = useGetPackagingList()
+  const { providersList } = useGetProvidersList()
   const ability = useAbility()
 
   const canReadEntradas = ability.can('create', ABILITY_SUBJECT.PACKAGING, ABILITY_FIELDS.ENTRADAS)
@@ -76,7 +76,7 @@ const Input = () => {
                 render={({ field: { value, onChange } }: any) => (
                   <CustomAutocomplete
                     value={value}
-                    options={packaging || []}
+                    options={packagingList || []}
                     onChange={(e, value: any) => {
                       onChange(value)
                     }}
@@ -101,7 +101,7 @@ const Input = () => {
                 render={({ field: { value, onChange } }: any) => (
                   <CustomAutocomplete
                     value={value}
-                    options={providers || []}
+                    options={providersList || []}
                     onChange={(e, value: any) => {
                       onChange(value)
                     }}

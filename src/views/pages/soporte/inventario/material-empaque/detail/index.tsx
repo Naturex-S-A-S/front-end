@@ -1,4 +1,4 @@
-import { Controller, FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 
 import { Grid } from '@mui/material'
 
@@ -6,8 +6,6 @@ import CustomCard from '@/@core/components/mui/Card'
 import type { IPackaging } from '@/hooks/packaging/useGetPackagingById'
 import CustomTextField from '@/@core/components/mui/TextField'
 import CustomButton from '@/@core/components/mui/Button'
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import { mockUnitWeight } from '@/utils/mocks'
 import usePatchPackaging from '@/hooks/packaging/usePatchPackaging'
 import Categories from '../../../../../../@core/components/inventory/categories'
 import Providers from '../../../../../../@core/components/inventory/providers'
@@ -25,13 +23,9 @@ const Detail: React.FC<Props> = ({ packaging }) => {
     defaultValues: {
       name: packaging.name,
       color: packaging.color,
-      measureUnit: {
-        label: 'Gramo',
-        value: 'g'
-      },
-      quantity: packaging.quantityG,
-      charge: packaging.chargeG,
-      total: packaging.charge,
+      quantity: packaging.quantityTotal,
+      charge: packaging.chargeU,
+      total: packaging.chargeTotal,
       minimumStandard: packaging.minimumStandard
     }
   })
@@ -39,8 +33,7 @@ const Detail: React.FC<Props> = ({ packaging }) => {
   const {
     handleSubmit,
     register,
-    formState: { errors },
-    control
+    formState: { errors }
   } = methods
 
   const onSubmit = (values: any) => {
@@ -99,28 +92,6 @@ const Detail: React.FC<Props> = ({ packaging }) => {
                     type='number'
                     label='Stock mínimo'
                     placeholder=''
-                  />
-                </Grid>
-                <Grid item xs={12} md={6} lg={3}>
-                  <Controller
-                    name='measureUnit'
-                    control={control}
-                    render={({ field: { value, onChange } }: any) => (
-                      <CustomAutocomplete
-                        value={value}
-                        options={mockUnitWeight}
-                        onChange={(e, value: any) => {
-                          onChange(value)
-                        }}
-                        renderInput={params => (
-                          <CustomTextField
-                            {...params}
-                            label='Unidad de medida'
-                            placeholder='Seleccione una unidad de medida'
-                          />
-                        )}
-                      />
-                    )}
                   />
                 </Grid>
                 <Grid item xs={12} md={6} lg={3}>

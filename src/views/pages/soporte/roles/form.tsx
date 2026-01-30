@@ -57,7 +57,7 @@ const Form: React.FC<Props> = ({
           module.children.forEach((item: any) => {
             const actionsObj = item.actions ?? {
               read: false,
-              write: false,
+              create: false,
               update: false,
               delete: false
             }
@@ -70,7 +70,7 @@ const Form: React.FC<Props> = ({
           // El módulo mismo actúa como item (no tiene children)
           const actionsObj = module.actions ?? {
             read: false,
-            write: false,
+            create: false,
             update: false,
             delete: false
           }
@@ -139,7 +139,7 @@ const Form: React.FC<Props> = ({
             },
             privileges: {
               read: false,
-              write: false,
+              create: false,
               update: false,
               delete: false
             }
@@ -320,7 +320,7 @@ const Form: React.FC<Props> = ({
                               {(() => {
                                 const actionsObj = module.actions ?? {
                                   read: false,
-                                  write: false,
+                                  create: false,
                                   update: false,
                                   delete: false
                                 }
@@ -375,7 +375,7 @@ const Form: React.FC<Props> = ({
                               {module.children?.map((item: any) => {
                                 const actionsObj = item.actions ?? {
                                   read: false,
-                                  write: false,
+                                  create: false,
                                   update: false,
                                   delete: false
                                 }

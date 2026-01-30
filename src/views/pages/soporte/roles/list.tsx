@@ -29,7 +29,7 @@ import Form from './form'
 import Loader from '@/@core/components/react-spinners'
 import type { Role } from '@/types/pages/role'
 
-import { deleteRole, getRoleById } from '@/api/role'
+import { deleteRole, getRoleById, updateRole } from '@/api/role'
 import { useSettings } from '@/@core/hooks/useSettings'
 
 const List = () => {
@@ -61,8 +61,21 @@ const List = () => {
     }
   })
 
-  const mutate = (data: any) => {
-    console.log('Update role', data)
+  const { mutate: updateRoleMutation } = useMutation({
+    mutationFn: (data: any) => updateRole(data.id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['getRoles'] })
+      queryClient.invalidateQueries({ queryKey: ['getRoleById', dataEdit?.id] })
+      toast.success('Rol actualizado con éxito')
+      toogleDialog()
+    },
+    onError: () => {
+      toast.error('Error al actualizar el rol')
+    }
+  })
+
+  const handleEdit = (data: any) => {
+    updateRoleMutation({ id: dataEdit?.id, ...data })
   }
 
   const { mutate: deleteRolMutation } = useMutation({
@@ -105,7 +118,7 @@ const List = () => {
       <Form
         open={open}
         toogleDialog={toogleDialog}
-        mutate={mutate}
+        mutate={handleEdit}
         defaultValues={dataEdit}
         isLoadingQuery={isLoadingRole}
         roleModules={role?.privileges || []}
