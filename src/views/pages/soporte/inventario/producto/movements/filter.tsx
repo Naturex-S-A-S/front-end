@@ -8,7 +8,7 @@ import CustomCard from '@/@core/components/mui/Card'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 import CustomTextField from '@/@core/components/mui/TextField'
 import CustomButton from '@/@core/components/mui/Button'
-import useGetProviders from '@/hooks/provider/useGetProviders'
+import useGetProductList from '@/hooks/product/useGetProductList'
 
 type Filters = {
   kardexType?: {
@@ -16,14 +16,12 @@ type Filters = {
     value?: string
   } | null
   batch?: string
-  providerId?: {
+  product?: {
     name?: string
     id?: string
   } | null
-  measureUnit: {
-    label?: string
-    value?: string
-  } | null
+  classification?: string
+  orderId?: string
 }
 
 type FormValues = Filters
@@ -35,7 +33,7 @@ type Props = {
 }
 
 const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
-  const { providers } = useGetProviders()
+  const { productList } = useGetProductList()
 
   const { control, handleSubmit, reset, register } = useForm<FormValues>({
     defaultValues
@@ -56,26 +54,26 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
       <form onSubmit={handleSubmit(submit)}>
         <Grid container spacing={2} alignItems={'end'}>
           <Grid item xs={12} md={6} lg={3}>
-            <CustomTextField {...register('batch')} label='Lote' placeholder='Ingrese el lote' />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={3}>
             <Controller
-              name='providerId'
+              name='product'
               control={control}
               render={({ field: { value, onChange } }: any) => (
                 <CustomAutocomplete
                   value={value}
-                  options={providers}
+                  options={productList}
                   onChange={(e, value: any) => {
                     onChange(value)
                   }}
                   renderInput={params => (
-                    <CustomTextField {...params} label='Proveedor' placeholder='Seleccione un proveedor' />
+                    <CustomTextField {...params} label='Producto' placeholder='Seleccione un producto' />
                   )}
                 />
               )}
             />
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={3}>
+            <CustomTextField {...register('batch')} label='Lote' placeholder='Ingrese el lote' />
           </Grid>
 
           <Grid item xs={12} md={6} lg={2}>
@@ -98,28 +96,17 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
             />
           </Grid>
 
-          {/*<Grid item xs={12} md={6} lg={2}>
-            <Controller
-              name='measureUnit'
-              control={control}
-              render={({ field: { value, onChange } }: any) => (
-                <CustomAutocomplete
-                  value={value}
-                  options={mockUnitWeight}
-                  onChange={(e, value: any) => {
-                    onChange(value)
-                  }}
-                  renderInput={params => (
-                    <CustomTextField
-                      {...params}
-                      label='Unidad de medida'
-                      placeholder='Seleccione una unidad de medida'
-                    />
-                  )}
-                />
-              )}
+          <Grid item xs={12} md={6} lg={3}>
+            <CustomTextField
+              {...register('classification')}
+              label='Clasificacion'
+              placeholder='Ingrese la clasificacion'
             />
-          </Grid>*/}
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={3}>
+            <CustomTextField {...register('orderId')} label='Orden' placeholder='Ingrese la orden' />
+          </Grid>
 
           <Grid item xs={12} md={6} lg={2} height={'min-content'} display={'flex'} gap={1} justifyContent={'center'}>
             <CustomButton type='submit' variant='contained' size='small'>

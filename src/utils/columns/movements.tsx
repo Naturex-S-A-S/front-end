@@ -1,41 +1,19 @@
 'use client'
 
-import { Icon } from '@iconify/react'
-import { Chip, IconButton, Tooltip } from '@mui/material'
+import { Chip, Tooltip } from '@mui/material'
 import type { GridColDef } from '@mui/x-data-grid'
 
 import moment from 'moment'
 
-import { useAbility } from '@/hooks/casl/useAbility'
-
 type params = {
-  handleEdit: (user: any) => void
-  handleDelete: (userId: any) => void
+  handleEdit?: (user: any) => void
+  handleDelete?: (userId: any) => void
   filters: any
 }
 
-/*
-Columnas
-{
-        "id": 21,
-        "type": "input",
-        "classification": "",
-        "batch": "05062025", 
-        "charge": 2000000.0, // Valor total
-        "quantityG": 20000.0,
-        "amountKg": 20.0,
-        "dateCreated": "2026-01-06T14:58:23.74262",
-        "expirationDate1": "2025-05-06",
-        "materialName": "Test",
-        "providerName": "Vendedor001"
-}
-*/
-
-export const columns = ({ handleEdit, handleDelete, filters }: params): GridColDef[] => {
-  const ability = useAbility()
-
+export const columns = ({ filters }: params): GridColDef[] => {
   return [
-    {
+    /*{
       field: 'actions',
       headerName: 'Acciones',
       width: 100,
@@ -59,7 +37,7 @@ export const columns = ({ handleEdit, handleDelete, filters }: params): GridColD
           </>
         )
       }
-    },
+    },*/
     { field: 'batch', headerName: 'Lote', width: 100 },
     { field: 'materialName', headerName: 'Material', width: 150 },
     {

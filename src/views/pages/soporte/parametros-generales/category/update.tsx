@@ -1,26 +1,27 @@
+import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-
+import { FormProvider, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 
-import { FormProvider, useForm } from 'react-hook-form'
-
-import { yupResolver } from '@hookform/resolvers/yup'
-
-import { useAbility } from '@/hooks/casl/useAbility'
-import CustomCard from '@/@core/components/mui/Card'
-import { postCategory } from '@/api/general-parameters'
-import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
 import { categorySchema } from '@/utils/schemas/generalParameters'
+import CustomDialog from '@/@core/components/mui/Dialog'
 import Form from './form'
+import { putCategory } from '@/api/general-parameters'
+import type { ICategory } from '@/types/pages/generalParameters'
 
-const Create = () => {
+interface Props {
+  category: ICategory
+  open: boolean
+  toogleDialog: () => void
+}
+
+const Update = ({ open, toogleDialog, category }: Props) => {
   const queryClient = useQueryClient()
-  const ability = useAbility()
 
   const methods = useForm({
     defaultValues: {
-      name: undefined,
-      type: undefined
+      name: category.name,
+      type: { label: category.typeName, id: category.idType.toString() }
     },
     resolver: yupResolver(categorySchema)
   })
@@ -28,36 +29,35 @@ const Create = () => {
   const { handleSubmit, reset } = methods
 
   const { mutate, isPending } = useMutation({
-    mutationFn: postCategory,
+    mutationFn: putCategory,
     onSuccess: () => {
-      toast.success('Categoria creada con éxito')
+      toast.success('Categoria actualizada con éxito')
       queryClient.invalidateQueries({ queryKey: ['getCategories'] })
+      toogleDialog()
       reset()
     },
     onError: () => {
-      toast.error('Error al crear la categoria')
+      toast.error('Error al actualizar la categoria')
     }
   })
 
-  if (!ability.can(ABILITY_ACTIONS.CREATE as any, ABILITY_SUBJECT.GENERAL_PARAMETERS, ABILITY_FIELDS.CATEGORIES))
-    return null
-
   const onSubmit = (data: any) => {
     mutate({
+      id: category.id,
       name: data.name,
       idType: data.type.id
     })
   }
 
   return (
-    <CustomCard title='Crear Categoria'>
+    <CustomDialog open={open} toogleDialog={toogleDialog} title='Editar categoria'>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Form isPending={isPending} />
         </form>
       </FormProvider>
-    </CustomCard>
+    </CustomDialog>
   )
 }
 
-export default Create
+export default Update

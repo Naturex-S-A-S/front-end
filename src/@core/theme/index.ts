@@ -1,5 +1,5 @@
 // Next Imports
-// import { Public_Sans } from 'next/font/google'
+import { Public_Sans } from 'next/font/google'
 
 // MUI Imports
 import type { Theme } from '@mui/material/styles'
@@ -15,9 +15,14 @@ import spacing from './spacing'
 import shadows from './shadows'
 import customShadows from './customShadows'
 
-// import typography from './typography'
+import typography from './typography'
 
-// const public_sans = Public_Sans({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700', '800', '900'] })
+const public_sans = Public_Sans({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  display: 'swap',
+  variable: '--font-public-sans'
+})
 
 const theme = (settings: Settings, mode: SystemMode, direction: Theme['direction']): Theme => {
   return {
@@ -36,8 +41,7 @@ const theme = (settings: Settings, mode: SystemMode, direction: Theme['direction
       }
     },
     shadows: shadows(mode),
-
-    // typography: typography(public_sans.style.fontFamily),
+    typography: typography(public_sans.style.fontFamily),
     customShadows: customShadows(mode),
     mainColorChannels: {
       light: '47 43 61',

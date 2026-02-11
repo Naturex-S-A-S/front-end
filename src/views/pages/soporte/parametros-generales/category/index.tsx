@@ -1,35 +1,49 @@
+import { useState } from 'react'
+
 import { useQuery } from '@tanstack/react-query'
-
-import { Grid, List, ListItem, ListItemText, Paper } from '@mui/material'
-
-import { Icon } from '@iconify/react'
 
 import CustomDataGrid from '@/@core/components/mui/DataGrid'
 import Create from './create'
 import { columns } from '@/utils/columns/category'
 import { getCategories } from '@/api/general-parameters'
+import type { ICategory } from '@/types/pages/generalParameters'
+import Update from './update'
 
 const Category = () => {
-  const { data } = useQuery({
+  const [updateData, setUpdateData] = useState<{ open: boolean; category: ICategory | undefined }>({
+    open: false,
+    category: undefined
+  })
+
+  const { data } = useQuery<ICategory[]>({
     queryKey: ['getCategories'],
     queryFn: getCategories
   })
 
-  const handleEdit = (category: any) => {
-    alert('edit ' + category.name)
+  const toogleDialog = () => {
+    setUpdateData({
+      open: false,
+      category: undefined
+    })
   }
 
-  const handleDelete = (category: any) => {
-    alert('delete ' + category.name)
+  const handleEdit = (category: ICategory) => {
+    setUpdateData({
+      category,
+      open: true
+    })
   }
 
   return (
     <div className='flex flex-col items-center gap-2'>
+      {updateData.category && (
+        <Update open={updateData.open} toogleDialog={toogleDialog} category={updateData.category} />
+      )}
       <Create />
       <div className='w-full'>
-        <CustomDataGrid columns={columns({ handleEdit, handleDelete })} data={data} />
+        <CustomDataGrid columns={columns({ handleEdit })} data={data} />
       </div>
-      <Grid container spacing={2}>
+      {/*<Grid container spacing={2}>
         {data?.map((category: any) => (
           <Grid item xs={12} sm={6} md={4} key={category.id}>
             <Paper elevation={2} className='p-4'>
@@ -67,7 +81,7 @@ const Category = () => {
             </List>
           </Paper>
         </Grid>
-      </Grid>
+      </Grid>*/}
     </div>
   )
 }

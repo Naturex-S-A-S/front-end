@@ -39,7 +39,7 @@ const CustomDatePicker: React.FC<Props> = ({ control, errors, minDate, label, na
                 label={label}
                 error={Boolean(errors)}
                 aria-describedby='validation-basic-expirationDate1'
-                {...(errors && { helperText: 'This field is required' })}
+                {...{ helperText: Boolean(errors) ? errors?.message || 'This field is required' : '' }}
               />
             }
           />

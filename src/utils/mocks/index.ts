@@ -44,3 +44,12 @@ export const mockDocumentTypes = [{
     value: 'Permiso Especial de Permanencia',
     label: 'Permiso Especial de Permanencia'
 }]
+
+export const mockCategoryTypes = [{
+    label: 'Materia prima',
+    id: 1
+},
+{
+    label: 'Material de empaque',
+    id: 2
+}]

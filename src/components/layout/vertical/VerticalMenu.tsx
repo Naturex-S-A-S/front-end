@@ -65,7 +65,7 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
       const name = child.name || key
 
       const resolvedPath = Object.hasOwn(child, 'children')
-        ? child.children?.find(c => c.name === 'Listado')?.path
+        ? child.children?.find(c => c.name === 'Listado')?.path || child.children?.[0]?.path
         : child.path
           ? child.path.startsWith('/')
             ? child.path

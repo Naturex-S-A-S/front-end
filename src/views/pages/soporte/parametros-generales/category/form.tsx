@@ -1,25 +1,64 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import CustomDialog from '@/@core/components/mui/Dialog'
+import { Grid } from '@mui/material'
 
-interface FormProps {
-  open: boolean
-  toogleDialog: () => void
-  defaultValues?: any
-  mutate: (data: any) => Promise<void>
-  isLoadingMutate: boolean
-  roleModules: any
+import { Controller, useFormContext } from 'react-hook-form'
+
+import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
+import CustomButton from '@/@core/components/mui/Button'
+import CustomTextField from '@/@core/components/mui/TextField'
+import { mockCategoryTypes } from '@/utils/mocks'
+
+interface Props {
+  isPending: boolean
 }
 
-const Form = ({ open, toogleDialog, defaultValues, mutate, isLoadingMutate, roleModules }: FormProps) => {
+const Form = ({ isPending }: Props) => {
+  const {
+    control,
+    formState: { errors },
+    register
+  }: any = useFormContext()
+
   return (
-    <CustomDialog
-      open={open}
-      toogleDialog={toogleDialog}
-      title={defaultValues ? 'Editar Rol' : 'Crear Categoria'}
-      maxWidth='lg'
-    >
-      <h1>Formulario de Categoria</h1>
-    </CustomDialog>
+    <Grid container spacing={4}>
+      <Grid item xs={12} md={6}>
+        <CustomTextField
+          {...register('name')}
+          autoFocus
+          fullWidth
+          label='Nombre'
+          placeholder='Ingrese el nombre'
+          error={!!errors.name}
+          helperText={errors.name?.message as string}
+        />
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <Controller
+          name='type'
+          control={control}
+          render={({ field: { value, onChange } }: any) => (
+            <CustomAutocomplete
+              value={value}
+              options={mockCategoryTypes}
+              onChange={(e, value: any) => {
+                onChange(value)
+              }}
+              renderInput={params => (
+                <CustomTextField
+                  {...params}
+                  label='Tipo'
+                  placeholder='Seleccione un tipo'
+                  error={!!errors.type}
+                  helperText={errors.type?.id?.message as string}
+                />
+              )}
+            />
+          )}
+        />
+      </Grid>
+      <Grid item xs={12} className='flex justify-center'>
+        <CustomButton text='Guardar' type='submit' isLoading={isPending} />
+      </Grid>
+    </Grid>
   )
 }
 

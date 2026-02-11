@@ -6,10 +6,12 @@ import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabPanel from '@mui/lab/TabPanel'
 
+import { Grid } from '@mui/material'
+
 import CustomTabList from '@/@core/components/mui/TabList'
-import CustomCard from '@/@core/components/mui/Card'
 import { useAbility } from '@/hooks/casl/useAbility'
 import Category from './category'
+import { ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
 
 const Tabs = () => {
   const [activeTab, setActiveTab] = useState('1')
@@ -20,9 +22,9 @@ const Tabs = () => {
     return [
       {
         value: '1',
-        label: 'Categorias',
-        icon: 'tabler:category',
-        allow: ability.can('read', 'Materia prima', 'Listado')
+        label: ABILITY_FIELDS.CATEGORIES,
+        icon: 'tabler-list',
+        allow: ability.can('read', ABILITY_SUBJECT.GENERAL_PARAMETERS, ABILITY_FIELDS.CATEGORIES)
       }
     ]
   }, [ability])
@@ -42,16 +44,18 @@ const Tabs = () => {
   }, [tabs, activeTab])
 
   return (
-    <>
-      <CustomCard title=''>
-        <TabContext value={activeTab}>
-          <CustomTabList onChange={handleChange} variant='standard' centered pill='true' sx={{ width: '100%' }}>
+    <Grid container spacing={2}>
+      <TabContext value={activeTab}>
+        <Grid item xs={12} md={4}>
+          <CustomTabList orientation='vertical' onChange={handleChange} className='is-full' pill='true'>
             {tabs.map(tab => {
               if (!tab.allow) return null
 
               return (
                 <Tab
                   key={tab.value}
+                  className='flex-row justify-start !min-is-full'
+                  iconPosition='start'
                   label={
                     <div className='flex items-center gap-1.5'>
                       <i className={tab.icon} />
@@ -63,15 +67,14 @@ const Tabs = () => {
               )
             })}
           </CustomTabList>
+        </Grid>
+        <Grid item xs={12} md={8}>
           <TabPanel value='1'>
             <Category />
           </TabPanel>
-          <TabPanel value='2'>test</TabPanel>
-          <TabPanel value='3'>dd</TabPanel>
-          <TabPanel value='4'>gg</TabPanel>
-        </TabContext>
-      </CustomCard>
-    </>
+        </Grid>
+      </TabContext>
+    </Grid>
   )
 }
 

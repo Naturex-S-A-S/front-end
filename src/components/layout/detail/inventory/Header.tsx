@@ -1,5 +1,7 @@
 import { Box, Chip, Switch, Tooltip } from '@mui/material'
 
+import moment from 'moment'
+
 import Loader from '@/@core/components/react-spinners'
 
 type Props = {
@@ -34,7 +36,7 @@ const Header: React.FC<Props> = ({
           </span>
         </h1>
         {description && <p>{description}</p>}
-        {createdAt && <p className='text-textSecondary'>Fecha de creación: {createdAt}</p>}
+        {createdAt && <p className='text-textSecondary'>Fecha de creación: {moment(createdAt).format('DD/MM/YYYY')}</p>}
       </div>
       <div className='flex items-center gap-4'>
         <Chip
