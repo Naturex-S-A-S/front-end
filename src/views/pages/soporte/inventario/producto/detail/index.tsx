@@ -40,7 +40,7 @@ const Detail: React.FC<IProps> = ({ product }) => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} lg={8}>
+      <Grid item xs={12} lg={12}>
         <CustomCard title='Información'>
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -113,14 +113,6 @@ const Detail: React.FC<IProps> = ({ product }) => {
             </form>
           </FormProvider>
         </CustomCard>
-      </Grid>
-
-      <Grid item xs={12} lg={4}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6} lg={12}>
-            lista
-          </Grid>
-        </Grid>
       </Grid>
     </Grid>
   )
