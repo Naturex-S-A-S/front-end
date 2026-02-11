@@ -41,14 +41,12 @@ export const columns = ({ handleEdit, handleDelete }: params): GridColDef[] => {
       }
     },
     {
-      field: 'name',
+      field: 'fullName',
       headerName: 'Nombre completo',
       width: 200,
-      renderCell: params => {
-        return `${params.row.name} ${params.row.lastName}`
-      }
+      valueGetter: (_: any, row) => `${row.name} ${row.lastName}`
     },
-    { field: 'role', headerName: 'Rol', width: 150, renderCell: params => params.row.role.name },
+    { field: 'roleName', headerName: 'Rol', width: 150, valueGetter: (_: any, row) => row.role.name },
     { field: 'dni', headerName: 'DNI', width: 100 },
     { field: 'dniType', headerName: 'Tipo DNI', width: 100 },
     { field: 'email', headerName: 'Correo Electrónico', width: 200 },

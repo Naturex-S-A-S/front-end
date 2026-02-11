@@ -25,7 +25,7 @@ const Account = ({ data }: { data: ProfileData }) => {
     handleSubmit,
     register,
     reset,
-    formState: { defaultValues },
+    formState: { defaultValues, errors },
     control
   } = useForm({
     defaultValues: {
@@ -33,7 +33,7 @@ const Account = ({ data }: { data: ProfileData }) => {
       lastName: '',
       email: '',
       phone: '',
-      role: { value: undefined, label: '' },
+      role: null,
       address: '',
       dni: '',
       dniType: ''
@@ -47,12 +47,12 @@ const Account = ({ data }: { data: ProfileData }) => {
       name: data.name,
       lastName: data.lastName,
       email: data.email,
-      phone: data.phone,
+      phone: data?.phone,
       role: {
         value: data.role?.id,
         label: data.role?.name
       },
-      address: data.address,
+      address: data?.address,
       dni: data.dni,
       dniType: data.dniType
     })
@@ -81,13 +81,31 @@ const Account = ({ data }: { data: ProfileData }) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={4} justifyContent={'center'}>
           <Grid item xs={12} sm={6}>
-            <CustomTextField {...register('name')} name='name' label='Nombre' />
+            <CustomTextField
+              {...register('name')}
+              name='name'
+              label='Nombre'
+              error={!!errors.name}
+              helperText={errors.name?.message}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <CustomTextField {...register('lastName')} name='lastName' label='Apellido' />
+            <CustomTextField
+              {...register('lastName')}
+              name='lastName'
+              label='Apellido'
+              error={!!errors.lastName}
+              helperText={errors.lastName?.message}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <CustomTextField {...register('email')} name='email' label='Email' />
+            <CustomTextField
+              {...register('email')}
+              name='email'
+              label='Email'
+              error={!!errors.email}
+              helperText={errors.email?.message}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
             <CustomTextField {...register('phone')} name='phone' label='Teléfono' />
