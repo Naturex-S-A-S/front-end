@@ -46,6 +46,7 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
   const clear = () => {
     reset(defaultValues)
     onClear?.()
+    defaultValues && onApplyFilters && onApplyFilters(defaultValues)
   }
 
   return (

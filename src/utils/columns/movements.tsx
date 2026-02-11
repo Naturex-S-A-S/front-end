@@ -3,7 +3,7 @@
 import { Chip, Tooltip } from '@mui/material'
 import type { GridColDef } from '@mui/x-data-grid'
 
-import moment from 'moment'
+import { formatDate } from '../format'
 
 type params = {
   handleEdit?: (user: any) => void
@@ -97,7 +97,7 @@ export const columns = ({ filters }: params): GridColDef[] => {
       field: 'dateCreated',
       headerName: 'Fecha de movimiento',
       width: 150,
-      renderCell: params => moment(params.row.dateCreated).format('YYYY-MM-DD')
+      renderCell: params => formatDate(params.row.dateCreated)
     }
   ]
 }

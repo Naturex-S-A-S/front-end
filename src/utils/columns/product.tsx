@@ -42,7 +42,7 @@ export const columns = ({ handleStatus, isPending }: params): GridColDef[] => {
     { field: 'name', headerName: 'Nombre', width: 200 },
     {
       field: 'measurement',
-      headerName: `Medición`,
+      headerName: `Medida`,
       width: 100,
       renderCell: params => Number(params.row.measurement).toFixed(2)
     },

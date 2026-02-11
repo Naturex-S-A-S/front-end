@@ -1,4 +1,6 @@
 'use client'
+import { useMemo } from 'react'
+
 import { Box } from '@mui/material'
 
 import { useTheme } from '@mui/material/styles'
@@ -32,6 +34,12 @@ const Page: React.FC<Props> = ({ params }) => {
     return <NotFound mode={mode} />
   }
 
+  const quantity = useMemo(() => {
+    const productHistory = product.productHistory[0]
+
+    return productHistory?.quantityInProcess + productHistory?.quantityCompleted
+  }, [product.productHistory])
+
   return (
     <Box display='flex' flexDirection='column' gap={2}>
       <Header
@@ -42,7 +50,7 @@ const Page: React.FC<Props> = ({ params }) => {
         handleActive={handleStatus}
         canUpdate={canUpdate}
         isPending={isPending}
-        quantity={0}
+        quantity={quantity}
       />
       <Detail product={product} />
     </Box>

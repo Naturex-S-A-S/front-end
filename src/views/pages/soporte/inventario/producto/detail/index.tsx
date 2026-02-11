@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import { Grid } from '@mui/material'
 
 import { Controller, FormProvider, useForm } from 'react-hook-form'
@@ -8,6 +10,8 @@ import CustomTextField from '@/@core/components/mui/TextField'
 import type { IProduct } from '@/types/pages/product'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 import useGetProductUnit from '@/hooks/product/useGetProductUnit'
+import usePutProduct from '@/hooks/product/usePatchProduct'
+import History from './history'
 
 interface IProps {
   product: IProduct
@@ -15,27 +19,47 @@ interface IProps {
 
 const Detail: React.FC<IProps> = ({ product }) => {
   const { units } = useGetProductUnit()
-
-  console.log(units)
+  const { mutate, isPending } = usePutProduct()
 
   const methods = useForm({
     defaultValues: {
-      name: product.name,
-      measurement: product.measurement,
+      name: '',
+      measurement: '',
       unit: null,
-      minimumStandard: product.minimumStandard
-    }
+      minimumStandard: ''
+    },
+    mode: 'onChange'
   })
 
   const {
     handleSubmit,
     register,
     formState: { errors },
-    control
+    control,
+    reset
   } = methods
 
+  useEffect(() => {
+    if (!product || !units?.length) return
+
+    reset({
+      name: product.name ?? '',
+      measurement: product.measurement?.toString() ?? '',
+      unit: units.find((u: any) => u.id === product.unit) ?? null,
+      minimumStandard: product.minimumStandard?.toString() ?? ''
+    })
+  }, [product, units, reset])
+
   const onSubmit = (values: any) => {
-    console.log(values)
+    mutate({
+      id: product.id,
+      data: {
+        name: values.name,
+        measurement: Number(values.measurement),
+        unit: values.unit.id,
+        minimumStandard: Number(values.minimumStandard)
+      }
+    })
   }
 
   return (
@@ -55,30 +79,25 @@ const Detail: React.FC<IProps> = ({ product }) => {
                     helperText={errors.name?.message}
                   />
                 </Grid>
-                <Grid item xs={12} md={6} lg={3}>
+                <Grid item xs={12} md={3} lg={3}>
                   <CustomTextField
                     {...register('measurement')}
                     fullWidth
-                    label='Medición'
-                    placeholder='Ingrese la medición'
+                    label='Medida'
+                    placeholder='Ingrese la medida'
                     error={!!errors.measurement}
                     helperText={errors.measurement?.message}
                   />
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={3}>
                   <Controller
                     name='unit'
                     control={control}
                     render={({ field: { value, onChange } }: any) => (
                       <CustomAutocomplete
                         value={value}
-                        options={[
-                          {
-                            label: 'ml',
-                            value: 'ml'
-                          }
-                        ]}
+                        options={units ?? []}
                         onChange={(e, value: any) => {
                           onChange(value)
                         }}
@@ -96,7 +115,7 @@ const Detail: React.FC<IProps> = ({ product }) => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={12} md={6} lg={3}>
+                <Grid item xs={12} md={3} lg={3}>
                   <CustomTextField
                     {...register('minimumStandard')}
                     fullWidth
@@ -107,11 +126,16 @@ const Detail: React.FC<IProps> = ({ product }) => {
                 </Grid>
 
                 <Grid item xs={12} className='flex justify-center'>
-                  <CustomButton text='Actualizar' type='submit' isLoading={false} />
+                  <CustomButton text='Actualizar' type='submit' isLoading={isPending} />
                 </Grid>
               </Grid>
             </form>
           </FormProvider>
+        </CustomCard>
+      </Grid>
+      <Grid item xs={12}>
+        <CustomCard title='Historial'>
+          <History list={product.productHistory ?? []} />
         </CustomCard>
       </Grid>
     </Grid>

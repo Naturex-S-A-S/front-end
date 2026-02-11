@@ -16,6 +16,7 @@ import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/consta
 import useGetProductList from '@/hooks/product/useGetProductList'
 import CustomDatePicker from '@/@core/components/react-datepicker'
 import { kardexProductInputSchema } from '@/utils/schemas/inventory/input'
+import { formatDate } from '@/utils/format'
 
 const Input = () => {
   const { mutateAsync, isPending } = useKardexInput()
@@ -55,7 +56,7 @@ const Input = () => {
       rack: values.rack,
       location: values.location,
       quantity: Number(values.quantity),
-      expirationDate1: moment(values.expirationDate1).format('YYYY-MM-DD'),
+      expirationDate1: formatDate(values.expirationDate1),
       idOrder: values.order
     }
 

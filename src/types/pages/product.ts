@@ -27,7 +27,7 @@ export interface IUpdateProduct {
     minimumStandard: number
 }
 
-interface IProductHistory {
+export interface IProductHistory {
     id: number
     quantityInProcess: number
     quantityCompleted: number

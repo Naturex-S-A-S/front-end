@@ -48,6 +48,7 @@ const Create = () => {
     onSuccess: () => {
       toast.success('Producto creado con éxito')
       queryClient.invalidateQueries({ queryKey: ['getProducts'] })
+      queryClient.invalidateQueries({ queryKey: ['productList'] })
       reset()
       toogleDialog()
     },
@@ -59,7 +60,7 @@ const Create = () => {
   const onSubmit = (values: any) => {
     mutate({
       ...values,
-      unit: values.unit.value
+      unit: values.unit.id
     })
   }
 

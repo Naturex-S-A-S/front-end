@@ -18,6 +18,7 @@ import useKardexInput from '@/hooks/feedstock/kardex/useKardexInput'
 import { ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
 import useGetFeedstockList from '@/hooks/feedstock/useGetFeedstockList'
 import useGetProvidersList from '@/hooks/provider/useGetProvidersList'
+import { formatDate } from '@/utils/format'
 
 const Input = () => {
   const { mutateAsync, isPending } = useKardexInput()
@@ -64,8 +65,8 @@ const Input = () => {
       document: values.document,
       location: values.location,
       rack: values.rack,
-      expirationDate1: moment(values.expirationDate1).format('YYYY-MM-DD'),
-      expirationDate2: moment(values.expirationDate2).format('YYYY-MM-DD')
+      expirationDate1: formatDate(values.expirationDate1),
+      expirationDate2: formatDate(values.expirationDate2)
     }
 
     mutateAsync(req).then(() => {

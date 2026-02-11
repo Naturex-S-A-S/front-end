@@ -5,6 +5,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 import CustomButton from '@/@core/components/mui/Button'
 import CustomTextField from '@/@core/components/mui/TextField'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
+import useGetProductUnit from '@/hooks/product/useGetProductUnit'
 
 type Props = {
   isPending: boolean
@@ -12,6 +13,8 @@ type Props = {
 }
 
 const Form: React.FC<Props> = ({ isPending }) => {
+  const { units } = useGetProductUnit()
+
   const {
     register,
     formState: { errors },
@@ -47,8 +50,8 @@ const Form: React.FC<Props> = ({ isPending }) => {
           {...register('measurement')}
           autoFocus
           fullWidth
-          label='Medición'
-          placeholder='Ingrese la medición'
+          label='Medida'
+          placeholder='Ingrese la medida'
           error={!!errors.measurement}
           helperText={errors.measurement?.message}
         />
@@ -60,12 +63,7 @@ const Form: React.FC<Props> = ({ isPending }) => {
           render={({ field: { value, onChange } }: any) => (
             <CustomAutocomplete
               value={value}
-              options={[
-                {
-                  label: 'ml',
-                  value: 'ml'
-                }
-              ]}
+              options={units}
               onChange={(e, value: any) => {
                 onChange(value)
               }}
@@ -75,7 +73,7 @@ const Form: React.FC<Props> = ({ isPending }) => {
                   label='Unidad'
                   placeholder='Seleccione una unidad'
                   error={!!errors.unit}
-                  helperText={errors.unit?.value?.message}
+                  helperText={errors.unit?.id?.message}
                 />
               )}
             />
