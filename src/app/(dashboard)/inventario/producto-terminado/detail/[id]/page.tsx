@@ -26,6 +26,14 @@ const Page: React.FC<Props> = ({ params }) => {
 
   const canUpdate = ability.can(ABILITY_ACTIONS.UPDATE as any, ABILITY_SUBJECT.PRODUCT, ABILITY_FIELDS.LISTADO)
 
+  const quantity = useMemo(() => {
+    if (!Array.isArray(product?.productHistory) || product?.productHistory.length === 0) return 0
+
+    const productHistory = product.productHistory[0]
+
+    return productHistory?.quantityInProcess + productHistory?.quantityCompleted
+  }, [product?.productHistory])
+
   if (isLoading) {
     return <Loader type='page' />
   }
@@ -33,12 +41,6 @@ const Page: React.FC<Props> = ({ params }) => {
   if (!product) {
     return <NotFound mode={mode} />
   }
-
-  const quantity = useMemo(() => {
-    const productHistory = product.productHistory[0]
-
-    return productHistory?.quantityInProcess + productHistory?.quantityCompleted
-  }, [product.productHistory])
 
   return (
     <Box display='flex' flexDirection='column' gap={2}>
