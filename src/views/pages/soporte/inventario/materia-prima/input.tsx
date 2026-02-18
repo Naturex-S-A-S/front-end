@@ -164,8 +164,8 @@ const Input = () => {
               <CustomTextField
                 {...register('rack')}
                 fullWidth
-                label='Rack'
-                placeholder='Ingrese el Rack'
+                label='Estantería'
+                placeholder='Ingrese el estante'
                 error={!!errors.rack}
                 helperText={errors.rack?.message}
               />
