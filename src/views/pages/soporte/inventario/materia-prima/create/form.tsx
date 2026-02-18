@@ -45,6 +45,7 @@ const Form: React.FC<Props> = ({ isPending }) => {
             <CustomAutocomplete
               value={value}
               options={categories}
+              multiple
               onChange={(e, value: any) => {
                 onChange(value)
               }}
