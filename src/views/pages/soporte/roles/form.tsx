@@ -132,6 +132,8 @@ const Form: React.FC<Props> = ({
       (acc, id) => {
         const [, , itemId, action] = id.split('-')
 
+        if (!itemId) return acc
+
         if (!acc[itemId]) {
           acc[itemId] = {
             module: {
