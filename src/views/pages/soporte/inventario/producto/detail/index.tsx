@@ -12,6 +12,9 @@ import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 import useGetProductUnit from '@/hooks/product/useGetProductUnit'
 import usePutProduct from '@/hooks/product/usePatchProduct'
 import History from './history'
+import FormulationsList from './formulationsList'
+import { useAbility } from '@/hooks/casl/useAbility'
+import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
 
 interface IProps {
   product: IProduct
@@ -20,6 +23,13 @@ interface IProps {
 const Detail: React.FC<IProps> = ({ product }) => {
   const { units } = useGetProductUnit()
   const { mutate, isPending } = usePutProduct()
+  const ability = useAbility()
+
+  const canReadFormulation = ability.can(
+    ABILITY_ACTIONS.READ as any,
+    ABILITY_SUBJECT.PRODUCTION,
+    ABILITY_FIELDS.FORMULATION
+  )
 
   const methods = useForm({
     defaultValues: {
@@ -138,6 +148,13 @@ const Detail: React.FC<IProps> = ({ product }) => {
           <History list={product.productHistory ?? []} />
         </CustomCard>
       </Grid>
+      {canReadFormulation && (
+        <Grid item xs={12}>
+          <CustomCard title='Formulas'>
+            <FormulationsList productId={product.id} />
+          </CustomCard>
+        </Grid>
+      )}
     </Grid>
   )
 }

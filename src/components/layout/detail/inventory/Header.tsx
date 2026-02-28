@@ -9,10 +9,11 @@ type Props = {
   description?: string
   createdAt?: string
   active?: boolean
-  handleActive: (id: any, name: string, active: boolean, validate?: boolean) => void
+  handleActive?: (id: any, name: string, active: boolean, validate?: boolean) => void
   canUpdate?: boolean
   isPending?: boolean
   quantity?: number
+  version?: number
 }
 
 const Header: React.FC<Props> = ({
@@ -24,7 +25,8 @@ const Header: React.FC<Props> = ({
   createdAt,
   canUpdate,
   isPending,
-  quantity
+  quantity,
+  version
 }) => {
   return (
     <Box display={'flex'} flexDirection='row' justifyContent={'space-between'}>
@@ -38,11 +40,15 @@ const Header: React.FC<Props> = ({
         {createdAt && <p className='text-textSecondary'>Fecha de creación: {formatDate(createdAt)}</p>}
       </div>
       <div className='flex items-center gap-4'>
-        <Chip
-          label={quantity && quantity > 0 ? `${quantity} en stock` : 'Sin stock'}
-          size='medium'
-          color={quantity && quantity > 0 ? 'success' : 'error'}
-        />
+        {typeof quantity === 'number' && Number.isFinite(quantity) && (
+          <Chip
+            label={quantity && quantity > 0 ? `${quantity} en stock` : 'Sin stock'}
+            size='medium'
+            color={quantity && quantity > 0 ? 'success' : 'error'}
+          />
+        )}
+
+        {version && <Chip label={`Versión ${version}`} size='medium' color='primary' />}
 
         {active !== undefined &&
           canUpdate &&
@@ -57,7 +63,7 @@ const Header: React.FC<Props> = ({
                   <Tooltip title={active ? 'Desactivar' : 'Activar'}>
                     <Switch
                       checked={active}
-                      onChange={() => handleActive(id, name, active, false)}
+                      onChange={() => handleActive?.(id, name, active, false)}
                       color={active ? 'success' : 'error'}
                       {...(active ? { slotProps: { input: { 'aria-label': 'controlled' } } } : {})}
                     />

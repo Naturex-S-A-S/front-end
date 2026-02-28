@@ -256,10 +256,11 @@ const CustomTextField = forwardRef((props: TextFieldProps, ref) => {
     <TextFieldStyled
       size={size}
       inputRef={ref}
+      className='w-full'
+      autoFocus={false}
       {...rest}
       variant='filled'
       InputLabelProps={{ ...InputLabelProps, shrink: true }}
-      className='w-full'
     />
   )
 })

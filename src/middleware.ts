@@ -36,6 +36,6 @@ export const config = {
         // - rutas de next internals y recursos
         // - el endpoint de next-auth (si usas /api/auth)
         // - recursos estáticos en /images (para que se sirvan los avif/png/jpg)
-        '/((?!login$|api/auth|_next/static|_next/image|favicon.ico|images/).*)',
+        '/((?!login$|test$|api/auth|_next/static|_next/image|favicon.ico|images/).*)',
     ],
 };

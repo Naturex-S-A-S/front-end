@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from '@mui/material'
 
 interface Props {
-  title: string
+  title?: React.ReactNode
   children: React.ReactNode
   action?: React.ReactNode
 }
