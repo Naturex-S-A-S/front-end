@@ -19,6 +19,7 @@ import { defaultUserValues } from '@/utils/defaultValues/user'
 import { putUser } from '@/api/user'
 import Form from './form'
 import { mockDocumentTypes } from '@/utils/mocks'
+import { alertMessageErrors } from '@/utils/messages'
 
 type Props = {
   open: boolean
@@ -46,7 +47,7 @@ const Edit: React.FC<Props> = ({ open, toogleDialog, defaultValues }) => {
       toogleDialog()
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || 'Error al actualizar usuario')
+      alertMessageErrors(error?.response?.data?.message, 'Error al actualizar usuario')
     }
   })
 

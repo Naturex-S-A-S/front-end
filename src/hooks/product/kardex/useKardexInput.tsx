@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 
 import { postKardexInput } from '@/api/product'
+import { alertMessageErrors } from '@/utils/messages'
 
 const useKardexInput = () => {
   return useMutation({
@@ -10,9 +11,7 @@ const useKardexInput = () => {
       toast.success('Entrada de producto registrada con éxito')
     },
     onError: (error: any) => {
-      toast.error(
-        JSON.stringify(error?.response?.data?.message).toString() || 'Error al registrar la entrada de producto'
-      )
+      alertMessageErrors(error?.response?.data?.message, 'Error al registrar la entrada de producto')
     }
   })
 }

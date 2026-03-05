@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 
 import { patchFeedstock } from "@/api/feedstock";
+import { alertMessageErrors } from "@/utils/messages";
 
 
 const usePatchFeedstock = () => {
@@ -17,7 +18,7 @@ const usePatchFeedstock = () => {
             toast.success('Materia prima actualizado con éxito');
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || 'Error al actualizar la materia prima');
+            alertMessageErrors(error?.response?.data?.message, 'Error al actualizar la materia prima');
         }
     })
 

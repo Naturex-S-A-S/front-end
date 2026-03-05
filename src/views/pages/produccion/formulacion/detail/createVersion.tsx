@@ -15,6 +15,7 @@ import { formulationVersionSchema } from '@/utils/schemas/formulation'
 import Form from '../form'
 
 import { postFormulationVersion } from '@/api/formulation'
+import { alertMessageErrors } from '@/utils/messages'
 
 interface Props {
   formulationId: number
@@ -47,7 +48,7 @@ const CreateVersion = ({ formulationId }: Props) => {
       toogleDialog()
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || 'Error al crear una nueva versión')
+      alertMessageErrors(error?.response?.data?.message, 'Error al crear una nueva versión')
     }
   })
 

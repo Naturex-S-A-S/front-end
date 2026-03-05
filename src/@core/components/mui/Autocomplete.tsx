@@ -12,13 +12,13 @@ const CustomAutocomplete = forwardRef((props: any, ref: any) => {
 
   return (
     <Autocomplete
-      {...props}
       value={value}
       getOptionLabel={(option: any) => option?.name || option?.label || ''}
       getOptionKey={(option: any) => option?.id || option?.value || ''}
       isOptionEqualToValue={(option: any, value: any) => getKey(option) === getKey(value)}
       ref={ref}
       PaperComponent={p => <Paper {...p} />}
+      {...props}
     />
   )
 }) as typeof Autocomplete

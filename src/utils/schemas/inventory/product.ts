@@ -13,3 +13,5 @@ export const productSchema = yup
         measurement: yup.string().required('La unidad es requerida')
     })
     .required()
+
+export const updateProductSchema = productSchema.omit(['id'])

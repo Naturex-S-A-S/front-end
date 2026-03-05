@@ -18,6 +18,7 @@ import { userSchema } from '@/utils/schemas/user'
 import { defaultUserValues } from '@/utils/defaultValues/user'
 import { postUser } from '@/api/user'
 import Form from './form'
+import { alertMessageErrors } from '@/utils/messages'
 
 const Create = () => {
   const [open, setOpen] = useState(false)
@@ -44,7 +45,7 @@ const Create = () => {
       toogleDialog()
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || 'Error al crear el usuario')
+      alertMessageErrors(error?.response?.data?.message, 'Error al crear el usuario')
     }
   })
 

@@ -73,6 +73,7 @@ const CustomDataGrid: React.FC<Props> = ({ columns, data, getRowClassName, isLoa
         getRowClassName={getRowClassName}
         disableRowSelectionOnClick
         pageSizeOptions={[5, 10, 15, 20]}
+        className='px-2'
         initialState={{
           pagination: {
             paginationModel: {

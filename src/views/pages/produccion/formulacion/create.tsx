@@ -19,6 +19,7 @@ import { formulationSchema } from '@/utils/schemas/formulation'
 import { formulationDefaultValues } from '@/utils/defaultValues/formulation'
 import { postFormulation } from '@/api/formulation'
 import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
+import { alertMessageErrors } from '@/utils/messages'
 
 const Create = () => {
   const [open, setOpen] = useState(false)
@@ -51,7 +52,7 @@ const Create = () => {
       toogleDialog()
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || 'Error al crear la fórmula')
+      alertMessageErrors(error?.response?.data?.message, 'Error al crear la fórmula')
     }
   })
 

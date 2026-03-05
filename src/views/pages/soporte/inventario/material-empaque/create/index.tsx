@@ -13,6 +13,7 @@ import CustomDialog from '@/@core/components/mui/Dialog'
 import Form from './form'
 import { packagingMaterialSchema } from '@/utils/schemas/inventory/packagingMaterial'
 import { postPackaging } from '@/api/packaging'
+import { alertMessageErrors } from '@/utils/messages'
 
 const Create = () => {
   const [open, setOpen] = useState(false)
@@ -50,7 +51,7 @@ const Create = () => {
       toogleDialog()
     },
     onError: (error: any) => {
-      toast.error(JSON.stringify(error?.response?.data?.message) || 'Error al crear el material de empaque')
+      alertMessageErrors(error?.response?.data?.message, 'Error al crear el material de empaque')
     }
   })
 

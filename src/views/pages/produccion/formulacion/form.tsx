@@ -91,6 +91,7 @@ const Form: React.FC<Props> = ({ isPending, isNewVersion = false }) => {
                 value={value}
                 multiple
                 options={productList}
+                getOptionLabel={(option: any) => option?.completeName || option?.name || ''}
                 onChange={(e, value: any) => {
                   onChange(value)
                 }}

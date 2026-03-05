@@ -95,7 +95,7 @@ export const columns = ({ filters }: params): GridColDef[] => {
     },
     {
       field: 'dateCreated',
-      headerName: 'Fecha de movimiento',
+      headerName: 'Fecha de creación',
       width: 150,
       renderCell: params => formatDate(params.row.dateCreated)
     }

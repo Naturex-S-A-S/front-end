@@ -121,7 +121,7 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
         callbackUrl
       })
 
-      const redirectTo = res?.url ?? (res?.ok ? callbackUrl : null)
+      const redirectTo = res?.url
 
       if (redirectTo) {
         router.replace(redirectTo)

@@ -62,7 +62,7 @@ const Form: React.FC<Props> = ({ isPending }) => {
           autoFocus
           fullWidth
           type='number'
-          label='Stock mínimo'
+          label='Stock mínimo (g)'
           placeholder='Ingrese el stock minimo'
           error={!!errors.minimumStandard}
           helperText={errors.minimumStandard?.message}

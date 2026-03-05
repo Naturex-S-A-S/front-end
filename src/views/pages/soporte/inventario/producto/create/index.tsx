@@ -13,6 +13,7 @@ import CustomDialog from '@/@core/components/mui/Dialog'
 import Form from './form'
 import { productSchema } from '@/utils/schemas/inventory/product'
 import { postProduct } from '@/api/product'
+import { alertMessageErrors } from '@/utils/messages'
 
 const Create = () => {
   const [open, setOpen] = useState(false)
@@ -53,7 +54,7 @@ const Create = () => {
       toogleDialog()
     },
     onError: (error: any) => {
-      toast.error(JSON.stringify(error?.response?.data?.message) || 'Error al crear el producto')
+      alertMessageErrors(error?.response?.data?.message, 'Error al crear el producto')
     }
   })
 

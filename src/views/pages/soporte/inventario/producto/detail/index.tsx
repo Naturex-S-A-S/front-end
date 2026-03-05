@@ -4,6 +4,8 @@ import { Grid } from '@mui/material'
 
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 
+import { yupResolver } from '@hookform/resolvers/yup'
+
 import CustomButton from '@/@core/components/mui/Button'
 import CustomCard from '@/@core/components/mui/Card'
 import CustomTextField from '@/@core/components/mui/TextField'
@@ -15,6 +17,7 @@ import History from './history'
 import FormulationsList from './formulationsList'
 import { useAbility } from '@/hooks/casl/useAbility'
 import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
+import { updateProductSchema } from '@/utils/schemas/inventory/product'
 
 interface IProps {
   product: IProduct
@@ -33,12 +36,13 @@ const Detail: React.FC<IProps> = ({ product }) => {
 
   const methods = useForm({
     defaultValues: {
-      name: '',
-      measurement: '',
-      unit: null,
-      minimumStandard: ''
+      name: undefined,
+      measurement: undefined,
+      unit: undefined,
+      minimumStandard: undefined
     },
-    mode: 'onChange'
+    mode: 'onChange',
+    resolver: yupResolver(updateProductSchema)
   })
 
   const {
@@ -55,8 +59,8 @@ const Detail: React.FC<IProps> = ({ product }) => {
     reset({
       name: product.name ?? '',
       measurement: product.measurement?.toString() ?? '',
-      unit: units.find((u: any) => u.id === product.unit) ?? null,
-      minimumStandard: product.minimumStandard?.toString() ?? ''
+      unit: units.find((u: any) => u.id === product.unit) ?? undefined,
+      minimumStandard: product.minimumStandard ?? undefined
     })
   }, [product, units, reset])
 

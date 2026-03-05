@@ -13,6 +13,7 @@ import CustomDialog from '@/@core/components/mui/Dialog'
 import Form from './form'
 import { rawMaterialSchema } from '@/utils/schemas/inventory/rawMaterial'
 import { postFeedstock } from '@/api/feedstock'
+import { alertMessageErrors } from '@/utils/messages'
 
 const Create = () => {
   const [open, setOpen] = useState(false)
@@ -50,7 +51,7 @@ const Create = () => {
       toogleDialog()
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || 'Error al crear la materia prima')
+      alertMessageErrors(error?.response?.data?.message, 'Error al crear la materia prima')
     }
   })
 

@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 
 import { putActivateProduct, putDeactivateProduct, putProduct } from "@/api/product";
+import { alertMessageErrors } from "@/utils/messages";
 
 const usePutProduct = () => {
     const queryClient = useQueryClient();
@@ -21,7 +22,7 @@ const usePutProduct = () => {
             updateCache();
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || 'Error al actualizar el producto');
+            alertMessageErrors(error?.response?.data?.message, 'Error al actualizar el producto');
         }
     })
 

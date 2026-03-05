@@ -41,7 +41,7 @@ export const mockDocumentTypes = [{
     label: 'Pasaporte'
 },
 {
-    value: 'Permiso Especial de Permanencia',
+    value: 'permiso especial de permanencia',
     label: 'Permiso Especial de Permanencia'
 }]
 

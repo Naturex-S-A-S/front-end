@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 
 import { patchPackaging } from "@/api/packaging";
+import { alertMessageErrors } from "@/utils/messages";
 
 const usePatchPackaging = () => {
     const queryClient = useQueryClient();
@@ -17,7 +18,7 @@ const usePatchPackaging = () => {
             toast.success('Material de empaque actualizado con éxito');
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || 'Error al actualizar el material de empaque');
+            alertMessageErrors(error?.response?.data?.message, 'Error al actualizar el material de empaque');
         }
     })
 
