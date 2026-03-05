@@ -3,7 +3,8 @@ export const ABILITY_SUBJECT = {
     FEEDSTOCK: 'Materia prima',
     PRODUCT: 'Producto terminado',
     GENERAL_PARAMETERS: "Parámetros generales",
-    PRODUCTION: "Producción"
+    PRODUCTION: "Producción",
+    FINANCE_AND_ADMINISTRATION: "Finanzas y administracion"
 }
 
 export const ABILITY_FIELDS = {
@@ -12,7 +13,8 @@ export const ABILITY_FIELDS = {
     SALIDAS: 'Control de salidas',
     MOVIMIENTOS: 'Historial de movimientos',
     CATEGORIES: "Categorias",
-    FORMULATION: "Formulación"
+    FORMULATION: "Formulación",
+    SUPPLIERS: "Proveedores"
 }
 
 export const ABILITY_ACTIONS = {

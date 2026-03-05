@@ -7,11 +7,17 @@ export const alertMessageErrors = (messages: object, message: string) => {
         return;
     }
 
-    const errorMessages = Object.values(messages).flat();
+    if (typeof messages === "string") {
+        toast.error(messages);
+    }
 
-    if (errorMessages.length) {
-        errorMessages.forEach((message: string) => {
-            toast.error(message);
-        });
+    if (typeof messages === "object") {
+        const errorMessages = Object.values(messages).flat();
+
+        if (errorMessages.length) {
+            errorMessages.forEach((message: string) => {
+                toast.error(message);
+            });
+        }
     }
 }
