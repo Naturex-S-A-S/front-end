@@ -170,19 +170,22 @@ const Form: React.FC<Props> = ({ isPending, isNewVersion = false }) => {
                       <Icon icon='mdi:pen' />
                     </Button>*/}
 
-                    {index !== 0 && (
+                    {index !== 0 ? (
                       <>
-                        {index === fields.length - 1 ? (
+                        {index === fields.length - 1 && (
                           <Button variant='outlined' color='success' onClick={() => handleAddDetail()}>
                             <Icon icon='mdi:plus' />
                           </Button>
-                        ) : (
-                          <Button variant='outlined' color='error' onClick={() => remove(index)}>
-                            <Icon icon='mdi:trash-can' />
-                          </Button>
                         )}
+                        <Button variant='outlined' color='error' onClick={() => remove(index)}>
+                          <Icon icon='mdi:trash-can' />
+                        </Button>
                       </>
-                    )}
+                    ) : fields.length === 1 ? (
+                      <Button variant='outlined' color='success' onClick={() => handleAddDetail()}>
+                        <Icon icon='mdi:plus' />
+                      </Button>
+                    ) : null}
                   </div>
                 </TableCell>
               </TableRow>

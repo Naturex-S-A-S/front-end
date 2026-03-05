@@ -12,8 +12,5 @@ export const formulationVersionDefaultValues = {
     details: [{
         material: null,
         quantity: null
-    }, {
-        material: null,
-        quantity: null
     }]
 }

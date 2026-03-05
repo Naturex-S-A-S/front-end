@@ -53,13 +53,11 @@ const CreateVersion = ({ formulationId }: Props) => {
   })
 
   const onSubmit = (values: any) => {
-    const details = values.details.slice(0, -1)
-
     const req = {
       idFormulation: formulationId,
       comment: values.comment,
       active: values.active,
-      details: details.map((detail: any) => ({ idMaterial: detail.material.id, quantity: detail.quantity }))
+      details: values.details.map((detail: any) => ({ idMaterial: detail.material.id, quantity: detail.quantity }))
     }
 
     mutate(req)

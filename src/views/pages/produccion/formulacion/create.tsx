@@ -57,13 +57,11 @@ const Create = () => {
   })
 
   const onSubmit = (values: any) => {
-    const details = values.details.slice(0, -1)
-
     const req = {
       name: values.name,
       comment: values.comment,
       active: true,
-      details: details.map((detail: any) => ({ idMaterial: detail.material.id, quantity: detail.quantity })),
+      details: values.details.map((detail: any) => ({ idMaterial: detail.material.id, quantity: detail.quantity })),
       products: values.products.map((product: any) => {
         return product.id
       })

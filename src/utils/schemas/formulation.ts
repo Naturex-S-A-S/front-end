@@ -72,12 +72,9 @@ export const formulationVersionSchema = yup
                         quantity: yup.number().typeError('La cantidad debe ser válida').test('required', 'La cantidad es requerida', value => value !== undefined && value !== null).min(1, 'La cantidad debe ser al menos 1')
                     })
 
-                    // Validate all items except the last one
-                    const toValidate = arr.slice(0, -1)
-
-                    for (let i = 0; i < toValidate.length; i++) {
+                    for (let i = 0; i < arr.length; i++) {
                         try {
-                            await itemSchema.validate(toValidate[i])
+                            await itemSchema.validate(arr[i])
                         } catch (err: any) {
                             return createError({
                                 path: `${path}[${i}]`,
