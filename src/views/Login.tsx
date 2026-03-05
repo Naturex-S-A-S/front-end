@@ -111,7 +111,7 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
       setIsLoading(true)
 
       const params = new URLSearchParams(window.location.search)
-      const callbackUrl = params.get('callbackUrl') ?? '/'
+      const callbackUrl = params.get('callbackUrl') ?? '/home'
 
       const res = await signIn('credentials', {
         document: values.document,
