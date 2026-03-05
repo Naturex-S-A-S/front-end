@@ -31,7 +31,10 @@ export const authOptions = {
                     return null;
                 }
 
-                return res.token
+                return {
+                    id: '',
+                    access_token: res.token
+                };
             },
         }),
     ],
@@ -39,11 +42,11 @@ export const authOptions = {
     callbacks: {
         async jwt({ token, user }: any) {
             if (user) {
-                token.access_token = user;
+                token.access_token = user.access_token;
 
                 try {
                     // Decode JWT
-                    const payload: any = decodeJwt(token.access_token as string);
+                    const payload: any = decodeJwt(user.access_token as string);
 
                     console.log("Decoded JWT payload:", payload);
 
