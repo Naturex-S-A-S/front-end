@@ -11,17 +11,17 @@ export default withAuth(
             // Use only the expected params for authorized (token). Avoid using req here.
             authorized: ({ token }) => {
                 try {
-                    if (!token?.tokenExpires) return false
+                    if (!token) return false
 
-                    const currentTime = Math.floor(Date.now() / 1000);
+                    const currentTime = Math.floor(Date.now() / 1000)
 
-                    if (token.tokenExpires < currentTime) {
-                        return false;
+                    if (token.tokenExpires && token.tokenExpires < currentTime) {
+                        return false
                     }
 
-                    return !!token;
-                } catch (err) {
-                    return false;
+                    return true
+                } catch {
+                    return false
                 }
             },
         },
