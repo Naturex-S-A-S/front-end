@@ -19,6 +19,12 @@ export const getProduct = async (id: string) => {
     return response.data
 }
 
+export const getProductsRelated = async (code: string) => {
+    const response = await API().get(`/product/${code}/related`)
+
+    return response.data
+}
+
 export const postKardexInput = async (data: any) => {
     const response = await API().post("/kardex/product/input", data)
 

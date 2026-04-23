@@ -14,7 +14,8 @@ export const ABILITY_FIELDS = {
     MOVIMIENTOS: 'Historial de movimientos',
     CATEGORIES: "Categorias",
     FORMULATION: "Formulación",
-    SUPPLIERS: "Proveedores"
+    SUPPLIERS: "Proveedores",
+    ORDERS: "Ordenes"
 }
 
 export const ABILITY_ACTIONS = {

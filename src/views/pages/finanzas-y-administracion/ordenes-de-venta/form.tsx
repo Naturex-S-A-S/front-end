@@ -1,29 +1,19 @@
-'use client'
-
 import { useEffect, useRef } from 'react'
 
-import { Box, Grid, IconButton, Typography } from '@mui/material'
-import { Controller, FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { Icon } from '@iconify/react'
 
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { Box, Grid, IconButton, Typography } from '@mui/material'
 
-import toast from 'react-hot-toast'
+import { useQuery } from '@tanstack/react-query'
 
-import CustomTextField from '@/@core/components/mui/TextField'
-import CustomButton from '@/@core/components/mui/Button'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
+
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
+import CustomButton from '@/@core/components/mui/Button'
+import CustomTextField from '@/@core/components/mui/TextField'
 import { getFileTypes } from '@/api/metadata'
-import { postSaleOrderType1, postSaleOrderType2 } from '@/api/order'
 
-type FormValues = {
-  fileType: {
-    id: string
-  }
-  file: File | null
-}
-
-const Form = () => {
+export const Form = () => {
   const { data: fileTypes } = useQuery({
     queryKey: ['fileTypes'],
     queryFn: getFileTypes
@@ -188,54 +178,3 @@ const Form = () => {
     </Grid>
   )
 }
-
-const SALE_ORDER_TYPE_1 = 'remision_venta'
-const SALE_ORDER_TYPE_2 = 'ventas_siigo'
-
-const Testing = () => {
-  const methods = useForm<FormValues>({
-    defaultValues: { fileType: undefined, file: null }
-  })
-
-  const { mutate } = useMutation({
-    mutationFn: (data: FormValues) => {
-      const formData = new FormData()
-
-      formData.append('file', data.file as Blob)
-
-      if (data.fileType.id === SALE_ORDER_TYPE_1) {
-        return postSaleOrderType1(formData)
-      } else if (data.fileType.id === SALE_ORDER_TYPE_2) {
-        return postSaleOrderType2(formData)
-      }
-
-      return Promise.reject(new Error('Tipo de archivo no válido'))
-    },
-    onSuccess: (result: any) => {
-      methods.reset()
-
-      toast.success(result)
-    },
-    onError: error => {
-      toast.error(error.message || 'Error al procesar el archivo')
-    }
-  })
-
-  console.log(methods.watch())
-
-  const onSubmit = (data: FormValues) => {
-    mutate(data)
-  }
-
-  return (
-    <Box sx={{ p: 6 }}>
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Form />
-        </form>
-      </FormProvider>
-    </Box>
-  )
-}
-
-export default Testing

@@ -32,6 +32,7 @@ const CustomDatePicker: React.FC<Props> = ({ control, errors, minDate, label, na
             placeholderText='YYYY-MM-DD'
             dateFormat={'yyyy-MM-dd'}
             minDate={minDate}
+            className='w-full'
             customInput={
               <CustomTextField
                 value={value}

@@ -71,7 +71,7 @@ export const columns = (): GridColDef[] => {
                 title={
                   <div>
                     {remaining.map((c: any, i: number) => (
-                      <div key={c.id ?? `${c.name}-${i}`}>{c.name.slice(0, 10)}</div>
+                      <div key={c.id ?? `${c.name}-${i}`}>{c.name}</div>
                     ))}
                   </div>
                 }

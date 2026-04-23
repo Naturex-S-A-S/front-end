@@ -53,3 +53,48 @@ export const mockCategoryTypes = [{
     label: 'Material de empaque',
     id: 2
 }]
+
+export const mockMaterialList = [{
+    id: 1,
+    code: '123',
+    name: 'Material 1',
+    quantity: 5,
+    price: 100000
+}, {
+    id: 2,
+    code: '456',
+    name: 'Material 2',
+    quantity: 10,
+    price: 250000
+}, {
+    id: 3,
+    code: '789',
+    name: 'Material 3',
+    quantity: 20,
+    price: 500000
+}, {
+    id: 4,
+    code: '963',
+    name: 'Material 4',
+    quantity: 50,
+    price: 800000
+}]
+
+export const mockMaterialPresentation = [
+    {
+        id: 1,
+        code: '123',
+        name: 'Material 1',
+        unit: 'kg',
+        quantity: 5,
+        price: 100000
+    },
+    {
+        id: 2,
+        code: '456',
+        name: 'Material 2',
+        unit: 'g',
+        quantity: 10,
+        price: 250000
+    }
+]

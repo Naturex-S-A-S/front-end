@@ -25,10 +25,9 @@ type FormValues = Filters
 type Props = {
   defaultValues?: Filters
   onApplyFilters?: (filters: Filters) => void
-  onClear?: () => void
 }
 
-const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
+const Filter = ({ defaultValues, onApplyFilters }: Props) => {
   const { categories } = useGetCategory()
 
   const { control, handleSubmit, reset } = useForm<FormValues>({
@@ -45,7 +44,6 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
 
   const clear = () => {
     reset(defaultValues)
-    onClear?.()
     defaultValues && onApplyFilters && onApplyFilters(defaultValues)
   }
 

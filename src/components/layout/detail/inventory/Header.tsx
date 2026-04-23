@@ -4,7 +4,7 @@ import Loader from '@/@core/components/react-spinners'
 import { formatDate } from '@/utils/format'
 
 type Props = {
-  id: string
+  id?: string
   name: string
   description?: string
   createdAt?: string
@@ -14,6 +14,7 @@ type Props = {
   isPending?: boolean
   quantity?: number
   version?: number
+  actions?: React.ReactNode
 }
 
 const Header: React.FC<Props> = ({
@@ -26,14 +27,15 @@ const Header: React.FC<Props> = ({
   canUpdate,
   isPending,
   quantity,
-  version
+  version,
+  actions
 }) => {
   return (
     <Box display={'flex'} flexDirection='row' justifyContent={'space-between'}>
       <div>
         <h1>
           <span>
-            #{id} - {name}
+            {id ? `#${id} - ` : ''} {name}
           </span>
         </h1>
         {description && <p>{description}</p>}
@@ -49,6 +51,8 @@ const Header: React.FC<Props> = ({
         )}
 
         {version && <Chip label={`Versión ${version}`} size='medium' color='primary' />}
+
+        {actions && <div className='flex items-center gap-2'>{actions}</div>}
 
         {active !== undefined &&
           canUpdate &&

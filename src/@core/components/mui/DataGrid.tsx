@@ -48,6 +48,11 @@ const CustomDataGrid: React.FC<Props> = ({ columns, data, getRowClassName, isLoa
           return value.toString().toLowerCase().includes(searchText.toLowerCase())
         }
 
+        // Filtrar por string[]
+        if (Array.isArray(value)) {
+          return value.some(item => item.toString().toLowerCase().includes(searchText.toLowerCase()))
+        }
+
         return false
       })
     })

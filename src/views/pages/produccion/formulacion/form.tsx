@@ -1,6 +1,7 @@
 import { Fragment, useEffect } from 'react'
 
 import {
+  Alert,
   Button,
   Checkbox,
   FormControlLabel,
@@ -55,6 +56,14 @@ const Form: React.FC<Props> = ({ isPending, isNewVersion = false }) => {
 
   return (
     <Grid container spacing={4}>
+      <Grid item xs={12}>
+        <Alert severity='info'>
+          <span>
+            Fórmula base para producir <b>100 gramos</b>
+          </span>
+        </Alert>
+      </Grid>
+
       {!isNewVersion && (
         <Grid item xs={12} md={6}>
           <CustomTextField
@@ -116,7 +125,7 @@ const Form: React.FC<Props> = ({ isPending, isNewVersion = false }) => {
           <TableHead>
             <TableRow>
               <TableCell align='center'>Material</TableCell>
-              <TableCell align='center'>Cantidad</TableCell>
+              <TableCell align='center'>Cantidad (g)</TableCell>
               <TableCell align='center'>Acciones</TableCell>
             </TableRow>
           </TableHead>

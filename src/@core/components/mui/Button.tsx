@@ -9,7 +9,7 @@ type Props = ButtonProps & {
 
 const CustomButton: React.FC<Props> = ({ isLoading, text, children, ...props }) => {
   return (
-    <Button {...props} variant={props.variant || 'contained'} disabled={isLoading}>
+    <Button {...props} variant={props.variant || 'contained'} disabled={isLoading || props.disabled}>
       {isLoading ? <CircularProgress size={20} color='inherit' /> : children || text}
     </Button>
   )

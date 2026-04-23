@@ -8,8 +8,6 @@ import usePatchPackaging from '@/hooks/packaging/usePatchPackaging'
 
 const defaultFilters = {
   category: undefined,
-  measureUnit: { label: 'Gramo', value: 'g' },
-  allergen: false,
   active: true
 }
 

@@ -9,7 +9,7 @@ interface Props {
 const CustomCard: React.FC<Props> = ({ title, children, action }) => {
   return (
     <Card className='w-full'>
-      <CardHeader title={title} action={action} />
+      {title && <CardHeader title={title} action={action} />}
       <CardContent>{children}</CardContent>
     </Card>
   )
