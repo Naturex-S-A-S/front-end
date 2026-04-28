@@ -27,13 +27,13 @@ interface Props {
 
 const STATUS_COLOR: Record<string, 'warning' | 'success' | 'error' | 'default'> = {
   en_proceso: 'warning',
-  completado: 'success',
+  finalizada: 'success',
   cancelado: 'error'
 }
 
 const STATUS_LABEL: Record<string, string> = {
   en_proceso: 'En proceso',
-  completado: 'Completado',
+  finalizada: 'Finalizada',
   cancelado: 'Cancelado'
 }
 
