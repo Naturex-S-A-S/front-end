@@ -51,6 +51,42 @@ export interface IOrderList {
     productNames: string[]
 }
 
+export interface IOrderSupplyList {
+    id: number
+    orderId: number
+    batch: string
+    dateCreated: string
+    quantityExpected: number
+    productNames: string[]
+}
+
+export interface IOrderSupplyMaterial {
+    id: string
+    name: string
+    quantityAvailable: number
+    quantityMissing: number
+    quantityTotalOrder: number
+    totalCost: number
+}
+
+export interface IOrderSupplyProduct {
+    id: string
+    fullName: string
+    units: number
+}
+
+export interface IOrderSupply {
+    id: number
+    batch: string
+    totalQuantityInKg: number
+    totalQuantityInUnits: number
+    totalChargeOrder: number
+    dateCreated: string
+    userName: string
+    materials: IOrderSupplyMaterial[]
+    products: IOrderSupplyProduct[]
+}
+
 export interface IOrderCreate {
     quantityExpected: number
     batch: string

@@ -221,8 +221,6 @@ const Testing = () => {
     }
   })
 
-  console.log(methods.watch())
-
   const onSubmit = (data: FormValues) => {
     mutate(data)
   }

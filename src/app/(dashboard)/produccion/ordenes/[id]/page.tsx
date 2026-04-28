@@ -6,19 +6,38 @@ import { useTheme } from '@mui/material/styles'
 
 import Swal from 'sweetalert2'
 
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+
+import toast from 'react-hot-toast'
+
 import Loader from '@/@core/components/react-spinners'
 import Header from '@/components/layout/detail/inventory/Header'
 import Detail from '@/views/pages/produccion/ordenes/detail'
 import NotFound from '@/views/NotFound'
 import useGetOrderById from '@/hooks/order/useGetOrderById'
+import { patchStatusOrder } from '@/api/order'
 
 type Props = {
   params: { id: string }
 }
 
 const Page: React.FC<Props> = ({ params }) => {
+  const queryClient = useQueryClient()
   const { order, isLoading } = useGetOrderById(params.id)
   const mode = useTheme().palette.mode
+
+  const { mutate: updateOrderStatus } = useMutation({
+    mutationFn: (status: string) => patchStatusOrder(params.id, status),
+    onSuccess: () => {
+      toast.success('Orden actualizada con éxito')
+      queryClient.invalidateQueries({
+        queryKey: ['getOrderById', Number(params.id)]
+      })
+    },
+    onError: () => {
+      toast.error('Error al actualizar la orden')
+    }
+  })
 
   if (isLoading) {
     return <Loader type='page' />
@@ -38,7 +57,7 @@ const Page: React.FC<Props> = ({ params }) => {
       cancelButtonText: 'Cancelar'
     }).then(result => {
       if (result.isConfirmed) {
-        // Logic to finalize the order
+        updateOrderStatus('finalizada')
       }
     })
   }
@@ -53,7 +72,7 @@ const Page: React.FC<Props> = ({ params }) => {
       cancelButtonText: 'Cancelar'
     }).then(result => {
       if (result.isConfirmed) {
-        // Logic to cancel the order
+        updateOrderStatus('cancelada')
       }
     })
   }
@@ -66,12 +85,16 @@ const Page: React.FC<Props> = ({ params }) => {
         createdAt={order.dateCreated}
         actions={
           <>
-            <Button variant='contained' color='primary' onClick={handleFinalize}>
-              Finalizar
-            </Button>
-            <Button variant='outlined' color='error' onClick={handleCancel}>
-              Cancelar
-            </Button>
+            {order.status === 'en_proceso' && (
+              <Button variant='contained' color='primary' onClick={handleFinalize}>
+                Finalizar
+              </Button>
+            )}
+            {order.status === 'en_proceso' && (
+              <Button variant='outlined' color='error' onClick={handleCancel}>
+                Cancelar
+              </Button>
+            )}
           </>
         }
       />

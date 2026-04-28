@@ -14,8 +14,6 @@ import { useMutation } from '@tanstack/react-query'
 
 import toast from 'react-hot-toast'
 
-import Swal from 'sweetalert2'
-
 import moment from 'moment'
 
 import { useAbility } from '@/hooks/casl/useAbility'
@@ -24,7 +22,7 @@ import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/consta
 import { alertMessageErrors } from '@/utils/messages'
 import { orderSchema } from '@/utils/schemas/order'
 import { orderDefaultValues } from '@/utils/defaultValues/order'
-import { getOrderSupplyCalculate, postOrder } from '@/api/order'
+import { getOrderSupplyCalculate, postOrderSupply } from '@/api/order'
 
 const Create = () => {
   const [isChanged, setIsChanged] = useState(false)
@@ -46,9 +44,9 @@ const Create = () => {
   const { handleSubmit, setValue, getValues }: any = methods
 
   const { isPending, mutateAsync: createOrder } = useMutation({
-    mutationFn: postOrder,
+    mutationFn: postOrderSupply,
     onSuccess: response => {
-      router.replace(`/produccion/aprovisionamiento/${response.orderId}`)
+      router.replace(`/produccion/aprovisionamiento/${response.id}`)
     },
     onError: (error: any) => {
       alertMessageErrors(error?.response?.data?.message, 'Error al crear la orden')
@@ -77,52 +75,23 @@ const Create = () => {
   }, [mutateOrderSupplyCalculate, getValues])
 
   const onSubmit = (values: any) => {
-    console.log(values)
+    const quantityExpected = values.presentations.reduce(
+      (acc: number, presentation: any) => acc + presentation.quantityG,
+      0
+    )
 
-    return
-
-    if (values?.calculatedData?.totalQuantityMissing !== 0) {
-      Swal.fire({
-        title: `No hay material suficiente. ¿Desea calcular con la cantidad disponible?`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#009541',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Continuar',
-        cancelButtonText: 'Cancelar'
-      }).then(result => {
-        if (result.isConfirmed) {
-          const presentations = values.presentations
-
-          for (const product of values.calculatedData.possibleProducts) {
-            const presentationIndex = presentations.findIndex((p: any) => p.id === product.id)
-
-            if (presentationIndex !== -1) {
-              setValue(`presentations.${presentationIndex}.quantityG`, product.units)
-              orderCalculate()
-            }
-          }
-        }
-      })
-    } else {
-      const quantityExpected = values.presentations.reduce(
-        (acc: number, presentation: any) => acc + presentation.quantityG,
-        0
-      )
-
-      const req = {
-        quantityExpected,
-        batch: values.batch,
-        date_expiration: moment(values.expirationDate1).format('YYYY-MM-DD'),
-        products: values.presentations.map((product: any) => ({
-          id: product.id,
-          quantity: product.quantityG,
-          base: product.id === values.product.id
-        }))
-      }
-
-      createOrder(req)
+    const req = {
+      quantityExpected,
+      batch: values.batch,
+      date_expiration: moment(values.expirationDate1).format('YYYY-MM-DD'),
+      products: values.presentations.map((product: any, index: number) => ({
+        id: product.id,
+        quantity: product.quantityG,
+        base: index === 0
+      }))
     }
+
+    createOrder(req)
   }
 
   if (!canCreateProvisioning) return null

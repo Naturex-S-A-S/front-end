@@ -5,7 +5,7 @@ export const orderSchema = yup
         presentations: yup.array().of(
             yup.object().shape({
                 id: yup.string().required('El ID de la presentación es requerido'),
-                quantityG: yup.number().typeError('La cantidad debe ser un número').min(1, 'La cantidad debe ser al menos 1').required('La cantidad es requerida')
+                quantityG: yup.number().typeError('La cantidad debe ser un número').min(0, 'La cantidad debe ser al menos 0').required('La cantidad es requerida')
             })
         ),
         batch: yup.string().required('El batch es requerido'),

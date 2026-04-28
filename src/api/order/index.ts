@@ -74,3 +74,27 @@ export const getOrderSupplyCalculate = async (data: any) => {
 
     return response.data
 }
+
+export const postOrderSupply = async (data: any) => {
+    const response = await API().post(`/orders/supply`, data)
+
+    return response.data
+}
+
+export const getOrderSupplyById = async (id: string) => {
+    const response = await API().get(`/orders/supply/${id}`)
+
+    return response.data
+}
+
+export const getOrderSupply = async (params: any) => {
+    const response = await API().get(`/orders/supply`, { params })
+
+    return response.data
+}
+
+export const patchStatusOrder = async (id: string, status: string) => {
+    const response = await API().patch(`/orders/${id}/status`, { status })
+
+    return response.data
+}
