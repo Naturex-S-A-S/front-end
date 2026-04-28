@@ -48,12 +48,6 @@ export const columns = (): GridColDef[] => {
       width: 200
     },
     {
-      field: 'fileDate',
-      headerName: 'Fecha del archivo',
-      width: 200,
-      renderCell: params => formatDate(params.row.fileDate)
-    },
-    {
       field: 'dateCreated',
       headerName: 'Fecha de creación',
       width: 200,

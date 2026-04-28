@@ -62,3 +62,15 @@ export const getSalesOrderById = async (id: string) => {
 
     return response.data
 }
+
+export const getOrderSupplyCalculate = async (data: any) => {
+    const response = await API().get(`/orders/supply/calculate`, {
+        params: {
+            baseProductId: data.baseProductId,
+            productIds: data.productIds,
+            quantities: data.quantities
+        }
+    })
+
+    return response.data
+}

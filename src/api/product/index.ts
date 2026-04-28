@@ -80,3 +80,9 @@ export const getProductUnits = async () => {
 
     return response.data
 }
+
+export const postKardexInputAdjustment = async (data: any) => {
+    const response = await API().post("/kardex/product/input/adjustment", data)
+
+    return response.data
+}

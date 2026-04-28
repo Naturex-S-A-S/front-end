@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import type { Theme } from '@mui/material'
 import {
@@ -24,14 +24,11 @@ import classNames from 'classnames'
 
 import moment from 'moment'
 
-import { useMutation } from '@tanstack/react-query'
-
 import CustomTextField from '@/@core/components/mui/TextField'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 import CustomButton from '@/@core/components/mui/Button'
 import useGetProductList from '@/hooks/product/useGetProductList'
 import CustomDatePicker from '@/@core/components/react-datepicker'
-import { getProductsRelated } from '@/api/product'
 
 type Props = {
   isPending: boolean
@@ -89,17 +86,31 @@ const Form: React.FC<Props> = ({
     getValues
   }: any = useFormContext()
 
-  const { mutateAsync: mutateProductsRelated, isPending: isPendingProductsRelated } = useMutation({
-    mutationFn: getProductsRelated
-  })
-
   const { fields, replace } = useFieldArray({
     control,
     name: 'presentations'
   })
 
-  const productWatch = useWatch({ control, name: 'product' })
+  const productsWatch = useWatch({ control, name: 'products' })
   const calculatedData = useWatch({ control, name: 'calculatedData' })
+
+  const prevProductsRef = useRef<string>('')
+
+  useEffect(() => {
+    const serialized = JSON.stringify(productsWatch?.map((p: Product) => p.id) ?? [])
+
+    if (serialized === prevProductsRef.current) return
+    prevProductsRef.current = serialized
+
+    if (productsWatch?.length > 0) {
+      replace(productsWatch.map((product: Product) => ({ ...product, quantityG: '' })))
+      setStep(1)
+    } else {
+      setStep(0)
+      reset()
+      replace([])
+    }
+  }, [productsWatch, replace, reset])
 
   const handleContinue = useCallback(async () => {
     const result = await trigger('presentations')
@@ -115,19 +126,6 @@ const Form: React.FC<Props> = ({
 
     if (newValue !== oldValue) setIsChanged(true)
   }
-
-  useEffect(() => {
-    if (productWatch?.id) {
-      mutateProductsRelated(productWatch.id).then((res: Presentation[] = []) => {
-        replace(res)
-        setStep(1)
-      })
-    } else {
-      setStep(0)
-      reset()
-      replace([])
-    }
-  }, [mutateProductsRelated, replace, productWatch?.id, reset])
 
   const getCardClass = useCallback(() => {
     return classNames({
@@ -145,16 +143,19 @@ const Form: React.FC<Props> = ({
               <CardContent>
                 <Box display='flex' flexDirection='column' gap={4}>
                   <Controller
-                    name='product'
+                    name='products'
                     control={control}
                     render={({ field: { value, onChange } }: any) => (
                       <CustomAutocomplete
                         value={value}
+                        multiple
                         options={productList}
-                        getOptionLabel={(option: Product) => option?.fullName || ''}
-                        onChange={(_, v: Product | null) => onChange(v)}
-                        renderInput={(params: any) => (
-                          <CustomTextField {...params} label='Elegir producto' placeholder='Seleccione un producto' />
+                        getOptionLabel={(option: any) => option?.completeName || option?.name || ''}
+                        onChange={(e, value: any) => {
+                          onChange(value)
+                        }}
+                        renderInput={params => (
+                          <CustomTextField {...params} label='Producto' placeholder='Seleccione un producto' />
                         )}
                       />
                     )}
@@ -162,7 +163,7 @@ const Form: React.FC<Props> = ({
 
                   <Divider />
 
-                  {isPendingProductsRelated || isPendingOrderCalculate ? (
+                  {isPendingOrderCalculate ? (
                     <LoaderInfo />
                   ) : (
                     (step === 1 || step === 2) && (
@@ -212,7 +213,7 @@ const Form: React.FC<Props> = ({
                               errors={errors?.expirationDate1?.message}
                             />
                             <CustomButton
-                              text='Generar orden'
+                              text='Generar aprovisionamiento'
                               type='submit'
                               disabled={isChanged}
                               isLoading={isPendingCreate}
@@ -230,7 +231,7 @@ const Form: React.FC<Props> = ({
       </Grid>
 
       <Grid item xs={12} md={8}>
-        {isPendingProductsRelated || isPendingOrderCalculate ? (
+        {isPendingOrderCalculate ? (
           <>
             <Skeleton variant='rectangular' width='100%' height={90} sx={{ borderRadius: '8px', marginBottom: 4 }} />
             <Skeleton variant='rectangular' width='100%' height={200} sx={{ borderRadius: '8px', marginBottom: 4 }} />
@@ -251,7 +252,7 @@ const Form: React.FC<Props> = ({
                 <Card>
                   <CardContent>
                     <Grid container spacing={6}>
-                      <Grid item xs={12} sm={6} md={3} className={getCardClass()}>
+                      <Grid item xs={12} sm={6} md={4} className={getCardClass()}>
                         <div className='flex h-full'>
                           <div className='flex flex-col justify-between'>
                             <Typography variant='caption'>Cantidad a producir (Kg)</Typography>
@@ -260,33 +261,22 @@ const Form: React.FC<Props> = ({
                         </div>
                       </Grid>
 
-                      <Grid item xs={12} sm={6} md={3} className={getCardClass()}>
+                      <Grid item xs={12} sm={6} md={4} className={getCardClass()}>
                         <div className='flex h-full'>
                           <div className='flex flex-col justify-between'>
-                            <Typography variant='caption'>Cantidad disponible (Kg)</Typography>
-                            <Typography variant='h5'>{calculatedData?.totalQuantityPossible}</Typography>
-                          </div>
-                        </div>
-                      </Grid>
-
-                      <Grid item xs={12} sm={6} md={3} className={getCardClass()}>
-                        <div className='flex h-full'>
-                          <div className='flex flex-col justify-between'>
-                            <Typography variant='caption'>Cantidad necesaria (x100 g)</Typography>
-                            <Typography variant='h5'>
-                              {calculatedData?.materials?.reduce((a: number, b: any) => a + b.quantityFormulation, 0)}
-                            </Typography>
-                          </div>
-                        </div>
-                      </Grid>
-
-                      <Grid item xs={12} sm={6} md={3} className={getCardClass()}>
-                        <div className='flex h-full'>
-                          <div className='flex flex-col justify-between'>
-                            <Typography variant='caption'>Cantidad total necesaria (g)</Typography>
+                            <Typography variant='caption'>Total general</Typography>
                             <Typography variant='h5'>
                               {calculatedData?.materials?.reduce((a: number, b: any) => a + b.quantityTotalOrder, 0)}
                             </Typography>
+                          </div>
+                        </div>
+                      </Grid>
+
+                      <Grid item xs={12} sm={6} md={4} className={getCardClass()}>
+                        <div className='flex h-full'>
+                          <div className='flex flex-col justify-between'>
+                            <Typography variant='caption'>Total costo</Typography>
+                            <Typography variant='h5'>~ {calculatedData?.totalChargeMaterialByOrder}</Typography>
                           </div>
                         </div>
                       </Grid>
@@ -304,8 +294,9 @@ const Form: React.FC<Props> = ({
                       <TableRow>
                         <TableCell>Codigo</TableCell>
                         <TableCell>Descripcion</TableCell>
-                        <TableCell>Cantidad (G)</TableCell>
-                        <TableCell>Total</TableCell>
+                        <TableCell>Cantidad disponible</TableCell>
+                        <TableCell>Cantidad faltante</TableCell>
+                        <TableCell>Cantidad Total</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -320,7 +311,8 @@ const Form: React.FC<Props> = ({
                           <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                             <TableCell>{item.id}</TableCell>
                             <TableCell>{item.name}</TableCell>
-                            <TableCell>{item.quantityFormulation}</TableCell>
+                            <TableCell>{item.quantityAvailable}</TableCell>
+                            <TableCell>{item.quantityMissing}</TableCell>
                             <TableCell>{item.quantityTotalOrder}</TableCell>
                           </TableRow>
                         ))

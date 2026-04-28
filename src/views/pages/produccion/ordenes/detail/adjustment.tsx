@@ -7,6 +7,10 @@ import { Controller, useForm } from 'react-hook-form'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+
+import toast from 'react-hot-toast'
+
 import type { IOrderDetail, IOrderItem } from '@/types/pages/order'
 import CreateButton from '@/components/layout/shared/CreateButton'
 import CustomDialog from '@/@core/components/mui/Dialog'
@@ -15,6 +19,12 @@ import CustomTextField from '@/@core/components/mui/TextField'
 import CustomButton from '@/@core/components/mui/Button'
 import { adjustmentMaterialSchema, adjustmentProductSchema, categoryOnlySchema } from '@/utils/schemas/order'
 import AdjustmentList from './adjustmentList'
+import {
+  postKardexInputAdjustment as postKardexInputAdjustmentFeedStock,
+  postKardexOutputAdjustment
+} from '@/api/feedstock'
+
+import { postKardexInputAdjustment as postKardexInputAdjustmentProduct } from '@/api/product'
 
 type Option = { id: number; label: string }
 
@@ -42,6 +52,8 @@ interface IProps {
 
 const Adjustment: FC<IProps> = ({ materials, products, orderId }) => {
   const [open, setOpen] = useState(false)
+
+  const queryClient = useQueryClient()
 
   const { control, handleSubmit, watch, reset, setValue } = useForm<AdjustmentFormValues>({
     defaultValues: {
@@ -78,7 +90,7 @@ const Adjustment: FC<IProps> = ({ materials, products, orderId }) => {
   const isCategoryMaterial = categoryWatch?.id === 1
 
   const materialOptions = materials.map((material: any) => ({
-    id: material.id,
+    id: material.idMaterial,
     label: material.nameMaterial
   }))
 
@@ -87,12 +99,80 @@ const Adjustment: FC<IProps> = ({ materials, products, orderId }) => {
     label: product.finalProduct.name
   }))
 
+  const { mutate: mutateInputProduct, isPending: isPendingInputProduct } = useMutation({
+    mutationFn: postKardexInputAdjustmentProduct,
+    onSuccess: () => {
+      handleOnReset()
+      toogleDialog()
+      queryClient.invalidateQueries({ queryKey: ['getOrderById', Number(orderId)] })
+      toast.success('Ajuste registrado correctamente')
+    },
+    onError: () => {
+      toast.error('Error al registrar el ajuste')
+    }
+  })
+
+  const { mutate: mutateInputFeedStock, isPending: isPendingInputFeedStock } = useMutation({
+    mutationFn: postKardexInputAdjustmentFeedStock,
+    onSuccess: () => {
+      handleOnReset()
+      toogleDialog()
+      queryClient.invalidateQueries({ queryKey: ['getOrderById', Number(orderId)] })
+      toast.success('Ajuste registrado correctamente')
+    },
+    onError: () => {
+      toast.error('Error al registrar el ajuste')
+    }
+  })
+
+  const { mutate: mutateOutput, isPending: isPendingOutput } = useMutation({
+    mutationFn: postKardexOutputAdjustment,
+    onSuccess: () => {
+      handleOnReset()
+      toogleDialog()
+      queryClient.invalidateQueries({ queryKey: ['getOrderById', Number(orderId)] })
+      toast.success('Ajuste registrado correctamente')
+    },
+    onError: () => {
+      toast.error('Error al registrar el ajuste')
+    }
+  })
+
   const handleOnSubmit = (values: any) => {
-    console.log({ values, orderId })
+    if (isCategoryMaterial) {
+      const payload = {
+        idMaterial: values.material?.id,
+        idOrder: orderId,
+        quantity: values.quantity,
+        batch: values.batch,
+        expirationDate1: values.expiration_date_1,
+        observation: values.observation,
+        location: values.location,
+        rack: values.rack
+      }
+
+      if (values.type === 'IN') {
+        mutateInputFeedStock(payload)
+      } else if (values.type === 'OUT') {
+        mutateOutput(payload)
+      }
+    } else if (isCategoryProduct) {
+      const payload = {
+        idOrder: orderId,
+        idFinalProduct: values.product?.id,
+        batch: values.batch,
+        quantity: values.quantity,
+        location: values.location,
+        observation: values.observation,
+        expirationDate1: values.expiration_date_1,
+        rack: values?.rack
+      }
+
+      mutateInputProduct(payload)
+    }
   }
 
-  const handleOnChangeCategory = (_: any, value: any) => {
-    setValue('category', value)
+  const handleOnReset = (value?: any) => {
     reset({
       category: value,
       material: null,
@@ -108,6 +188,11 @@ const Adjustment: FC<IProps> = ({ materials, products, orderId }) => {
       expiration_date_1: '',
       expiration_date_2: ''
     })
+  }
+
+  const handleOnChangeCategory = (_: any, value: any) => {
+    setValue('category', value)
+    handleOnReset(value)
   }
 
   return (
@@ -202,12 +287,11 @@ const Adjustment: FC<IProps> = ({ materials, products, orderId }) => {
 
                   <Grid item xs={6}>
                     <Controller
-                      name='charge' // entrada o salida
+                      name='batch'
                       control={control}
-                      rules={{ required: 'Seleccione entrada o salida' }}
                       render={({ field: { value, onChange }, fieldState: { error } }: any) => (
                         <CustomTextField
-                          label='Cargo'
+                          label='Lote'
                           value={value ?? ''}
                           onChange={e => onChange(e.target.value)}
                           error={!!error}
@@ -235,17 +319,62 @@ const Adjustment: FC<IProps> = ({ materials, products, orderId }) => {
                     />
                   </Grid>
 
+                  <Grid item xs={6}>
+                    <Controller
+                      name='expiration_date_1'
+                      control={control}
+                      render={({ field: { value, onChange } }: any) => (
+                        <CustomTextField
+                          type='date'
+                          label='Fecha expiración 1'
+                          InputLabelProps={{ shrink: true }}
+                          value={value ?? ''}
+                          onChange={e => onChange(e.target.value)}
+                        />
+                      )}
+                    />
+                  </Grid>
+
+                  <Grid item xs={6}>
+                    <Controller
+                      name='location'
+                      control={control}
+                      rules={{ required: 'Debe ingresar el lugar de almacenamiento' }}
+                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
+                        <CustomTextField
+                          label='Ubicación'
+                          value={value ?? ''}
+                          onChange={e => onChange(e.target.value)}
+                          error={!!error}
+                          helperText={error?.message}
+                        />
+                      )}
+                    />
+                  </Grid>
+
+                  <Grid item xs={6}>
+                    <Controller
+                      name='rack'
+                      control={control}
+                      render={({ field: { value, onChange } }: any) => (
+                        <CustomTextField label='Rack' value={value ?? ''} onChange={e => onChange(e.target.value)} />
+                      )}
+                    />
+                  </Grid>
+
                   <Grid item xs={12}>
                     <Controller
                       name='observation'
                       control={control}
-                      render={({ field: { value, onChange } }: any) => (
+                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
                         <CustomTextField
                           label='Observación'
                           value={value ?? ''}
                           onChange={e => onChange(e.target.value)}
                           multiline
                           rows={3}
+                          error={!!error}
+                          helperText={error?.message}
                         />
                       )}
                     />
@@ -281,44 +410,16 @@ const Adjustment: FC<IProps> = ({ materials, products, orderId }) => {
 
                   <Grid item xs={6}>
                     <Controller
-                      name='type'
-                      control={control}
-                      rules={{ required: 'El tipo es requerido' }}
-                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
-                        <CustomTextField
-                          label='Tipo'
-                          value={value ?? ''}
-                          onChange={e => onChange(e.target.value)}
-                          error={!!error}
-                          helperText={error?.message}
-                        />
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={6}>
-                    <Controller
-                      name='classification'
-                      control={control}
-                      rules={{ required: 'Ingrese una clasificación' }}
-                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
-                        <CustomTextField
-                          label='Clasificación'
-                          value={value ?? ''}
-                          onChange={e => onChange(e.target.value)}
-                          error={!!error}
-                          helperText={error?.message}
-                        />
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={6}>
-                    <Controller
                       name='batch'
                       control={control}
-                      render={({ field: { value, onChange } }: any) => (
-                        <CustomTextField label='Lote' value={value ?? ''} onChange={e => onChange(e.target.value)} />
+                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
+                        <CustomTextField
+                          label='Lote'
+                          value={value ?? ''}
+                          onChange={e => onChange(e.target.value)}
+                          error={!!error}
+                          helperText={error?.message}
+                        />
                       )}
                     />
                   </Grid>
@@ -372,29 +473,15 @@ const Adjustment: FC<IProps> = ({ materials, products, orderId }) => {
                     <Controller
                       name='expiration_date_1'
                       control={control}
-                      render={({ field: { value, onChange } }: any) => (
+                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
                         <CustomTextField
                           type='date'
                           label='Fecha expiración 1'
                           InputLabelProps={{ shrink: true }}
                           value={value ?? ''}
                           onChange={e => onChange(e.target.value)}
-                        />
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={6}>
-                    <Controller
-                      name='expiration_date_2'
-                      control={control}
-                      render={({ field: { value, onChange } }: any) => (
-                        <CustomTextField
-                          type='date'
-                          label='Fecha expiración 2'
-                          InputLabelProps={{ shrink: true }}
-                          value={value ?? ''}
-                          onChange={e => onChange(e.target.value)}
+                          error={!!error}
+                          helperText={error?.message}
                         />
                       )}
                     />
@@ -404,13 +491,15 @@ const Adjustment: FC<IProps> = ({ materials, products, orderId }) => {
                     <Controller
                       name='observation'
                       control={control}
-                      render={({ field: { value, onChange } }: any) => (
+                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
                         <CustomTextField
                           label='Observación'
                           value={value ?? ''}
                           onChange={e => onChange(e.target.value)}
                           multiline
                           rows={3}
+                          error={!!error}
+                          helperText={error?.message}
                         />
                       )}
                     />
@@ -419,7 +508,13 @@ const Adjustment: FC<IProps> = ({ materials, products, orderId }) => {
               )}
 
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <CustomButton type='submit'>Guardar</CustomButton>
+                <CustomButton
+                  type='submit'
+                  disabled={isPendingInputProduct || isPendingInputFeedStock || isPendingOutput}
+                  isLoading={isPendingInputProduct || isPendingInputFeedStock || isPendingOutput}
+                >
+                  Guardar
+                </CustomButton>
               </Grid>
             </Grid>
           </form>

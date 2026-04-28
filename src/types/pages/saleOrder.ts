@@ -13,6 +13,24 @@ export interface ISaleOrderDetail {
     idFinalProduct: string;
     finalProduct: ISaleOrderFinalProduct;
 }
+export interface ISaleOrderKardex {
+    id: number;
+    type: string;
+    classification: string;
+    observation: string;
+    batch: string;
+    rack: string | null;
+    location: string | null;
+    quantity: number;
+    dateCreated: string;
+    expirationDate1: string | null;
+    expirationDate2: string | null;
+    idUser: string;
+    idOrder: number | null;
+    idSalesOrder: number | null;
+    idFinalProduct: number | null;
+    finalProductName: string;
+}
 
 export interface ISaleOrder {
     id: string;
@@ -25,5 +43,5 @@ export interface ISaleOrder {
     idUser: string;
     userFullName: string;
     details: ISaleOrderDetail[];
-    kardexProducts: any[];
+    kardexProducts: ISaleOrderKardex[];
 }

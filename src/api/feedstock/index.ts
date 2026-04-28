@@ -53,3 +53,15 @@ export const getFeedstockList = async () => {
 
     return response.data
 }
+
+export const postKardexInputAdjustment = async (data: any) => {
+    const response = await API().post("/kardex/feedstock/input/adjustment", data)
+
+    return response.data
+}
+
+export const postKardexOutputAdjustment = async (data: any) => {
+    const response = await API().post("/kardex/feedstock/output/adjustment", data)
+
+    return response.data
+}

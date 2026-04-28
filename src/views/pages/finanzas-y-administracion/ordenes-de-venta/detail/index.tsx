@@ -8,6 +8,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
   Typography
@@ -15,6 +16,7 @@ import {
 
 import { formatDate } from '@/utils/format'
 import type { ISaleOrder } from '@/types/pages/saleOrder'
+import Kardex from './kardex'
 
 interface Props {
   saleOrder: ISaleOrder
@@ -57,14 +59,6 @@ const Detail: React.FC<Props> = ({ saleOrder }) => {
                 </Box>
                 <Box display='flex' justifyContent='space-between'>
                   <Typography variant='body2' color='textSecondary'>
-                    Fecha del archivo
-                  </Typography>
-                  <Typography variant='body2' fontWeight={600}>
-                    {formatDate(saleOrder.fileDate)}
-                  </Typography>
-                </Box>
-                <Box display='flex' justifyContent='space-between'>
-                  <Typography variant='body2' color='textSecondary'>
                     Fecha de carga
                   </Typography>
                   <Typography variant='body2' fontWeight={600}>
@@ -101,44 +95,50 @@ const Detail: React.FC<Props> = ({ saleOrder }) => {
             <Typography variant='h6' mb={2}>
               Productos vendidos
             </Typography>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Código</TableCell>
-                  <TableCell>Producto</TableCell>
-                  <TableCell>Presentación</TableCell>
-                  <TableCell align='right'>Cantidad</TableCell>
-                  <TableCell align='right'>Costo</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {!saleOrder.details?.length ? (
+            <TableContainer sx={{ width: '100%', overflowX: 'auto' }}>
+              <Table>
+                <TableHead>
                   <TableRow>
-                    <TableCell colSpan={5} sx={{ textAlign: 'center' }}>
-                      Sin productos registrados
-                    </TableCell>
+                    <TableCell>Código</TableCell>
+                    <TableCell>Producto</TableCell>
+                    <TableCell>Presentación</TableCell>
+                    <TableCell align='right'>Cantidad</TableCell>
+                    <TableCell align='right'>Costo</TableCell>
                   </TableRow>
-                ) : (
-                  saleOrder.details.map(item => (
-                    <TableRow key={item.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                      <TableCell>{item.finalProduct.id}</TableCell>
-                      <TableCell>{item.finalProduct.name}</TableCell>
-                      <TableCell>
-                        <Chip
-                          label={`${item.finalProduct.measurement} ${item.finalProduct.unit}`}
-                          size='small'
-                          variant='outlined'
-                        />
+                </TableHead>
+                <TableBody>
+                  {!saleOrder.details?.length ? (
+                    <TableRow>
+                      <TableCell colSpan={5} sx={{ textAlign: 'center' }}>
+                        Sin productos registrados
                       </TableCell>
-                      <TableCell align='right'>{item.quantity}</TableCell>
-                      <TableCell align='right'>${item.charge.toFixed(2)}</TableCell>
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+                  ) : (
+                    saleOrder.details.map(item => (
+                      <TableRow key={item.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                        <TableCell>{item.finalProduct.id}</TableCell>
+                        <TableCell>{item.finalProduct.name}</TableCell>
+                        <TableCell>
+                          <Chip
+                            label={`${item.finalProduct.measurement} ${item.finalProduct.unit}`}
+                            size='small'
+                            variant='outlined'
+                          />
+                        </TableCell>
+                        <TableCell align='right'>{item.quantity}</TableCell>
+                        <TableCell align='right'>${item.charge.toFixed(2)}</TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </CardContent>
         </Card>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Kardex data={saleOrder.kardexProducts} />
       </Grid>
     </Grid>
   )

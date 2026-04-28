@@ -24,7 +24,7 @@ import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/consta
 import { alertMessageErrors } from '@/utils/messages'
 import { orderSchema } from '@/utils/schemas/order'
 import { orderDefaultValues } from '@/utils/defaultValues/order'
-import { getOrderCalculate, postOrder } from '@/api/order'
+import { getOrderSupplyCalculate, postOrder } from '@/api/order'
 
 const Create = () => {
   const [isChanged, setIsChanged] = useState(false)
@@ -32,10 +32,10 @@ const Create = () => {
   const router = useRouter()
   const ability = useAbility()
 
-  const canCreateFormulation = ability.can(
+  const canCreateProvisioning = ability.can(
     ABILITY_ACTIONS.CREATE as any,
     ABILITY_SUBJECT.PRODUCTION,
-    ABILITY_FIELDS.ORDERS
+    ABILITY_FIELDS.PROVISIONING
   )
 
   const methods = useForm({
@@ -48,15 +48,15 @@ const Create = () => {
   const { isPending, mutateAsync: createOrder } = useMutation({
     mutationFn: postOrder,
     onSuccess: response => {
-      router.replace(`/produccion/ordenes/${response.orderId}`)
+      router.replace(`/produccion/aprovisionamiento/${response.orderId}`)
     },
     onError: (error: any) => {
       alertMessageErrors(error?.response?.data?.message, 'Error al crear la orden')
     }
   })
 
-  const { mutateAsync: mutateOrderCalculate, isPending: isPendingOrderCalculate } = useMutation({
-    mutationFn: getOrderCalculate,
+  const { mutateAsync: mutateOrderSupplyCalculate, isPending: isPendingOrderCalculate } = useMutation({
+    mutationFn: getOrderSupplyCalculate,
     onSuccess: (res: any) => {
       setValue('calculatedData', res)
       toast.success('Cálculo realizado con éxito')
@@ -67,17 +67,20 @@ const Create = () => {
   })
 
   const orderCalculate = useCallback(() => {
-    const { product, presentations } = getValues()
+    const { presentations } = getValues()
 
-    mutateOrderCalculate({
-      baseProductId: product.id,
+    mutateOrderSupplyCalculate({
       productIds: presentations.map((p: any) => p.id).join(','),
       quantities: presentations.map((p: any) => p.quantityG).join(',')
     })
     setIsChanged(false)
-  }, [mutateOrderCalculate, getValues])
+  }, [mutateOrderSupplyCalculate, getValues])
 
   const onSubmit = (values: any) => {
+    console.log(values)
+
+    return
+
     if (values?.calculatedData?.totalQuantityMissing !== 0) {
       Swal.fire({
         title: `No hay material suficiente. ¿Desea calcular con la cantidad disponible?`,
@@ -122,12 +125,12 @@ const Create = () => {
     }
   }
 
-  if (!canCreateFormulation) return null
+  if (!canCreateProvisioning) return null
 
   return (
     <Box>
       <Typography variant='h5' sx={{ mb: 4 }}>
-        Generar nueva orden
+        Generar nuevo aprovisionamiento
       </Typography>
 
       <FormProvider {...methods}>

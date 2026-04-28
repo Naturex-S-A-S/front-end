@@ -15,7 +15,8 @@ export const ABILITY_FIELDS = {
     CATEGORIES: "Categorias",
     FORMULATION: "Formulación",
     SUPPLIERS: "Proveedores",
-    ORDERS: "Ordenes"
+    ORDERS: "Ordenes",
+    PROVISIONING: "Aprovisionamiento"
 }
 
 export const ABILITY_ACTIONS = {
