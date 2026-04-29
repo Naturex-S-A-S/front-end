@@ -1,13 +1,12 @@
 import { useForm, Controller } from 'react-hook-form'
 
-import { Grid, MenuItem } from '@mui/material'
+import { Grid } from '@mui/material'
 
 import CustomCard from '@/@core/components/mui/Card'
 import CustomTextField from '@/@core/components/mui/TextField'
 import CustomButton from '@/@core/components/mui/Button'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
 import useGetProductList from '@/hooks/product/useGetProductList'
-import useGetStatuses from '@/hooks/metadata/useGetStatuses'
 
 type Filters = {
   product?: {
@@ -25,7 +24,6 @@ const Filter = ({ defaultValues, onApplyFilters }: Props) => {
   const { control, handleSubmit, reset } = useForm<Filters>({ defaultValues })
 
   const { productList } = useGetProductList()
-  const { statuses } = useGetStatuses()
 
   const submit = (data: Filters) => {
     onApplyFilters?.({
@@ -61,24 +59,7 @@ const Filter = ({ defaultValues, onApplyFilters }: Props) => {
             />
           </Grid>
 
-          <Grid item xs={12} md={4}>
-            <Controller
-              name='status'
-              control={control}
-              render={({ field }) => (
-                <CustomTextField {...field} select fullWidth label='Estado'>
-                  <MenuItem value=''>Todos</MenuItem>
-                  {statuses.map(opt => (
-                    <MenuItem key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </MenuItem>
-                  ))}
-                </CustomTextField>
-              )}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={4} display='flex' gap={1} justifyContent='flex-end'>
+          <Grid item xs={12} md={8} display='flex' gap={1} justifyContent='flex-end'>
             <CustomButton type='submit' variant='contained' size='small'>
               Aplicar
             </CustomButton>
