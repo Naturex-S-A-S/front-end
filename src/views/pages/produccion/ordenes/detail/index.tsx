@@ -260,7 +260,7 @@ const Detail: React.FC<Props> = ({ order }) => {
       </Grid>
 
       <Grid item xs={12}>
-        <Adjustment materials={order.details} products={order.items} orderId={order.id} />
+        <Adjustment materials={order.details} products={order.items} orderId={order.id} kardex={order.kardex} />
       </Grid>
     </Grid>
   )

@@ -21,6 +21,21 @@ export interface IOrderItem {
     }
 }
 
+export interface IOrderKardex {
+    id: number
+    name: string
+    type: string
+    quantity: number
+    batch: string
+    location: string | null
+    rack: string
+    classification: string
+    observations: string
+    dateCreate: string
+    idUser: string
+    userName: string
+}
+
 export interface IOrder {
     id: number
     classification: string
@@ -39,6 +54,7 @@ export interface IOrder {
     userFullName: string
     items: IOrderItem[]
     details: IOrderDetail[]
+    kardex: IOrderKardex[]
 }
 
 export interface IOrderList {

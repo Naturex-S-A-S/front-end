@@ -11,7 +11,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import toast from 'react-hot-toast'
 
-import type { IOrderDetail, IOrderItem } from '@/types/pages/order'
+import type { IOrderDetail, IOrderItem, IOrderKardex } from '@/types/pages/order'
 import CreateButton from '@/components/layout/shared/CreateButton'
 import CustomDialog from '@/@core/components/mui/Dialog'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
@@ -47,10 +47,11 @@ interface AdjustmentFormValues {
 interface IProps {
   materials: IOrderDetail[]
   products: IOrderItem[]
+  kardex: IOrderKardex[]
   orderId: number
 }
 
-const Adjustment: FC<IProps> = ({ materials, products, orderId }) => {
+const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId }) => {
   const [open, setOpen] = useState(false)
 
   const queryClient = useQueryClient()
@@ -519,7 +520,7 @@ const Adjustment: FC<IProps> = ({ materials, products, orderId }) => {
             </Grid>
           </form>
         </CustomDialog>
-        <AdjustmentList />
+        <AdjustmentList data={kardex} isLoading={false} />
       </CardContent>
     </Card>
   )
