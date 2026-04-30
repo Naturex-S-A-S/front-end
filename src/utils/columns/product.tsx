@@ -30,7 +30,10 @@ export const columns = ({ handleStatus, isPending }: params): GridColDef[] => {
         return (
           <>
             {ability.can(ABILITY_ACTIONS.READ as any, ABILITY_SUBJECT.PRODUCT, ABILITY_FIELDS.LISTADO) && (
-              <IconButton onClick={() => router.push(`${PATHS.PRODUCT_DETAIL}/${params.row.id}`)}>
+              <IconButton
+                onMouseDown={e => e.stopPropagation()}
+                onClick={() => router.push(`${PATHS.PRODUCT_DETAIL}/${params.row.id}`)}
+              >
                 <Icon icon='hugeicons:view' width={20} height={20} />
               </IconButton>
             )}

@@ -17,7 +17,10 @@ export const columns = (): GridColDef[] => {
       width: 100,
       renderCell: params => {
         return (
-          <IconButton onClick={() => router.push(`/produccion/formulacion/detail/${params.row.id}`)}>
+          <IconButton
+            onMouseDown={e => e.stopPropagation()}
+            onClick={() => router.push(`/produccion/formulacion/detail/${params.row.id}`)}
+          >
             <Icon icon='mdi:eye-outline' width={20} height={20} />
           </IconButton>
         )

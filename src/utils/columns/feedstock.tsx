@@ -30,7 +30,10 @@ export const columns = ({ handleActive, filters, isPending }: params): GridColDe
         return (
           <>
             {ability.can('read', 'Soporte', 'Usuarios') && (
-              <IconButton onClick={() => router.push(`${PATHS.MATERIAL_PRIMA_DETAIL}/${params.row.id}`)}>
+              <IconButton
+                onMouseDown={e => e.stopPropagation()}
+                onClick={() => router.push(`${PATHS.MATERIAL_PRIMA_DETAIL}/${params.row.id}`)}
+              >
                 <Icon icon='hugeicons:view' width={20} height={20} />
               </IconButton>
             )}

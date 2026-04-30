@@ -1,3 +1,5 @@
+import { memo, useDeferredValue, useMemo } from 'react'
+
 import { useForm, Controller } from 'react-hook-form'
 
 import { Grid } from '@mui/material'
@@ -20,7 +22,7 @@ type Props = {
   onApplyFilters?: (filters: any) => void
 }
 
-const Filter = ({ defaultValues, onApplyFilters }: Props) => {
+const Filter = memo(({ defaultValues, onApplyFilters }: Props) => {
   const { control, handleSubmit, reset } = useForm<Filters>({ defaultValues })
 
   const { productList } = useGetProductList()
@@ -37,6 +39,10 @@ const Filter = ({ defaultValues, onApplyFilters }: Props) => {
     onApplyFilters?.(defaultValues)
   }
 
+  const productListDeferred = useDeferredValue(productList)
+
+  const getOptionLabel = useMemo(() => (option: any) => option?.fullName || '', [])
+
   return (
     <CustomCard title='Filtros'>
       <form onSubmit={handleSubmit(submit)}>
@@ -48,8 +54,8 @@ const Filter = ({ defaultValues, onApplyFilters }: Props) => {
               render={({ field: { value, onChange } }: any) => (
                 <CustomAutocomplete
                   value={value}
-                  options={productList}
-                  getOptionLabel={(option: any) => option?.fullName || ''}
+                  options={productListDeferred}
+                  getOptionLabel={getOptionLabel}
                   onChange={(_, v: any | null) => onChange(v)}
                   renderInput={(params: any) => (
                     <CustomTextField {...params} label='Elegir producto' placeholder='Seleccione un producto' />
@@ -71,6 +77,8 @@ const Filter = ({ defaultValues, onApplyFilters }: Props) => {
       </form>
     </CustomCard>
   )
-}
+})
+
+Filter.displayName = 'Filter'
 
 export default Filter

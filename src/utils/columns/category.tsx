@@ -22,7 +22,7 @@ export const columns = ({ handleEdit }: params): GridColDef[] => {
         return (
           <>
             {ability.can('update', 'Soporte', 'Usuarios') && (
-              <IconButton onClick={() => handleEdit(params.row)}>
+              <IconButton onMouseDown={e => e.stopPropagation()} onClick={() => handleEdit(params.row)}>
                 <Icon icon='mdi:pencil-outline' width={20} height={20} />
               </IconButton>
             )}

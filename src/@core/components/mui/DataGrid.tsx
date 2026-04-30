@@ -16,6 +16,7 @@ interface Props {
 }
 
 const CustomDataGrid: React.FC<Props> = ({ columns, data, getRowClassName, isLoading }) => {
+  const loading = isLoading && !data
   const [searchValue, setSearchValue] = useState('')
   const [filteredData, setFilteredData] = useState<any[]>([])
 
@@ -74,7 +75,7 @@ const CustomDataGrid: React.FC<Props> = ({ columns, data, getRowClassName, isLoa
       <DataGrid
         rows={searchValue ? filteredData : data ?? []}
         columns={columns}
-        loading={isLoading}
+        loading={loading}
         getRowClassName={getRowClassName}
         disableRowSelectionOnClick
         pageSizeOptions={[5, 10, 15, 20]}
