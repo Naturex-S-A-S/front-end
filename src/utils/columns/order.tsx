@@ -2,9 +2,9 @@ import { useRouter } from 'next/navigation'
 
 import type { GridColDef } from '@mui/x-data-grid'
 
-import { Box, Chip, IconButton, Tooltip } from '@mui/material'
-import { Icon } from '@iconify/react'
+import { Box, Chip, Tooltip } from '@mui/material'
 
+import { ActionButton } from './components/ActionButton'
 import { formatDate } from '../format'
 
 const STATUS_COLOR: Record<string, 'warning' | 'success' | 'error' | 'default'> = {
@@ -29,12 +29,10 @@ export const columns = (): GridColDef[] => {
       width: 80,
       sortable: false,
       renderCell: params => (
-        <IconButton
-          onMouseDown={e => e.stopPropagation()}
+        <ActionButton
+          icon='mdi:eye-outline'
           onClick={() => router.push(`/produccion/ordenes/${params.row.orderId}`)}
-        >
-          <Icon icon='mdi:eye-outline' width={20} height={20} />
-        </IconButton>
+        />
       )
     },
     {

@@ -3,12 +3,12 @@
 
 import { useRouter } from 'next/navigation'
 
-import { Icon } from '@iconify/react'
-import { Chip, IconButton, Switch, Tooltip } from '@mui/material'
+import { Chip, Switch, Tooltip } from '@mui/material'
 import type { GridColDef } from '@mui/x-data-grid'
 
 import { useAbility } from '@/hooks/casl/useAbility'
 import Loader from '@/@core/components/react-spinners'
+import { ActionButton } from './components/ActionButton'
 import { PATHS } from '../paths'
 
 type params = {
@@ -29,12 +29,10 @@ export const columns = ({ handleActive, isPending }: params): GridColDef[] => {
         return (
           <>
             {ability.can('read', 'Soporte', 'Usuarios') && (
-              <IconButton
-                onMouseDown={e => e.stopPropagation()}
+              <ActionButton
+                icon='hugeicons:view'
                 onClick={() => router.push(`${PATHS.MATERIAL_EMPAQUE_DETAIL}/${params.row.id}`)}
-              >
-                <Icon icon='hugeicons:view' width={20} height={20} />
-              </IconButton>
+              />
             )}
           </>
         )

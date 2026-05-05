@@ -1,9 +1,8 @@
 import { useRouter } from 'next/navigation'
 
-import { Icon } from '@iconify/react'
-import { IconButton } from '@mui/material'
 import type { GridColDef } from '@mui/x-data-grid'
 
+import { ActionButton } from './components/ActionButton'
 import { formatDate } from '../format'
 
 export const columns = (): GridColDef[] => {
@@ -16,12 +15,10 @@ export const columns = (): GridColDef[] => {
       width: 80,
       sortable: false,
       renderCell: params => (
-        <IconButton
-          onMouseDown={e => e.stopPropagation()}
+        <ActionButton
+          icon='mdi:eye-outline'
           onClick={() => router.push(`/finanzas-y-administracion/ordenes-de-venta/${params.row.id}`)}
-        >
-          <Icon icon='mdi:eye-outline' width={20} height={20} />
-        </IconButton>
+        />
       )
     },
     {

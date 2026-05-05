@@ -2,9 +2,9 @@ import { useRouter } from 'next/navigation'
 
 import type { GridColDef } from '@mui/x-data-grid'
 
-import { Box, Chip, IconButton, Tooltip } from '@mui/material'
-import { Icon } from '@iconify/react'
+import { Box, Chip, Tooltip } from '@mui/material'
 
+import { ActionButton } from './components/ActionButton'
 import { formatDate } from '../format'
 
 export const columns = (): GridColDef[] => {
@@ -17,12 +17,10 @@ export const columns = (): GridColDef[] => {
       width: 100,
       renderCell: params => {
         return (
-          <IconButton
-            onMouseDown={e => e.stopPropagation()}
+          <ActionButton
+            icon='mdi:eye-outline'
             onClick={() => router.push(`/produccion/formulacion/detail/${params.row.id}`)}
-          >
-            <Icon icon='mdi:eye-outline' width={20} height={20} />
-          </IconButton>
+          />
         )
       }
     },
