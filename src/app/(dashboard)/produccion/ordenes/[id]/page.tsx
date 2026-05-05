@@ -16,6 +16,7 @@ import Detail from '@/views/pages/produccion/ordenes/detail'
 import NotFound from '@/views/NotFound'
 import useGetOrderById from '@/hooks/order/useGetOrderById'
 import { patchStatusOrder } from '@/api/order'
+import { alertMessageErrors } from '@/utils/messages'
 
 type Props = {
   params: { id: string }
@@ -34,8 +35,8 @@ const Page: React.FC<Props> = ({ params }) => {
         queryKey: ['getOrderById', Number(params.id)]
       })
     },
-    onError: () => {
-      toast.error('Error al actualizar la orden')
+    onError: (error: any) => {
+      alertMessageErrors(error, 'Error al actualizar la orden')
     }
   })
 
