@@ -1,6 +1,7 @@
 import { Box, Chip, Switch, Tooltip } from '@mui/material'
 
 import Loader from '@/@core/components/react-spinners'
+import BackButton from '@/@core/components/back-button'
 import { formatDate } from '@/utils/format'
 
 type Props = {
@@ -31,15 +32,18 @@ const Header: React.FC<Props> = ({
   actions
 }) => {
   return (
-    <Box display={'flex'} flexDirection='row' justifyContent={'space-between'}>
-      <div>
-        <h1>
-          <span>
-            {id ? `#${id} - ` : ''} {name}
-          </span>
-        </h1>
-        {description && <p>{description}</p>}
-        {createdAt && <p className='text-textSecondary'>Fecha de creación: {formatDate(createdAt)}</p>}
+    <Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='flex-start'>
+      <div className='flex items-center gap-4'>
+        <BackButton />
+        <div>
+          <h1>
+            <span>
+              {id ? `#${id} - ` : ''} {name}
+            </span>
+          </h1>
+          {description && <p>{description}</p>}
+          {createdAt && <p className='text-textSecondary'>Fecha de creación: {formatDate(createdAt)}</p>}
+        </div>
       </div>
       <div className='flex items-center gap-4'>
         {typeof quantity === 'number' && Number.isFinite(quantity) && (
@@ -59,22 +63,17 @@ const Header: React.FC<Props> = ({
           (isPending ? (
             <Loader type='component' />
           ) : (
-            <Chip
-              color={active ? 'success' : 'error'}
-              label={
-                <>
-                  {active ? 'Activo' : 'Inactivo'}
-                  <Tooltip title={active ? 'Desactivar' : 'Activar'}>
-                    <Switch
-                      checked={active}
-                      onChange={() => handleActive?.(id, name, active, false)}
-                      color={active ? 'success' : 'error'}
-                      {...(active ? { slotProps: { input: { 'aria-label': 'controlled' } } } : {})}
-                    />
-                  </Tooltip>
-                </>
-              }
-            />
+            <div className='flex items-center gap-2'>
+              <Chip color={active ? 'success' : 'error'} label={active ? 'Activo' : 'Inactivo'} size='medium' />
+              <Tooltip title=''>
+                <Switch
+                  checked={active}
+                  onChange={() => handleActive?.(id, name, active, false)}
+                  color={active ? 'success' : 'error'}
+                  {...(active ? { slotProps: { input: { 'aria-label': 'controlled' } } } : {})}
+                />
+              </Tooltip>
+            </div>
           ))}
       </div>
     </Box>
