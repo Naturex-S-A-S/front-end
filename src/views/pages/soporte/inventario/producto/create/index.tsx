@@ -54,7 +54,7 @@ const Create = () => {
       toogleDialog()
     },
     onError: (error: any) => {
-      alertMessageErrors(error?.response?.data?.message, 'Error al crear el producto')
+      alertMessageErrors(error, 'Error al crear el producto')
     }
   })
 

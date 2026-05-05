@@ -11,7 +11,7 @@ const useKardexOutput = () => {
       toast.success('Salida de producto registrada con éxito')
     },
     onError: (error: any) => {
-      alertMessageErrors(error?.response?.data?.message, 'Error al registrar la salida de producto')
+      alertMessageErrors(error, 'Error al registrar la salida de producto')
     }
   })
 }

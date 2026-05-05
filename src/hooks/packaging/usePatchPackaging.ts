@@ -18,7 +18,7 @@ const usePatchPackaging = () => {
             toast.success('Material de empaque actualizado con éxito');
         },
         onError: (error: any) => {
-            alertMessageErrors(error?.response?.data?.message, 'Error al actualizar el material de empaque');
+            alertMessageErrors(error, 'Error al actualizar el material de empaque');
         }
     })
 

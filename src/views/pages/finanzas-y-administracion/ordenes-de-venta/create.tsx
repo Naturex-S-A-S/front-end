@@ -13,6 +13,7 @@ import * as yup from 'yup'
 import { postSaleOrderType1, postSaleOrderType2 } from '@/api/order'
 import CustomCard from '@/@core/components/mui/Card'
 import { Form } from './form'
+import { alertMessageErrors } from '@/utils/messages'
 
 const schema = yup.object({
   fileType: yup
@@ -56,8 +57,8 @@ const Create = () => {
 
       toast.success(result)
     },
-    onError: () => {
-      toast.error('Error al procesar el archivo')
+    onError: (error: any) => {
+      alertMessageErrors(error, 'Error al procesar el archivo')
     }
   })
 

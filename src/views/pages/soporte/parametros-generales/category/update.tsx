@@ -8,6 +8,7 @@ import CustomDialog from '@/@core/components/mui/Dialog'
 import Form from './form'
 import { putCategory } from '@/api/general-parameters'
 import type { ICategory } from '@/types/pages/generalParameters'
+import { alertMessageErrors } from '@/utils/messages'
 
 interface Props {
   category: ICategory
@@ -36,8 +37,8 @@ const Update = ({ open, toogleDialog, category }: Props) => {
       toogleDialog()
       reset()
     },
-    onError: () => {
-      toast.error('Error al actualizar la categoria')
+    onError: (error: any) => {
+      alertMessageErrors(error, 'Error al actualizar la categoria')
     }
   })
 

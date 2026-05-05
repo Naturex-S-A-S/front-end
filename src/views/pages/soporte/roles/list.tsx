@@ -31,6 +31,7 @@ import type { Role } from '@/types/pages/role'
 
 import { deleteRole, getRoleById, updateRole } from '@/api/role'
 import { useSettings } from '@/@core/hooks/useSettings'
+import { alertMessageErrors } from '@/utils/messages'
 
 const List = () => {
   const [open, setOpen] = useState<boolean>(false)
@@ -69,8 +70,8 @@ const List = () => {
       toast.success('Rol actualizado con éxito')
       toogleDialog()
     },
-    onError: () => {
-      toast.error('Error al actualizar el rol')
+    onError: (error: any) => {
+      alertMessageErrors(error, 'Error al actualizar el rol')
     }
   })
 
@@ -84,8 +85,8 @@ const List = () => {
       queryClient.invalidateQueries({ queryKey: ['getRoles'] })
       toast.success('Rol eliminado con éxito')
     },
-    onError: () => {
-      toast.error('Error al eliminar el rol')
+    onError: (error: any) => {
+      alertMessageErrors(error, 'Error al eliminar el rol')
     }
   })
 

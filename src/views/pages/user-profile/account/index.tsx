@@ -17,6 +17,7 @@ import { putProfile } from '@/api/user/profile'
 import CustomButton from '@/@core/components/mui/Button'
 import { updateProfileSchema } from '@/utils/schemas/profile'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
+import { alertMessageErrors } from '@/utils/messages'
 
 const Account = ({ data }: { data: ProfileData }) => {
   const queryClient = useQueryClient()
@@ -65,8 +66,8 @@ const Account = ({ data }: { data: ProfileData }) => {
 
       queryClient.invalidateQueries({ queryKey: ['getProfile'] })
     },
-    onError: () => {
-      toast.error('Error al actualizar el perfil')
+    onError: (error: any) => {
+      alertMessageErrors(error, 'Error al actualizar el perfil')
     }
   })
 

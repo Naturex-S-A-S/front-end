@@ -11,6 +11,7 @@ import CreateButton from '@/components/layout/shared/CreateButton'
 import { useAbility } from '@/hooks/casl/useAbility'
 import Form from './form'
 import { getRoleModules, postRole } from '@/api/role'
+import { alertMessageErrors } from '@/utils/messages'
 
 const Create = () => {
   const [open, setOpen] = useState<boolean>(false)
@@ -34,8 +35,8 @@ const Create = () => {
       queryClient.invalidateQueries({ queryKey: ['getRoles'] })
       toogleDialog()
     },
-    onError: () => {
-      toast.error('Error al crear el rol')
+    onError: (error: any) => {
+      alertMessageErrors(error, 'Error al crear el rol')
     }
   })
 

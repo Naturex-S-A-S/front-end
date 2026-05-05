@@ -49,7 +49,7 @@ const Create = () => {
       router.replace(`/produccion/aprovisionamiento/${response.id}`)
     },
     onError: (error: any) => {
-      alertMessageErrors(error?.response?.data?.message, 'Error al crear la orden')
+      alertMessageErrors(error, 'Error al crear la orden')
     }
   })
 
@@ -59,8 +59,8 @@ const Create = () => {
       setValue('calculatedData', res)
       toast.success('Cálculo realizado con éxito')
     },
-    onError: () => {
-      toast.error('Error al realizar el cálculo')
+    onError: (error: any) => {
+      alertMessageErrors(error, 'Error al realizar el cálculo')
     }
   })
 

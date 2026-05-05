@@ -47,7 +47,7 @@ const Edit: React.FC<Props> = ({ open, toogleDialog, defaultValues }) => {
       toogleDialog()
     },
     onError: (error: any) => {
-      alertMessageErrors(error?.response?.data?.message, 'Error al actualizar usuario')
+      alertMessageErrors(error, 'Error al actualizar usuario')
     }
   })
 

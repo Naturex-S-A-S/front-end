@@ -52,7 +52,7 @@ const Create = () => {
       toogleDialog()
     },
     onError: (error: any) => {
-      alertMessageErrors(error?.response?.data?.message, 'Error al crear el proveedor')
+      alertMessageErrors(error, 'Error al crear el proveedor')
     }
   })
 

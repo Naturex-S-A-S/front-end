@@ -11,7 +11,7 @@ const useKardexOutput = () => {
       toast.success('Salida de material de empaque registrada con éxito')
     },
     onError: (error: any) => {
-      alertMessageErrors(error?.response?.data?.message, 'Error al registrar la salida de material de empaque')
+      alertMessageErrors(error, 'Error al registrar la salida de material de empaque')
     }
   })
 }

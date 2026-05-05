@@ -15,6 +15,7 @@ import TextFieldPassword from '@/components/layout/shared/TextFieldPassword'
 import CustomButton from '@/@core/components/mui/Button'
 import { changePasswordSchema } from '@/utils/schemas/user'
 import { putPassword } from '@/api/user/profile'
+import { alertMessageErrors } from '@/utils/messages'
 
 const ChangePassword = () => {
   const {
@@ -34,8 +35,8 @@ const ChangePassword = () => {
       toast.success('Contraseña actualizada con éxito')
       reset()
     },
-    onError: () => {
-      toast.error('Error al actualizar la contraseña')
+    onError: (error: any) => {
+      alertMessageErrors(error, 'Error al actualizar la contraseña')
     }
   })
 

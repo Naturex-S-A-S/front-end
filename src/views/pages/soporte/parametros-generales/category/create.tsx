@@ -12,6 +12,7 @@ import { postCategory } from '@/api/general-parameters'
 import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
 import { categorySchema } from '@/utils/schemas/generalParameters'
 import Form from './form'
+import { alertMessageErrors } from '@/utils/messages'
 
 const Create = () => {
   const queryClient = useQueryClient()
@@ -34,8 +35,8 @@ const Create = () => {
       queryClient.invalidateQueries({ queryKey: ['getCategories'] })
       reset()
     },
-    onError: () => {
-      toast.error('Error al crear la categoria')
+    onError: (error: any) => {
+      alertMessageErrors(error, 'Error al crear la categoria')
     }
   })
 

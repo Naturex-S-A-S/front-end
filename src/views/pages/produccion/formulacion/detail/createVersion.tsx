@@ -48,7 +48,7 @@ const CreateVersion = ({ formulationId }: Props) => {
       toogleDialog()
     },
     onError: (error: any) => {
-      alertMessageErrors(error?.response?.data?.message, 'Error al crear una nueva versión')
+      alertMessageErrors(error, 'Error al crear una nueva versión')
     }
   })
 

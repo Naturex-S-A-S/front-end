@@ -25,6 +25,7 @@ import {
 } from '@/api/feedstock'
 
 import { postKardexInputAdjustment as postKardexInputAdjustmentProduct } from '@/api/product'
+import { alertMessageErrors } from '@/utils/messages'
 
 type Option = { id: number; label: string }
 
@@ -108,8 +109,8 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId }) => {
       queryClient.invalidateQueries({ queryKey: ['getOrderById', Number(orderId)] })
       toast.success('Ajuste registrado correctamente')
     },
-    onError: () => {
-      toast.error('Error al registrar el ajuste')
+    onError: (error: any) => {
+      alertMessageErrors(error, 'Error al registrar el ajuste')
     }
   })
 
@@ -121,8 +122,8 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId }) => {
       queryClient.invalidateQueries({ queryKey: ['getOrderById', Number(orderId)] })
       toast.success('Ajuste registrado correctamente')
     },
-    onError: () => {
-      toast.error('Error al registrar el ajuste')
+    onError: (error: any) => {
+      alertMessageErrors(error, 'Error al registrar el ajuste')
     }
   })
 
@@ -134,8 +135,8 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId }) => {
       queryClient.invalidateQueries({ queryKey: ['getOrderById', Number(orderId)] })
       toast.success('Ajuste registrado correctamente')
     },
-    onError: () => {
-      toast.error('Error al registrar el ajuste')
+    onError: (error: any) => {
+      alertMessageErrors(error, 'Error al registrar el ajuste')
     }
   })
 

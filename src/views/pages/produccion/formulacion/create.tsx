@@ -52,7 +52,7 @@ const Create = () => {
       toogleDialog()
     },
     onError: (error: any) => {
-      alertMessageErrors(error?.response?.data?.message, 'Error al crear la fórmula')
+      alertMessageErrors(error, 'Error al crear la fórmula')
     }
   })
 

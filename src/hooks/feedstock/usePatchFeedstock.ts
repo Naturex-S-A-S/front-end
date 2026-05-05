@@ -18,7 +18,7 @@ const usePatchFeedstock = () => {
             toast.success('Materia prima actualizado con éxito');
         },
         onError: (error: any) => {
-            alertMessageErrors(error?.response?.data?.message, 'Error al actualizar la materia prima');
+            alertMessageErrors(error, 'Error al actualizar la materia prima');
         }
     })
 

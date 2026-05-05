@@ -22,7 +22,7 @@ const usePutProduct = () => {
             updateCache();
         },
         onError: (error: any) => {
-            alertMessageErrors(error?.response?.data?.message, 'Error al actualizar el producto');
+            alertMessageErrors(error, 'Error al actualizar el producto');
         }
     })
 

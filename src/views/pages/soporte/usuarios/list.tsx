@@ -12,6 +12,7 @@ import CustomDataGrid from '@/@core/components/mui/DataGrid'
 import { deleteUser, getUsers } from '@/api/user'
 import { columns } from '@/utils/columns/user'
 import Edit from './edit'
+import { alertMessageErrors } from '@/utils/messages'
 
 const List = () => {
   const [userEdit, setUserEdit] = useState(undefined)
@@ -30,8 +31,8 @@ const List = () => {
       queryClient.invalidateQueries({ queryKey: ['getUsers'] })
       toast.success('Usuario eliminado con éxito')
     },
-    onError: () => {
-      toast.error('Error al eliminar el usuario')
+    onError: (error: any) => {
+      alertMessageErrors(error, 'Error al eliminar el usuario')
     }
   })
 
