@@ -66,15 +66,21 @@ const Create = () => {
     }
   })
 
-  const orderCalculate = useCallback(() => {
+  const orderCalculate = useCallback(async () => {
     const { product, presentations } = getValues()
 
-    mutateOrderCalculate({
-      baseProductId: product.id,
-      productIds: presentations.map((p: any) => p.id).join(','),
-      quantities: presentations.map((p: any) => p.quantityG).join(',')
-    })
-    setIsChanged(false)
+    try {
+      await mutateOrderCalculate({
+        baseProductId: product.id,
+        productIds: presentations.map((p: any) => p.id).join(','),
+        quantities: presentations.map((p: any) => p.quantityG).join(',')
+      })
+      setIsChanged(false)
+
+      return true
+    } catch (_) {
+      return false
+    }
   }, [mutateOrderCalculate, getValues])
 
   const onSubmit = (values: any) => {

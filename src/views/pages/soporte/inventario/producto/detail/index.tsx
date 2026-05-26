@@ -154,7 +154,7 @@ const Detail: React.FC<IProps> = ({ product }) => {
       </Grid>
       {canReadFormulation && (
         <Grid item xs={12}>
-          <CustomCard title='Formulas'>
+          <CustomCard title='Fórmulas'>
             <FormulationsList productId={product.id} />
           </CustomCard>
         </Grid>

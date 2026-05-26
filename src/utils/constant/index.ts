@@ -26,3 +26,15 @@ export const ABILITY_ACTIONS = {
     DELETE: 'delete',
     MANAGE: 'manage'
 }
+
+export const STATUS_COLOR: Record<string, 'warning' | 'success' | 'error' | 'default'> = {
+    en_proceso: 'warning',
+    finalizada: 'success',
+    cancelada: 'error'
+}
+
+export const STATUS_LABEL: any = {
+    en_proceso: 'En proceso',
+    finalizada: 'Completada',
+    cancelada: 'Cancelada'
+}

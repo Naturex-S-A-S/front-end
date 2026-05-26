@@ -50,9 +50,10 @@ interface IProps {
   products: IOrderItem[]
   kardex: IOrderKardex[]
   orderId: number
+  canCreate: boolean
 }
 
-const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId }) => {
+const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreate }) => {
   const [open, setOpen] = useState(false)
 
   const queryClient = useQueryClient()
@@ -201,9 +202,11 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId }) => {
     <Card>
       <CardHeader title='Ajustes' />
       <CardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <CreateButton onClick={toogleDialog} />
-        </Box>
+        {canCreate && (
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <CreateButton onClick={toogleDialog} />
+          </Box>
+        )}
         <CustomDialog open={open} toogleDialog={toogleDialog} title='Realizar Ajuste'>
           <form onSubmit={handleSubmit(handleOnSubmit)}>
             <Grid container spacing={2}>

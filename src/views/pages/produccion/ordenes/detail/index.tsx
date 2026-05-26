@@ -20,21 +20,10 @@ import classNames from 'classnames'
 import { formatDate } from '@/utils/format'
 import type { IOrder } from '@/types/pages/order'
 import Adjustment from './adjustment'
+import { STATUS_COLOR, STATUS_LABEL } from '@/utils/constant'
 
 interface Props {
   order: IOrder
-}
-
-const STATUS_COLOR: Record<string, 'warning' | 'success' | 'error' | 'default'> = {
-  en_proceso: 'warning',
-  finalizada: 'success',
-  cancelado: 'error'
-}
-
-const STATUS_LABEL: Record<string, string> = {
-  en_proceso: 'En proceso',
-  finalizada: 'Finalizada',
-  cancelado: 'Cancelado'
 }
 
 const Detail: React.FC<Props> = ({ order }) => {
@@ -84,7 +73,7 @@ const Detail: React.FC<Props> = ({ order }) => {
                       fontWeight={600}
                       sx={{ whiteSpace: 'normal', wordBreak: 'break-word', overflowWrap: 'anywhere' }}
                     >
-                      Deiby Andres Moreno
+                      {order.userFullName}
                     </Typography>
                   </Box>
                 </Box>
@@ -260,7 +249,13 @@ const Detail: React.FC<Props> = ({ order }) => {
       </Grid>
 
       <Grid item xs={12}>
-        <Adjustment materials={order.details} products={order.items} orderId={order.id} kardex={order.kardex} />
+        <Adjustment
+          materials={order.details}
+          products={order.items}
+          orderId={order.id}
+          kardex={order.kardex}
+          canCreate={order.status === STATUS_LABEL.en_proceso}
+        />
       </Grid>
     </Grid>
   )

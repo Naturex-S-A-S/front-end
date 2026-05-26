@@ -48,7 +48,7 @@ const NotFound = ({ mode }: { mode: SystemMode }) => {
           <Typography variant='h4'>Page Not Found ⚠️</Typography>
           <Typography>we couldn&#39;t find the page you are looking for.</Typography>
         </div>
-        <Button href='/' component={Link} variant='contained'>
+        <Button href='/home' component={Link} variant='contained'>
           Back To Home
         </Button>
         <img

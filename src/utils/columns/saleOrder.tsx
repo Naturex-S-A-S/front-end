@@ -39,7 +39,7 @@ export const columns = (): GridColDef[] => {
     },
     {
       field: 'charge',
-      headerName: 'Cargo',
+      headerName: 'Costo',
       width: 100
     },
     {

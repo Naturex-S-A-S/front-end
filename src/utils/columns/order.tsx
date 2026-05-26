@@ -6,18 +6,7 @@ import { Box, Chip, Tooltip } from '@mui/material'
 
 import { ActionButton } from './components/ActionButton'
 import { formatDate } from '../format'
-
-const STATUS_COLOR: Record<string, 'warning' | 'success' | 'error' | 'default'> = {
-  en_proceso: 'warning',
-  completado: 'success',
-  cancelado: 'error'
-}
-
-const STATUS_LABEL: Record<string, string> = {
-  en_proceso: 'En proceso',
-  completado: 'Completado',
-  cancelado: 'Cancelado'
-}
+import { STATUS_COLOR, STATUS_LABEL } from '../constant'
 
 export const columns = (): GridColDef[] => {
   const router = useRouter()
@@ -29,10 +18,7 @@ export const columns = (): GridColDef[] => {
       width: 80,
       sortable: false,
       renderCell: params => (
-        <ActionButton
-          icon='mdi:eye-outline'
-          onClick={() => router.push(`/produccion/ordenes/${params.row.orderId}`)}
-        />
+        <ActionButton icon='mdi:eye-outline' onClick={() => router.push(`/produccion/ordenes/${params.row.orderId}`)} />
       )
     },
     {

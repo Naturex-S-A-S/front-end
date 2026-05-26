@@ -64,14 +64,26 @@ const Create = () => {
     }
   })
 
-  const orderCalculate = useCallback(() => {
+  const orderCalculate = useCallback(async () => {
     const { presentations } = getValues()
 
-    mutateOrderSupplyCalculate({
-      productIds: presentations.map((p: any) => p.id).join(','),
-      quantities: presentations.map((p: any) => p.quantityG).join(',')
-    })
-    setIsChanged(false)
+    if (!presentations || !presentations.length) {
+      toast.error('No hay presentaciones para calcular.')
+
+      return false
+    }
+
+    try {
+      await mutateOrderSupplyCalculate({
+        productIds: presentations.map((p: any) => p.id).join(','),
+        quantities: presentations.map((p: any) => p.quantityG).join(',')
+      })
+      setIsChanged(false)
+
+      return true
+    } catch (error: any) {
+      return false
+    }
   }, [mutateOrderSupplyCalculate, getValues])
 
   const onSubmit = (values: any) => {

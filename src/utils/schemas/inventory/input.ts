@@ -15,7 +15,7 @@ export const kardexFeedstockInputSchema = yup
             value: yup.string().required('La unidad es requerida'),
             label: yup.string().required('El label es requerido')
         }),
-        charge: yup.string().typeError('El cargo debe ser un número').required('El cargo es requerido'),
+        charge: yup.string().typeError('El costo debe ser un número').required('El costo es requerido'),
         document: yup.string().optional(),
         batch: yup.string().required('El lote es requerido'),
         location: yup.string().optional(),
@@ -36,7 +36,7 @@ export const kardexPackagingInputSchema = yup
             name: yup.string().required('El label es requerido')
         }),
         quantity: yup.string().min(1, 'La cantidad debe ser mayor o igual a 1').typeError('La cantidad debe ser un número').required('La cantidad es requerida'),
-        charge: yup.string().typeError('El cargo debe ser un número').required('El cargo es requerido'),
+        charge: yup.string().typeError('El costo debe ser un número').required('El costo es requerido'),
         document: yup.string().optional(),
         batch: yup.string().required('El lote es requerido'),
         location: yup.string().optional(),

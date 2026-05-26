@@ -37,7 +37,7 @@ type Props = {
   isPending: boolean
   isChanged: boolean
   setIsChanged: (value: boolean) => void
-  orderCalculate: () => void
+  orderCalculate: () => Promise<boolean>
   isPendingOrderCalculate: boolean
 }
 
@@ -105,8 +105,9 @@ const Form: React.FC<Props> = ({
     const result = await trigger('presentations')
 
     if (result) {
-      setStep(2)
-      orderCalculate()
+      const success = await orderCalculate()
+
+      success ? setStep(2) : setStep(1)
     }
   }, [orderCalculate, setStep, trigger])
 
