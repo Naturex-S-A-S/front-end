@@ -1,3 +1,5 @@
+'use client'
+
 // MUI Imports
 import { useTheme } from '@mui/material/styles'
 
@@ -38,6 +40,60 @@ const RenderExpandIcon = ({ open, transitionDuration }: RenderExpandIconProps) =
   </StyledVerticalNavExpandIcon>
 )
 
+const GenerateVerticalMenu = ({ permissions }: { permissions?: IPermissions[] }) => {
+  if (!permissions || permissions.length === 0) {
+    return (
+      <>
+        <MenuItem href='/home' icon={<i className='tabler-smart-home' />}>
+          Home
+        </MenuItem>
+      </>
+    )
+  }
+
+  const renderChild = (child: IChild, key: string): JSX.Element => {
+    const name = child.name || key
+
+    const resolvedPath = Object.hasOwn(child, 'children')
+      ? child.children?.find(c => c.name === 'Listado')?.path || child.children?.[0]?.path
+      : child.path
+        ? child.path.startsWith('/')
+          ? child.path
+          : `/${child.path}`
+        : '/'
+
+    return (
+      <MenuItem key={key} href={resolvedPath || '/'}>
+        {name}
+      </MenuItem>
+    )
+  }
+
+  return (
+    <>
+      {permissions.map((module, idx) => {
+        const moduleKey = module.name || `module-${idx}`
+        const moduleName = module.name || moduleKey
+        const modulePath = module.path || '/'
+
+        if (module.children && module.children.length > 0) {
+          return (
+            <SubMenu key={`${idx}-${moduleKey}`} label={moduleName} icon={<i className='tabler-folder' />}>
+              {module.children.map((child, i) => renderChild(child, `${idx}-${moduleKey}-${i}`))}
+            </SubMenu>
+          )
+        }
+
+        return (
+          <MenuItem key={`${idx}-${moduleKey}`} href={modulePath} icon={<i className='tabler-folder' />}>
+            {moduleName}
+          </MenuItem>
+        )
+      })}
+    </>
+  )
+}
+
 const VerticalMenu = ({ scrollMenu }: Props) => {
   // Hooks
   const theme = useTheme()
@@ -49,68 +105,6 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
   const { transitionDuration } = verticalNavOptions
 
   const ScrollWrapper = isBreakpointReached ? 'div' : PerfectScrollbar
-
-  const GenerateVerticalMenu = ({ permissions }: { permissions?: IPermissions[] }) => {
-    if (!permissions || permissions.length === 0) {
-      return (
-        <>
-          <MenuItem href='/home' icon={<i className='tabler-smart-home' />}>
-            Home
-          </MenuItem>
-        </>
-      )
-    }
-
-    const renderChild = (child: IChild, key: string): JSX.Element => {
-      const name = child.name || key
-
-      const resolvedPath = Object.hasOwn(child, 'children')
-        ? child.children?.find(c => c.name === 'Listado')?.path || child.children?.[0]?.path
-        : child.path
-          ? child.path.startsWith('/')
-            ? child.path
-            : `/${child.path}`
-          : '/'
-
-      /* if (child.children && child.children.length > 0 && !child.path) {
-        return (
-          <SubMenu key={key} label={name} icon={<i className='tabler-folder' />}>
-            {child.children.map((c, i) => renderChild(c, `${key}-${i}`))}
-          </SubMenu>
-        )
-      } */
-
-      return (
-        <MenuItem key={key} href={resolvedPath || '/'}>
-          {name}
-        </MenuItem>
-      )
-    }
-
-    return (
-      <>
-        {permissions.map((module, idx) => {
-          const moduleKey = module.name || `module-${idx}`
-          const moduleName = module.name || moduleKey
-          const modulePath = module.path || '/'
-
-          if (module.children && module.children.length > 0) {
-            return (
-              <SubMenu key={`${idx}-${moduleKey}`} label={moduleName} icon={<i className='tabler-folder' />}>
-                {module.children.map((child, i) => renderChild(child, `${idx}-${moduleKey}-${i}`))}
-              </SubMenu>
-            )
-          }
-
-          return (
-            <MenuItem key={`${idx}-${moduleKey}`} href={modulePath} icon={<i className='tabler-folder' />}>
-              {moduleName}
-            </MenuItem>
-          )
-        })}
-      </>
-    )
-  }
 
   return (
     <ScrollWrapper

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import CustomCard from '@/@core/components/mui/Card'
 import CustomDataGrid from '@/@core/components/mui/DataGrid'
 import useGetFormulation from '@/hooks/formulation/useGetFormulation'
-import { columns } from '@/utils/columns/formulation'
+import { useColumns } from '@/utils/columns/formulation'
 import Filter from './filter'
 
 const defaultFilters = {
@@ -15,6 +15,7 @@ export default function List() {
   const [filters, setFilters] = useState(defaultFilters)
 
   const { formulations, isLoading } = useGetFormulation(filters)
+  const colDefs = useColumns()
 
   const onApplyFilters = (filters: any) => {
     setFilters({
@@ -25,7 +26,7 @@ export default function List() {
   return (
     <CustomCard>
       <Filter onApplyFilters={onApplyFilters} defaultValues={defaultFilters} />
-      <CustomDataGrid columns={columns()} data={formulations} isLoading={isLoading} />
+      <CustomDataGrid columns={colDefs} data={formulations} isLoading={isLoading} />
     </CustomCard>
   )
 }

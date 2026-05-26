@@ -17,7 +17,7 @@ type params = {
   isPending: boolean
 }
 
-export const columns = ({ handleStatus, isPending }: params): GridColDef[] => {
+export const useColumns = ({ handleStatus, isPending }: params): GridColDef[] => {
   const ability = useAbility()
   const router = useRouter()
 

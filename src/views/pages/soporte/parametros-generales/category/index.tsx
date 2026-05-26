@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import CustomDataGrid from '@/@core/components/mui/DataGrid'
 import Create from './create'
-import { columns } from '@/utils/columns/category'
+import { useColumns } from '@/utils/columns/category'
 import { getCategories } from '@/api/general-parameters'
 import type { ICategory } from '@/types/pages/generalParameters'
 import Update from './update'
@@ -34,6 +34,8 @@ const Category = () => {
     })
   }
 
+  const colDefs = useColumns({ handleEdit })
+
   return (
     <div className='flex flex-col items-center gap-2'>
       {updateData.category && (
@@ -41,7 +43,7 @@ const Category = () => {
       )}
       <Create />
       <div className='w-full'>
-        <CustomDataGrid columns={columns({ handleEdit })} data={data} />
+        <CustomDataGrid columns={colDefs} data={data} />
       </div>
       {/*<Grid container spacing={2}>
         {data?.map((category: any) => (

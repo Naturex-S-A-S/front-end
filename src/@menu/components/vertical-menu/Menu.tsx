@@ -1,7 +1,7 @@
 'use client'
 
 // React Imports
-import { createContext, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ForwardRefRenderFunction, MenuHTMLAttributes, MutableRefObject, ReactElement, ReactNode } from 'react'
 
 // Next Imports
@@ -26,6 +26,9 @@ import useVerticalNav from '../../hooks/useVerticalNav'
 
 // Util Imports
 import { menuClasses } from '../../utils/menuClasses'
+
+// Context Imports
+import { VerticalMenuContext } from './verticalMenuContext'
 
 // Styled Component Imports
 import StyledVerticalMenu from '../../styles/vertical/StyledVerticalMenu'
@@ -89,8 +92,6 @@ export type MenuProps = VerticalMenuContextProps &
   MenuHTMLAttributes<HTMLMenuElement> & {
     popoutWhenCollapsed?: boolean
   }
-
-export const VerticalMenuContext = createContext({} as VerticalMenuContextProps)
 
 const Menu: ForwardRefRenderFunction<HTMLMenuElement, MenuProps> = (props, ref) => {
   // Props
@@ -227,3 +228,4 @@ const Menu: ForwardRefRenderFunction<HTMLMenuElement, MenuProps> = (props, ref) 
 }
 
 export default forwardRef(Menu)
+export { VerticalMenuContext } from './verticalMenuContext'

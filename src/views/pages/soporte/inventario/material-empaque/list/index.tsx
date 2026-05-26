@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import CustomDataGrid from '@/@core/components/mui/DataGrid'
-import { columns } from '@/utils/columns/packaging'
+import { useColumns } from '@/utils/columns/packaging'
 import Filter from './filter'
 import useGetPackaging from '@/hooks/packaging/useGetPackaging'
 import usePatchPackaging from '@/hooks/packaging/usePatchPackaging'
@@ -15,6 +15,7 @@ const List = () => {
   const [filters, setFilters] = useState(defaultFilters)
   const { packaging, isLoading } = useGetPackaging(filters)
   const { handleActive, isPending } = usePatchPackaging()
+  const colDefs = useColumns({ handleActive, isPending })
 
   const onApplyFilters = (filters: any) => {
     setFilters({
@@ -26,7 +27,7 @@ const List = () => {
   return (
     <div className='flex flex-col gap-2'>
       <Filter onApplyFilters={onApplyFilters} defaultValues={defaultFilters} />
-      <CustomDataGrid columns={columns({ handleActive, isPending })} data={packaging} isLoading={isLoading} />
+      <CustomDataGrid columns={colDefs} data={packaging} isLoading={isLoading} />
     </div>
   )
 }

@@ -1,12 +1,8 @@
-// React Imports
-import React from 'react'
-
 // MUI Imports
 import type { Theme } from '@mui/material/styles'
 
-const SelectIcon = () => {
-  return <i className='tabler-chevron-down' />
-}
+// Local Imports
+import SelectIcon from './select-icon'
 
 const iconStyles = (theme: Theme) => ({
   userSelect: 'none',

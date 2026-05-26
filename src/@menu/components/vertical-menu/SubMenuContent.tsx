@@ -66,10 +66,12 @@ const SubMenuContent: ForwardRefRenderFunction<HTMLDivElement, SubMenuContentPro
 
           target.style.blockSize = `${height}px`
 
-          setTimeout(() => {
+          const timer = setTimeout(() => {
             target.style.overflow = 'auto'
             target.style.blockSize = 'auto'
           }, transitionDuration)
+
+          return () => clearTimeout(timer)
         }
       } else {
         const target = SubMenuContentRef?.current
@@ -80,10 +82,12 @@ const SubMenuContent: ForwardRefRenderFunction<HTMLDivElement, SubMenuContentPro
           target.offsetHeight
           target.style.blockSize = '0px'
 
-          setTimeout(() => {
+          const timer = setTimeout(() => {
             target.style.overflow = 'auto'
             target.style.display = 'none'
           }, transitionDuration)
+
+          return () => clearTimeout(timer)
         }
       }
     }

@@ -7,7 +7,7 @@ import { Box, Chip, Tooltip } from '@mui/material'
 import { ActionButton } from './components/ActionButton'
 import { formatDate } from '../format'
 
-export const columns = (): GridColDef[] => {
+export const useColumns = (): GridColDef[] => {
   const router = useRouter()
 
   return [

@@ -169,6 +169,7 @@ const Form: React.FC<Props> = ({
                         <Typography variant='h5'>Presentaciones</Typography>
                         {fields.map((presentation: Presentation, index: number) => (
                           <CustomTextField
+                            key={presentation.id}
                             {...register(`presentations.${index}.quantityG`)}
                             type='number'
                             autoComplete='off'
@@ -182,7 +183,6 @@ const Form: React.FC<Props> = ({
 
                               setValue(`presentations.${index}.quantityG`, value)
                             }}
-                            key={presentation.id}
                             fullWidth
                             label={`${presentation.fullName}`}
                             placeholder='Ingrese las unidades a producir'

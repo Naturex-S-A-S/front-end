@@ -8,7 +8,7 @@ import { ActionButton } from './components/ActionButton'
 import { formatDate } from '../format'
 import { STATUS_COLOR, STATUS_LABEL } from '../constant'
 
-export const columns = (): GridColDef[] => {
+export const useColumns = (): GridColDef[] => {
   const router = useRouter()
 
   return [

@@ -5,7 +5,7 @@ import type { GridColDef } from '@mui/x-data-grid'
 import { ActionButton } from './components/ActionButton'
 import { formatDate } from '../format'
 
-export const columns = (): GridColDef[] => {
+export const useColumns = (): GridColDef[] => {
   const router = useRouter()
 
   return [

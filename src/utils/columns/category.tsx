@@ -10,7 +10,7 @@ type params = {
   handleEdit: (category: any) => void
 }
 
-export const columns = ({ handleEdit }: params): GridColDef[] => {
+export const useColumns = ({ handleEdit }: params): GridColDef[] => {
   const ability = useAbility()
 
   return [

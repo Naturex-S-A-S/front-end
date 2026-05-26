@@ -9,7 +9,7 @@ import type { MenuItemProps } from '../../components/vertical-menu/MenuItem'
 import { menuClasses } from '../../utils/menuClasses'
 
 // Style Imports
-import { menuButtonStyles } from '../../components/vertical-menu/MenuButton'
+import { menuButtonStyles } from '../../components/vertical-menu/menuButtonStyles'
 
 type StyledVerticalMenuItemProps = Pick<MenuItemProps, 'rootStyles' | 'disabled'> & {
   level: number

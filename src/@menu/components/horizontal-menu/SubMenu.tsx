@@ -1,14 +1,13 @@
 'use client'
 
 // React Imports
-import { Children, cloneElement, createContext, forwardRef, useEffect, useRef, useState } from 'react'
+import { Children, cloneElement, forwardRef, useEffect, useRef, useState } from 'react'
 import type {
   AnchorHTMLAttributes,
   ForwardRefRenderFunction,
   KeyboardEvent,
   MouseEvent,
   ReactElement,
-  HTMLProps,
   ReactNode
 } from 'react'
 
@@ -55,7 +54,8 @@ import { menuClasses } from '../../utils/menuClasses'
 import { confirmUrlInChildren, renderMenuIcon } from '../../utils/menuUtils'
 
 // Styled Component Imports
-import MenuButton, { menuButtonStyles } from './MenuButton'
+import MenuButton from './MenuButton'
+import { menuButtonStyles } from './menuButtonStyles'
 import StyledMenuLabel from '../../styles/StyledMenuLabel'
 import StyledMenuPrefix from '../../styles/StyledMenuPrefix'
 import StyledMenuSuffix from '../../styles/StyledMenuSuffix'
@@ -95,10 +95,6 @@ type StyledSubMenuProps = Pick<SubMenuProps, 'rootStyles' | 'disabled'> & {
   buttonStyles?: CSSObject
 }
 
-type HorizontalSubMenuContextProps = {
-  getItemProps: (userProps?: HTMLProps<HTMLElement>) => Record<string, unknown>
-}
-
 const StyledSubMenu = styled.li<StyledSubMenuProps>`
   ${({ level }) => level === 0 && { borderRadius: '6px', overflow: 'hidden' }}
 
@@ -120,7 +116,7 @@ const StyledSubMenu = styled.li<StyledSubMenuProps>`
   }
 `
 
-export const HorizontalSubMenuContext = createContext<HorizontalSubMenuContextProps>({ getItemProps: () => ({}) })
+import { HorizontalSubMenuContext } from './horizontalSubMenuContext'
 
 const SubMenu: ForwardRefRenderFunction<HTMLLIElement, SubMenuProps> = (props, ref) => {
   // Props

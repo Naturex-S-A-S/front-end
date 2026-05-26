@@ -11,7 +11,7 @@ type params = {
   handleDelete: (userId: any) => void
 }
 
-export const columns = ({ handleEdit, handleDelete }: params): GridColDef[] => {
+export const useColumns = ({ handleEdit, handleDelete }: params): GridColDef[] => {
   const ability = useAbility()
 
   return [

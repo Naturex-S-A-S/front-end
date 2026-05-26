@@ -10,7 +10,7 @@ import toast from 'react-hot-toast'
 import CustomCard from '@/@core/components/mui/Card'
 import CustomDataGrid from '@/@core/components/mui/DataGrid'
 import { deleteUser, getUsers } from '@/api/user'
-import { columns } from '@/utils/columns/user'
+import { useColumns } from '@/utils/columns/user'
 import Edit from './edit'
 import { alertMessageErrors } from '@/utils/messages'
 
@@ -63,10 +63,12 @@ const List = () => {
     })
   }
 
+  const colDefs = useColumns({ handleEdit, handleDelete })
+
   return (
     <CustomCard title=''>
       <Edit open={open} toogleDialog={handleDialog} defaultValues={userEdit} />
-      <CustomDataGrid columns={columns({ handleEdit, handleDelete })} data={data} />
+      <CustomDataGrid columns={colDefs} data={data} />
     </CustomCard>
   )
 }

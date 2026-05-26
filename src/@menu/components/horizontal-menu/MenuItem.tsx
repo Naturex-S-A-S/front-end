@@ -17,7 +17,7 @@ import { useFloatingTree } from '@floating-ui/react'
 import type { ChildrenType, MenuItemElement, MenuItemExactMatchUrlProps, RootStylesType } from '../../types'
 
 // Context Imports
-import { HorizontalSubMenuContext } from './SubMenu'
+import { HorizontalSubMenuContext } from './horizontalSubMenuContext'
 
 // Component Imports
 import MenuButton from './MenuButton'

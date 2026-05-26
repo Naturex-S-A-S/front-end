@@ -1,22 +1,15 @@
 'use client'
 
 // React Imports
-import { createContext, forwardRef, useMemo } from 'react'
-import type { ForwardRefRenderFunction, MenuHTMLAttributes, ReactElement } from 'react'
+import { forwardRef, useMemo } from 'react'
+import type { ForwardRefRenderFunction, MenuHTMLAttributes } from 'react'
 
 // Third-party Imports
 import classnames from 'classnames'
 import { FloatingTree } from '@floating-ui/react'
 
 // Type Imports
-import type { MenuProps as VerticalMenuProps } from '../vertical-menu/Menu'
-import type {
-  ChildrenType,
-  MenuItemStyles,
-  RenderExpandIconParams,
-  RenderExpandedMenuItemIcon,
-  RootStylesType
-} from '../../types'
+import type { ChildrenType, RootStylesType } from '../../types'
 
 // Util Imports
 import { menuClasses } from '../../utils/menuClasses'
@@ -30,37 +23,16 @@ import styles from '../../styles/horizontal/horizontalUl.module.css'
 // Default Config Imports
 import { horizontalSubMenuToggleDuration } from '../../defaultConfigs'
 
-export type HorizontalMenuContextProps = {
-  triggerPopout?: 'hover' | 'click'
-  browserScroll?: boolean
-  menuItemStyles?: MenuItemStyles
-  renderExpandIcon?: (params: RenderExpandIconParams) => ReactElement
-  renderExpandedMenuItemIcon?: RenderExpandedMenuItemIcon
-  transitionDuration?: number
-  popoutMenuOffset?: {
-    mainAxis?: number | ((params: { level?: number }) => number)
-    alignmentAxis?: number | ((params: { level?: number }) => number)
-  }
-  textTruncate?: boolean
-  verticalMenuProps?: Pick<
-    VerticalMenuProps,
-    | 'transitionDuration'
-    | 'menuSectionStyles'
-    | 'menuItemStyles'
-    | 'subMenuOpenBehavior'
-    | 'renderExpandIcon'
-    | 'renderExpandedMenuItemIcon'
-    | 'textTruncate'
-    | 'rootStyles'
-  >
-}
+// Context Imports
+import { HorizontalMenuContext } from './horizontalMenuContext'
+import type { HorizontalMenuContextProps } from './horizontalMenuContext'
 
 export type MenuProps = HorizontalMenuContextProps &
   RootStylesType &
   Partial<ChildrenType> &
   MenuHTMLAttributes<HTMLMenuElement>
 
-export const HorizontalMenuContext = createContext({} as HorizontalMenuContextProps)
+export { HorizontalMenuContext, HorizontalMenuContextProps } from './horizontalMenuContext'
 
 const Menu: ForwardRefRenderFunction<HTMLMenuElement, MenuProps> = (props, ref) => {
   // Props

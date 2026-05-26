@@ -42,7 +42,8 @@ import type { ChildrenType, RootStylesType, SubMenuItemElement } from '../../typ
 
 // Component Imports
 import SubMenuContent from './SubMenuContent'
-import MenuButton, { menuButtonStyles } from './MenuButton'
+import MenuButton from './MenuButton'
+import { menuButtonStyles } from './menuButtonStyles'
 
 // Icon Imports
 import ChevronRight from '../../svg/ChevronRight'

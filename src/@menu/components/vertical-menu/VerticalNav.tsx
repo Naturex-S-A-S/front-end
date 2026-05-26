@@ -127,7 +127,7 @@ const VerticalNav = (props: VerticalNavProps) => {
   }, [defaultCollapsed])
 
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       updateVerticalNavState({
         expanding: false,
         collapsing: false
@@ -137,6 +137,8 @@ const VerticalNav = (props: VerticalNavProps) => {
     if (!isCollapsedContext && !breakpointReached && verticalNavCollapsedRef.current) {
       verticalNavCollapsedRef.current = false
     }
+
+    return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCollapsedContext])
 

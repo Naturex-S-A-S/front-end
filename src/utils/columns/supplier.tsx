@@ -8,7 +8,7 @@ import type { GridColDef } from '@mui/x-data-grid'
 import { useAbility } from '@/hooks/casl/useAbility'
 import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from '../constant'
 
-export const columns = (): GridColDef[] => {
+export const useColumns = (): GridColDef[] => {
   const ability = useAbility()
 
   return [

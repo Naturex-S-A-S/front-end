@@ -9,7 +9,7 @@ import type { MenuItemProps } from '../../components/horizontal-menu/MenuItem'
 import { menuClasses } from '../../utils/menuClasses'
 
 // Style Imports
-import { menuButtonStyles } from '../../components/horizontal-menu/MenuButton'
+import { menuButtonStyles } from '../../components/horizontal-menu/menuButtonStyles'
 
 type StyledHorizontalMenuItemProps = Pick<MenuItemProps, 'rootStyles' | 'disabled'> & {
   level: number
