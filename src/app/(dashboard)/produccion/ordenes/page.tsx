@@ -3,13 +3,13 @@ import Create from '@/views/order/create'
 import List from '@/views/pages/produccion/ordenes/list'
 
 export const metadata = {
-  title: 'Ordenes - Naturex',
+  title: 'Órdenes - Naturex',
   description: ''
 }
 
 const OrderPage = () => {
   return (
-    <CustomBox title='Ordenes'>
+    <CustomBox title='Órdenes'>
       <Create />
       <List />
     </CustomBox>
