@@ -1,3 +1,5 @@
+import { CategoryType } from "../enum"
+
 export const mockMaterial = [{
     label: 'Material 1',
     value: 1
@@ -47,11 +49,11 @@ export const mockDocumentTypes = [{
 
 export const mockCategoryTypes = [{
     label: 'Materia prima',
-    id: 1
+    id: CategoryType.FEEDSTOCK
 },
 {
     label: 'Material de empaque',
-    id: 2
+    id: CategoryType.PACKAGING
 }]
 
 export const mockMaterialList = [{

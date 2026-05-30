@@ -5,6 +5,7 @@ import { IconButton } from '@mui/material'
 import type { GridColDef } from '@mui/x-data-grid'
 
 import { useAbility } from '@/hooks/casl/useAbility'
+import { formatDate } from '../format'
 
 type params = {
   handleEdit: (category: any) => void
@@ -35,6 +36,12 @@ export const useColumns = ({ handleEdit }: params): GridColDef[] => {
       headerName: 'Nombre',
       width: 200
     },
-    { field: 'typeName', headerName: 'Tipo', width: 200 }
+    { field: 'type', headerName: 'Tipo', width: 200 },
+    {
+      field: 'dateCreated',
+      headerName: 'Fecha de Creación',
+      width: 200,
+      renderCell: params => formatDate(params.row.dateCreated)
+    }
   ]
 }

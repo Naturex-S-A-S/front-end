@@ -6,9 +6,11 @@ import toast from 'react-hot-toast'
 import { categorySchema } from '@/utils/schemas/generalParameters'
 import CustomDialog from '@/@core/components/mui/Dialog'
 import Form from './form'
-import { putCategory } from '@/api/general-parameters'
 import type { ICategory } from '@/types/pages/generalParameters'
 import { alertMessageErrors } from '@/utils/messages'
+import { putCategoryFeedstock } from '@/api/general-parameters/categories-feedstock'
+import { CategoryTypeName } from '@/utils/enum'
+import { putCategoryPackaging } from '@/api/general-parameters/categories-packaging'
 
 interface Props {
   category: ICategory
@@ -22,7 +24,7 @@ const Update = ({ open, toogleDialog, category }: Props) => {
   const methods = useForm({
     defaultValues: {
       name: category.name,
-      type: { label: category.typeName, id: category.idType.toString() }
+      type: { label: category.type, id: category.type }
     },
     resolver: yupResolver(categorySchema)
   })
@@ -30,7 +32,8 @@ const Update = ({ open, toogleDialog, category }: Props) => {
   const { handleSubmit, reset } = methods
 
   const { mutate, isPending } = useMutation({
-    mutationFn: putCategory,
+    mutationFn: (data: any) =>
+      data.idType === CategoryTypeName.FEEDSTOCK ? putCategoryFeedstock(data) : putCategoryPackaging(data),
     onSuccess: () => {
       toast.success('Categoria actualizada con éxito')
       queryClient.invalidateQueries({ queryKey: ['getCategories'] })
@@ -43,6 +46,7 @@ const Update = ({ open, toogleDialog, category }: Props) => {
   })
 
   const onSubmit = (data: any) => {
+    console.log(data)
     mutate({
       id: category.id,
       name: data.name,

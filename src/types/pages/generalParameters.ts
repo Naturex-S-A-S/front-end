@@ -1,11 +1,13 @@
-export interface IBaseCategory {
+interface IBaseCategory {
     name: string
-    idType: number
 }
 
 export interface ICategory extends IBaseCategory {
     id: string
-    typeName?: string
+    type?: string
+    dateCreated: string
 }
+
+export type IPutCategory = ICategory
 
 export type IPostCategory = IBaseCategory
