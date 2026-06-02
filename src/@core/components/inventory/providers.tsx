@@ -15,12 +15,14 @@ interface Props {
 }
 
 const Providers: FC<Props> = ({ data }) => {
+  const isEmpty = !Array.isArray(data) || data.length === 0
+
   return (
     <CustomCard title='Proveedores'>
-      {Array.isArray(data) && data.length === 0 && <span>No hay proveedores disponibles</span>}
+      {isEmpty && <span>No hay proveedores disponibles</span>}
 
       <List className='p-0'>
-        {data.map(provider => (
+        {data?.map(provider => (
           <ListItem key={provider.id} className='p-0 mb-2'>
             <ListItemText
               primary={

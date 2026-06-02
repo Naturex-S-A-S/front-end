@@ -37,7 +37,7 @@ export const patchPackaging = async (id: number, data: any) => {
 }
 
 export const getCategories = async () => {
-    const response = await API().get("/packaging/category")
+    const response = await API().get("/categories/packaging")
 
     return response.data
 }

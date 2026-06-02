@@ -10,6 +10,35 @@ export interface IProduct {
     formulations: any
     productHistory: IProductHistory[]
     recentKardex: IRecentKardex[]
+    packagings: IProductPackaging[]
+}
+
+export interface ICategory {
+    id: string
+    name: string
+    dateCreated: string | null
+}
+
+export interface IPackagingMaterial {
+    id: number
+    name: string
+    minimumStandard: number | null
+    active: boolean | null
+    quantity: number | null
+    charge: number | null
+    color: string | null
+    dateCreated: string | null
+    category: ICategory[]
+    linkedProducts: string | null
+    chargeU: number | null
+}
+
+export interface IProductPackaging {
+    id: number
+    quantity: number
+    dateCreated: string
+    dateUpdated: string | null
+    packaging: IPackagingMaterial
 }
 
 export interface ICreateProduct {

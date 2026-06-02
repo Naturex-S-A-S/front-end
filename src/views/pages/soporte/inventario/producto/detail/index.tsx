@@ -1,8 +1,10 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
-import { Grid } from '@mui/material'
+import { Grid, IconButton } from '@mui/material'
 
 import { Controller, FormProvider, useForm } from 'react-hook-form'
+
+import { Icon } from '@iconify/react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 
@@ -15,6 +17,8 @@ import useGetProductUnit from '@/hooks/product/useGetProductUnit'
 import usePutProduct from '@/hooks/product/usePatchProduct'
 import History from './history'
 import FormulationsList from './formulationsList'
+import PackagingsList from './packagingsList'
+import EditPackagingsDialog from './editPackagingsDialog'
 import { useAbility } from '@/hooks/casl/useAbility'
 import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
 import { updateProductSchema } from '@/utils/schemas/inventory/product'
@@ -24,6 +28,7 @@ interface IProps {
 }
 
 const Detail: React.FC<IProps> = ({ product }) => {
+  const [openEditPackagings, setOpenEditPackagings] = useState(false)
   const { units } = useGetProductUnit()
   const { mutate, isPending } = usePutProduct()
   const ability = useAbility()
@@ -152,6 +157,25 @@ const Detail: React.FC<IProps> = ({ product }) => {
           <History list={product.productHistory ?? []} />
         </CustomCard>
       </Grid>
+      <Grid item xs={12}>
+        <CustomCard
+          title='Materiales de empaque'
+          action={
+            <IconButton onClick={() => setOpenEditPackagings(true)}>
+              <Icon icon='mdi:pencil' />
+            </IconButton>
+          }
+        >
+          <PackagingsList list={product.packagings ?? []} />
+        </CustomCard>
+      </Grid>
+      <EditPackagingsDialog
+        productId={product.id}
+        productName={product.name}
+        packagings={product.packagings ?? []}
+        open={openEditPackagings}
+        toogleDialog={() => setOpenEditPackagings(!openEditPackagings)}
+      />
       {canReadFormulation && (
         <Grid item xs={12}>
           <CustomCard title='Fórmulas'>

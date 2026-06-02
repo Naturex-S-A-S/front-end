@@ -45,12 +45,11 @@ export const useColumns = ({ handleStatus, isPending }: params): GridColDef[] =>
       field: 'measurement',
       headerName: `Medida`,
       width: 100,
-      renderCell: params => Number(params.row.measurement).toFixed(2)
-    },
-    {
-      field: 'unit',
-      headerName: 'Unidad',
-      width: 150
+      renderCell: params => (
+        <span>
+          {Number(params.row.measurement).toFixed(2)} {params.row.unit}
+        </span>
+      )
     },
     {
       field: 'minimumStandard',
