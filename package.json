@@ -87,7 +87,7 @@
     "tailwindcss": "3.4.4",
     "tailwindcss-logical": "3.0.1",
     "tsx": "4.15.2",
-    "typescript": "5.4.5",
+    "typescript": "^5.5.4",
     "vitest": "^4.1.7"
   },
   "resolutions": {
