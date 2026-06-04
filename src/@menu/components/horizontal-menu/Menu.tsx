@@ -32,8 +32,6 @@ export type MenuProps = HorizontalMenuContextProps &
   Partial<ChildrenType> &
   MenuHTMLAttributes<HTMLMenuElement>
 
-export { HorizontalMenuContext, HorizontalMenuContextProps } from './horizontalMenuContext'
-
 const Menu: ForwardRefRenderFunction<HTMLMenuElement, MenuProps> = (props, ref) => {
   // Props
   const {

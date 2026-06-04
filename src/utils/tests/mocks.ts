@@ -1,6 +1,6 @@
 import { vi } from 'vitest'
 
-export function createMockRouter(overrides?: Partial<ReturnType<typeof createMockRouter>>) {
+export function createMockRouter(overrides?: any) {
   return {
     replace: vi.fn(),
     push: vi.fn(),
@@ -28,7 +28,7 @@ export function createMockSettings(overrides?: Record<string, unknown>) {
     updateSettings: vi.fn(),
     isSettingsChanged: false,
     resetSettings: vi.fn(),
-    updatePageSettings: () => () => {},
+    updatePageSettings: () => () => { },
   }
 }
 
