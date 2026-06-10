@@ -108,55 +108,50 @@ Use this recipe to convert a page from Client Component (React Query) to Server 
 
 File: `src/api/<domain>/server.ts`
 ```ts
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/nextAuthOptions'
+import { apiFetch } from '@/api/apiFetch'
+import type { I<Domain> } from '@/types/pages/<typePath>'
 
-export async function get<Domain>Server(tags?: string[]) {
-  const session = await getServerSession(authOptions)
-  const res = await fetch(`${process.env.API_BASE_URL}/<endpoint>`, {
-    headers: { Authorization: `Bearer ${session?.access_token}` },
-    next: { tags }    // for on-demand revalidation with revalidateTag()
-  })
-  if (!res.ok) throw new Error(`Failed to fetch <domain>: ${res.status}`)
-  return res.json()
+export async function get<Domain>Server(): Promise<I<Domain>[]> {
+  try {
+    return await apiFetch<I<Domain>[]>('<endpoint>', { tags: ['<domain>'] })
+  } catch {
+    return []
+  }
 }
 ```
 
 **Rules:**
-- Use native `fetch` + `getServerSession` (NOT axios, NOT `ApiServer` helper, NOT `cache: 'no-store'`)
-- The path alias is `@/api/...` not `@api/...`
-- Type the return with a generic or explicit type
+- Use `apiFetch` helper (not axios, not raw `fetch`, not `ApiServer` helper).
+- `apiFetch` already handles auth via `getServerSession`, timeout (15s), and `tags`.
+- Wrap in try/catch and return `[]` on failure — the list component handles empty state.
+- The path alias is `@/api/...` not `@api/...`.
+- Type the return with a generic or explicit type.
 
-### 2. Create a shared TableSkeleton (if not exists)
+### 2. Loading fallback
 
-File: `src/@core/components/table-skeleton.tsx`
+Use `<Loader type='component' />` from `@/@core/components/react-spinners`:
+
+File: `src/@core/components/react-spinners/index.tsx` (already exists)
 ```tsx
-export default function TableSkeleton() {
-  return (
-    <div className='animate-pulse space-y-3 p-4'>
-      <div className='h-10 w-full rounded bg-gray-200' />
-      <div className='h-8 w-full rounded bg-gray-200' />
-      <div className='h-8 w-3/4 rounded bg-gray-200' />
-    </div>
-  )
-}
+import { PulseLoader } from 'react-spinners'
+// renders a spinner centered in the container
 ```
 
 **Rules:**
-- Pure Server Component (NO `"use client"`)
-- Use Tailwind `animate-pulse`
+- Pure Client Component (uses `react-spinners`), but works as Suspense fallback.
+- No need to create a custom skeleton — `Loader` already supports `type='page'` and `type='component'`.
 
 ### 3. Refactor the page
 
-File: `src/app/(dashboard)/<route>/page.tsx`
+File: `src/app/(dashboard)/<route-path>/page.tsx`
 ```tsx
 import { Suspense } from 'react'
 
 import CustomBox from '@/@core/components/mui/Box'
-import Create from '@/views/pages/<route>/create'
-import List from '@/views/pages/<route>/list'
+import Create from '@/views/pages/<route-path>/create'
+import List from '@/views/pages/<route-path>/list'
 import { get<Domain>Server } from '@/api/<domain>/server'
-import TableSkeleton from '@/@core/components/table-skeleton'
+import Loader from '@/@core/components/react-spinners'
 
 export const metadata = {
   title: '...',
@@ -167,7 +162,7 @@ const Page = () => {             // ← MUST be sync (no async)
   return (
     <CustomBox title='...'>
       <Create />
-      <Suspense fallback={<TableSkeleton />}>
+      <Suspense fallback={<Loader type='component' />}>
         <DataFetcher />
       </Suspense>
     </CustomBox>
@@ -184,13 +179,14 @@ export default Page
 
 **Rules:**
 - `Page` MUST be sync (no `async`). Only the inner Server Component (`DataFetcher`) is async. An async page makes Next.js block the entire response until the page promise resolves, defeating Suspense streaming.
-- Metadata (`title`, `description`) exported as static object.
+- Metadata (`title`, `description`) exported as static object — NOT using `generateMetadata`.
 - The `Create` button renders immediately (even if it's a Client Component — it streams via SSR).
 - `List` accepts `initialData` prop instead of calling `useGet<Domain>()` internally.
+- Views path mirrors the route path under `src/views/pages/` (e.g., `finanzas-y-administracion/proveedores/`).
 
 ### 4. Modify the List component
 
-File: `src/views/pages/<route>/list/index.tsx`
+File: `src/views/pages/<route-path>/list/index.tsx`
 ```diff
 - import { useGet<Domain>() } from '@/api/<domain>'
 + // `initialData` is provided by the parent Server Component
@@ -202,10 +198,11 @@ File: `src/views/pages/<route>/list/index.tsx`
 - Accept `initialData` prop (typed as the API response type).
 - Remove React Query hook call.
 - Keep `"use client"` if the component uses client hooks (`useRouter`, `useAbility`, etc.).
+- Uses `CustomCard` + `CustomDataGrid` for layout.
 
 ### 5. Modify the Create component (if needed)
 
-File: `src/views/pages/<route>/create.tsx`
+File: `src/views/pages/<route-path>/create.tsx`
 
 On successful mutation:
 ```diff
@@ -214,14 +211,122 @@ On successful mutation:
 ```
 
 - Replace `invalidateQueries` with `router.refresh()` from `next/navigation`.
-- Keeps the form as a Client Component.
+- Keeps the form as a Client Component (uses `react-hook-form` + `yup`).
 
-### 6. Verification
+### 6. Filter with URL searchParams (SSR)
+
+When a page has filters that were previously sent as API query params, use URL `searchParams` instead of client-side filtering:
+
+File: `src/app/(dashboard)/<route-path>/page.tsx`
+```tsx
+const Page = ({
+  searchParams
+}: {
+  searchParams?: { productId?: string; status?: string }
+}) => {
+  return (
+    <CustomBox title='...'>
+      <Create />
+      <Suspense fallback={<Loader type='component' />}>
+        <DataFetcher searchParams={searchParams} />
+      </Suspense>
+    </CustomBox>
+  )
+}
+
+async function DataFetcher({
+  searchParams
+}: {
+  searchParams?: { productId?: string; status?: string }
+}) {
+  const data = await get<Domain>Server(searchParams)
+  return <List initialData={data} />
+}
+```
+
+File: `src/api/<domain>/server.ts` — function accepts params and builds query string:
+```ts
+export async function get<Domain>Server(
+  params?: { productId?: string; status?: string }
+): Promise<I<Domain>[]> {
+  try {
+    const sp = new URLSearchParams()
+    if (params?.productId) sp.set('productId', params.productId)
+    if (params?.status) sp.set('status', params.status)
+    const qs = sp.toString()
+    const data = await apiFetch<any[]>(`<endpoint>${qs ? `?${qs}` : ''}`, {
+      tags: ['<domain>']
+    })
+    return data.map(r => ({ ...r, id: r.id || r.orderId }))
+  } catch {
+    return []
+  }
+}
+```
+
+File: `src/views/pages/<route-path>/list/filter.tsx` — a Client Component that reads/writes URL params:
+```tsx
+"use client"
+
+import { useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useForm } from 'react-hook-form'
+
+const Filter = () => {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const { control, handleSubmit, reset } = useForm({ defaultValues: { ... } })
+
+  // Read URL params as plain strings OUTSIDE useEffect to avoid infinite re-renders
+  const productIdParam = searchParams.get('productId')
+  const statusParam = searchParams.get('status') || ''
+
+  useEffect(() => {
+    // sync form with URL on mount / param change
+    reset({ product: findProduct(productIdParam), status: statusParam })
+  }, [productIdParam, statusParam, /* data lists */, reset])
+
+  const submit = (data: Filters) => {
+    const params = new URLSearchParams()
+    if (data?.product?.id) params.set('productId', String(data.product.id))
+    if (data?.status) params.set('status', data.status)
+    router.replace(`/ruta${params.toString() ? `?${params.toString()}` : ''}`)
+  }
+
+  const clear = () => {
+    reset({ product: null, status: '' })
+    router.replace('/ruta')
+  }
+
+  return <form onSubmit={handleSubmit(submit)}>...</form>
+}
+```
+
+**Rules:**
+- Extract `searchParams` values to plain string variables **outside** `useEffect` and use those as deps. Using `searchParams` (the URLSearchParams object) as a dep causes infinite loops because it's a new reference on every render.
+- The filter is still a Client Component (for interactivity and data hooks like product lists), but the main list data comes from the Server Component via `searchParams`.
+- `router.replace` (not `push`) avoids adding history entries for every filter change.
+- The `List` component receives pre-filtered `initialData` and has no filter state.
+
+File: `src/views/pages/<route-path>/list/index.tsx` — simplified, no filter state:
+```tsx
+export default function List({ initialData }: Props) {
+  return (
+    <CustomCard>
+      <Filter />
+      <CustomDataGrid columns={colDefs} data={initialData} isLoading={false} />
+    </CustomCard>
+  )
+}
+```
+
+### 7. Verification
 
 ```bash
 npx tsc --noEmit     # type-check (pnpm lint fails due to ESLint cache EACCES)
 pnpm format          # Prettier
-pnpm dev             # manual smoke test — confirm fallback skeleton appears immediately
+pnpm dev             # manual smoke test — confirm fallback spinner appears immediately
 ```
 
 ### Pages converted so far
@@ -231,6 +336,7 @@ pnpm dev             # manual smoke test — confirm fallback skeleton appears i
 | `/home` | inline | Done |
 | `/produccion/empaque` | `src/api/packing/server.ts` | Done |
 | `/finanzas-y-administracion/proveedores` | `src/api/providers/server.ts` | Done |
+| `/produccion/ordenes` | `src/api/order/server.ts` | Done |
 
 ## Key quirks
 

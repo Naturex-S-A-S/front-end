@@ -49,5 +49,8 @@
     "customizer",
     "iconify",
     "tanstack"
-  ]
+  ],
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

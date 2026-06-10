@@ -1,3 +1,9 @@
+"use client";
+
+import { useEffect } from "react";
+
+import { useRouter, useSearchParams } from "next/navigation";
+
 import { useForm, Controller } from "react-hook-form";
 
 import { Grid, MenuItem } from "@mui/material";
@@ -12,31 +18,46 @@ import useGetStatuses from "@/hooks/metadata/useGetStatuses";
 type Filters = {
   product?: {
     id: number;
-  };
+    fullName?: string;
+  } | null;
   status?: string;
 };
 
-type Props = {
-  defaultValues?: Filters;
-  onApplyFilters?: (filters: any) => void;
-};
+const Filter = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-const Filter = ({ defaultValues, onApplyFilters }: Props) => {
-  const { control, handleSubmit, reset } = useForm<Filters>({ defaultValues });
+  const { control, handleSubmit, reset } = useForm<Filters>({
+    defaultValues: { product: null, status: "" }
+  });
 
   const { productList } = useGetProductList();
   const { statuses } = useGetStatuses();
 
+  const productIdParam = searchParams.get("productId");
+  const statusParam = searchParams.get("status") || "";
+
+  useEffect(() => {
+    const product =
+      productIdParam && productList ? productList.find((p: any) => String(p.id) === productIdParam) ?? null : null;
+
+    product && reset({ product, status: statusParam });
+  }, [productIdParam, statusParam, productList, reset]);
+
   const submit = (data: Filters) => {
-    onApplyFilters?.({
-      productId: data?.product?.id || undefined,
-      status: data.status || undefined
-    });
+    const params = new URLSearchParams();
+
+    if (data?.product?.id) params.set("productId", String(data.product.id));
+    if (data?.status) params.set("status", data.status);
+
+    const queryString = params.toString();
+
+    router.replace(`/produccion/ordenes${queryString ? `?${queryString}` : ""}`);
   };
 
   const clear = () => {
-    reset(defaultValues);
-    onApplyFilters?.(defaultValues);
+    reset({ product: null, status: "" });
+    router.replace("/produccion/ordenes");
   };
 
   return (
