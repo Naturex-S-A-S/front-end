@@ -1,19 +1,19 @@
 // MUI Imports
-import type { Theme } from '@mui/material/styles'
+import type { Theme } from "@mui/material/styles";
 
-const tablePagination: Theme['components'] = {
+const tablePagination: Theme["components"] = {
   MuiTablePagination: {
     styleOverrides: {
       toolbar: ({ theme }) => ({
         paddingInlineEnd: `${theme.spacing(3)} !important`
       }),
       select: {
-        '& ~ i, & ~ svg': {
-          right: '2px !important'
+        "& ~ i, & ~ svg": {
+          right: "2px !important"
         }
       }
     }
   }
-}
+};
 
-export default tablePagination
+export default tablePagination;

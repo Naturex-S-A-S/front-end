@@ -1,12 +1,12 @@
-import { Grid } from '@mui/material'
+import { Grid } from "@mui/material";
 
-import CustomCard from '@/@core/components/mui/Card'
-import type { IFormulation } from '@/types/pages/formulation'
-import Versions from './versions'
-import Products from './products'
+import CustomCard from "@/@core/components/mui/Card";
+import type { IFormulation } from "@/types/pages/formulation";
+import Versions from "./versions";
+import Products from "./products";
 
 interface Props {
-  formulation: IFormulation
+  formulation: IFormulation;
 }
 
 const Detail: React.FC<Props> = ({ formulation }) => {
@@ -23,7 +23,7 @@ const Detail: React.FC<Props> = ({ formulation }) => {
         </CustomCard>
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default Detail
+export default Detail;

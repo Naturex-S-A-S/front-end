@@ -1,20 +1,20 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
+import Link from "next/link";
 
-import { Icon } from '@iconify/react'
-import type { GridColDef } from '@mui/x-data-grid'
+import { Icon } from "@iconify/react";
+import type { GridColDef } from "@mui/x-data-grid";
 
-import { useAbility } from '@/hooks/casl/useAbility'
-import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from '../constant'
+import { useAbility } from "@/hooks/casl/useAbility";
+import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from "../constant";
 
 export const useColumns = (): GridColDef[] => {
-  const ability = useAbility()
+  const ability = useAbility();
 
   return [
     {
-      field: 'actions',
-      headerName: 'Acciones',
+      field: "actions",
+      headerName: "Acciones",
       width: 100,
       renderCell: params => {
         return (
@@ -33,16 +33,16 @@ export const useColumns = (): GridColDef[] => {
               </Link>
             )}
           </>
-        )
+        );
       }
     },
     {
-      field: 'name',
-      headerName: 'Nombre',
+      field: "name",
+      headerName: "Nombre",
       width: 200
     },
-    { field: 'phone', headerName: 'Teléfono', width: 150 },
-    { field: 'address', headerName: 'Dirección', width: 200 },
-    { field: 'dateCreated', headerName: 'Fecha de Creación', width: 200 }
-  ]
-}
+    { field: "phone", headerName: "Teléfono", width: 150 },
+    { field: "address", headerName: "Dirección", width: 200 },
+    { field: "dateCreated", headerName: "Fecha de Creación", width: 200 }
+  ];
+};

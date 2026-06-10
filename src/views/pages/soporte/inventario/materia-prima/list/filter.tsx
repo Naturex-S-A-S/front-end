@@ -1,40 +1,40 @@
 // ...existing code...
-import React from 'react'
+import React from "react";
 
-import { useForm, Controller } from 'react-hook-form'
-import { Checkbox, FormControlLabel, Grid } from '@mui/material'
+import { useForm, Controller } from "react-hook-form";
+import { Checkbox, FormControlLabel, Grid } from "@mui/material";
 
-import CustomCard from '@/@core/components/mui/Card'
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import CustomTextField from '@/@core/components/mui/TextField'
-import CustomButton from '@/@core/components/mui/Button'
-import { mockUnitWeight } from '@/utils/mocks'
-import useGetCategory from '@/hooks/feedstock/useGetCategory'
+import CustomCard from "@/@core/components/mui/Card";
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import CustomTextField from "@/@core/components/mui/TextField";
+import CustomButton from "@/@core/components/mui/Button";
+import { mockUnitWeight } from "@/utils/mocks";
+import useGetCategory from "@/hooks/feedstock/useGetCategory";
 
 type Filters = {
-  category?: string
-  allergen?: boolean
-  active: boolean
+  category?: string;
+  allergen?: boolean;
+  active: boolean;
   measureUnit?: {
-    label: string
-    value: string
-  }
-}
+    label: string;
+    value: string;
+  };
+};
 
-type FormValues = Filters
+type FormValues = Filters;
 
 type Props = {
-  defaultValues?: Filters
-  onApplyFilters?: (filters: Filters) => void
-  onClear?: () => void
-}
+  defaultValues?: Filters;
+  onApplyFilters?: (filters: Filters) => void;
+  onClear?: () => void;
+};
 
 const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
-  const { categories } = useGetCategory()
+  const { categories } = useGetCategory();
 
   const { control, handleSubmit, reset } = useForm<FormValues>({
     defaultValues
-  })
+  });
 
   const submit = (data: FormValues) => {
     onApplyFilters?.({
@@ -42,19 +42,19 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
       allergen: data.allergen || undefined,
       active: data.active,
       measureUnit: data.measureUnit || undefined
-    })
-  }
+    });
+  };
 
   const clear = () => {
-    reset(defaultValues)
-    onClear?.()
-    onApplyFilters && defaultValues && onApplyFilters(defaultValues)
-  }
+    reset(defaultValues);
+    onClear?.();
+    onApplyFilters && defaultValues && onApplyFilters(defaultValues);
+  };
 
   return (
     <CustomCard title='Filtros'>
       <form onSubmit={handleSubmit(submit)}>
-        <Grid container spacing={2} alignItems={'end'}>
+        <Grid container spacing={2} alignItems={"end"}>
           <Grid item xs={12} md={6} lg={3}>
             <Controller
               name='category'
@@ -64,7 +64,7 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
                   value={value}
                   options={categories}
                   onChange={(e, value: any) => {
-                    onChange(value)
+                    onChange(value);
                   }}
                   renderInput={params => (
                     <CustomTextField {...params} label='Categoria' placeholder='Seleccione una categoria' />
@@ -83,7 +83,7 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
                   value={value}
                   options={mockUnitWeight}
                   onChange={(e, value: any) => {
-                    onChange(value)
+                    onChange(value);
                   }}
                   renderInput={params => (
                     <CustomTextField
@@ -120,7 +120,7 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={3} height={'min-content'} display={'flex'} gap={1} justifyContent={'center'}>
+          <Grid item xs={12} md={6} lg={3} height={"min-content"} display={"flex"} gap={1} justifyContent={"center"}>
             <CustomButton type='submit' variant='contained' size='small'>
               Aplicar
             </CustomButton>
@@ -131,7 +131,7 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
         </Grid>
       </form>
     </CustomCard>
-  )
-}
+  );
+};
 
-export default Filter
+export default Filter;

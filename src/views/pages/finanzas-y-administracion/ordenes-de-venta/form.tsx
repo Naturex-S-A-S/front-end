@@ -1,42 +1,42 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from "react";
 
-import { Icon } from '@iconify/react'
+import { Icon } from "@iconify/react";
 
-import { Box, Grid, IconButton, Typography } from '@mui/material'
+import { Box, Grid, IconButton, Typography } from "@mui/material";
 
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from "@tanstack/react-query";
 
-import { Controller, useFormContext, useWatch } from 'react-hook-form'
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import CustomButton from '@/@core/components/mui/Button'
-import CustomTextField from '@/@core/components/mui/TextField'
-import { getFileTypes } from '@/api/metadata'
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import CustomButton from "@/@core/components/mui/Button";
+import CustomTextField from "@/@core/components/mui/TextField";
+import { getFileTypes } from "@/api/metadata";
 
 export const Form = () => {
   const { data: fileTypes } = useQuery({
-    queryKey: ['fileTypes'],
+    queryKey: ["fileTypes"],
     queryFn: getFileTypes
-  })
+  });
 
   const {
     register,
     control,
     formState: { errors }
-  }: any = useFormContext()
+  }: any = useFormContext();
 
   const fileWatch = useWatch({
     control,
-    name: 'file'
-  })
+    name: "file"
+  });
 
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!fileWatch && fileInputRef.current) {
-      fileInputRef.current.value = ''
+      fileInputRef.current.value = "";
     }
-  }, [fileWatch])
+  }, [fileWatch]);
 
   return (
     <Grid container spacing={4}>
@@ -49,7 +49,7 @@ export const Form = () => {
               value={value}
               options={fileTypes || []}
               onChange={(e, value: any) => {
-                onChange(value)
+                onChange(value);
               }}
               renderInput={params => (
                 <CustomTextField
@@ -74,11 +74,11 @@ export const Form = () => {
               <Typography
                 component='label'
                 sx={{
-                  display: 'block',
+                  display: "block",
                   lineHeight: 1.153,
-                  fontSize: 'var(--mui-typography-body2-fontSize, 0.8125rem)',
+                  fontSize: "var(--mui-typography-body2-fontSize, 0.8125rem)",
                   mb: 1,
-                  color: errors.file ? 'var(--mui-palette-error-main)' : 'var(--mui-palette-text-primary)'
+                  color: errors.file ? "var(--mui-palette-error-main)" : "var(--mui-palette-text-primary)"
                 }}
               >
                 Archivo Excel
@@ -87,19 +87,19 @@ export const Form = () => {
               {value ? (
                 <Box
                   sx={{
-                    display: 'flex',
-                    alignItems: 'center',
+                    display: "flex",
+                    alignItems: "center",
                     gap: 1,
-                    border: '1px solid var(--mui-palette-customColors-inputBorder)',
-                    borderRadius: 'var(--mui-shape-borderRadius)',
-                    padding: '5.25px 14px',
-                    backgroundColor: 'transparent'
+                    border: "1px solid var(--mui-palette-customColors-inputBorder)",
+                    borderRadius: "var(--mui-shape-borderRadius)",
+                    padding: "5.25px 14px",
+                    backgroundColor: "transparent"
                   }}
                 >
-                  <Icon icon='mdi:microsoft-excel' style={{ color: '#28C76F', fontSize: '1rem', flexShrink: 0 }} />
+                  <Icon icon='mdi:microsoft-excel' style={{ color: "#28C76F", fontSize: "1rem", flexShrink: 0 }} />
                   <Typography
                     variant='body2'
-                    sx={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                    sx={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
                   >
                     {value.name}
                   </Typography>
@@ -107,33 +107,33 @@ export const Form = () => {
                     size='small'
                     color='error'
                     onClick={() => {
-                      onChange(null)
-                      if (fileInputRef.current) fileInputRef.current.value = ''
+                      onChange(null);
+                      if (fileInputRef.current) fileInputRef.current.value = "";
                     }}
                   >
-                    <Icon icon='mdi:close-circle' style={{ fontSize: '1rem' }} />
+                    <Icon icon='mdi:close-circle' style={{ fontSize: "1rem" }} />
                   </IconButton>
                 </Box>
               ) : (
                 <Box
                   onClick={() => fileInputRef.current?.click()}
                   sx={{
-                    display: 'flex',
-                    alignItems: 'center',
+                    display: "flex",
+                    alignItems: "center",
                     gap: 2,
-                    border: '1px dashed var(--mui-palette-customColors-inputBorder)',
-                    borderRadius: 'var(--mui-shape-borderRadius)',
-                    padding: '7.25px 14px',
-                    cursor: 'pointer',
-                    transition: 'border-color 0.2s',
-                    '&:hover': {
-                      borderColor: 'var(--mui-palette-action-active)'
+                    border: "1px dashed var(--mui-palette-customColors-inputBorder)",
+                    borderRadius: "var(--mui-shape-borderRadius)",
+                    padding: "7.25px 14px",
+                    cursor: "pointer",
+                    transition: "border-color 0.2s",
+                    "&:hover": {
+                      borderColor: "var(--mui-palette-action-active)"
                     }
                   }}
                 >
                   <Icon
                     icon='mdi:file-excel-outline'
-                    style={{ color: '#28C76F', fontSize: '1.25rem', flexShrink: 0 }}
+                    style={{ color: "#28C76F", fontSize: "1.25rem", flexShrink: 0 }}
                   />
                   <Typography variant='body2' color='text.secondary'>
                     Haz clic para seleccionar un archivo Excel
@@ -147,9 +147,9 @@ export const Form = () => {
                 accept='.xlsx,.xls,.csv'
                 hidden
                 onChange={e => {
-                  const file = e.target.files?.[0]
+                  const file = e.target.files?.[0];
 
-                  if (file) onChange(file)
+                  if (file) onChange(file);
                 }}
               />
 
@@ -160,8 +160,8 @@ export const Form = () => {
                   sx={{
                     mt: 1,
                     lineHeight: 1.154,
-                    fontSize: 'var(--mui-typography-body2-fontSize, 0.8125rem)',
-                    display: 'block'
+                    fontSize: "var(--mui-typography-body2-fontSize, 0.8125rem)",
+                    display: "block"
                   }}
                 >
                   {errors.file.message as string}
@@ -176,5 +176,5 @@ export const Form = () => {
         <CustomButton text='Guardar' type='submit' />
       </Grid>
     </Grid>
-  )
-}
+  );
+};

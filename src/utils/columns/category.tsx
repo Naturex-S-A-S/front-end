@@ -1,47 +1,47 @@
-'use client'
+"use client";
 
-import { Icon } from '@iconify/react'
-import { IconButton } from '@mui/material'
-import type { GridColDef } from '@mui/x-data-grid'
+import { Icon } from "@iconify/react";
+import { IconButton } from "@mui/material";
+import type { GridColDef } from "@mui/x-data-grid";
 
-import { useAbility } from '@/hooks/casl/useAbility'
-import { formatDate } from '../format'
+import { useAbility } from "@/hooks/casl/useAbility";
+import { formatDate } from "../format";
 
 type params = {
-  handleEdit: (category: any) => void
-}
+  handleEdit: (category: any) => void;
+};
 
 export const useColumns = ({ handleEdit }: params): GridColDef[] => {
-  const ability = useAbility()
+  const ability = useAbility();
 
   return [
     {
-      field: 'actions',
-      headerName: 'Acciones',
+      field: "actions",
+      headerName: "Acciones",
       width: 80,
       renderCell: params => {
         return (
           <>
-            {ability.can('update', 'Soporte', 'Usuarios') && (
+            {ability.can("update", "Soporte", "Usuarios") && (
               <IconButton onMouseDown={e => e.stopPropagation()} onClick={() => handleEdit(params.row)}>
                 <Icon icon='mdi:pencil-outline' width={20} height={20} />
               </IconButton>
             )}
           </>
-        )
+        );
       }
     },
     {
-      field: 'name',
-      headerName: 'Nombre',
+      field: "name",
+      headerName: "Nombre",
       width: 200
     },
-    { field: 'type', headerName: 'Tipo', width: 200 },
+    { field: "type", headerName: "Tipo", width: 200 },
     {
-      field: 'dateCreated',
-      headerName: 'Fecha de Creación',
+      field: "dateCreated",
+      headerName: "Fecha de Creación",
       width: 200,
       renderCell: params => formatDate(params.row.dateCreated)
     }
-  ]
-}
+  ];
+};

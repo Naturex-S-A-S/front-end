@@ -1,46 +1,46 @@
-'use client'
-import { useState } from 'react'
+"use client";
+import { useState } from "react";
 
-import { Box } from '@mui/material'
+import { Box } from "@mui/material";
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
-import CreateButton from '@/components/layout/shared/CreateButton'
-import { useAbility } from '@/hooks/casl/useAbility'
-import Form from './form'
-import { getRoleModules, postRole } from '@/api/role'
-import { alertMessageErrors } from '@/utils/messages'
+import CreateButton from "@/components/layout/shared/CreateButton";
+import { useAbility } from "@/hooks/casl/useAbility";
+import Form from "./form";
+import { getRoleModules, postRole } from "@/api/role";
+import { alertMessageErrors } from "@/utils/messages";
 
 const Create = () => {
-  const [open, setOpen] = useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>(false);
 
-  const queryClient = useQueryClient()
-  const ability = useAbility()
+  const queryClient = useQueryClient();
+  const ability = useAbility();
 
   const toogleDialog = () => {
-    setOpen(!open)
-  }
+    setOpen(!open);
+  };
 
   const { data: roleModules } = useQuery({
-    queryKey: ['getRoleModules'],
+    queryKey: ["getRoleModules"],
     queryFn: getRoleModules
-  })
+  });
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: postRole,
     onSuccess: () => {
-      toast.success('Rol creado con éxito')
-      queryClient.invalidateQueries({ queryKey: ['getRoles'] })
-      toogleDialog()
+      toast.success("Rol creado con éxito");
+      queryClient.invalidateQueries({ queryKey: ["getRoles"] });
+      toogleDialog();
     },
     onError: (error: any) => {
-      alertMessageErrors(error, 'Error al crear el rol')
+      alertMessageErrors(error, "Error al crear el rol");
     }
-  })
+  });
 
-  if (!ability.can('create', 'Soporte', 'Roles')) return null
+  if (!ability.can("create", "Soporte", "Roles")) return null;
 
   return (
     <Box>
@@ -53,7 +53,7 @@ const Create = () => {
         roleModules={roleModules}
       />
     </Box>
-  )
-}
+  );
+};
 
-export default Create
+export default Create;

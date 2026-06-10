@@ -1,16 +1,16 @@
 // MUI Imports
-import type { Theme } from '@mui/material/styles'
+import type { Theme } from "@mui/material/styles";
 
-const backdrop: Theme['components'] = {
+const backdrop: Theme["components"] = {
   MuiBackdrop: {
     styleOverrides: {
       root: {
-        '&:not(.MuiBackdrop-invisible)': {
-          backgroundColor: 'var(--backdrop-color)'
+        "&:not(.MuiBackdrop-invisible)": {
+          backgroundColor: "var(--backdrop-color)"
         }
       }
     }
   }
-}
+};
 
-export default backdrop
+export default backdrop;

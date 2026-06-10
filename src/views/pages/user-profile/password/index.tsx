@@ -1,21 +1,21 @@
-import React from 'react'
+import React from "react";
 
-import { Grid } from '@mui/material'
+import { Grid } from "@mui/material";
 
-import { useForm } from 'react-hook-form'
+import { useForm } from "react-hook-form";
 
-import { yupResolver } from '@hookform/resolvers/yup'
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import { useMutation } from '@tanstack/react-query'
+import { useMutation } from "@tanstack/react-query";
 
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
-import CustomCard from '@/@core/components/mui/Card'
-import TextFieldPassword from '@/components/layout/shared/TextFieldPassword'
-import CustomButton from '@/@core/components/mui/Button'
-import { changePasswordSchema } from '@/utils/schemas/user'
-import { putPassword } from '@/api/user/profile'
-import { alertMessageErrors } from '@/utils/messages'
+import CustomCard from "@/@core/components/mui/Card";
+import TextFieldPassword from "@/components/layout/shared/TextFieldPassword";
+import CustomButton from "@/@core/components/mui/Button";
+import { changePasswordSchema } from "@/utils/schemas/user";
+import { putPassword } from "@/api/user/profile";
+import { alertMessageErrors } from "@/utils/messages";
 
 const ChangePassword = () => {
   const {
@@ -24,31 +24,31 @@ const ChangePassword = () => {
     handleSubmit,
     reset
   } = useForm({
-    mode: 'onChange',
-    reValidateMode: 'onChange',
+    mode: "onChange",
+    reValidateMode: "onChange",
     resolver: yupResolver(changePasswordSchema)
-  })
+  });
 
   const { mutate: updatePassword, isPending } = useMutation({
     mutationFn: putPassword,
     onSuccess: () => {
-      toast.success('Contraseña actualizada con éxito')
-      reset()
+      toast.success("Contraseña actualizada con éxito");
+      reset();
     },
     onError: (error: any) => {
-      alertMessageErrors(error, 'Error al actualizar la contraseña')
+      alertMessageErrors(error, "Error al actualizar la contraseña");
     }
-  })
+  });
 
   const handleOnSubmit = (data: any) => {
     const payload = {
       oldPassword: data.password,
       newPassword1: data.newPassword,
       newPassword2: data.newConfirmPassword
-    }
+    };
 
-    updatePassword(payload)
-  }
+    updatePassword(payload);
+  };
 
   return (
     <CustomCard title='Cambiar contraseña'>
@@ -88,7 +88,7 @@ const ChangePassword = () => {
         </Grid>
       </form>
     </CustomCard>
-  )
-}
+  );
+};
 
-export default ChangePassword
+export default ChangePassword;

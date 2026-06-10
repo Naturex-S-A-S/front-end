@@ -1,26 +1,26 @@
-'use client'
+"use client";
 
 // React Imports
-import { createContext, useMemo, useState } from 'react'
+import { createContext, useMemo, useState } from "react";
 
 // Type Imports
-import type { ChildrenType } from '../types'
+import type { ChildrenType } from "../types";
 
 export type HorizontalNavContextProps = {
-  isBreakpointReached?: boolean
-  updateIsBreakpointReached: (isBreakpointReached: boolean) => void
-}
+  isBreakpointReached?: boolean;
+  updateIsBreakpointReached: (isBreakpointReached: boolean) => void;
+};
 
-const HorizontalNavContext = createContext({} as HorizontalNavContextProps)
+const HorizontalNavContext = createContext({} as HorizontalNavContextProps);
 
 export const HorizontalNavProvider = ({ children }: ChildrenType) => {
   // States
-  const [isBreakpointReached, setIsBreakpointReached] = useState(false)
+  const [isBreakpointReached, setIsBreakpointReached] = useState(false);
 
   // update isBreakpointReached value
   const updateIsBreakpointReached = (isBreakpointReached: boolean) => {
-    setIsBreakpointReached(isBreakpointReached)
-  }
+    setIsBreakpointReached(isBreakpointReached);
+  };
 
   // Hooks
   const HorizontalNavProviderValue = useMemo(
@@ -29,9 +29,9 @@ export const HorizontalNavProvider = ({ children }: ChildrenType) => {
       updateIsBreakpointReached
     }),
     [isBreakpointReached]
-  )
+  );
 
-  return <HorizontalNavContext.Provider value={HorizontalNavProviderValue}>{children}</HorizontalNavContext.Provider>
-}
+  return <HorizontalNavContext.Provider value={HorizontalNavProviderValue}>{children}</HorizontalNavContext.Provider>;
+};
 
-export default HorizontalNavContext
+export default HorizontalNavContext;

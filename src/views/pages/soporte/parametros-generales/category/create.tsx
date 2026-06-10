@@ -1,24 +1,24 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm } from "react-hook-form";
 
-import { yupResolver } from '@hookform/resolvers/yup'
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import { useAbility } from '@/hooks/casl/useAbility'
-import CustomCard from '@/@core/components/mui/Card'
-import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
-import { categorySchema } from '@/utils/schemas/generalParameters'
-import Form from './form'
-import { alertMessageErrors } from '@/utils/messages'
-import { postCategoryFeedstock } from '@/api/general-parameters/categories-feedstock'
-import { postCategoryPackaging } from '@/api/general-parameters/categories-packaging'
-import { CategoryType } from '@/utils/enum'
+import { useAbility } from "@/hooks/casl/useAbility";
+import CustomCard from "@/@core/components/mui/Card";
+import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from "@/utils/constant";
+import { categorySchema } from "@/utils/schemas/generalParameters";
+import Form from "./form";
+import { alertMessageErrors } from "@/utils/messages";
+import { postCategoryFeedstock } from "@/api/general-parameters/categories-feedstock";
+import { postCategoryPackaging } from "@/api/general-parameters/categories-packaging";
+import { CategoryType } from "@/utils/enum";
 
 const Create = () => {
-  const queryClient = useQueryClient()
-  const ability = useAbility()
+  const queryClient = useQueryClient();
+  const ability = useAbility();
 
   const methods = useForm({
     defaultValues: {
@@ -26,32 +26,32 @@ const Create = () => {
       type: undefined
     },
     resolver: yupResolver(categorySchema)
-  })
+  });
 
-  const { handleSubmit, reset } = methods
+  const { handleSubmit, reset } = methods;
 
   const { mutate, isPending } = useMutation({
     mutationFn: (variables: any) =>
       variables.idType === CategoryType.FEEDSTOCK ? postCategoryFeedstock(variables) : postCategoryPackaging(variables),
     onSuccess: () => {
-      toast.success('Categoria creada con éxito')
-      queryClient.invalidateQueries({ queryKey: ['getCategories'] })
-      reset()
+      toast.success("Categoria creada con éxito");
+      queryClient.invalidateQueries({ queryKey: ["getCategories"] });
+      reset();
     },
     onError: (error: any) => {
-      alertMessageErrors(error, 'Error al crear la categoria')
+      alertMessageErrors(error, "Error al crear la categoria");
     }
-  })
+  });
 
   if (!ability.can(ABILITY_ACTIONS.CREATE as any, ABILITY_SUBJECT.GENERAL_PARAMETERS, ABILITY_FIELDS.CATEGORIES))
-    return null
+    return null;
 
   const onSubmit = (data: any) => {
     mutate({
       name: data.name,
       idType: data.type.id
-    })
-  }
+    });
+  };
 
   return (
     <CustomCard title='Crear Categoria'>
@@ -61,7 +61,7 @@ const Create = () => {
         </form>
       </FormProvider>
     </CustomCard>
-  )
-}
+  );
+};
 
-export default Create
+export default Create;

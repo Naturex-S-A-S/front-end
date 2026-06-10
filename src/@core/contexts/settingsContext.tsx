@@ -1,53 +1,53 @@
-'use client'
+"use client";
 
 // React Imports
-import type { ReactNode } from 'react'
-import { createContext, useMemo, useState } from 'react'
+import type { ReactNode } from "react";
+import { createContext, useMemo, useState } from "react";
 
 // Type Imports
-import type { Mode, Skin, Layout, LayoutComponentWidth } from '@core/types'
+import type { Mode, Skin, Layout, LayoutComponentWidth } from "@core/types";
 
 // Config Imports
-import themeConfig from '@configs/themeConfig'
-import primaryColorConfig from '@configs/primaryColorConfig'
+import themeConfig from "@configs/themeConfig";
+import primaryColorConfig from "@configs/primaryColorConfig";
 
 // Hook Imports
-import { useObjectCookie } from '@core/hooks/useObjectCookie'
+import { useObjectCookie } from "@core/hooks/useObjectCookie";
 
 // Settings type
 export type Settings = {
-  mode?: Mode
-  skin?: Skin
-  semiDark?: boolean
-  layout?: Layout
-  navbarContentWidth?: LayoutComponentWidth
-  contentWidth?: LayoutComponentWidth
-  footerContentWidth?: LayoutComponentWidth
-  primaryColor?: string
-}
+  mode?: Mode;
+  skin?: Skin;
+  semiDark?: boolean;
+  layout?: Layout;
+  navbarContentWidth?: LayoutComponentWidth;
+  contentWidth?: LayoutComponentWidth;
+  footerContentWidth?: LayoutComponentWidth;
+  primaryColor?: string;
+};
 
 // UpdateSettingsOptions type
 type UpdateSettingsOptions = {
-  updateCookie?: boolean
-}
+  updateCookie?: boolean;
+};
 
 // SettingsContextProps type
 type SettingsContextProps = {
-  settings: Settings
-  updateSettings: (settings: Partial<Settings>, options?: UpdateSettingsOptions) => void
-  isSettingsChanged: boolean
-  resetSettings: () => void
-  updatePageSettings: (settings: Partial<Settings>) => () => void
-}
+  settings: Settings;
+  updateSettings: (settings: Partial<Settings>, options?: UpdateSettingsOptions) => void;
+  isSettingsChanged: boolean;
+  resetSettings: () => void;
+  updatePageSettings: (settings: Partial<Settings>) => () => void;
+};
 
 type Props = {
-  children: ReactNode
-  settingsCookie: Settings | null
-  mode?: Mode
-}
+  children: ReactNode;
+  settingsCookie: Settings | null;
+  mode?: Mode;
+};
 
 // Initial Settings Context
-export const SettingsContext = createContext<SettingsContextProps | null>(null)
+export const SettingsContext = createContext<SettingsContextProps | null>(null);
 
 // Settings Provider
 export const SettingsProvider = (props: Props) => {
@@ -61,36 +61,36 @@ export const SettingsProvider = (props: Props) => {
     contentWidth: themeConfig.contentWidth,
     footerContentWidth: themeConfig.footer.contentWidth,
     primaryColor: primaryColorConfig[5].main
-  }
+  };
 
   const updatedInitialSettings = {
     ...initialSettings,
     mode: props.mode || themeConfig.mode
-  }
+  };
 
   // Cookies
   const [settingsCookie, updateSettingsCookie] = useObjectCookie<Settings>(
     themeConfig.settingsCookieName,
-    JSON.stringify(props.settingsCookie) !== '{}' ? props.settingsCookie : updatedInitialSettings
-  )
+    JSON.stringify(props.settingsCookie) !== "{}" ? props.settingsCookie : updatedInitialSettings
+  );
 
   // State
   const [_settingsState, _updateSettingsState] = useState<Settings>(
-    JSON.stringify(settingsCookie) !== '{}' ? settingsCookie : updatedInitialSettings
-  )
+    JSON.stringify(settingsCookie) !== "{}" ? settingsCookie : updatedInitialSettings
+  );
 
   const updateSettings = (settings: Partial<Settings>, options?: UpdateSettingsOptions) => {
-    const { updateCookie = true } = options || {}
+    const { updateCookie = true } = options || {};
 
     _updateSettingsState(prev => {
-      const newSettings = { ...prev, ...settings }
+      const newSettings = { ...prev, ...settings };
 
       // Update cookie if needed
-      if (updateCookie) updateSettingsCookie(newSettings)
+      if (updateCookie) updateSettingsCookie(newSettings);
 
-      return newSettings
-    })
-  }
+      return newSettings;
+    });
+  };
 
   /**
    * Updates the settings for page with the provided settings object.
@@ -105,21 +105,21 @@ export const SettingsProvider = (props: Props) => {
    * }, []);
    */
   const updatePageSettings = (settings: Partial<Settings>): (() => void) => {
-    updateSettings(settings, { updateCookie: false })
+    updateSettings(settings, { updateCookie: false });
 
     // Returns a function to reset the page settings
-    return () => updateSettings(settingsCookie, { updateCookie: false })
-  }
+    return () => updateSettings(settingsCookie, { updateCookie: false });
+  };
 
   const resetSettings = () => {
-    updateSettings(initialSettings)
-  }
+    updateSettings(initialSettings);
+  };
 
   const isSettingsChanged = useMemo(
     () => JSON.stringify(initialSettings) !== JSON.stringify(_settingsState),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [_settingsState]
-  )
+  );
 
   return (
     <SettingsContext.Provider
@@ -133,5 +133,5 @@ export const SettingsProvider = (props: Props) => {
     >
       {props.children}
     </SettingsContext.Provider>
-  )
-}
+  );
+};

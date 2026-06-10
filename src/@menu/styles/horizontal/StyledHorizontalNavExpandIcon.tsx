@@ -1,18 +1,18 @@
 // Third-party Imports
-import styled from '@emotion/styled'
+import styled from "@emotion/styled";
 
 // Type Imports
-import type { RootStylesType } from '../../types'
+import type { RootStylesType } from "../../types";
 
 type StyledHorizontalNavExpandIconProps = {
-  level?: number
-}
+  level?: number;
+};
 
 export const StyledHorizontalNavExpandIconWrapper = styled.span<RootStylesType>`
   display: flex;
   margin-inline-start: 5px;
   ${({ rootStyles }) => rootStyles};
-`
+`;
 
 const StyledHorizontalNavExpandIcon = styled.span<StyledHorizontalNavExpandIconProps>`
   display: flex;
@@ -35,6 +35,6 @@ const StyledHorizontalNavExpandIcon = styled.span<StyledHorizontalNavExpandIconP
       transform: rotate(180deg);
     }
   `}
-`
+`;
 
-export default StyledHorizontalNavExpandIcon
+export default StyledHorizontalNavExpandIcon;

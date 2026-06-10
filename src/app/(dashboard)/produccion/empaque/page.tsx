@@ -1,11 +1,11 @@
-import CustomBox from '@/@core/components/mui/Box'
-import Create from '@/views/pages/produccion/empaque/create'
-import List from '@/views/pages/produccion/empaque/list'
+import CustomBox from "@/@core/components/mui/Box";
+import Create from "@/views/pages/produccion/empaque/create";
+import List from "@/views/pages/produccion/empaque/list";
 
 export const metadata = {
-  title: 'Empaque - Naturex',
-  description: ''
-}
+  title: "Empaque - Naturex",
+  description: ""
+};
 
 const PackingPage = async () => {
   return (
@@ -13,7 +13,7 @@ const PackingPage = async () => {
       <Create />
       <List />
     </CustomBox>
-  )
-}
+  );
+};
 
-export default PackingPage
+export default PackingPage;

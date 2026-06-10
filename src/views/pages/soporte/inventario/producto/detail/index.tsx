@@ -1,43 +1,43 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
-import { Grid, IconButton } from '@mui/material'
+import { Grid, IconButton } from "@mui/material";
 
-import { Controller, FormProvider, useForm } from 'react-hook-form'
+import { Controller, FormProvider, useForm } from "react-hook-form";
 
-import { Icon } from '@iconify/react'
+import { Icon } from "@iconify/react";
 
-import { yupResolver } from '@hookform/resolvers/yup'
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import CustomButton from '@/@core/components/mui/Button'
-import CustomCard from '@/@core/components/mui/Card'
-import CustomTextField from '@/@core/components/mui/TextField'
-import type { IProduct } from '@/types/pages/product'
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import useGetProductUnit from '@/hooks/product/useGetProductUnit'
-import usePutProduct from '@/hooks/product/usePatchProduct'
-import History from './history'
-import FormulationsList from './formulationsList'
-import PackagingsList from './packagingsList'
-import EditPackagingsDialog from './editPackagingsDialog'
-import { useAbility } from '@/hooks/casl/useAbility'
-import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
-import { updateProductSchema } from '@/utils/schemas/inventory/product'
+import CustomButton from "@/@core/components/mui/Button";
+import CustomCard from "@/@core/components/mui/Card";
+import CustomTextField from "@/@core/components/mui/TextField";
+import type { IProduct } from "@/types/pages/product";
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import useGetProductUnit from "@/hooks/product/useGetProductUnit";
+import usePutProduct from "@/hooks/product/usePatchProduct";
+import History from "./history";
+import FormulationsList from "./formulationsList";
+import PackagingsList from "./packagingsList";
+import EditPackagingsDialog from "./editPackagingsDialog";
+import { useAbility } from "@/hooks/casl/useAbility";
+import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from "@/utils/constant";
+import { updateProductSchema } from "@/utils/schemas/inventory/product";
 
 interface IProps {
-  product: IProduct
+  product: IProduct;
 }
 
 const Detail: React.FC<IProps> = ({ product }) => {
-  const [openEditPackagings, setOpenEditPackagings] = useState(false)
-  const { units } = useGetProductUnit()
-  const { mutate, isPending } = usePutProduct()
-  const ability = useAbility()
+  const [openEditPackagings, setOpenEditPackagings] = useState(false);
+  const { units } = useGetProductUnit();
+  const { mutate, isPending } = usePutProduct();
+  const ability = useAbility();
 
   const canReadFormulation = ability.can(
     ABILITY_ACTIONS.READ as any,
     ABILITY_SUBJECT.PRODUCTION,
     ABILITY_FIELDS.FORMULATION
-  )
+  );
 
   const methods = useForm({
     defaultValues: {
@@ -46,9 +46,9 @@ const Detail: React.FC<IProps> = ({ product }) => {
       unit: undefined,
       minimumStandard: undefined
     },
-    mode: 'onChange',
+    mode: "onChange",
     resolver: yupResolver(updateProductSchema)
-  })
+  });
 
   const {
     handleSubmit,
@@ -56,18 +56,18 @@ const Detail: React.FC<IProps> = ({ product }) => {
     formState: { errors },
     control,
     reset
-  } = methods
+  } = methods;
 
   useEffect(() => {
-    if (!product || !units?.length) return
+    if (!product || !units?.length) return;
 
     reset({
-      name: product.name ?? '',
-      measurement: product.measurement?.toString() ?? '',
+      name: product.name ?? "",
+      measurement: product.measurement?.toString() ?? "",
       unit: units.find((u: any) => u.id === product.unit) ?? undefined,
       minimumStandard: product.minimumStandard ?? undefined
-    })
-  }, [product, units, reset])
+    });
+  }, [product, units, reset]);
 
   const onSubmit = (values: any) => {
     mutate({
@@ -78,8 +78,8 @@ const Detail: React.FC<IProps> = ({ product }) => {
         unit: values.unit.id,
         minimumStandard: Number(values.minimumStandard)
       }
-    })
-  }
+    });
+  };
 
   return (
     <Grid container spacing={2}>
@@ -90,7 +90,7 @@ const Detail: React.FC<IProps> = ({ product }) => {
               <Grid container spacing={4}>
                 <Grid item xs={12} md={6} lg={3}>
                   <CustomTextField
-                    {...register('name')}
+                    {...register("name")}
                     fullWidth
                     label='Nombre'
                     placeholder='Ingrese el nombre'
@@ -100,7 +100,7 @@ const Detail: React.FC<IProps> = ({ product }) => {
                 </Grid>
                 <Grid item xs={12} md={3} lg={3}>
                   <CustomTextField
-                    {...register('measurement')}
+                    {...register("measurement")}
                     fullWidth
                     label='Medida'
                     placeholder='Ingrese la medida'
@@ -118,7 +118,7 @@ const Detail: React.FC<IProps> = ({ product }) => {
                         value={value}
                         options={units ?? []}
                         onChange={(e, value: any) => {
-                          onChange(value)
+                          onChange(value);
                         }}
                         renderInput={params => (
                           <CustomTextField
@@ -136,7 +136,7 @@ const Detail: React.FC<IProps> = ({ product }) => {
                 </Grid>
                 <Grid item xs={12} md={3} lg={3}>
                   <CustomTextField
-                    {...register('minimumStandard')}
+                    {...register("minimumStandard")}
                     fullWidth
                     type='number'
                     label='Stock mínimo'
@@ -186,7 +186,7 @@ const Detail: React.FC<IProps> = ({ product }) => {
         </Grid>
       )}
     </Grid>
-  )
-}
+  );
+};
 
-export default Detail
+export default Detail;

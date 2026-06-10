@@ -1,7 +1,7 @@
-import Loader from '@/@core/components/react-spinners'
+import Loader from "@/@core/components/react-spinners";
 
 const Loading = () => {
-  return <Loader />
-}
+  return <Loader />;
+};
 
-export default Loading
+export default Loading;

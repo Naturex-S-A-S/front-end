@@ -1,7 +1,7 @@
-import { API } from "../instances"
+import { API } from "../instances";
 
 export const getCategories = async () => {
-    const response = await API().get(`/categories`)
+  const response = await API().get(`/categories`);
 
-    return response.data
-}
+  return response.data;
+};

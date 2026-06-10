@@ -1,275 +1,275 @@
 // MUI Imports
-import type { Theme } from '@mui/material/styles'
+import type { Theme } from "@mui/material/styles";
 
 // Config Imports
-import themeConfig from '@configs/themeConfig'
+import themeConfig from "@configs/themeConfig";
 
-const buttonGroup: Theme['components'] = {
+const buttonGroup: Theme["components"] = {
   MuiButtonGroup: {
     defaultProps: {
       disableRipple: themeConfig.disableRipple
     },
     variants: [
       {
-        props: { variant: 'text', color: 'primary' },
+        props: { variant: "text", color: "primary" },
         style: {
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderColor: 'var(--mui-palette-primary-main)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderColor: "var(--mui-palette-primary-main)"
             }
           }
         }
       },
       {
-        props: { variant: 'text', color: 'secondary' },
+        props: { variant: "text", color: "secondary" },
         style: {
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderColor: 'var(--mui-palette-secondary-main)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderColor: "var(--mui-palette-secondary-main)"
             }
           }
         }
       },
       {
-        props: { variant: 'text', color: 'error' },
+        props: { variant: "text", color: "error" },
         style: {
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderColor: 'var(--mui-palette-error-main)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderColor: "var(--mui-palette-error-main)"
             }
           }
         }
       },
       {
-        props: { variant: 'text', color: 'warning' },
+        props: { variant: "text", color: "warning" },
         style: {
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderColor: 'var(--mui-palette-warning-main)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderColor: "var(--mui-palette-warning-main)"
             }
           }
         }
       },
       {
-        props: { variant: 'text', color: 'info' },
+        props: { variant: "text", color: "info" },
         style: {
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderColor: 'var(--mui-palette-info-main)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderColor: "var(--mui-palette-info-main)"
             }
           }
         }
       },
       {
-        props: { variant: 'text', color: 'success' },
+        props: { variant: "text", color: "success" },
         style: {
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderColor: 'var(--mui-palette-success-main)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderColor: "var(--mui-palette-success-main)"
             }
           }
         }
       },
       {
-        props: { variant: 'contained', color: 'primary' },
+        props: { variant: "contained", color: "primary" },
         style: {
-          '&:not(.Mui-disabled)': {
-            boxShadow: 'var(--mui-customShadows-primary-sm)'
+          "&:not(.Mui-disabled)": {
+            boxShadow: "var(--mui-customShadows-primary-sm)"
           },
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderColor: 'var(--mui-palette-primary-dark)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderColor: "var(--mui-palette-primary-dark)"
             }
           }
         }
       },
       {
-        props: { variant: 'contained', color: 'secondary' },
+        props: { variant: "contained", color: "secondary" },
         style: {
-          '&:not(.Mui-disabled)': {
-            boxShadow: 'var(--mui-customShadows-secondary-sm)'
+          "&:not(.Mui-disabled)": {
+            boxShadow: "var(--mui-customShadows-secondary-sm)"
           },
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderColor: 'var(--mui-palette-secondary-dark)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderColor: "var(--mui-palette-secondary-dark)"
             }
           }
         }
       },
       {
-        props: { variant: 'contained', color: 'error' },
+        props: { variant: "contained", color: "error" },
         style: {
-          '&:not(.Mui-disabled)': {
-            boxShadow: 'var(--mui-customShadows-error-sm)'
+          "&:not(.Mui-disabled)": {
+            boxShadow: "var(--mui-customShadows-error-sm)"
           },
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderColor: 'var(--mui-palette-error-dark)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderColor: "var(--mui-palette-error-dark)"
             }
           }
         }
       },
       {
-        props: { variant: 'contained', color: 'warning' },
+        props: { variant: "contained", color: "warning" },
         style: {
-          '&:not(.Mui-disabled)': {
-            boxShadow: 'var(--mui-customShadows-warning-sm)'
+          "&:not(.Mui-disabled)": {
+            boxShadow: "var(--mui-customShadows-warning-sm)"
           },
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderColor: 'var(--mui-palette-warning-dark)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderColor: "var(--mui-palette-warning-dark)"
             }
           }
         }
       },
       {
-        props: { variant: 'contained', color: 'info' },
+        props: { variant: "contained", color: "info" },
         style: {
-          '&:not(.Mui-disabled)': {
-            boxShadow: 'var(--mui-customShadows-info-sm)'
+          "&:not(.Mui-disabled)": {
+            boxShadow: "var(--mui-customShadows-info-sm)"
           },
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderColor: 'var(--mui-palette-info-dark)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderColor: "var(--mui-palette-info-dark)"
             }
           }
         }
       },
       {
-        props: { variant: 'contained', color: 'success' },
+        props: { variant: "contained", color: "success" },
         style: {
-          '&:not(.Mui-disabled)': {
-            boxShadow: 'var(--mui-customShadows-success-sm)'
+          "&:not(.Mui-disabled)": {
+            boxShadow: "var(--mui-customShadows-success-sm)"
           },
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderColor: 'var(--mui-palette-success-dark)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderColor: "var(--mui-palette-success-dark)"
             }
           }
         }
       },
       {
-        props: { variant: 'tonal', color: 'primary', orientation: 'horizontal' },
+        props: { variant: "tonal", color: "primary", orientation: "horizontal" },
         style: {
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderRight: '1px solid var(--mui-palette-primary-darkOpacity)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderRight: "1px solid var(--mui-palette-primary-darkOpacity)"
             }
           }
         }
       },
       {
-        props: { variant: 'tonal', color: 'secondary', orientation: 'horizontal' },
+        props: { variant: "tonal", color: "secondary", orientation: "horizontal" },
         style: {
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderRight: '1px solid var(--mui-palette-secondary-darkOpacity)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderRight: "1px solid var(--mui-palette-secondary-darkOpacity)"
             }
           }
         }
       },
       {
-        props: { variant: 'tonal', color: 'error', orientation: 'horizontal' },
+        props: { variant: "tonal", color: "error", orientation: "horizontal" },
         style: {
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderRight: '1px solid var(--mui-palette-error-darkOpacity)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderRight: "1px solid var(--mui-palette-error-darkOpacity)"
             }
           }
         }
       },
       {
-        props: { variant: 'tonal', color: 'warning', orientation: 'horizontal' },
+        props: { variant: "tonal", color: "warning", orientation: "horizontal" },
         style: {
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderRight: '1px solid var(--mui-palette-warning-darkOpacity)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderRight: "1px solid var(--mui-palette-warning-darkOpacity)"
             }
           }
         }
       },
       {
-        props: { variant: 'tonal', color: 'info', orientation: 'horizontal' },
+        props: { variant: "tonal", color: "info", orientation: "horizontal" },
         style: {
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderRight: '1px solid var(--mui-palette-info-darkOpacity)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderRight: "1px solid var(--mui-palette-info-darkOpacity)"
             }
           }
         }
       },
       {
-        props: { variant: 'tonal', color: 'success', orientation: 'horizontal' },
+        props: { variant: "tonal", color: "success", orientation: "horizontal" },
         style: {
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderRight: '1px solid var(--mui-palette-success-darkOpacity)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderRight: "1px solid var(--mui-palette-success-darkOpacity)"
             }
           }
         }
       },
       {
-        props: { variant: 'tonal', color: 'primary', orientation: 'vertical' },
+        props: { variant: "tonal", color: "primary", orientation: "vertical" },
         style: {
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderBottom: '1px solid var(--mui-palette-primary-darkOpacity)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderBottom: "1px solid var(--mui-palette-primary-darkOpacity)"
             }
           }
         }
       },
       {
-        props: { variant: 'tonal', color: 'secondary', orientation: 'vertical' },
+        props: { variant: "tonal", color: "secondary", orientation: "vertical" },
         style: {
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderBottom: '1px solid var(--mui-palette-secondary-darkOpacity)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderBottom: "1px solid var(--mui-palette-secondary-darkOpacity)"
             }
           }
         }
       },
       {
-        props: { variant: 'tonal', color: 'error', orientation: 'vertical' },
+        props: { variant: "tonal", color: "error", orientation: "vertical" },
         style: {
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderBottom: '1px solid var(--mui-palette-error-darkOpacity)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderBottom: "1px solid var(--mui-palette-error-darkOpacity)"
             }
           }
         }
       },
       {
-        props: { variant: 'tonal', color: 'warning', orientation: 'vertical' },
+        props: { variant: "tonal", color: "warning", orientation: "vertical" },
         style: {
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderBottom: '1px solid var(--mui-palette-warning-darkOpacity)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderBottom: "1px solid var(--mui-palette-warning-darkOpacity)"
             }
           }
         }
       },
       {
-        props: { variant: 'tonal', color: 'info', orientation: 'vertical' },
+        props: { variant: "tonal", color: "info", orientation: "vertical" },
         style: {
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderBottom: '1px solid var(--mui-palette-info-darkOpacity)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderBottom: "1px solid var(--mui-palette-info-darkOpacity)"
             }
           }
         }
       },
       {
-        props: { variant: 'tonal', color: 'success', orientation: 'vertical' },
+        props: { variant: "tonal", color: "success", orientation: "vertical" },
         style: {
-          '& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton': {
-            '&, &.Mui-disabled': {
-              borderBottom: '1px solid var(--mui-palette-success-darkOpacity)'
+          "& .MuiButtonGroup-firstButton, & .MuiButtonGroup-middleButton": {
+            "&, &.Mui-disabled": {
+              borderBottom: "1px solid var(--mui-palette-success-darkOpacity)"
             }
           }
         }
       }
     ]
   }
-}
+};
 
-export default buttonGroup
+export default buttonGroup;

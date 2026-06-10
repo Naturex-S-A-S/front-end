@@ -1,7 +1,7 @@
-import Testing from '@/views/Testing'
+import Testing from "@/views/Testing";
 
 const Page = () => {
-  return <Testing />
-}
+  return <Testing />;
+};
 
-export default Page
+export default Page;

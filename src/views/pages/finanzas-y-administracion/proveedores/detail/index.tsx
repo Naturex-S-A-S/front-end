@@ -1,23 +1,23 @@
-import { Grid } from '@mui/material'
+import { Grid } from "@mui/material";
 
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm } from "react-hook-form";
 
-import CustomCard from '@/@core/components/mui/Card'
-import type { IProvider } from '@/types/pages/financeAdministation'
-import Form from '../form'
+import CustomCard from "@/@core/components/mui/Card";
+import type { IProvider } from "@/types/pages/financeAdministation";
+import Form from "../form";
 
 interface IDetailProps {
-  provider: IProvider
+  provider: IProvider;
 }
 
 const Detail = ({ provider }: IDetailProps) => {
   const methods = useForm<IProvider>({
     defaultValues: provider
-  })
+  });
 
-  const { handleSubmit } = methods
+  const { handleSubmit } = methods;
 
-  const onSubmit = () => {}
+  const onSubmit = () => {};
 
   return (
     <Grid container spacing={2}>
@@ -31,7 +31,7 @@ const Detail = ({ provider }: IDetailProps) => {
         </CustomCard>
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default Detail
+export default Detail;

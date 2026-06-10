@@ -1,35 +1,35 @@
-import { useState } from 'react'
+import { useState } from "react";
 
-import CustomDataGrid from '@/@core/components/mui/DataGrid'
-import { useColumns } from '@/utils/columns/packaging'
-import Filter from './filter'
-import useGetPackaging from '@/hooks/packaging/useGetPackaging'
-import usePatchPackaging from '@/hooks/packaging/usePatchPackaging'
+import CustomDataGrid from "@/@core/components/mui/DataGrid";
+import { useColumns } from "@/utils/columns/packaging";
+import Filter from "./filter";
+import useGetPackaging from "@/hooks/packaging/useGetPackaging";
+import usePatchPackaging from "@/hooks/packaging/usePatchPackaging";
 
 const defaultFilters = {
   category: undefined,
   active: true
-}
+};
 
 const List = () => {
-  const [filters, setFilters] = useState(defaultFilters)
-  const { packaging, isLoading } = useGetPackaging(filters)
-  const { handleActive, isPending } = usePatchPackaging()
-  const colDefs = useColumns({ handleActive, isPending })
+  const [filters, setFilters] = useState(defaultFilters);
+  const { packaging, isLoading } = useGetPackaging(filters);
+  const { handleActive, isPending } = usePatchPackaging();
+  const colDefs = useColumns({ handleActive, isPending });
 
   const onApplyFilters = (filters: any) => {
     setFilters({
       ...filters,
       category: filters.category?.id
-    })
-  }
+    });
+  };
 
   return (
     <div className='flex flex-col gap-2'>
       <Filter onApplyFilters={onApplyFilters} defaultValues={defaultFilters} />
       <CustomDataGrid columns={colDefs} data={packaging} isLoading={isLoading} />
     </div>
-  )
-}
+  );
+};
 
-export default List
+export default List;

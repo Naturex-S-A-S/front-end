@@ -1,10 +1,10 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Typography } from "@mui/material";
 
-import PageHeader from '../page-header'
+import PageHeader from "../page-header";
 
 interface Props {
-  children: React.ReactNode
-  title?: string
+  children: React.ReactNode;
+  title?: string;
 }
 
 const CustomBox: React.FC<Props> = ({ title, children }) => {
@@ -15,7 +15,7 @@ const CustomBox: React.FC<Props> = ({ title, children }) => {
         {children}
       </Box>
     </>
-  )
-}
+  );
+};
 
-export default CustomBox
+export default CustomBox;

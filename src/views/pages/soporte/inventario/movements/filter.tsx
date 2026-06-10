@@ -1,62 +1,62 @@
 // ...existing code...
-import React from 'react'
+import React from "react";
 
-import { useForm, Controller } from 'react-hook-form'
-import { Grid } from '@mui/material'
+import { useForm, Controller } from "react-hook-form";
+import { Grid } from "@mui/material";
 
-import CustomCard from '@/@core/components/mui/Card'
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import CustomTextField from '@/@core/components/mui/TextField'
-import CustomButton from '@/@core/components/mui/Button'
-import useGetProviders from '@/hooks/provider/useGetProviders'
+import CustomCard from "@/@core/components/mui/Card";
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import CustomTextField from "@/@core/components/mui/TextField";
+import CustomButton from "@/@core/components/mui/Button";
+import useGetProviders from "@/hooks/provider/useGetProviders";
 
 type Filters = {
   kardexType?: {
-    label?: string
-    value?: string
-  } | null
-  batch?: string
+    label?: string;
+    value?: string;
+  } | null;
+  batch?: string;
   providerId?: {
-    name?: string
-    id?: string
-  } | null
+    name?: string;
+    id?: string;
+  } | null;
   measureUnit: {
-    label?: string
-    value?: string
-  } | null
-}
+    label?: string;
+    value?: string;
+  } | null;
+};
 
-type FormValues = Filters
+type FormValues = Filters;
 
 type Props = {
-  defaultValues: Filters
-  onApplyFilters: (filters: Filters) => void
-  onClear?: () => void
-}
+  defaultValues: Filters;
+  onApplyFilters: (filters: Filters) => void;
+  onClear?: () => void;
+};
 
 const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
-  const { providers } = useGetProviders()
+  const { providers } = useGetProviders();
 
   const { control, handleSubmit, reset, register } = useForm<FormValues>({
     defaultValues
-  })
+  });
 
   const submit = (data: FormValues) => {
-    onApplyFilters(data)
-  }
+    onApplyFilters(data);
+  };
 
   const clear = () => {
-    reset(defaultValues)
-    onClear?.()
-    onApplyFilters(defaultValues)
-  }
+    reset(defaultValues);
+    onClear?.();
+    onApplyFilters(defaultValues);
+  };
 
   return (
     <CustomCard title='Filtros'>
       <form onSubmit={handleSubmit(submit)}>
-        <Grid container spacing={2} alignItems={'end'}>
+        <Grid container spacing={2} alignItems={"end"}>
           <Grid item xs={12} md={6} lg={3}>
-            <CustomTextField {...register('batch')} label='Lote' placeholder='Ingrese el lote' />
+            <CustomTextField {...register("batch")} label='Lote' placeholder='Ingrese el lote' />
           </Grid>
 
           <Grid item xs={12} md={6} lg={3}>
@@ -68,7 +68,7 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
                   value={value}
                   options={providers}
                   onChange={(e, value: any) => {
-                    onChange(value)
+                    onChange(value);
                   }}
                   renderInput={params => (
                     <CustomTextField {...params} label='Proveedor' placeholder='Seleccione un proveedor' />
@@ -86,11 +86,11 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
                 <CustomAutocomplete
                   value={value}
                   options={[
-                    { label: 'Ingreso', value: 'input' },
-                    { label: 'Egreso', value: 'output' }
+                    { label: "Ingreso", value: "input" },
+                    { label: "Egreso", value: "output" }
                   ]}
                   onChange={(e, value: any) => {
-                    onChange(value)
+                    onChange(value);
                   }}
                   renderInput={params => <CustomTextField {...params} label='Tipo' placeholder='Seleccione un tipo' />}
                 />
@@ -121,7 +121,7 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
             />
           </Grid>*/}
 
-          <Grid item xs={12} md={6} lg={2} height={'min-content'} display={'flex'} gap={1} justifyContent={'center'}>
+          <Grid item xs={12} md={6} lg={2} height={"min-content"} display={"flex"} gap={1} justifyContent={"center"}>
             <CustomButton type='submit' variant='contained' size='small'>
               Aplicar
             </CustomButton>
@@ -132,7 +132,7 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
         </Grid>
       </form>
     </CustomCard>
-  )
-}
+  );
+};
 
-export default Filter
+export default Filter;

@@ -1,35 +1,35 @@
 /* eslint-disable lines-around-comment */
-'use client'
+"use client";
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
-import { Icon } from '@iconify/react'
-import { Chip, IconButton, Switch, Tooltip } from '@mui/material'
-import type { GridColDef } from '@mui/x-data-grid'
+import { Icon } from "@iconify/react";
+import { Chip, IconButton, Switch, Tooltip } from "@mui/material";
+import type { GridColDef } from "@mui/x-data-grid";
 
-import { useAbility } from '@/hooks/casl/useAbility'
-import Loader from '@/@core/components/react-spinners'
-import { PATHS } from '../paths'
+import { useAbility } from "@/hooks/casl/useAbility";
+import Loader from "@/@core/components/react-spinners";
+import { PATHS } from "../paths";
 
 type params = {
-  handleActive: (id: any, name: string, active: boolean) => void
-  filters: any
-  isPending: boolean
-}
+  handleActive: (id: any, name: string, active: boolean) => void;
+  filters: any;
+  isPending: boolean;
+};
 
 export const useColumns = ({ handleActive, filters, isPending }: params): GridColDef[] => {
-  const ability = useAbility()
-  const router = useRouter()
+  const ability = useAbility();
+  const router = useRouter();
 
   return [
     {
-      field: 'actions',
-      headerName: 'Acciones',
+      field: "actions",
+      headerName: "Acciones",
       width: 80,
       renderCell: params => {
         return (
           <>
-            {ability.can('read', 'Soporte', 'Usuarios') && (
+            {ability.can("read", "Soporte", "Usuarios") && (
               <IconButton
                 onMouseDown={e => e.stopPropagation()}
                 onClick={() => router.push(`${PATHS.MATERIAL_PRIMA_DETAIL}/${params.row.id}`)}
@@ -38,57 +38,57 @@ export const useColumns = ({ handleActive, filters, isPending }: params): GridCo
               </IconButton>
             )}
           </>
-        )
+        );
       }
     },
-    { field: 'name', headerName: 'Nombre', width: 150 },
+    { field: "name", headerName: "Nombre", width: 150 },
     {
-      field: 'quantityG',
+      field: "quantityG",
       headerName: `Cantidad (${filters?.measureUnit?.value})`,
       width: 100,
       renderCell: params => {
         switch (filters?.measureUnit?.value) {
-          case 't':
-            return Number(params.row.quantityT).toFixed(2)
-          case 'kg':
-            return Number(params.row.quantityK).toFixed(2)
-          case 'g':
-            return Number(params.row.quantityG).toFixed(2)
+          case "t":
+            return Number(params.row.quantityT).toFixed(2);
+          case "kg":
+            return Number(params.row.quantityK).toFixed(2);
+          case "g":
+            return Number(params.row.quantityG).toFixed(2);
           default:
-            return Number(params.row.quantityG).toFixed(2)
+            return Number(params.row.quantityG).toFixed(2);
         }
       }
     },
     {
-      field: 'chargeG',
-      headerName: 'Valor unitario',
+      field: "chargeG",
+      headerName: "Valor unitario",
       width: 150,
       minWidth: 150,
       renderCell: params => {
         switch (filters?.measureUnit?.value) {
-          case 't':
-            return Number(params.row.chargeT).toFixed(2)
-          case 'kg':
-            return Number(params.row.chargeKg).toFixed(2)
-          case 'g':
-            return Number(params.row.chargeG).toFixed(2)
+          case "t":
+            return Number(params.row.chargeT).toFixed(2);
+          case "kg":
+            return Number(params.row.chargeKg).toFixed(2);
+          case "g":
+            return Number(params.row.chargeG).toFixed(2);
           default:
-            return Number(params.row.chargeG).toFixed(2)
+            return Number(params.row.chargeG).toFixed(2);
         }
       }
     },
     {
-      field: 'charge',
-      headerName: 'Valor total',
+      field: "charge",
+      headerName: "Valor total",
       width: 100,
       renderCell: params => Number(params.row.charge).toFixed(2)
     },
     {
-      field: 'allergen',
-      headerName: 'Alergeno',
+      field: "allergen",
+      headerName: "Alergeno",
       width: 80,
       renderCell: params => (
-        <div className='flex justify-center items-center' style={{ height: '100%' }}>
+        <div className='flex justify-center items-center' style={{ height: "100%" }}>
           {params.row.allergen ? (
             <Icon icon='lets-icons:check-fill' width={20} height={20} color='green' />
           ) : (
@@ -98,15 +98,15 @@ export const useColumns = ({ handleActive, filters, isPending }: params): GridCo
       )
     },
     {
-      field: 'categories',
-      headerName: 'Categorias',
+      field: "categories",
+      headerName: "Categorias",
       width: 150,
       renderCell: params => {
-        const visible = params.row.categories.slice(0, 1)
-        const remaining = params.row.categories.slice(1)
+        const visible = params.row.categories.slice(0, 1);
+        const remaining = params.row.categories.slice(1);
 
         return (
-          <div className='flex gap-2 justify-center items-center' style={{ height: '100%' }}>
+          <div className='flex gap-2 justify-center items-center' style={{ height: "100%" }}>
             {visible.map((category: any) => (
               <Chip key={category.id ?? category.name} label={category.name} variant='outlined' />
             ))}
@@ -125,31 +125,31 @@ export const useColumns = ({ handleActive, filters, isPending }: params): GridCo
               </Tooltip>
             )}
           </div>
-        )
+        );
       }
     },
     {
-      field: 'active',
-      headerName: 'Activo',
+      field: "active",
+      headerName: "Activo",
       width: 80,
       renderCell: params => (
-        <div className='flex justify-center items-center' style={{ height: '100%' }}>
-          <Tooltip title={params.row.active ? 'Desactivar' : 'Activar'}>
+        <div className='flex justify-center items-center' style={{ height: "100%" }}>
+          <Tooltip title={params.row.active ? "Desactivar" : "Activar"}>
             {isPending ? (
               <Loader type='component' />
             ) : (
               <Switch
                 checked={params.row.active}
                 onChange={() => handleActive(params.row.id, params.row.name, params.row.active)}
-                color={params.row.active ? 'success' : 'error'}
+                color={params.row.active ? "success" : "error"}
                 // {...(params.row.active ? { 'data-testid': 'active-switch' } : {})}
-                {...(ability.can('update', 'Soporte', 'Usuarios') ? { disabled: false } : { disabled: true })}
-                {...(params.row.active ? { slotProps: { input: { 'aria-label': 'controlled' } } } : {})}
+                {...(ability.can("update", "Soporte", "Usuarios") ? { disabled: false } : { disabled: true })}
+                {...(params.row.active ? { slotProps: { input: { "aria-label": "controlled" } } } : {})}
               />
             )}
           </Tooltip>
         </div>
       )
     }
-  ]
-}
+  ];
+};

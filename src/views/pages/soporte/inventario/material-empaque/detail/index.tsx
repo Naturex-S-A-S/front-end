@@ -1,23 +1,23 @@
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm } from "react-hook-form";
 
-import { Grid } from '@mui/material'
+import { Grid } from "@mui/material";
 
-import CustomCard from '@/@core/components/mui/Card'
-import type { IPackaging } from '@/hooks/packaging/useGetPackagingById'
-import CustomTextField from '@/@core/components/mui/TextField'
-import CustomButton from '@/@core/components/mui/Button'
-import usePatchPackaging from '@/hooks/packaging/usePatchPackaging'
-import Categories from '../../../../../../@core/components/inventory/categories'
-import Providers from '../../../../../../@core/components/inventory/providers'
-import useGetCategory from '@/hooks/packaging/useGetCategory'
+import CustomCard from "@/@core/components/mui/Card";
+import type { IPackaging } from "@/hooks/packaging/useGetPackagingById";
+import CustomTextField from "@/@core/components/mui/TextField";
+import CustomButton from "@/@core/components/mui/Button";
+import usePatchPackaging from "@/hooks/packaging/usePatchPackaging";
+import Categories from "../../../../../../@core/components/inventory/categories";
+import Providers from "../../../../../../@core/components/inventory/providers";
+import useGetCategory from "@/hooks/packaging/useGetCategory";
 
 interface Props {
-  packaging: IPackaging
+  packaging: IPackaging;
 }
 
 const Detail: React.FC<Props> = ({ packaging }) => {
-  const { mutate, isPending } = usePatchPackaging()
-  const { categories } = useGetCategory()
+  const { mutate, isPending } = usePatchPackaging();
+  const { categories } = useGetCategory();
 
   const methods = useForm({
     defaultValues: {
@@ -28,25 +28,25 @@ const Detail: React.FC<Props> = ({ packaging }) => {
       total: packaging.chargeTotal,
       minimumStandard: packaging.minimumStandard
     }
-  })
+  });
 
   const {
     handleSubmit,
     register,
     formState: { errors }
-  } = methods
+  } = methods;
 
   const onSubmit = (values: any) => {
     const req = {
       name: values.name,
       color: values.color
-    }
+    };
 
     mutate({
       id: packaging.id,
       data: req
-    })
-  }
+    });
+  };
 
   const updateCategories = (newCategories: string[]) => {
     mutate({
@@ -54,8 +54,8 @@ const Detail: React.FC<Props> = ({ packaging }) => {
       data: {
         category: newCategories
       }
-    })
-  }
+    });
+  };
 
   return (
     <Grid container spacing={2}>
@@ -66,7 +66,7 @@ const Detail: React.FC<Props> = ({ packaging }) => {
               <Grid container spacing={4}>
                 <Grid item xs={12} md={6} lg={3}>
                   <CustomTextField
-                    {...register('name')}
+                    {...register("name")}
                     fullWidth
                     label='Nombre'
                     placeholder='Ingrese el nombre'
@@ -76,7 +76,7 @@ const Detail: React.FC<Props> = ({ packaging }) => {
                 </Grid>
                 <Grid item xs={12} md={6} lg={3}>
                   <CustomTextField
-                    {...register('color')}
+                    {...register("color")}
                     fullWidth
                     label='Color'
                     placeholder='Ingrese el color'
@@ -86,7 +86,7 @@ const Detail: React.FC<Props> = ({ packaging }) => {
                 </Grid>
                 <Grid item xs={12} md={6} lg={3}>
                   <CustomTextField
-                    {...register('minimumStandard')}
+                    {...register("minimumStandard")}
                     disabled
                     fullWidth
                     type='number'
@@ -96,7 +96,7 @@ const Detail: React.FC<Props> = ({ packaging }) => {
                 </Grid>
                 <Grid item xs={12} md={6} lg={3}>
                   <CustomTextField
-                    {...register('quantity')}
+                    {...register("quantity")}
                     disabled
                     fullWidth
                     type='number'
@@ -106,7 +106,7 @@ const Detail: React.FC<Props> = ({ packaging }) => {
                 </Grid>
                 <Grid item xs={12} md={6} lg={3}>
                   <CustomTextField
-                    {...register('charge')}
+                    {...register("charge")}
                     disabled
                     fullWidth
                     type='number'
@@ -116,7 +116,7 @@ const Detail: React.FC<Props> = ({ packaging }) => {
                 </Grid>
                 <Grid item xs={12} md={6} lg={3}>
                   <CustomTextField
-                    {...register('total')}
+                    {...register("total")}
                     disabled
                     fullWidth
                     type='number'
@@ -146,7 +146,7 @@ const Detail: React.FC<Props> = ({ packaging }) => {
         </Grid>
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default Detail
+export default Detail;

@@ -1,6 +1,6 @@
-import '@testing-library/jest-dom'
+import "@testing-library/jest-dom";
 
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: (query: string) => ({
     matches: false,
@@ -10,9 +10,9 @@ Object.defineProperty(window, 'matchMedia', {
     removeListener: () => {},
     addEventListener: () => {},
     removeEventListener: () => {},
-    dispatchEvent: () => false,
-  }),
-})
+    dispatchEvent: () => false
+  })
+});
 
 class MockIntersectionObserver {
   observe() {}
@@ -20,16 +20,16 @@ class MockIntersectionObserver {
   disconnect() {}
 }
 
-Object.defineProperty(window, 'IntersectionObserver', {
+Object.defineProperty(window, "IntersectionObserver", {
   writable: true,
-  value: MockIntersectionObserver,
-})
+  value: MockIntersectionObserver
+});
 
-Object.defineProperty(window, 'ResizeObserver', {
+Object.defineProperty(window, "ResizeObserver", {
   writable: true,
   value: class {
     observe() {}
     unobserve() {}
     disconnect() {}
-  },
-})
+  }
+});

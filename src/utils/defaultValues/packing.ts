@@ -1,8 +1,6 @@
 export const packingDefaultValues = {
   product: {
-    id: ''
+    id: ""
   },
-  details: [
-    { packaging: null, quantity: null }
-  ]
-}
+  details: [{ packaging: null, quantity: null }]
+};

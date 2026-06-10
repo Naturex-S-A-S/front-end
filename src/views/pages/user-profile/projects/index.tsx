@@ -1,21 +1,21 @@
 // MUI Imports
-import Grid from '@mui/material/Grid'
-import Chip from '@mui/material/Chip'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
-import Divider from '@mui/material/Divider'
-import LinearProgress from '@mui/material/LinearProgress'
-import AvatarGroup from '@mui/material/AvatarGroup'
-import Tooltip from '@mui/material/Tooltip'
+import Grid from "@mui/material/Grid";
+import Chip from "@mui/material/Chip";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import LinearProgress from "@mui/material/LinearProgress";
+import AvatarGroup from "@mui/material/AvatarGroup";
+import Tooltip from "@mui/material/Tooltip";
 
 // Type Imports
-import type { ProjectsTabType } from '@/types/pages/profileTypes'
+import type { ProjectsTabType } from "@/types/pages/profileTypes";
 
 // Component Imports
-import OptionMenu from '@core/components/option-menu'
-import CustomAvatar from '@core/components/mui/Avatar'
-import Link from '@components/Link'
+import OptionMenu from "@core/components/option-menu";
+import CustomAvatar from "@core/components/mui/Avatar";
+import Link from "@components/Link";
 
 const Projects = ({ data }: { data?: ProjectsTabType[] }) => {
   return (
@@ -42,13 +42,13 @@ const Projects = ({ data }: { data?: ProjectsTabType[] }) => {
                     <OptionMenu
                       iconClassName='text-textDisabled'
                       options={[
-                        'Rename Project',
-                        'View Details',
-                        'Add to Favorite',
+                        "Rename Project",
+                        "View Details",
+                        "Add to Favorite",
                         { divider: true },
                         {
-                          text: 'Leave Project',
-                          menuItemProps: { className: 'text-error hover:bg-[var(--mui-palette-error-lightOpacity)]' }
+                          text: "Leave Project",
+                          menuItemProps: { className: "text-error hover:bg-[var(--mui-palette-error-lightOpacity)]" }
                         }
                       ]}
                     />
@@ -117,7 +117,7 @@ const Projects = ({ data }: { data?: ProjectsTabType[] }) => {
                             <Tooltip key={index} title={person.name}>
                               <CustomAvatar src={person.avatar} alt={person.name} size={32} />
                             </Tooltip>
-                          )
+                          );
                         })}
                       </AvatarGroup>
                       <Typography variant='body2' className='flex-grow'>
@@ -132,10 +132,10 @@ const Projects = ({ data }: { data?: ProjectsTabType[] }) => {
                 </CardContent>
               </Card>
             </Grid>
-          )
+          );
         })}
     </Grid>
-  )
-}
+  );
+};
 
-export default Projects
+export default Projects;

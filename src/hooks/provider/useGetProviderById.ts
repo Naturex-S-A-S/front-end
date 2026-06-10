@@ -4,15 +4,15 @@ import { getProviderById } from "@/api/providers";
 import type { IProvider } from "@/types/pages/financeAdministation";
 
 const useGetProviderById = (id: string) => {
-    const { data, isLoading } = useQuery<IProvider>({
-        queryKey: ['getProviderById', id],
-        queryFn: () => getProviderById(id)
-    })
+  const { data, isLoading } = useQuery<IProvider>({
+    queryKey: ["getProviderById", id],
+    queryFn: () => getProviderById(id)
+  });
 
-    return {
-        provider: data || null,
-        isLoading
-    }
-}
+  return {
+    provider: data || null,
+    isLoading
+  };
+};
 
 export default useGetProviderById;

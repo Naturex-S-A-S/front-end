@@ -1,15 +1,15 @@
-'use client'
+"use client";
 
 // Hook Imports
-import useVerticalNav from '@menu/hooks/useVerticalNav'
+import useVerticalNav from "@menu/hooks/useVerticalNav";
 
 const NavToggle = () => {
   // Hooks
-  const { toggleVerticalNav, isBreakpointReached } = useVerticalNav()
+  const { toggleVerticalNav, isBreakpointReached } = useVerticalNav();
 
   const handleClick = () => {
-    toggleVerticalNav()
-  }
+    toggleVerticalNav();
+  };
 
   return (
     <>
@@ -17,7 +17,7 @@ const NavToggle = () => {
       {/* Comment following code and uncomment above code in order to toggle menu on desktop screens as well */}
       {isBreakpointReached && <i className='tabler-menu-2 cursor-pointer' onClick={handleClick} />}
     </>
-  )
-}
+  );
+};
 
-export default NavToggle
+export default NavToggle;

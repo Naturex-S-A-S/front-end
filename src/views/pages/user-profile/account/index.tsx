@@ -1,26 +1,26 @@
-import { useEffect } from 'react'
+import { useEffect } from "react";
 
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm } from "react-hook-form";
 
-import { Grid } from '@mui/material'
+import { Grid } from "@mui/material";
 
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { yupResolver } from '@hookform/resolvers/yup'
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
-import CustomTextField from '@/@core/components/mui/TextField'
-import CustomCard from '@/@core/components/mui/Card'
-import type { ProfileData } from '@/types/pages/profile'
-import { putProfile } from '@/api/user/profile'
-import CustomButton from '@/@core/components/mui/Button'
-import { updateProfileSchema } from '@/utils/schemas/profile'
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import { alertMessageErrors } from '@/utils/messages'
+import CustomTextField from "@/@core/components/mui/TextField";
+import CustomCard from "@/@core/components/mui/Card";
+import type { ProfileData } from "@/types/pages/profile";
+import { putProfile } from "@/api/user/profile";
+import CustomButton from "@/@core/components/mui/Button";
+import { updateProfileSchema } from "@/utils/schemas/profile";
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import { alertMessageErrors } from "@/utils/messages";
 
 const Account = ({ data }: { data: ProfileData }) => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const {
     handleSubmit,
@@ -30,18 +30,18 @@ const Account = ({ data }: { data: ProfileData }) => {
     control
   } = useForm({
     defaultValues: {
-      name: '',
-      lastName: '',
-      email: '',
-      phone: '',
+      name: "",
+      lastName: "",
+      email: "",
+      phone: "",
       role: null,
-      address: '',
-      dni: '',
-      dniType: ''
+      address: "",
+      dni: "",
+      dniType: ""
     },
-    mode: 'onChange',
+    mode: "onChange",
     resolver: yupResolver(updateProfileSchema)
-  })
+  });
 
   useEffect(() => {
     reset({
@@ -56,34 +56,34 @@ const Account = ({ data }: { data: ProfileData }) => {
       address: data?.address,
       dni: data.dni,
       dniType: data.dniType
-    })
-  }, [reset, data])
+    });
+  }, [reset, data]);
 
   const { mutate, isPending } = useMutation({
     mutationFn: putProfile,
     onSuccess: () => {
-      toast.success('Perfil actualizado con éxito')
+      toast.success("Perfil actualizado con éxito");
 
-      queryClient.invalidateQueries({ queryKey: ['getProfile'] })
+      queryClient.invalidateQueries({ queryKey: ["getProfile"] });
     },
     onError: (error: any) => {
-      alertMessageErrors(error, 'Error al actualizar el perfil')
+      alertMessageErrors(error, "Error al actualizar el perfil");
     }
-  })
+  });
 
   const onSubmit = (values: any) => {
     mutate({
       ...values
-    })
-  }
+    });
+  };
 
   return (
     <CustomCard title='Configuración de la Cuenta'>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={4} justifyContent={'center'}>
+        <Grid container spacing={4} justifyContent={"center"}>
           <Grid item xs={12} sm={6}>
             <CustomTextField
-              {...register('name')}
+              {...register("name")}
               name='name'
               label='Nombre'
               error={!!errors.name}
@@ -92,7 +92,7 @@ const Account = ({ data }: { data: ProfileData }) => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <CustomTextField
-              {...register('lastName')}
+              {...register("lastName")}
               name='lastName'
               label='Apellido'
               error={!!errors.lastName}
@@ -101,7 +101,7 @@ const Account = ({ data }: { data: ProfileData }) => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <CustomTextField
-              {...register('email')}
+              {...register("email")}
               name='email'
               label='Email'
               error={!!errors.email}
@@ -109,7 +109,7 @@ const Account = ({ data }: { data: ProfileData }) => {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <CustomTextField {...register('phone')} name='phone' label='Teléfono' />
+            <CustomTextField {...register("phone")} name='phone' label='Teléfono' />
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
@@ -120,7 +120,7 @@ const Account = ({ data }: { data: ProfileData }) => {
                   {...field}
                   disabled={true}
                   options={defaultValues?.role ? [defaultValues.role] : []}
-                  getOptionLabel={(option: any) => option?.label ?? ''}
+                  getOptionLabel={(option: any) => option?.label ?? ""}
                   renderInput={params => <CustomTextField {...params} label='Rol' placeholder='Seleccione un rol' />}
                   onChange={(_, value) => field.onChange(value)}
                 />
@@ -128,13 +128,13 @@ const Account = ({ data }: { data: ProfileData }) => {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <CustomTextField {...register('address')} name='address' label='Dirección' />
+            <CustomTextField {...register("address")} name='address' label='Dirección' />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <CustomTextField {...register('dni')} name='dni' label='Documento de Identidad' disabled />
+            <CustomTextField {...register("dni")} name='dni' label='Documento de Identidad' disabled />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <CustomTextField {...register('dniType')} name='dniType' label='Tipo de Documento' disabled />
+            <CustomTextField {...register("dniType")} name='dniType' label='Tipo de Documento' disabled />
           </Grid>
 
           <Grid item xs={12} className='flex justify-center'>
@@ -143,7 +143,7 @@ const Account = ({ data }: { data: ProfileData }) => {
         </Grid>
       </form>
     </CustomCard>
-  )
-}
+  );
+};
 
-export default Account
+export default Account;

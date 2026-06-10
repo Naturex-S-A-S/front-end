@@ -1,22 +1,22 @@
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
-import { Icon } from '@iconify/react'
+import { Icon } from "@iconify/react";
 
-import { Avatar, IconButton, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material'
+import { Avatar, IconButton, List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
 
-import type { IProduct } from '@/types/pages/formulation'
-import { formatDate } from '@/utils/format'
+import type { IProduct } from "@/types/pages/formulation";
+import { formatDate } from "@/utils/format";
 
 interface Props {
-  products: IProduct[]
+  products: IProduct[];
 }
 
 const Products = ({ products }: Props) => {
-  const router = useRouter()
+  const router = useRouter();
 
   const handleViewDetail = (productId: string) => {
-    router.push(`/inventario/producto-terminado/detail/${productId}`)
-  }
+    router.push(`/inventario/producto-terminado/detail/${productId}`);
+  };
 
   return (
     <List>
@@ -41,7 +41,7 @@ const Products = ({ products }: Props) => {
         </ListItem>
       ))}
     </List>
-  )
-}
+  );
+};
 
-export default Products
+export default Products;

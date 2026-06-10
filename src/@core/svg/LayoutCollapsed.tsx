@@ -1,5 +1,5 @@
 // React Imports
-import type { SVGAttributes } from 'react'
+import type { SVGAttributes } from "react";
 
 const LayoutCollapsed = (props: SVGAttributes<SVGElement>) => {
   return (
@@ -56,7 +56,7 @@ const LayoutCollapsed = (props: SVGAttributes<SVGElement>) => {
       <rect x='21.4717' y='19.6134' width='22.1679' height='17.6' rx='2' fill='currentColor' fillOpacity='0.08' />
       <rect x='21.4717' y='42.4545' width='75.8413' height='17.6' rx='2' fill='currentColor' fillOpacity='0.08' />
     </svg>
-  )
-}
+  );
+};
 
-export default LayoutCollapsed
+export default LayoutCollapsed;

@@ -1,23 +1,23 @@
 //MUI Imports
-import type { Theme } from '@mui/material/styles'
+import type { Theme } from "@mui/material/styles";
 
 //Type Imports
-import type { Skin } from '@core/types'
+import type { Skin } from "@core/types";
 
-const dialog = (skin: Skin): Theme['components'] => ({
+const dialog = (skin: Skin): Theme["components"] => ({
   MuiDialog: {
     styleOverrides: {
       paper: ({ theme }) => ({
-        borderRadius: 'var(--mui-shape-customBorderRadius-lg)',
-        ...(skin !== 'bordered'
+        borderRadius: "var(--mui-shape-customBorderRadius-lg)",
+        ...(skin !== "bordered"
           ? {
-              boxShadow: 'var(--mui-customShadows-lg)'
+              boxShadow: "var(--mui-customShadows-lg)"
             }
           : {
-              boxShadow: 'none'
+              boxShadow: "none"
             }),
-        [theme.breakpoints.down('sm')]: {
-          '&:not(.MuiDialog-paperFullScreen)': {
+        [theme.breakpoints.down("sm")]: {
+          "&:not(.MuiDialog-paperFullScreen)": {
             margin: theme.spacing(6)
           }
         }
@@ -29,12 +29,12 @@ const dialog = (skin: Skin): Theme['components'] => ({
   },
   MuiDialogTitle: {
     defaultProps: {
-      variant: 'h5'
+      variant: "h5"
     },
     styleOverrides: {
       root: ({ theme }) => ({
         padding: theme.spacing(6),
-        '& + .MuiDialogActions-root': {
+        "& + .MuiDialogActions-root": {
           paddingTop: 0
         }
       })
@@ -44,7 +44,7 @@ const dialog = (skin: Skin): Theme['components'] => ({
     styleOverrides: {
       root: ({ theme }) => ({
         padding: theme.spacing(6),
-        '& + .MuiDialogContent-root, & + .MuiDialogActions-root': {
+        "& + .MuiDialogContent-root, & + .MuiDialogActions-root": {
           paddingTop: 0
         }
       })
@@ -54,18 +54,18 @@ const dialog = (skin: Skin): Theme['components'] => ({
     styleOverrides: {
       root: ({ theme }) => ({
         padding: theme.spacing(6),
-        '& .MuiButtonBase-root:not(:first-of-type)': {
+        "& .MuiButtonBase-root:not(:first-of-type)": {
           marginInlineStart: theme.spacing(4)
         },
-        '&:where(.dialog-actions-dense)': {
+        "&:where(.dialog-actions-dense)": {
           padding: theme.spacing(3),
-          '& .MuiButton-text': {
+          "& .MuiButton-text": {
             paddingInline: theme.spacing(3)
           }
         }
       })
     }
   }
-})
+});
 
-export default dialog
+export default dialog;

@@ -1,5 +1,5 @@
 export const supplierDefaultValues = {
-    name: '',
-    phone: '',
-    address: '',
-}
+  name: "",
+  phone: "",
+  address: ""
+};

@@ -1,8 +1,8 @@
 // Third-party Imports
-import styled from '@emotion/styled'
+import styled from "@emotion/styled";
 
 // Type Imports
-import type { RootStylesType } from '../types'
+import type { RootStylesType } from "../types";
 
 const StyledMenuIcon = styled.span<RootStylesType>`
   display: flex;
@@ -10,6 +10,6 @@ const StyledMenuIcon = styled.span<RootStylesType>`
   justify-content: center;
   margin-inline-end: 10px;
   ${({ rootStyles }) => rootStyles};
-`
+`;
 
-export default StyledMenuIcon
+export default StyledMenuIcon;

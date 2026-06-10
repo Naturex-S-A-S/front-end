@@ -1,5 +1,5 @@
 // React Imports
-import type { SVGAttributes } from 'react'
+import type { SVGAttributes } from "react";
 
 const Logo = (props: SVGAttributes<SVGElement>) => {
   return (
@@ -31,7 +31,7 @@ const Logo = (props: SVGAttributes<SVGElement>) => {
         fill='currentColor'
       />
     </svg>
-  )
-}
+  );
+};
 
-export default Logo
+export default Logo;

@@ -1,65 +1,65 @@
 /* eslint-disable lines-around-comment */
-import { useState, type ChangeEvent } from 'react'
+import { useState, type ChangeEvent } from "react";
 
 // MUI
-import { DataGrid } from '@mui/x-data-grid'
-import { Card } from '@mui/material'
+import { DataGrid } from "@mui/x-data-grid";
+import { Card } from "@mui/material";
 
 // Toolbar
-import ServerSideToolbar from './data-grid/ServerSideToolbar'
+import ServerSideToolbar from "./data-grid/ServerSideToolbar";
 
 interface Props {
-  columns: any[]
-  data: any[] | undefined
-  getRowClassName?: any
-  isLoading?: boolean
+  columns: any[];
+  data: any[] | undefined;
+  getRowClassName?: any;
+  isLoading?: boolean;
 }
 
 const CustomDataGrid: React.FC<Props> = ({ columns, data, getRowClassName, isLoading }) => {
-  const loading = isLoading && !data
-  const [searchValue, setSearchValue] = useState('')
-  const [filteredData, setFilteredData] = useState<any[]>([])
+  const loading = isLoading && !data;
+  const [searchValue, setSearchValue] = useState("");
+  const [filteredData, setFilteredData] = useState<any[]>([]);
 
   const handleSearch = (searchText: string) => {
     if (!data) {
-      return
+      return;
     }
 
-    setSearchValue(searchText)
+    setSearchValue(searchText);
 
     if (!searchText) {
-      setFilteredData([])
+      setFilteredData([]);
 
-      return
+      return;
     }
 
-    const fields = columns.map(column => column.field)
+    const fields = columns.map(column => column.field);
 
     const filteredData = data.filter(row => {
       return fields.some(field => {
-        const value = row[field]
+        const value = row[field];
 
         // Filtrar por números
-        if (typeof value === 'number') {
-          return value.toString().includes(searchText)
+        if (typeof value === "number") {
+          return value.toString().includes(searchText);
         }
 
         // Filtrar por strings
-        if (typeof value === 'string') {
-          return value.toString().toLowerCase().includes(searchText.toLowerCase())
+        if (typeof value === "string") {
+          return value.toString().toLowerCase().includes(searchText.toLowerCase());
         }
 
         // Filtrar por string[]
         if (Array.isArray(value)) {
-          return value.some(item => item.toString().toLowerCase().includes(searchText.toLowerCase()))
+          return value.some(item => item.toString().toLowerCase().includes(searchText.toLowerCase()));
         }
 
-        return false
-      })
-    })
+        return false;
+      });
+    });
 
-    setFilteredData(filteredData)
-  }
+    setFilteredData(filteredData);
+  };
 
   /* const ToolbarWrapper = () => (
     <ServerSideToolbar
@@ -71,7 +71,7 @@ const CustomDataGrid: React.FC<Props> = ({ columns, data, getRowClassName, isLoa
   ) */
 
   return (
-    <Card sx={{ mt: 3, overflow: 'visible' }}>
+    <Card sx={{ mt: 3, overflow: "visible" }}>
       <DataGrid
         rows={searchValue ? filteredData : data ?? []}
         columns={columns}
@@ -95,13 +95,13 @@ const CustomDataGrid: React.FC<Props> = ({ columns, data, getRowClassName, isLoa
           toolbar: {
             value: searchValue,
             onChange: (e: ChangeEvent<HTMLInputElement>) => handleSearch(e.target.value),
-            clearSearch: () => handleSearch(''),
+            clearSearch: () => handleSearch(""),
             data
           } as any
         }}
       />
     </Card>
-  )
-}
+  );
+};
 
-export default CustomDataGrid
+export default CustomDataGrid;

@@ -1,13 +1,13 @@
 // MUI Imports
-import type { Theme } from '@mui/material'
+import type { Theme } from "@mui/material";
 
 // Type Imports
-import type { Skin } from '@core/types'
+import type { Skin } from "@core/types";
 
-const drawer = (skin: Skin): Theme['components'] => ({
+const drawer = (skin: Skin): Theme["components"] => ({
   MuiDrawer: {
     defaultProps: {
-      ...(skin === 'bordered' && {
+      ...(skin === "bordered" && {
         PaperProps: {
           elevation: 0
         }
@@ -15,12 +15,12 @@ const drawer = (skin: Skin): Theme['components'] => ({
     },
     styleOverrides: {
       paper: {
-        ...(skin !== 'bordered' && {
-          boxShadow: 'var(--mui-customShadows-lg)'
+        ...(skin !== "bordered" && {
+          boxShadow: "var(--mui-customShadows-lg)"
         })
       }
     }
   }
-})
+});
 
-export default drawer
+export default drawer;

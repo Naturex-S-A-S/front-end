@@ -1,44 +1,44 @@
-'use client'
+"use client";
 
 // MUI Imports
-import { useTheme } from '@mui/material/styles'
+import { useTheme } from "@mui/material/styles";
 
 // Third-party Imports
-import PerfectScrollbar from 'react-perfect-scrollbar'
+import PerfectScrollbar from "react-perfect-scrollbar";
 
 // Type Imports
-import { useSession } from 'next-auth/react'
+import { useSession } from "next-auth/react";
 
-import type { VerticalMenuContextProps } from '@menu/components/vertical-menu/Menu'
+import type { VerticalMenuContextProps } from "@menu/components/vertical-menu/Menu";
 
 // Component Imports
-import { Menu, MenuItem, SubMenu } from '@menu/vertical-menu'
+import { Menu, MenuItem, SubMenu } from "@menu/vertical-menu";
 
 // Hook Imports
-import useVerticalNav from '@menu/hooks/useVerticalNav'
+import useVerticalNav from "@menu/hooks/useVerticalNav";
 
 // Styled Component Imports
-import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNavExpandIcon'
+import StyledVerticalNavExpandIcon from "@menu/styles/vertical/StyledVerticalNavExpandIcon";
 
 // Style Imports
-import menuItemStyles from '@core/styles/vertical/menuItemStyles'
-import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
-import type { IChild, IPermissions } from '@/types/next-auth'
+import menuItemStyles from "@core/styles/vertical/menuItemStyles";
+import menuSectionStyles from "@core/styles/vertical/menuSectionStyles";
+import type { IChild, IPermissions } from "@/types/next-auth";
 
 type RenderExpandIconProps = {
-  open?: boolean
-  transitionDuration?: VerticalMenuContextProps['transitionDuration']
-}
+  open?: boolean;
+  transitionDuration?: VerticalMenuContextProps["transitionDuration"];
+};
 
 type Props = {
-  scrollMenu: (container: any, isPerfectScrollbar: boolean) => void
-}
+  scrollMenu: (container: any, isPerfectScrollbar: boolean) => void;
+};
 
 const RenderExpandIcon = ({ open, transitionDuration }: RenderExpandIconProps) => (
   <StyledVerticalNavExpandIcon open={open} transitionDuration={transitionDuration}>
     <i className='tabler-chevron-right' />
   </StyledVerticalNavExpandIcon>
-)
+);
 
 const GenerateVerticalMenu = ({ permissions }: { permissions?: IPermissions[] }) => {
   if (!permissions || permissions.length === 0) {
@@ -48,69 +48,69 @@ const GenerateVerticalMenu = ({ permissions }: { permissions?: IPermissions[] })
           Home
         </MenuItem>
       </>
-    )
+    );
   }
 
   const renderChild = (child: IChild, key: string): JSX.Element => {
-    const name = child.name || key
+    const name = child.name || key;
 
-    const resolvedPath = Object.hasOwn(child, 'children')
-      ? child.children?.find(c => c.name === 'Listado')?.path || child.children?.[0]?.path
+    const resolvedPath = Object.hasOwn(child, "children")
+      ? child.children?.find(c => c.name === "Listado")?.path || child.children?.[0]?.path
       : child.path
-        ? child.path.startsWith('/')
+        ? child.path.startsWith("/")
           ? child.path
           : `/${child.path}`
-        : '/'
+        : "/";
 
     return (
-      <MenuItem key={key} href={resolvedPath || '/'}>
+      <MenuItem key={key} href={resolvedPath || "/"}>
         {name}
       </MenuItem>
-    )
-  }
+    );
+  };
 
   return (
     <>
       {permissions.map((module, idx) => {
-        const moduleKey = module.name || `module-${idx}`
-        const moduleName = module.name || moduleKey
-        const modulePath = module.path || '/'
+        const moduleKey = module.name || `module-${idx}`;
+        const moduleName = module.name || moduleKey;
+        const modulePath = module.path || "/";
 
         if (module.children && module.children.length > 0) {
           return (
             <SubMenu key={`${idx}-${moduleKey}`} label={moduleName} icon={<i className='tabler-folder' />}>
               {module.children.map((child, i) => renderChild(child, `${idx}-${moduleKey}-${i}`))}
             </SubMenu>
-          )
+          );
         }
 
         return (
           <MenuItem key={`${idx}-${moduleKey}`} href={modulePath} icon={<i className='tabler-folder' />}>
             {moduleName}
           </MenuItem>
-        )
+        );
       })}
     </>
-  )
-}
+  );
+};
 
 const VerticalMenu = ({ scrollMenu }: Props) => {
   // Hooks
-  const theme = useTheme()
-  const verticalNavOptions = useVerticalNav()
-  const { isBreakpointReached } = useVerticalNav()
-  const { data: session } = useSession()
+  const theme = useTheme();
+  const verticalNavOptions = useVerticalNav();
+  const { isBreakpointReached } = useVerticalNav();
+  const { data: session } = useSession();
 
   // Vars
-  const { transitionDuration } = verticalNavOptions
+  const { transitionDuration } = verticalNavOptions;
 
-  const ScrollWrapper = isBreakpointReached ? 'div' : PerfectScrollbar
+  const ScrollWrapper = isBreakpointReached ? "div" : PerfectScrollbar;
 
   return (
     <ScrollWrapper
       {...(isBreakpointReached
         ? {
-            className: 'bs-full overflow-y-auto overflow-x-hidden',
+            className: "bs-full overflow-y-auto overflow-x-hidden",
             onScroll: container => scrollMenu(container, false)
           }
         : {
@@ -128,7 +128,7 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
         {session?.permissions && <GenerateVerticalMenu permissions={session.permissions} />}
       </Menu>
     </ScrollWrapper>
-  )
-}
+  );
+};
 
-export default VerticalMenu
+export default VerticalMenu;

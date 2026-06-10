@@ -1,74 +1,74 @@
-import * as yup from 'yup'
+import * as yup from "yup";
 
 export const packingSchema = yup
   .object({
     product: yup
       .object()
       .shape({
-        id: yup.string().required('El producto es requerido')
+        id: yup.string().required("El producto es requerido")
       })
-      .required('El producto es requerido'),
+      .required("El producto es requerido"),
     details: yup
       .array()
-      .required('Los detalles son requeridos')
-      .test('validate-details-except-last', 'Debe agregar al menos un detalle', async function (value) {
-        const { path, createError } = this
-        const arr = Array.isArray(value) ? value : []
+      .required("Los detalles son requeridos")
+      .test("validate-details-except-last", "Debe agregar al menos un detalle", async function (value) {
+        const { path, createError } = this;
+        const arr = Array.isArray(value) ? value : [];
 
         if (arr.length === 0) {
-          return createError({ path, message: 'Debe agregar al menos un detalle' })
+          return createError({ path, message: "Debe agregar al menos un detalle" });
         }
 
         const itemSchema = yup.object().shape({
           packaging: yup
             .object()
             .shape({
-              id: yup.number().required('El material es requerido')
+              id: yup.number().required("El material es requerido")
             })
-            .required('El material de empaque es requerido'),
+            .required("El material de empaque es requerido"),
           quantity: yup
             .number()
-            .typeError('La cantidad debe ser válida')
-            .test('required', 'La cantidad es requerida', value => value !== undefined && value !== null)
-            .min(1, 'La cantidad debe ser al menos 1')
-        })
+            .typeError("La cantidad debe ser válida")
+            .test("required", "La cantidad es requerida", value => value !== undefined && value !== null)
+            .min(1, "La cantidad debe ser al menos 1")
+        });
 
-        const toValidate = arr.slice(0, -1)
+        const toValidate = arr.slice(0, -1);
 
         for (let i = 0; i < toValidate.length; i++) {
           try {
-            await itemSchema.validate(toValidate[i])
+            await itemSchema.validate(toValidate[i]);
           } catch (err: any) {
             return createError({
               path: `${path}[${i}]`,
               message: err.message
-            })
+            });
           }
         }
 
-        return true
+        return true;
       })
   })
-  .required()
+  .required();
 
 export const editPackagingSchema = yup.object({
   details: yup
     .array()
-    .required('Los detalles son requeridos')
-    .min(1, 'Debe agregar al menos un material de empaque')
+    .required("Los detalles son requeridos")
+    .min(1, "Debe agregar al menos un material de empaque")
     .of(
       yup.object({
         packaging: yup
           .object()
           .shape({
-            id: yup.number().required('El material es requerido')
+            id: yup.number().required("El material es requerido")
           })
-          .required('El material de empaque es requerido'),
+          .required("El material de empaque es requerido"),
         quantity: yup
           .number()
-          .typeError('La cantidad debe ser válida')
-          .required('La cantidad es requerida')
-          .min(1, 'La cantidad debe ser al menos 1')
+          .typeError("La cantidad debe ser válida")
+          .required("La cantidad es requerida")
+          .min(1, "La cantidad debe ser al menos 1")
       })
     )
-})
+});

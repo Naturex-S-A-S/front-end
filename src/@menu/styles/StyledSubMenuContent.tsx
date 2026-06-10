@@ -1,8 +1,8 @@
 // Third-party Imports
-import styled from '@emotion/styled'
+import styled from "@emotion/styled";
 
 // Type Imports
-import type { SubMenuContentProps } from '../components/vertical-menu/SubMenuContent'
+import type { SubMenuContentProps } from "../components/vertical-menu/SubMenuContent";
 
 const StyledSubMenuContent = styled.div<SubMenuContentProps>`
   display: none;
@@ -41,6 +41,6 @@ const StyledSubMenuContent = styled.div<SubMenuContentProps>`
 
 
   ${({ rootStyles }) => rootStyles};
-`
+`;
 
-export default StyledSubMenuContent
+export default StyledSubMenuContent;

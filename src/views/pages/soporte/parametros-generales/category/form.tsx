@@ -1,14 +1,14 @@
-import { Grid } from '@mui/material'
+import { Grid } from "@mui/material";
 
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext } from "react-hook-form";
 
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import CustomButton from '@/@core/components/mui/Button'
-import CustomTextField from '@/@core/components/mui/TextField'
-import { mockCategoryTypes } from '@/utils/mocks'
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import CustomButton from "@/@core/components/mui/Button";
+import CustomTextField from "@/@core/components/mui/TextField";
+import { mockCategoryTypes } from "@/utils/mocks";
 
 interface Props {
-  isPending: boolean
+  isPending: boolean;
 }
 
 const Form = ({ isPending }: Props) => {
@@ -16,13 +16,13 @@ const Form = ({ isPending }: Props) => {
     control,
     formState: { errors },
     register
-  }: any = useFormContext()
+  }: any = useFormContext();
 
   return (
     <Grid container spacing={4}>
       <Grid item xs={12} md={6}>
         <CustomTextField
-          {...register('name')}
+          {...register("name")}
           autoFocus
           fullWidth
           label='Nombre'
@@ -40,7 +40,7 @@ const Form = ({ isPending }: Props) => {
               value={value}
               options={mockCategoryTypes}
               onChange={(e, value: any) => {
-                onChange(value)
+                onChange(value);
               }}
               renderInput={params => (
                 <CustomTextField
@@ -59,7 +59,7 @@ const Form = ({ isPending }: Props) => {
         <CustomButton text='Guardar' type='submit' isLoading={isPending} />
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default Form
+export default Form;

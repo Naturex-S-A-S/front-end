@@ -1,26 +1,26 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
+import { useState } from "react";
 
-import Grid from '@mui/material/Grid'
-import Tab from '@mui/material/Tab'
-import TabContext from '@mui/lab/TabContext'
-import TabPanel from '@mui/lab/TabPanel'
+import Grid from "@mui/material/Grid";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabPanel from "@mui/lab/TabPanel";
 
-import type { ProfileData } from '@/types/pages/profile'
+import type { ProfileData } from "@/types/pages/profile";
 
-import UserProfileHeader from './UserProfileHeader'
-import CustomTabList from '@core/components/mui/TabList'
+import UserProfileHeader from "./UserProfileHeader";
+import CustomTabList from "@core/components/mui/TabList";
 
-import AccountsTab from '@views/pages/user-profile/account'
-import ChangePasswordTab from '@views/pages/user-profile/password'
+import AccountsTab from "@views/pages/user-profile/account";
+import ChangePasswordTab from "@views/pages/user-profile/password";
 
 type Props = {
-  profile: ProfileData
-}
+  profile: ProfileData;
+};
 
 export default function UserProfile({ profile }: Props) {
-  const [activeTab, setActiveTab] = useState('account')
+  const [activeTab, setActiveTab] = useState("account");
 
   return (
     <Grid container spacing={6}>
@@ -36,11 +36,11 @@ export default function UserProfile({ profile }: Props) {
           </CustomTabList>
 
           <TabPanel value={activeTab}>
-            {activeTab === 'account' && <AccountsTab data={profile} />}
-            {activeTab === 'change-password' && <ChangePasswordTab />}
+            {activeTab === "account" && <AccountsTab data={profile} />}
+            {activeTab === "change-password" && <ChangePasswordTab />}
           </TabPanel>
         </TabContext>
       </Grid>
     </Grid>
-  )
+  );
 }

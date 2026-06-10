@@ -1,11 +1,11 @@
 // MUI Imports
-import type { Theme } from '@mui/material/styles'
+import type { Theme } from "@mui/material/styles";
 
-const input: Theme['components'] = {
+const input: Theme["components"] = {
   MuiFormControl: {
     styleOverrides: {
       root: {
-        '&:has(.MuiRadio-root) .MuiFormHelperText-root, &:has(.MuiCheckbox-root) .MuiFormHelperText-root, &:has(.MuiSwitch-root) .MuiFormHelperText-root':
+        "&:has(.MuiRadio-root) .MuiFormHelperText-root, &:has(.MuiCheckbox-root) .MuiFormHelperText-root, &:has(.MuiSwitch-root) .MuiFormHelperText-root":
           {
             marginInline: 0
           }
@@ -16,16 +16,16 @@ const input: Theme['components'] = {
     styleOverrides: {
       root: {
         lineHeight: 1.6,
-        '&.MuiInput-underline': {
-          '&:before': {
-            borderColor: 'var(--mui-palette-customColors-inputBorder)'
+        "&.MuiInput-underline": {
+          "&:before": {
+            borderColor: "var(--mui-palette-customColors-inputBorder)"
           },
-          '&:not(.Mui-disabled, .Mui-error):hover:before': {
-            borderColor: 'var(--mui-palette-action-active)'
+          "&:not(.Mui-disabled, .Mui-error):hover:before": {
+            borderColor: "var(--mui-palette-action-active)"
           }
         },
-        '&.Mui-disabled .MuiInputAdornment-root, &.Mui-disabled .MuiInputAdornment-root > *': {
-          color: 'var(--mui-palette-action-disabled)'
+        "&.Mui-disabled .MuiInputAdornment-root, &.Mui-disabled .MuiInputAdornment-root > *": {
+          color: "var(--mui-palette-action-disabled)"
         }
       }
     }
@@ -35,14 +35,14 @@ const input: Theme['components'] = {
       root: {
         borderStartStartRadius: 4,
         borderStartEndRadius: 4,
-        '&:before': {
-          borderBottom: '1px solid var(--mui-palette-text-secondary)'
+        "&:before": {
+          borderBottom: "1px solid var(--mui-palette-text-secondary)"
         },
-        '&:hover:before': {
-          borderBottom: '1px solid var(--mui-palette-text-primary)'
+        "&:hover:before": {
+          borderBottom: "1px solid var(--mui-palette-text-primary)"
         },
-        '&.Mui-disabled:before': {
-          borderBottomStyle: 'solid',
+        "&.Mui-disabled:before": {
+          borderBottomStyle: "solid",
           opacity: 0.38
         }
       }
@@ -51,14 +51,14 @@ const input: Theme['components'] = {
   MuiInputLabel: {
     styleOverrides: {
       shrink: ({ ownerState }) => ({
-        ...(ownerState.variant === 'outlined' && {
-          transform: 'translate(14px, -8px) scale(0.867)'
+        ...(ownerState.variant === "outlined" && {
+          transform: "translate(14px, -8px) scale(0.867)"
         }),
-        ...(ownerState.variant === 'filled' && {
-          transform: `translate(12px, ${ownerState.size === 'small' ? 4 : 7}px) scale(0.867)`
+        ...(ownerState.variant === "filled" && {
+          transform: `translate(12px, ${ownerState.size === "small" ? 4 : 7}px) scale(0.867)`
         }),
-        ...(ownerState.variant === 'standard' && {
-          transform: 'translate(0, -1.5px) scale(0.867)'
+        ...(ownerState.variant === "standard" && {
+          transform: "translate(0, -1.5px) scale(0.867)"
         })
       })
     }
@@ -66,30 +66,30 @@ const input: Theme['components'] = {
   MuiOutlinedInput: {
     styleOverrides: {
       root: {
-        '&:not(.Mui-focused):not(.Mui-error):not(.Mui-disabled):hover .MuiOutlinedInput-notchedOutline': {
-          borderColor: 'var(--mui-palette-action-active)'
+        "&:not(.Mui-focused):not(.Mui-error):not(.Mui-disabled):hover .MuiOutlinedInput-notchedOutline": {
+          borderColor: "var(--mui-palette-action-active)"
         },
-        '&.Mui-disabled .MuiOutlinedInput-notchedOutline': {
-          borderColor: 'var(--mui-palette-divider)'
+        "&.Mui-disabled .MuiOutlinedInput-notchedOutline": {
+          borderColor: "var(--mui-palette-divider)"
         },
-        '&:not(.Mui-error).MuiInputBase-colorPrimary.Mui-focused': {
-          boxShadow: 'var(--mui-customShadows-primary-sm)'
+        "&:not(.Mui-error).MuiInputBase-colorPrimary.Mui-focused": {
+          boxShadow: "var(--mui-customShadows-primary-sm)"
         }
       },
       input: ({ theme, ownerState }) => ({
-        ...(ownerState?.size === 'medium' && {
-          '&:not(.MuiInputBase-inputMultiline, .MuiInputBase-inputAdornedStart)': {
+        ...(ownerState?.size === "medium" && {
+          "&:not(.MuiInputBase-inputMultiline, .MuiInputBase-inputAdornedStart)": {
             padding: theme.spacing(4)
           },
-          height: '1.5em'
+          height: "1.5em"
         }),
-        '& ~ .MuiOutlinedInput-notchedOutline': {
-          borderColor: 'var(--mui-palette-customColors-inputBorder)'
+        "& ~ .MuiOutlinedInput-notchedOutline": {
+          borderColor: "var(--mui-palette-customColors-inputBorder)"
         }
       }),
       notchedOutline: {
-        '& legend': {
-          fontSize: '0.867em'
+        "& legend": {
+          fontSize: "0.867em"
         }
       }
     }
@@ -97,12 +97,12 @@ const input: Theme['components'] = {
   MuiInputAdornment: {
     styleOverrides: {
       root: {
-        color: 'var(--mui-palette-text-primary)',
-        '& i, & svg': {
-          fontSize: '1rem !important'
+        color: "var(--mui-palette-text-primary)",
+        "& i, & svg": {
+          fontSize: "1rem !important"
         },
-        '& *': {
-          color: 'inherit !important'
+        "& *": {
+          color: "inherit !important"
         }
       }
     }
@@ -111,10 +111,10 @@ const input: Theme['components'] = {
     styleOverrides: {
       root: {
         lineHeight: 1,
-        letterSpacing: 'unset'
+        letterSpacing: "unset"
       }
     }
   }
-}
+};
 
-export default input
+export default input;

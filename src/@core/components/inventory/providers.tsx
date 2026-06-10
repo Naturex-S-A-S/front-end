@@ -1,21 +1,21 @@
-import type { FC } from 'react'
+import type { FC } from "react";
 
-import { List, ListItem, ListItemText } from '@mui/material'
+import { List, ListItem, ListItemText } from "@mui/material";
 
-import { Icon } from '@iconify/react'
+import { Icon } from "@iconify/react";
 
-import CustomCard from '@/@core/components/mui/Card'
+import CustomCard from "@/@core/components/mui/Card";
 
 interface Props {
   data: {
-    id: string
-    name: string
-    phone: string
-  }[]
+    id: string;
+    name: string;
+    phone: string;
+  }[];
 }
 
 const Providers: FC<Props> = ({ data }) => {
-  const isEmpty = !Array.isArray(data) || data.length === 0
+  const isEmpty = !Array.isArray(data) || data.length === 0;
 
   return (
     <CustomCard title='Proveedores'>
@@ -44,7 +44,7 @@ const Providers: FC<Props> = ({ data }) => {
         ))}
       </List>
     </CustomCard>
-  )
-}
+  );
+};
 
-export default Providers
+export default Providers;

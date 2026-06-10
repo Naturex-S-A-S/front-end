@@ -1,53 +1,53 @@
 // MUI Imports
-import MuiTabList from '@mui/lab/TabList'
-import { styled } from '@mui/material/styles'
-import type { TabListProps } from '@mui/lab/TabList'
+import MuiTabList from "@mui/lab/TabList";
+import { styled } from "@mui/material/styles";
+import type { TabListProps } from "@mui/lab/TabList";
 
 // Type Imports
-import type { ThemeColor } from '@core/types'
+import type { ThemeColor } from "@core/types";
 
 export type CustomTabListProps = TabListProps & {
-  color?: ThemeColor
-  pill?: 'true' | 'false'
-}
+  color?: ThemeColor;
+  pill?: "true" | "false";
+};
 
 const TabList = styled(MuiTabList)<CustomTabListProps>(({ color, theme, pill, orientation }) => ({
-  ...(pill === 'true' && {
+  ...(pill === "true" && {
     minHeight: 38,
-    ...(orientation === 'vertical'
+    ...(orientation === "vertical"
       ? {
           borderInlineEnd: 0
         }
       : {
           borderBlockEnd: 0
         }),
-    '&, & .MuiTabs-scroller': {
-      ...(orientation === 'vertical' && {
-        boxSizing: 'content-box'
+    "&, & .MuiTabs-scroller": {
+      ...(orientation === "vertical" && {
+        boxSizing: "content-box"
       }),
       margin: `${theme.spacing(-1, -1, -1.5, -1)} !important`,
       padding: theme.spacing(1, 1, 1.5, 1)
     },
-    '& .MuiTabs-indicator': {
-      display: 'none'
+    "& .MuiTabs-indicator": {
+      display: "none"
     },
-    '& .MuiTabs-flexContainer': {
+    "& .MuiTabs-flexContainer": {
       gap: theme.spacing(1)
     },
-    '& .Mui-selected': {
+    "& .Mui-selected": {
       backgroundColor: `var(--mui-palette-${color}-main) !important`,
       color: `var(--mui-palette-${color}-contrastText) !important`,
       boxShadow: `var(--mui-customShadows-${color}-sm)`
     },
-    '& .MuiTab-root': {
+    "& .MuiTab-root": {
       minHeight: 38,
       padding: theme.spacing(2, 5),
-      borderRadius: 'var(--mui-shape-borderRadius)',
-      '&:hover': {
+      borderRadius: "var(--mui-shape-borderRadius)",
+      "&:hover": {
         border: 0,
         backgroundColor: `var(--mui-palette-${color}-lightOpacity)`,
         color: `var(--mui-palette-${color}-main)`,
-        ...(orientation === 'vertical'
+        ...(orientation === "vertical"
           ? {
               paddingInlineEnd: theme.spacing(5)
             }
@@ -57,19 +57,19 @@ const TabList = styled(MuiTabList)<CustomTabListProps>(({ color, theme, pill, or
       }
     }
   })
-}))
+}));
 
 const CustomTabList = (props: CustomTabListProps) => {
   // Props
-  const { color = 'primary', ...rest } = props
+  const { color = "primary", ...rest } = props;
 
   return (
     <TabList
       color={color}
       {...rest}
-      sx={props.centered ? { '& .MuiTabs-flexContainer': { justifyContent: 'center' } } : {}}
+      sx={props.centered ? { "& .MuiTabs-flexContainer": { justifyContent: "center" } } : {}}
     />
-  )
-}
+  );
+};
 
-export default CustomTabList
+export default CustomTabList;

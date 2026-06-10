@@ -1,62 +1,62 @@
-import type { FC } from 'react'
-import { useState } from 'react'
+import type { FC } from "react";
+import { useState } from "react";
 
-import { Box, Card, CardContent, CardHeader, Grid, MenuItem } from '@mui/material'
+import { Box, Card, CardContent, CardHeader, Grid, MenuItem } from "@mui/material";
 
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm } from "react-hook-form";
 
-import { yupResolver } from '@hookform/resolvers/yup'
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
-import type { IOrderDetail, IOrderItem, IOrderKardex } from '@/types/pages/order'
-import CreateButton from '@/components/layout/shared/CreateButton'
-import CustomDialog from '@/@core/components/mui/Dialog'
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import CustomTextField from '@/@core/components/mui/TextField'
-import CustomButton from '@/@core/components/mui/Button'
-import { adjustmentMaterialSchema, adjustmentProductSchema, categoryOnlySchema } from '@/utils/schemas/order'
-import AdjustmentList from './adjustmentList'
+import type { IOrderDetail, IOrderItem, IOrderKardex } from "@/types/pages/order";
+import CreateButton from "@/components/layout/shared/CreateButton";
+import CustomDialog from "@/@core/components/mui/Dialog";
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import CustomTextField from "@/@core/components/mui/TextField";
+import CustomButton from "@/@core/components/mui/Button";
+import { adjustmentMaterialSchema, adjustmentProductSchema, categoryOnlySchema } from "@/utils/schemas/order";
+import AdjustmentList from "./adjustmentList";
 import {
   postKardexInputAdjustment as postKardexInputAdjustmentFeedStock,
   postKardexOutputAdjustment
-} from '@/api/feedstock'
+} from "@/api/feedstock";
 
-import { postKardexInputAdjustment as postKardexInputAdjustmentProduct } from '@/api/product'
-import { alertMessageErrors } from '@/utils/messages'
+import { postKardexInputAdjustment as postKardexInputAdjustmentProduct } from "@/api/product";
+import { alertMessageErrors } from "@/utils/messages";
 
-type Option = { id: number; label: string }
+type Option = { id: number; label: string };
 
 interface AdjustmentFormValues {
-  category?: Option | null
-  material?: Option | null
-  product?: Option | null
-  type?: string | null
-  charge?: string | null
-  quantity?: number | null
-  observation?: string | null
-  location?: string | null
-  classification?: string | null
-  batch?: string | null
-  rack?: string | null
-  expiration_date_1?: string | null
-  expiration_date_2?: string | null
+  category?: Option | null;
+  material?: Option | null;
+  product?: Option | null;
+  type?: string | null;
+  charge?: string | null;
+  quantity?: number | null;
+  observation?: string | null;
+  location?: string | null;
+  classification?: string | null;
+  batch?: string | null;
+  rack?: string | null;
+  expiration_date_1?: string | null;
+  expiration_date_2?: string | null;
 }
 
 interface IProps {
-  materials: IOrderDetail[]
-  products: IOrderItem[]
-  kardex: IOrderKardex[]
-  orderId: number
-  canCreate: boolean
+  materials: IOrderDetail[];
+  products: IOrderItem[];
+  kardex: IOrderKardex[];
+  orderId: number;
+  canCreate: boolean;
 }
 
 const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreate }) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const { control, handleSubmit, watch, reset, setValue } = useForm<AdjustmentFormValues>({
     defaultValues: {
@@ -64,82 +64,83 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
       material: null,
       product: null,
       type: null,
-      charge: '',
+      charge: "",
       quantity: null,
-      observation: '',
-      location: '',
-      classification: '',
-      batch: '',
-      rack: '',
-      expiration_date_1: '',
-      expiration_date_2: ''
+      observation: "",
+      location: "",
+      classification: "",
+      batch: "",
+      rack: "",
+      expiration_date_1: "",
+      expiration_date_2: ""
     },
     resolver: async (data, context, options) => {
-      const catId = data.category?.id
+      const catId = data.category?.id;
 
-      const schema = catId === 1 ? adjustmentMaterialSchema : catId === 2 ? adjustmentProductSchema : categoryOnlySchema
+      const schema =
+        catId === 1 ? adjustmentMaterialSchema : catId === 2 ? adjustmentProductSchema : categoryOnlySchema;
 
-      return yupResolver(schema)(data as any, context, options as any)
+      return yupResolver(schema)(data as any, context, options as any);
     }
-  })
+  });
 
   const toogleDialog = () => {
-    setOpen(!open)
-  }
+    setOpen(!open);
+  };
 
-  const categoryWatch: any = watch('category')
+  const categoryWatch: any = watch("category");
 
-  const isCategoryProduct = categoryWatch?.id === 2
-  const isCategoryMaterial = categoryWatch?.id === 1
+  const isCategoryProduct = categoryWatch?.id === 2;
+  const isCategoryMaterial = categoryWatch?.id === 1;
 
   const materialOptions = materials.map((material: any) => ({
     id: material.idMaterial,
     label: material.nameMaterial
-  }))
+  }));
 
   const productOptions = products.map((product: any) => ({
     id: product.finalProduct.id,
     label: product.finalProduct.name
-  }))
+  }));
 
   const { mutate: mutateInputProduct, isPending: isPendingInputProduct } = useMutation({
     mutationFn: postKardexInputAdjustmentProduct,
     onSuccess: () => {
-      handleOnReset()
-      toogleDialog()
-      queryClient.invalidateQueries({ queryKey: ['getOrderById', Number(orderId)] })
-      toast.success('Ajuste registrado correctamente')
+      handleOnReset();
+      toogleDialog();
+      queryClient.invalidateQueries({ queryKey: ["getOrderById", Number(orderId)] });
+      toast.success("Ajuste registrado correctamente");
     },
     onError: (error: any) => {
-      alertMessageErrors(error, 'Error al registrar el ajuste')
+      alertMessageErrors(error, "Error al registrar el ajuste");
     }
-  })
+  });
 
   const { mutate: mutateInputFeedStock, isPending: isPendingInputFeedStock } = useMutation({
     mutationFn: postKardexInputAdjustmentFeedStock,
     onSuccess: () => {
-      handleOnReset()
-      toogleDialog()
-      queryClient.invalidateQueries({ queryKey: ['getOrderById', Number(orderId)] })
-      toast.success('Ajuste registrado correctamente')
+      handleOnReset();
+      toogleDialog();
+      queryClient.invalidateQueries({ queryKey: ["getOrderById", Number(orderId)] });
+      toast.success("Ajuste registrado correctamente");
     },
     onError: (error: any) => {
-      alertMessageErrors(error, 'Error al registrar el ajuste')
+      alertMessageErrors(error, "Error al registrar el ajuste");
     }
-  })
+  });
 
   const { mutate: mutateOutput, isPending: isPendingOutput } = useMutation({
     mutationFn: postKardexOutputAdjustment,
     onSuccess: () => {
-      handleOnReset()
-      toogleDialog()
-      queryClient.invalidateQueries({ queryKey: ['getOrderById', Number(orderId)] })
-      toast.success('Ajuste registrado correctamente')
+      handleOnReset();
+      toogleDialog();
+      queryClient.invalidateQueries({ queryKey: ["getOrderById", Number(orderId)] });
+      toast.success("Ajuste registrado correctamente");
     },
     onError: (error: any) => {
-      alertMessageErrors(error, 'Error al registrar el ajuste')
+      alertMessageErrors(error, "Error al registrar el ajuste");
     }
-  })
+  });
 
   const handleOnSubmit = (values: any) => {
     if (isCategoryMaterial) {
@@ -152,12 +153,12 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
         observation: values.observation,
         location: values.location,
         rack: values.rack
-      }
+      };
 
-      if (values.type === 'IN') {
-        mutateInputFeedStock(payload)
-      } else if (values.type === 'OUT') {
-        mutateOutput(payload)
+      if (values.type === "IN") {
+        mutateInputFeedStock(payload);
+      } else if (values.type === "OUT") {
+        mutateOutput(payload);
       }
     } else if (isCategoryProduct) {
       const payload = {
@@ -169,11 +170,11 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
         observation: values.observation,
         expirationDate1: values.expiration_date_1,
         rack: values?.rack
-      }
+      };
 
-      mutateInputProduct(payload)
+      mutateInputProduct(payload);
     }
-  }
+  };
 
   const handleOnReset = (value?: any) => {
     reset({
@@ -181,29 +182,29 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
       material: null,
       product: null,
       type: null,
-      charge: '',
+      charge: "",
       quantity: null,
-      observation: '',
-      location: '',
-      classification: '',
-      batch: '',
-      rack: '',
-      expiration_date_1: '',
-      expiration_date_2: ''
-    })
-  }
+      observation: "",
+      location: "",
+      classification: "",
+      batch: "",
+      rack: "",
+      expiration_date_1: "",
+      expiration_date_2: ""
+    });
+  };
 
   const handleOnChangeCategory = (_: any, value: any) => {
-    setValue('category', value)
-    handleOnReset(value)
-  }
+    setValue("category", value);
+    handleOnReset(value);
+  };
 
   return (
     <Card>
       <CardHeader title='Ajustes' />
       <CardContent>
         {canCreate && (
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CreateButton onClick={toogleDialog} />
           </Box>
         )}
@@ -214,18 +215,18 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                 <Controller
                   name='category'
                   control={control}
-                  rules={{ required: 'Seleccione una categoría' }}
+                  rules={{ required: "Seleccione una categoría" }}
                   render={({ field: { value }, fieldState: { error } }: any) => (
                     <CustomAutocomplete
                       value={value}
                       options={[
                         {
                           id: 1,
-                          label: 'Material de empaque / Materia prima'
+                          label: "Material de empaque / Materia prima"
                         },
                         {
                           id: 2,
-                          label: 'Producto'
+                          label: "Producto"
                         }
                       ]}
                       onChange={handleOnChangeCategory}
@@ -249,7 +250,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                     <Controller
                       name='material'
                       control={control}
-                      rules={{ required: 'Seleccione un material' }}
+                      rules={{ required: "Seleccione un material" }}
                       render={({ field: { value, onChange }, fieldState: { error } }: any) => (
                         <CustomAutocomplete
                           value={value}
@@ -273,12 +274,12 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                     <Controller
                       name='type' // entrada o salida
                       control={control}
-                      rules={{ required: 'Seleccione entrada o salida' }}
+                      rules={{ required: "Seleccione entrada o salida" }}
                       render={({ field: { value, onChange }, fieldState: { error } }: any) => (
                         <CustomTextField
                           select
                           label='Tipo'
-                          value={value ?? ''}
+                          value={value ?? ""}
                           onChange={e => onChange(e.target.value)}
                           error={!!error}
                           helperText={error?.message}
@@ -297,7 +298,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                       render={({ field: { value, onChange }, fieldState: { error } }: any) => (
                         <CustomTextField
                           label='Lote'
-                          value={value ?? ''}
+                          value={value ?? ""}
                           onChange={e => onChange(e.target.value)}
                           error={!!error}
                           helperText={error?.message}
@@ -310,12 +311,12 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                     <Controller
                       name='quantity'
                       control={control}
-                      rules={{ required: 'Ingrese la cantidad', min: { value: 1, message: 'Cantidad mínima 1' } }}
+                      rules={{ required: "Ingrese la cantidad", min: { value: 1, message: "Cantidad mínima 1" } }}
                       render={({ field: { value, onChange }, fieldState: { error } }: any) => (
                         <CustomTextField
                           type='number'
                           label='Cantidad'
-                          value={value ?? ''}
+                          value={value ?? ""}
                           onChange={e => onChange(Number(e.target.value))}
                           error={!!error}
                           helperText={error?.message}
@@ -333,7 +334,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                           type='date'
                           label='Fecha expiración 1'
                           InputLabelProps={{ shrink: true }}
-                          value={value ?? ''}
+                          value={value ?? ""}
                           onChange={e => onChange(e.target.value)}
                         />
                       )}
@@ -344,11 +345,11 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                     <Controller
                       name='location'
                       control={control}
-                      rules={{ required: 'Debe ingresar el lugar de almacenamiento' }}
+                      rules={{ required: "Debe ingresar el lugar de almacenamiento" }}
                       render={({ field: { value, onChange }, fieldState: { error } }: any) => (
                         <CustomTextField
                           label='Ubicación'
-                          value={value ?? ''}
+                          value={value ?? ""}
                           onChange={e => onChange(e.target.value)}
                           error={!!error}
                           helperText={error?.message}
@@ -362,7 +363,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                       name='rack'
                       control={control}
                       render={({ field: { value, onChange } }: any) => (
-                        <CustomTextField label='Rack' value={value ?? ''} onChange={e => onChange(e.target.value)} />
+                        <CustomTextField label='Rack' value={value ?? ""} onChange={e => onChange(e.target.value)} />
                       )}
                     />
                   </Grid>
@@ -374,7 +375,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                       render={({ field: { value, onChange }, fieldState: { error } }: any) => (
                         <CustomTextField
                           label='Observación'
-                          value={value ?? ''}
+                          value={value ?? ""}
                           onChange={e => onChange(e.target.value)}
                           multiline
                           rows={3}
@@ -393,7 +394,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                     <Controller
                       name='product'
                       control={control}
-                      rules={{ required: 'Seleccione un producto' }}
+                      rules={{ required: "Seleccione un producto" }}
                       render={({ field: { value, onChange }, fieldState: { error } }: any) => (
                         <CustomAutocomplete
                           value={value}
@@ -420,7 +421,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                       render={({ field: { value, onChange }, fieldState: { error } }: any) => (
                         <CustomTextField
                           label='Lote'
-                          value={value ?? ''}
+                          value={value ?? ""}
                           onChange={e => onChange(e.target.value)}
                           error={!!error}
                           helperText={error?.message}
@@ -434,7 +435,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                       name='rack'
                       control={control}
                       render={({ field: { value, onChange } }: any) => (
-                        <CustomTextField label='Rack' value={value ?? ''} onChange={e => onChange(e.target.value)} />
+                        <CustomTextField label='Rack' value={value ?? ""} onChange={e => onChange(e.target.value)} />
                       )}
                     />
                   </Grid>
@@ -443,11 +444,11 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                     <Controller
                       name='location'
                       control={control}
-                      rules={{ required: 'Debe ingresar el lugar de almacenamiento' }}
+                      rules={{ required: "Debe ingresar el lugar de almacenamiento" }}
                       render={({ field: { value, onChange }, fieldState: { error } }: any) => (
                         <CustomTextField
                           label='Ubicación'
-                          value={value ?? ''}
+                          value={value ?? ""}
                           onChange={e => onChange(e.target.value)}
                           error={!!error}
                           helperText={error?.message}
@@ -460,12 +461,12 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                     <Controller
                       name='quantity'
                       control={control}
-                      rules={{ required: 'Debe ingresar la cantidad', min: { value: 1, message: 'Cantidad mínima 1' } }}
+                      rules={{ required: "Debe ingresar la cantidad", min: { value: 1, message: "Cantidad mínima 1" } }}
                       render={({ field: { value, onChange }, fieldState: { error } }: any) => (
                         <CustomTextField
                           type='number'
                           label='Cantidad'
-                          value={value ?? ''}
+                          value={value ?? ""}
                           onChange={e => onChange(Number(e.target.value))}
                           error={!!error}
                           helperText={error?.message}
@@ -483,7 +484,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                           type='date'
                           label='Fecha expiración 1'
                           InputLabelProps={{ shrink: true }}
-                          value={value ?? ''}
+                          value={value ?? ""}
                           onChange={e => onChange(e.target.value)}
                           error={!!error}
                           helperText={error?.message}
@@ -499,7 +500,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                       render={({ field: { value, onChange }, fieldState: { error } }: any) => (
                         <CustomTextField
                           label='Observación'
-                          value={value ?? ''}
+                          value={value ?? ""}
                           onChange={e => onChange(e.target.value)}
                           multiline
                           rows={3}
@@ -512,7 +513,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                 </>
               )}
 
-              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
                 <CustomButton
                   type='submit'
                   disabled={isPendingInputProduct || isPendingInputFeedStock || isPendingOutput}
@@ -527,7 +528,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
         <AdjustmentList data={kardex} isLoading={false} />
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default Adjustment
+export default Adjustment;

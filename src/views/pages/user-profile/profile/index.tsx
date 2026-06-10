@@ -1,11 +1,11 @@
 // MUI Imports
-import Grid from '@mui/material/Grid'
+import Grid from "@mui/material/Grid";
 
 // Type Imports
-import type { ProfileTabType } from '@/types/pages/profileTypes'
+import type { ProfileTabType } from "@/types/pages/profileTypes";
 
 // Component Imports
-import AboutOverview from './AboutOverview'
+import AboutOverview from "./AboutOverview";
 
 // import ProjectsTable from './ProjectsTables'
 
@@ -16,7 +16,7 @@ const ProfileTab = ({ data }: { data?: ProfileTabType }) => {
         <AboutOverview data={data} />
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default ProfileTab
+export default ProfileTab;

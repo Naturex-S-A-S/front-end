@@ -1,17 +1,17 @@
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
-import type { GridColDef } from '@mui/x-data-grid'
+import type { GridColDef } from "@mui/x-data-grid";
 
-import { ActionButton } from './components/ActionButton'
-import { formatDate } from '../format'
+import { ActionButton } from "./components/ActionButton";
+import { formatDate } from "../format";
 
 export const useColumns = (): GridColDef[] => {
-  const router = useRouter()
+  const router = useRouter();
 
   return [
     {
-      field: 'actions',
-      headerName: 'Acciones',
+      field: "actions",
+      headerName: "Acciones",
       width: 80,
       sortable: false,
       renderCell: params => (
@@ -22,36 +22,36 @@ export const useColumns = (): GridColDef[] => {
       )
     },
     {
-      field: 'fileName',
-      headerName: 'Nombre del archivo',
+      field: "fileName",
+      headerName: "Nombre del archivo",
       flex: 1,
       minWidth: 200
     },
     {
-      field: 'type',
-      headerName: 'Tipo',
+      field: "type",
+      headerName: "Tipo",
       width: 150
     },
     {
-      field: 'quantity',
-      headerName: 'Cantidad',
+      field: "quantity",
+      headerName: "Cantidad",
       width: 100
     },
     {
-      field: 'charge',
-      headerName: 'Costo',
+      field: "charge",
+      headerName: "Costo",
       width: 100
     },
     {
-      field: 'userFullName',
-      headerName: 'Nombre del usuario',
+      field: "userFullName",
+      headerName: "Nombre del usuario",
       width: 200
     },
     {
-      field: 'dateCreated',
-      headerName: 'Fecha de creación',
+      field: "dateCreated",
+      headerName: "Fecha de creación",
       width: 200,
       renderCell: params => formatDate(params.row.dateCreated)
     }
-  ]
-}
+  ];
+};

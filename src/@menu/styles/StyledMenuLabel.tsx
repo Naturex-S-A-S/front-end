@@ -1,12 +1,12 @@
 // Third-party Imports
-import styled from '@emotion/styled'
+import styled from "@emotion/styled";
 
 // Type Imports
-import type { RootStylesType } from '../types'
+import type { RootStylesType } from "../types";
 
 type StyledMenuLabelProps = RootStylesType & {
-  textTruncate?: boolean
-}
+  textTruncate?: boolean;
+};
 
 const StyledMenuLabel = styled.span<StyledMenuLabelProps>`
   flex-grow: 1;
@@ -18,6 +18,6 @@ const StyledMenuLabel = styled.span<StyledMenuLabelProps>`
       white-space: nowrap;
     `};
   ${({ rootStyles }) => rootStyles};
-`
+`;
 
-export default StyledMenuLabel
+export default StyledMenuLabel;

@@ -1,67 +1,67 @@
 // React Imports
-import { Children, isValidElement } from 'react'
-import type { ReactElement, ReactNode } from 'react'
+import { Children, isValidElement } from "react";
+import type { ReactElement, ReactNode } from "react";
 
 // Third-party Imports
-import type { CSSObject } from '@emotion/styled'
+import type { CSSObject } from "@emotion/styled";
 
 // Type Imports
-import type { ChildrenType, RenderExpandedMenuItemIcon } from '../types'
+import type { ChildrenType, RenderExpandedMenuItemIcon } from "../types";
 
 // Component Imports
 import {
   SubMenu as HorizontalSubMenu,
   MenuItem as HorizontalMenuItem,
   Menu as HorizontalMenu
-} from '../horizontal-menu'
-import { SubMenu as VerticalSubMenu, MenuItem as VerticalMenuItem, Menu as VerticalMenu } from '../vertical-menu'
-import { GenerateVerticalMenu } from '@components/GenerateMenu'
+} from "../horizontal-menu";
+import { SubMenu as VerticalSubMenu, MenuItem as VerticalMenuItem, Menu as VerticalMenu } from "../vertical-menu";
+import { GenerateVerticalMenu } from "@components/GenerateMenu";
 
 // Util Imports
-import { menuClasses } from './menuClasses'
+import { menuClasses } from "./menuClasses";
 
 // Styled Component Imports
-import StyledMenuIcon from '../styles/StyledMenuIcon'
+import StyledMenuIcon from "../styles/StyledMenuIcon";
 
 type RenderMenuIconParams = {
-  level?: number
-  active?: boolean
-  disabled?: boolean
-  styles?: CSSObject
-  icon?: ReactElement
-  renderExpandedMenuItemIcon?: RenderExpandedMenuItemIcon
-  isBreakpointReached?: boolean
-}
+  level?: number;
+  active?: boolean;
+  disabled?: boolean;
+  styles?: CSSObject;
+  icon?: ReactElement;
+  renderExpandedMenuItemIcon?: RenderExpandedMenuItemIcon;
+  isBreakpointReached?: boolean;
+};
 
-export const confirmUrlInChildren = (children: ChildrenType['children'], url: string): boolean => {
+export const confirmUrlInChildren = (children: ChildrenType["children"], url: string): boolean => {
   if (!children) {
-    return false
+    return false;
   }
 
   if (Array.isArray(children)) {
-    return children.some((child: ReactNode) => confirmUrlInChildren(child, url))
+    return children.some((child: ReactNode) => confirmUrlInChildren(child, url));
   }
 
   if (isValidElement(children)) {
-    const { component, href, exactMatch, activeUrl, children: subChildren } = children.props
+    const { component, href, exactMatch, activeUrl, children: subChildren } = children.props;
 
     if (component && component.props.href) {
       return exactMatch === true || exactMatch === undefined
         ? component.props.href === url
-        : activeUrl && url.includes(activeUrl)
+        : activeUrl && url.includes(activeUrl);
     }
 
     if (href) {
-      return exactMatch === true || exactMatch === undefined ? href === url : activeUrl && url.includes(activeUrl)
+      return exactMatch === true || exactMatch === undefined ? href === url : activeUrl && url.includes(activeUrl);
     }
 
     if (subChildren) {
-      return confirmUrlInChildren(subChildren, url)
+      return confirmUrlInChildren(subChildren, url);
     }
   }
 
-  return false
-}
+  return false;
+};
 
 /*
  * Reason behind mapping the children of the horizontal-menu component to the vertical-menu component:
@@ -81,13 +81,13 @@ export const confirmUrlInChildren = (children: ChildrenType['children'], url: st
 const processMenuChildren = (children: ReactNode, mapFunction: (child: ReactNode) => ReactNode): ReactNode => {
   return Children.map(children, child => {
     // Skip processing for non-React elements
-    if (!isValidElement(child)) return child
+    if (!isValidElement(child)) return child;
 
     // If child has menuData prop, create a GenerateVerticalMenu component
     // Otherwise, apply the transformation function to the child
-    return child.props?.menuData ? <GenerateVerticalMenu menuData={child.props.menuData} /> : mapFunction(child)
-  })
-}
+    return child.props?.menuData ? <GenerateVerticalMenu menuData={child.props.menuData} /> : mapFunction(child);
+  });
+};
 
 /**
  * Transforms a hierarchy of horizontal menu components (HorizontalMenuItem,
@@ -99,43 +99,43 @@ const processMenuChildren = (children: ReactNode, mapFunction: (child: ReactNode
 export const mapHorizontalToVerticalMenu = (children: ReactNode): ReactNode => {
   return Children.map(children, child => {
     // If the child is not a valid React element, exclude it from the output
-    if (!isValidElement(child)) return null
+    if (!isValidElement(child)) return null;
 
     // Destructure to separate specific props and rest props for further use
-    const { children: childChildren, verticalMenuProps, ...rest } = child.props
+    const { children: childChildren, verticalMenuProps, ...rest } = child.props;
 
     // Use a switch statement to handle different types of menu items
     switch (child.type) {
       case HorizontalMenuItem:
         // Directly transform HorizontalMenuItem to VerticalMenuItem
-        return <VerticalMenuItem {...rest}>{childChildren}</VerticalMenuItem>
+        return <VerticalMenuItem {...rest}>{childChildren}</VerticalMenuItem>;
       case HorizontalSubMenu:
         // Transform HorizontalSubMenu to VerticalSubMenu, recursively transforming its children
-        return <VerticalSubMenu {...rest}>{mapHorizontalToVerticalMenu(childChildren)}</VerticalSubMenu>
+        return <VerticalSubMenu {...rest}>{mapHorizontalToVerticalMenu(childChildren)}</VerticalSubMenu>;
       case HorizontalMenu:
         // For HorizontalMenu, process its children specifically, then wrap in VerticalMenu
-        const transformedChildren = processMenuChildren(childChildren, mapHorizontalToVerticalMenu)
+        const transformedChildren = processMenuChildren(childChildren, mapHorizontalToVerticalMenu);
 
-        return <VerticalMenu {...verticalMenuProps}>{transformedChildren}</VerticalMenu>
+        return <VerticalMenu {...verticalMenuProps}>{transformedChildren}</VerticalMenu>;
       default:
         // For any other type of child, return it without modification
-        return child
+        return child;
     }
-  })
-}
+  });
+};
 
 /*
  * Render all the icons for Menu Item and SubMenu components for all the levels more than 0
  */
 export const renderMenuIcon = (params: RenderMenuIconParams) => {
-  const { icon, level, active, disabled, styles, renderExpandedMenuItemIcon, isBreakpointReached } = params
+  const { icon, level, active, disabled, styles, renderExpandedMenuItemIcon, isBreakpointReached } = params;
 
   if (icon && (level === 0 || (!isBreakpointReached && level && level > 0))) {
     return (
       <StyledMenuIcon className={menuClasses.icon} rootStyles={styles}>
         {icon}
       </StyledMenuIcon>
-    )
+    );
   }
 
   if (
@@ -146,18 +146,18 @@ export const renderMenuIcon = (params: RenderMenuIconParams) => {
     (!renderExpandedMenuItemIcon.level || renderExpandedMenuItemIcon.level >= level)
   ) {
     const iconToRender =
-      typeof renderExpandedMenuItemIcon.icon === 'function'
+      typeof renderExpandedMenuItemIcon.icon === "function"
         ? renderExpandedMenuItemIcon.icon({ level, active, disabled })
-        : renderExpandedMenuItemIcon.icon
+        : renderExpandedMenuItemIcon.icon;
 
     if (iconToRender) {
       return (
         <StyledMenuIcon className={menuClasses.icon} rootStyles={styles}>
           {iconToRender}
         </StyledMenuIcon>
-      )
+      );
     }
   }
 
-  return null
-}
+  return null;
+};

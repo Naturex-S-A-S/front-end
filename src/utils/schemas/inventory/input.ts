@@ -1,61 +1,73 @@
-import * as yup from "yup"
+import * as yup from "yup";
 
 export const kardexFeedstockInputSchema = yup
-    .object({
-        material: yup.object().shape({
-            id: yup.string().required('El material es requerido'),
-            name: yup.string().required('El label es requerido')
-        }),
-        provider: yup.object().shape({
-            id: yup.string().required('El proveedor es requerido'),
-            name: yup.string().required('El label es requerido')
-        }),
-        quantity: yup.string().min(1, 'La cantidad debe ser mayor o igual a 1').typeError('La cantidad debe ser un número').required('La cantidad es requerida'),
-        unit: yup.object().shape({
-            value: yup.string().required('La unidad es requerida'),
-            label: yup.string().required('El label es requerido')
-        }),
-        charge: yup.string().typeError('El costo debe ser un número').required('El costo es requerido'),
-        document: yup.string().optional(),
-        batch: yup.string().required('El lote es requerido'),
-        location: yup.string().optional(),
-        rack: yup.string().optional(),
-        expirationDate1: yup.date().required('La fecha de expiración es requerida'),
-        expirationDate2: yup.date().optional()
-    })
-    .required()
+  .object({
+    material: yup.object().shape({
+      id: yup.string().required("El material es requerido"),
+      name: yup.string().required("El label es requerido")
+    }),
+    provider: yup.object().shape({
+      id: yup.string().required("El proveedor es requerido"),
+      name: yup.string().required("El label es requerido")
+    }),
+    quantity: yup
+      .string()
+      .min(1, "La cantidad debe ser mayor o igual a 1")
+      .typeError("La cantidad debe ser un número")
+      .required("La cantidad es requerida"),
+    unit: yup.object().shape({
+      value: yup.string().required("La unidad es requerida"),
+      label: yup.string().required("El label es requerido")
+    }),
+    charge: yup.string().typeError("El costo debe ser un número").required("El costo es requerido"),
+    document: yup.string().optional(),
+    batch: yup.string().required("El lote es requerido"),
+    location: yup.string().optional(),
+    rack: yup.string().optional(),
+    expirationDate1: yup.date().required("La fecha de expiración es requerida"),
+    expirationDate2: yup.date().optional()
+  })
+  .required();
 
 export const kardexPackagingInputSchema = yup
-    .object({
-        material: yup.object().shape({
-            id: yup.string().required('El material es requerido'),
-            name: yup.string().required('El label es requerido')
-        }),
-        provider: yup.object().shape({
-            id: yup.string().required('El proveedor es requerido'),
-            name: yup.string().required('El label es requerido')
-        }),
-        quantity: yup.string().min(1, 'La cantidad debe ser mayor o igual a 1').typeError('La cantidad debe ser un número').required('La cantidad es requerida'),
-        charge: yup.string().typeError('El costo debe ser un número').required('El costo es requerido'),
-        document: yup.string().optional(),
-        batch: yup.string().required('El lote es requerido'),
-        location: yup.string().optional(),
-        rack: yup.string().optional()
-    })
-    .required()
+  .object({
+    material: yup.object().shape({
+      id: yup.string().required("El material es requerido"),
+      name: yup.string().required("El label es requerido")
+    }),
+    provider: yup.object().shape({
+      id: yup.string().required("El proveedor es requerido"),
+      name: yup.string().required("El label es requerido")
+    }),
+    quantity: yup
+      .string()
+      .min(1, "La cantidad debe ser mayor o igual a 1")
+      .typeError("La cantidad debe ser un número")
+      .required("La cantidad es requerida"),
+    charge: yup.string().typeError("El costo debe ser un número").required("El costo es requerido"),
+    document: yup.string().optional(),
+    batch: yup.string().required("El lote es requerido"),
+    location: yup.string().optional(),
+    rack: yup.string().optional()
+  })
+  .required();
 
 export const kardexProductInputSchema = yup
-    .object({
-        product: yup.object().shape({
-            id: yup.string().required('El material es requerido'),
-            name: yup.string().required('El label es requerido')
-        }),
-        order: yup.number().typeError('El orden debe ser un número').required('El orden es requerido'),
-        quantity: yup.string().min(1, 'La cantidad debe ser mayor o igual a 1').typeError('La cantidad debe ser un número').required('La cantidad es requerida'),
-        batch: yup.string().required('El lote es requerido'),
-        location: yup.string().optional(),
-        rack: yup.string().optional(),
-        expirationDate1: yup.date().required('La fecha de expiración es requerida'),
-        observation: yup.string().optional()
-    })
-    .required() 
+  .object({
+    product: yup.object().shape({
+      id: yup.string().required("El material es requerido"),
+      name: yup.string().required("El label es requerido")
+    }),
+    order: yup.number().typeError("El orden debe ser un número").required("El orden es requerido"),
+    quantity: yup
+      .string()
+      .min(1, "La cantidad debe ser mayor o igual a 1")
+      .typeError("La cantidad debe ser un número")
+      .required("La cantidad es requerida"),
+    batch: yup.string().required("El lote es requerido"),
+    location: yup.string().optional(),
+    rack: yup.string().optional(),
+    expirationDate1: yup.date().required("La fecha de expiración es requerida"),
+    observation: yup.string().optional()
+  })
+  .required();

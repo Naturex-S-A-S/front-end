@@ -1,40 +1,40 @@
-import { useState } from 'react'
+import { useState } from "react";
 
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from "@tanstack/react-query";
 
-import CustomDataGrid from '@/@core/components/mui/DataGrid'
-import Create from './create'
-import { useColumns } from '@/utils/columns/category'
-import { getCategories } from '@/api/general-parameters'
-import type { ICategory } from '@/types/pages/generalParameters'
-import Update from './update'
+import CustomDataGrid from "@/@core/components/mui/DataGrid";
+import Create from "./create";
+import { useColumns } from "@/utils/columns/category";
+import { getCategories } from "@/api/general-parameters";
+import type { ICategory } from "@/types/pages/generalParameters";
+import Update from "./update";
 
 const Category = () => {
   const [updateData, setUpdateData] = useState<{ open: boolean; category: ICategory | undefined }>({
     open: false,
     category: undefined
-  })
+  });
 
   const { data } = useQuery<ICategory[]>({
-    queryKey: ['getCategories'],
+    queryKey: ["getCategories"],
     queryFn: getCategories
-  })
+  });
 
   const toogleDialog = () => {
     setUpdateData({
       open: false,
       category: undefined
-    })
-  }
+    });
+  };
 
   const handleEdit = (category: ICategory) => {
     setUpdateData({
       category,
       open: true
-    })
-  }
+    });
+  };
 
-  const colDefs = useColumns({ handleEdit })
+  const colDefs = useColumns({ handleEdit });
 
   return (
     <div className='flex flex-col items-center gap-2'>
@@ -85,7 +85,7 @@ const Category = () => {
         </Grid>
       </Grid>*/}
     </div>
-  )
-}
+  );
+};
 
-export default Category
+export default Category;

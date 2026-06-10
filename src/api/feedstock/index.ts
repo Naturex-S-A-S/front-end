@@ -1,61 +1,61 @@
-import { API } from "../instances"
+import { API } from "../instances";
 
 export const postFeedstock = async (data: any) => {
-    const response = await API().post("/feedstock", data)
+  const response = await API().post("/feedstock", data);
 
-    return response.data
-}
+  return response.data;
+};
 
 export const postKardexInput = async (data: any) => {
-    const response = await API().post("/kardex/feedstock/input", data)
+  const response = await API().post("/kardex/feedstock/input", data);
 
-    return response.data
-}
+  return response.data;
+};
 
 export const postKardexOutput = async (data: any) => {
-    const response = await API().post("/kardex/feedstock/output", data)
+  const response = await API().post("/kardex/feedstock/output", data);
 
-    return response.data
-}
+  return response.data;
+};
 
 export const getFeedstock = async (params?: any) => {
-    const response = await API().get("/feedstock", {
-        params: {
-            active: params?.active,
-            allergen: params?.allergen,
-            category: params?.category
-        }
-    })
+  const response = await API().get("/feedstock", {
+    params: {
+      active: params?.active,
+      allergen: params?.allergen,
+      category: params?.category
+    }
+  });
 
-    return response.data
-}
+  return response.data;
+};
 
 export const getFeedstockById = async (id: string) => {
-    const response = await API().get(`/feedstock/${id}`)
+  const response = await API().get(`/feedstock/${id}`);
 
-    return response.data
-}
+  return response.data;
+};
 
 export const patchFeedstock = async (id: number, data: any) => {
-    const response = await API().patch(`/feedstock/${id}`, data)
+  const response = await API().patch(`/feedstock/${id}`, data);
 
-    return response.data
-}
+  return response.data;
+};
 
 export const getFeedstockList = async () => {
-    const response = await API().get("/feedstock/list")
+  const response = await API().get("/feedstock/list");
 
-    return response.data
-}
+  return response.data;
+};
 
 export const postKardexInputAdjustment = async (data: any) => {
-    const response = await API().post("/kardex/feedstock/input/adjustment", data)
+  const response = await API().post("/kardex/feedstock/input/adjustment", data);
 
-    return response.data
-}
+  return response.data;
+};
 
 export const postKardexOutputAdjustment = async (data: any) => {
-    const response = await API().post("/kardex/feedstock/output/adjustment", data)
+  const response = await API().post("/kardex/feedstock/output/adjustment", data);
 
-    return response.data
-}
+  return response.data;
+};

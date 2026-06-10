@@ -1,11 +1,11 @@
 // MUI Imports
-import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card'
-import Typography from '@mui/material/Typography'
-import CardContent from '@mui/material/CardContent'
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import Typography from "@mui/material/Typography";
+import CardContent from "@mui/material/CardContent";
 
 // Type Imports
-import type { ProfileTeamsType, ProfileCommonType, ProfileTabType } from '@/types/pages/profileTypes'
+import type { ProfileTeamsType, ProfileCommonType, ProfileTabType } from "@/types/pages/profileTypes";
 
 const renderList = (list: ProfileCommonType[]) => {
   return (
@@ -22,10 +22,10 @@ const renderList = (list: ProfileCommonType[]) => {
             <Typography> {item.value.charAt(0).toUpperCase() + item.value.slice(1)}</Typography>
           </div>
         </div>
-      )
+      );
     })
-  )
-}
+  );
+};
 
 const renderTeams = (teams: ProfileTeamsType[]) => {
   return (
@@ -38,10 +38,10 @@ const renderTeams = (teams: ProfileTeamsType[]) => {
           </Typography>
           <Typography>{item.value.charAt(0).toUpperCase() + item.value.slice(1)}</Typography>
         </div>
-      )
+      );
     })
-  )
-}
+  );
+};
 
 const AboutOverview = ({ data }: { data?: ProfileTabType }) => {
   return (
@@ -83,7 +83,7 @@ const AboutOverview = ({ data }: { data?: ProfileTabType }) => {
         </Card>
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default AboutOverview
+export default AboutOverview;

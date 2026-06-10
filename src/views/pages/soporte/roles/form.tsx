@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from "react";
 
 import {
   Box,
@@ -11,30 +11,30 @@ import {
   TableHead,
   TableRow,
   Tooltip
-} from '@mui/material'
+} from "@mui/material";
 
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm } from "react-hook-form";
 
-import { Icon } from '@iconify/react'
+import { Icon } from "@iconify/react";
 
-import CustomTextField from '@/@core/components/mui/TextField'
-import CustomButton from '@/@core/components/mui/Button'
-import CustomDialog from '@/@core/components/mui/Dialog'
-import { defaultRoleValues } from '@/utils/defaultValues/role'
-import Loader from '@/@core/components/react-spinners'
+import CustomTextField from "@/@core/components/mui/TextField";
+import CustomButton from "@/@core/components/mui/Button";
+import CustomDialog from "@/@core/components/mui/Dialog";
+import { defaultRoleValues } from "@/utils/defaultValues/role";
+import Loader from "@/@core/components/react-spinners";
 
 type Props = {
-  mutate: (data: any) => void
-  isLoadingMutate?: boolean
-  isLoadingQuery?: boolean
-  open: boolean
-  toogleDialog: () => void
+  mutate: (data: any) => void;
+  isLoadingMutate?: boolean;
+  isLoadingQuery?: boolean;
+  open: boolean;
+  toogleDialog: () => void;
   defaultValues?: {
-    id: number
-    name: string
-  }
-  roleModules: any[]
-}
+    id: number;
+    name: string;
+  };
+  roleModules: any[];
+};
 
 const Form: React.FC<Props> = ({
   mutate,
@@ -45,10 +45,10 @@ const Form: React.FC<Props> = ({
   isLoadingQuery = false,
   roleModules
 }) => {
-  const [selectedCheckbox, setSelectedCheckbox] = useState<string[]>([])
+  const [selectedCheckbox, setSelectedCheckbox] = useState<string[]>([]);
 
   const allActionIds = useMemo(() => {
-    const ids: string[] = []
+    const ids: string[] = [];
 
     roleModules?.forEach(role => {
       role.children?.forEach((module: any) => {
@@ -60,12 +60,12 @@ const Form: React.FC<Props> = ({
               create: false,
               update: false,
               delete: false
-            }
+            };
 
             Object.keys(actionsObj).forEach(action => {
-              actionsObj[action] && ids.push(`${role.id}-${module.id}-${item.id}-${action}`)
-            })
-          })
+              actionsObj[action] && ids.push(`${role.id}-${module.id}-${item.id}-${action}`);
+            });
+          });
         } else {
           // El módulo mismo actúa como item (no tiene children)
           const actionsObj = module.actions ?? {
@@ -73,32 +73,32 @@ const Form: React.FC<Props> = ({
             create: false,
             update: false,
             delete: false
-          }
+          };
 
           // Usamos module.id tanto para "module" como para "item" para mantener la estructura de ids
           Object.keys(actionsObj).forEach(action => {
-            actionsObj[action] && ids.push(`${role.id}-${module.id}-${module.id}-${action}`)
-          })
+            actionsObj[action] && ids.push(`${role.id}-${module.id}-${module.id}-${action}`);
+          });
         }
 
         // Permisos a nivel de módulo (si existen)
         module.actions &&
-          Object.keys(module.actions).forEach(action => module.actions[action] && ids.push(`${role.id}-${action}`))
-      })
-    })
+          Object.keys(module.actions).forEach(action => module.actions[action] && ids.push(`${role.id}-${action}`));
+      });
+    });
 
-    return ids
-  }, [roleModules])
+    return ids;
+  }, [roleModules]);
 
   // const totalActionsCount = allActionIds.length
 
   const togglePermission = (id: string) => {
-    setSelectedCheckbox(prev => (prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]))
-  }
+    setSelectedCheckbox(prev => (prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]));
+  };
 
   useEffect(() => {
-    setSelectedCheckbox(allActionIds)
-  }, [allActionIds])
+    setSelectedCheckbox(allActionIds);
+  }, [allActionIds]);
 
   /* const handleSelectAllCheckbox = () => {
     if (selectedCheckbox.length === totalActionsCount) {
@@ -112,27 +112,27 @@ const Form: React.FC<Props> = ({
 
   const methods = useForm({
     defaultValues: defaultValues ?? defaultRoleValues
-  })
+  });
 
   useEffect(() => {
     if (defaultValues) {
-      methods.reset(defaultValues ?? defaultRoleValues)
+      methods.reset(defaultValues ?? defaultRoleValues);
     }
-  }, [defaultValues, methods])
+  }, [defaultValues, methods]);
 
   const {
     handleSubmit,
     register,
     formState: { errors },
     reset
-  } = methods
+  } = methods;
 
   const handleOnSubmit = async (values: any) => {
     const permissions = selectedCheckbox.reduce(
       (acc, id) => {
-        const [, , itemId, action] = id.split('-')
+        const [, , itemId, action] = id.split("-");
 
-        if (!itemId) return acc
+        if (!itemId) return acc;
 
         if (!acc[itemId]) {
           acc[itemId] = {
@@ -145,44 +145,44 @@ const Form: React.FC<Props> = ({
               update: false,
               delete: false
             }
-          }
+          };
         }
 
-        acc[itemId].privileges[action] = true
+        acc[itemId].privileges[action] = true;
 
-        return acc
+        return acc;
       },
       {} as Record<
         string,
         {
-          module: { id: number }
-          privileges: Record<string, boolean>
+          module: { id: number };
+          privileges: Record<string, boolean>;
         }
       >
-    )
+    );
 
     await mutate({
       roleName: values.name,
       modulePrivileges: Object.values(permissions)
-    })
+    });
 
-    reset()
+    reset();
 
-    setSelectedCheckbox([])
-  }
+    setSelectedCheckbox([]);
+  };
 
   return (
     <CustomDialog
       open={open}
       toogleDialog={toogleDialog}
-      title={defaultValues ? 'Editar Rol' : 'Crear Rol'}
+      title={defaultValues ? "Editar Rol" : "Crear Rol"}
       maxWidth='lg'
     >
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(handleOnSubmit)}>
           <Box mb={4}>
             <CustomTextField
-              {...register('name')}
+              {...register("name")}
               autoFocus
               fullWidth
               label='Rol'
@@ -196,21 +196,21 @@ const Form: React.FC<Props> = ({
             <Table size='small'>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ pl: '5px !important' }}>
+                  <TableCell sx={{ pl: "5px !important" }}>
                     <Box
                       sx={{
-                        display: 'flex',
-                        whiteSpace: 'nowrap',
-                        alignItems: 'center',
-                        textTransform: 'capitalize',
-                        '& svg': { ml: 1, cursor: 'pointer' },
+                        display: "flex",
+                        whiteSpace: "nowrap",
+                        alignItems: "center",
+                        textTransform: "capitalize",
+                        "& svg": { ml: 1, cursor: "pointer" },
                         color: theme => theme.palette.text.secondary,
                         fontSize: theme => theme.typography.h6.fontSize
                       }}
                     >
                       Módulos
                       <Tooltip placement='top' title='Permitir o denegar todos los permisos'>
-                        <Box sx={{ display: 'flex' }}>
+                        <Box sx={{ display: "flex" }}>
                           <Icon icon='tabler:info-circle' fontSize='1.25rem' />
                         </Box>
                       </Tooltip>
@@ -219,7 +219,7 @@ const Form: React.FC<Props> = ({
                   <TableCell>
                     <Box
                       sx={{
-                        textTransform: 'capitalize',
+                        textTransform: "capitalize",
                         color: theme => theme.palette.text.secondary,
                         fontSize: theme => theme.typography.h6.fontSize
                       }}
@@ -242,7 +242,7 @@ const Form: React.FC<Props> = ({
                   <TableCell>
                     <Box
                       sx={{
-                        textTransform: 'capitalize',
+                        textTransform: "capitalize",
                         color: theme => theme.palette.text.secondary,
                         fontSize: theme => theme.typography.h6.fontSize
                       }}
@@ -253,7 +253,7 @@ const Form: React.FC<Props> = ({
                   <TableCell>
                     <Box
                       sx={{
-                        textTransform: 'capitalize',
+                        textTransform: "capitalize",
                         color: theme => theme.palette.text.secondary,
                         fontSize: theme => theme.typography.h6.fontSize
                       }}
@@ -264,7 +264,7 @@ const Form: React.FC<Props> = ({
                   <TableCell>
                     <Box
                       sx={{
-                        textTransform: 'capitalize',
+                        textTransform: "capitalize",
                         color: theme => theme.palette.text.secondary,
                         fontSize: theme => theme.typography.h6.fontSize
                       }}
@@ -292,10 +292,10 @@ const Form: React.FC<Props> = ({
                         <TableCell
                           colSpan={5}
                           sx={{
-                            pl: '5px !important',
+                            pl: "5px !important",
                             fontWeight: 700,
                             backgroundColor: theme => theme.palette.action.hover,
-                            textTransform: 'capitalize'
+                            textTransform: "capitalize"
                           }}
                         >
                           {role.name}
@@ -310,10 +310,10 @@ const Form: React.FC<Props> = ({
                             <TableRow key={`${role.id}-${module.id}-${module.id}`}>
                               <TableCell
                                 sx={{
-                                  pl: '20px !important',
+                                  pl: "20px !important",
                                   fontWeight: 600,
                                   backgroundColor: theme => theme.palette.action.selected,
-                                  textTransform: 'capitalize'
+                                  textTransform: "capitalize"
                                 }}
                               >
                                 {module.name}
@@ -325,12 +325,12 @@ const Form: React.FC<Props> = ({
                                   create: false,
                                   update: false,
                                   delete: false
-                                }
+                                };
 
-                                const actionKeys = Object.keys(actionsObj)
+                                const actionKeys = Object.keys(actionsObj);
 
                                 return actionKeys.map((action: string) => {
-                                  const cbId = `${role.id}-${module.id}-${module.id}-${action}`
+                                  const cbId = `${role.id}-${module.id}-${module.id}-${action}`;
 
                                   return (
                                     <TableCell
@@ -340,8 +340,8 @@ const Form: React.FC<Props> = ({
                                       }}
                                     >
                                       <FormControlLabel
-                                        label={''}
-                                        sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
+                                        label={""}
+                                        sx={{ "& .MuiTypography-root": { color: "text.secondary" } }}
                                         control={
                                           <Checkbox
                                             size='small'
@@ -352,8 +352,8 @@ const Form: React.FC<Props> = ({
                                         }
                                       />
                                     </TableCell>
-                                  )
-                                })
+                                  );
+                                });
                               })()}
                             </TableRow>
                           ) : (
@@ -363,10 +363,10 @@ const Form: React.FC<Props> = ({
                                 <TableCell
                                   colSpan={5}
                                   sx={{
-                                    pl: '20px !important',
+                                    pl: "20px !important",
                                     fontWeight: 600,
                                     backgroundColor: theme => theme.palette.action.selected,
-                                    textTransform: 'capitalize'
+                                    textTransform: "capitalize"
                                   }}
                                 >
                                   {module.name}
@@ -380,25 +380,25 @@ const Form: React.FC<Props> = ({
                                   create: false,
                                   update: false,
                                   delete: false
-                                }
+                                };
 
-                                const actionKeys = Object.keys(actionsObj)
+                                const actionKeys = Object.keys(actionsObj);
 
                                 return (
                                   <TableRow key={`${role.id}-${module.id}-${item.id}`}>
                                     <TableCell
                                       sx={{
-                                        pl: '40px !important',
+                                        pl: "40px !important",
                                         backgroundColor: theme => theme.palette.action.hover,
                                         fontWeight: 500,
-                                        whiteSpace: 'nowrap'
+                                        whiteSpace: "nowrap"
                                       }}
                                     >
                                       {item.name}
                                     </TableCell>
 
                                     {actionKeys.map((action: string) => {
-                                      const cbId = `${role.id}-${module.id}-${item.id}-${action}`
+                                      const cbId = `${role.id}-${module.id}-${item.id}-${action}`;
 
                                       return (
                                         <TableCell
@@ -406,8 +406,8 @@ const Form: React.FC<Props> = ({
                                           sx={{ backgroundColor: theme => theme.palette.action.hover }}
                                         >
                                           <FormControlLabel
-                                            label={''}
-                                            sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
+                                            label={""}
+                                            sx={{ "& .MuiTypography-root": { color: "text.secondary" } }}
                                             control={
                                               <Checkbox
                                                 size='small'
@@ -418,17 +418,17 @@ const Form: React.FC<Props> = ({
                                             }
                                           />
                                         </TableCell>
-                                      )
+                                      );
                                     })}
                                   </TableRow>
-                                )
+                                );
                               })}
                             </>
                           )}
                         </Fragment>
                       ))}
                     </Fragment>
-                  )
+                  );
                 })}
               </TableBody>
             </Table>
@@ -440,7 +440,7 @@ const Form: React.FC<Props> = ({
         </form>
       </FormProvider>
     </CustomDialog>
-  )
-}
+  );
+};
 
-export default Form
+export default Form;

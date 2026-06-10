@@ -1,34 +1,34 @@
-'use client'
-import { Box } from '@mui/material'
+"use client";
+import { Box } from "@mui/material";
 
-import { useTheme } from '@mui/material/styles'
+import { useTheme } from "@mui/material/styles";
 
-import Loader from '@/@core/components/react-spinners'
-import Header from '@/components/layout/detail/inventory/Header'
-import useGetPackagingById from '@/hooks/packaging/useGetPackagingById'
-import Detail from '@/views/pages/soporte/inventario/material-empaque/detail'
-import usePatchPackaging from '@/hooks/packaging/usePatchPackaging'
-import { useAbility } from '@/hooks/casl/useAbility'
-import NotFound from '@/views/NotFound'
+import Loader from "@/@core/components/react-spinners";
+import Header from "@/components/layout/detail/inventory/Header";
+import useGetPackagingById from "@/hooks/packaging/useGetPackagingById";
+import Detail from "@/views/pages/soporte/inventario/material-empaque/detail";
+import usePatchPackaging from "@/hooks/packaging/usePatchPackaging";
+import { useAbility } from "@/hooks/casl/useAbility";
+import NotFound from "@/views/NotFound";
 
 type Props = {
-  params: { id: string }
-}
+  params: { id: string };
+};
 
 const Page: React.FC<Props> = ({ params }) => {
-  const { packaging, isLoading } = useGetPackagingById(params.id)
-  const { handleActive, isPending } = usePatchPackaging()
-  const mode = useTheme().palette.mode
-  const ability = useAbility()
+  const { packaging, isLoading } = useGetPackagingById(params.id);
+  const { handleActive, isPending } = usePatchPackaging();
+  const mode = useTheme().palette.mode;
+  const ability = useAbility();
 
-  const canUpdate = ability.can('update', 'Material de empaque', 'Listado')
+  const canUpdate = ability.can("update", "Material de empaque", "Listado");
 
   if (isLoading) {
-    return <Loader type='page' />
+    return <Loader type='page' />;
   }
 
   if (!packaging) {
-    return <NotFound mode={mode} />
+    return <NotFound mode={mode} />;
   }
 
   return (
@@ -45,7 +45,7 @@ const Page: React.FC<Props> = ({ params }) => {
       />
       <Detail packaging={packaging} />
     </Box>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;

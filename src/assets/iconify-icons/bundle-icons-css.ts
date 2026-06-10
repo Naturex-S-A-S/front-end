@@ -10,13 +10,13 @@
  * This example uses Iconify Tools to import and clean up icons.
  * For Iconify Tools documentation visit https://docs.iconify.design/tools/tools2/
  */
-import { promises as fs } from 'node:fs'
-import { dirname, join } from 'node:path'
+import { promises as fs } from "node:fs";
+import { dirname, join } from "node:path";
 
 // Installation: npm install --save-dev @iconify/tools @iconify/utils @iconify/json @iconify/iconify
-import { cleanupSVG, importDirectory, isEmptyColor, parseColors, runSVGO } from '@iconify/tools'
-import type { IconifyJSON } from '@iconify/types'
-import { getIcons, getIconsCSS, stringToIcon } from '@iconify/utils'
+import { cleanupSVG, importDirectory, isEmptyColor, parseColors, runSVGO } from "@iconify/tools";
+import type { IconifyJSON } from "@iconify/types";
+import { getIcons, getIconsCSS, stringToIcon } from "@iconify/utils";
 
 /**
  * Script configuration
@@ -24,42 +24,42 @@ import { getIcons, getIconsCSS, stringToIcon } from '@iconify/utils'
 interface BundleScriptCustomSVGConfig {
   // eslint-disable-next-line lines-around-comment
   // Path to SVG files
-  dir: string
+  dir: string;
 
   // True if icons should be treated as monotone: colors replaced with currentColor
-  monotone: boolean
+  monotone: boolean;
 
   // Icon set prefix
-  prefix: string
+  prefix: string;
 }
 
 interface BundleScriptCustomJSONConfig {
   // eslint-disable-next-line lines-around-comment
   // Path to JSON file
-  filename: string
+  filename: string;
 
   // List of icons to import. If missing, all icons will be imported
-  icons?: string[]
+  icons?: string[];
 }
 
 interface BundleScriptConfig {
   // eslint-disable-next-line lines-around-comment
   // Custom SVG to import and bundle
-  svg?: BundleScriptCustomSVGConfig[]
+  svg?: BundleScriptCustomSVGConfig[];
 
   // Icons to bundled from @iconify/json packages
-  icons?: string[]
+  icons?: string[];
 
   // List of JSON files to bundled
   // Entry can be a string, pointing to filename or a BundleScriptCustomJSONConfig object (see type above)
   // If entry is a string or object without 'icons' property, an entire JSON file will be bundled
-  json?: (string | BundleScriptCustomJSONConfig)[]
+  json?: (string | BundleScriptCustomJSONConfig)[];
 }
 
 const sources: BundleScriptConfig = {
   json: [
     // Iconify JSON file (@iconify/json is a package name, /json/ is directory where files are, then filename)
-    require.resolve('@iconify/json/json/tabler.json')
+    require.resolve("@iconify/json/json/tabler.json")
 
     // Custom file with only few icons
     /* {
@@ -93,164 +93,164 @@ const sources: BundleScriptConfig = {
       prefix: 'emoji'
     } */
   ]
-}
+};
 
 // File to save bundle to
-const target = join(__dirname, 'generated-icons.css')
+const target = join(__dirname, "generated-icons.css");
+
+/**
+ * Do stuff!
+ */
+
+(async function () {
+  // Create directory for output if missing
+  const dir = dirname(target);
+
+  try {
+    await fs.mkdir(dir, {
+      recursive: true
+    });
+  } catch (err) {
+    //
+  }
+
+  const allIcons: IconifyJSON[] = [];
 
   /**
-   * Do stuff!
+   * Convert sources.icons to sources.json
    */
+  if (sources.icons) {
+    const sourcesJSON = sources.json ? sources.json : (sources.json = []);
 
-  ; (async function () {
-    // Create directory for output if missing
-    const dir = dirname(target)
+    // Sort icons by prefix
+    const organizedList = organizeIconsList(sources.icons);
 
-    try {
-      await fs.mkdir(dir, {
-        recursive: true
-      })
-    } catch (err) {
-      //
+    for (const prefix in organizedList) {
+      const filename = require.resolve(`@iconify/json/json/${prefix}.json`);
+
+      sourcesJSON.push({
+        filename,
+        icons: organizedList[prefix]
+      });
     }
+  }
 
-    const allIcons: IconifyJSON[] = []
+  /**
+   * Bundle JSON files and collect icons
+   */
+  if (sources.json) {
+    for (let i = 0; i < sources.json.length; i++) {
+      const item = sources.json[i];
 
-    /**
-     * Convert sources.icons to sources.json
-     */
-    if (sources.icons) {
-      const sourcesJSON = sources.json ? sources.json : (sources.json = [])
+      // Load icon set
+      const filename = typeof item === "string" ? item : item.filename;
+      const content = JSON.parse(await fs.readFile(filename, "utf8")) as IconifyJSON;
 
-      // Sort icons by prefix
-      const organizedList = organizeIconsList(sources.icons)
+      // Filter icons
+      if (typeof item !== "string" && item.icons?.length) {
+        const filteredContent = getIcons(content, item.icons);
 
-      for (const prefix in organizedList) {
-        const filename = require.resolve(`@iconify/json/json/${prefix}.json`)
+        if (!filteredContent) throw new Error(`Cannot find required icons in ${filename}`);
 
-        sourcesJSON.push({
-          filename,
-          icons: organizedList[prefix]
-        })
+        // Collect filtered icons
+        allIcons.push(filteredContent);
+      } else {
+        // Collect all icons from the JSON file
+        allIcons.push(content);
       }
     }
+  }
 
-    /**
-     * Bundle JSON files and collect icons
-     */
-    if (sources.json) {
-      for (let i = 0; i < sources.json.length; i++) {
-        const item = sources.json[i]
+  /**
+   * Bundle custom SVG icons and collect icons
+   */
+  if (sources.svg) {
+    for (let i = 0; i < sources.svg.length; i++) {
+      const source = sources.svg[i];
 
-        // Load icon set
-        const filename = typeof item === 'string' ? item : item.filename
-        const content = JSON.parse(await fs.readFile(filename, 'utf8')) as IconifyJSON
+      // Import icons
+      const iconSet = await importDirectory(source.dir, {
+        prefix: source.prefix
+      });
 
-        // Filter icons
-        if (typeof item !== 'string' && item.icons?.length) {
-          const filteredContent = getIcons(content, item.icons)
+      // Validate, clean up, fix palette, etc.
+      await iconSet.forEach(async (name, type) => {
+        if (type !== "icon") return;
 
-          if (!filteredContent) throw new Error(`Cannot find required icons in ${filename}`)
+        // Get SVG instance for parsing
+        const svg = iconSet.toSVG(name);
 
-          // Collect filtered icons
-          allIcons.push(filteredContent)
-        } else {
-          // Collect all icons from the JSON file
-          allIcons.push(content)
+        if (!svg) {
+          // Invalid icon
+          iconSet.remove(name);
+
+          return;
         }
-      }
-    }
 
-    /**
-     * Bundle custom SVG icons and collect icons
-     */
-    if (sources.svg) {
-      for (let i = 0; i < sources.svg.length; i++) {
-        const source = sources.svg[i]
+        // Clean up and optimise icons
+        try {
+          // Clean up icon code
+          await cleanupSVG(svg);
 
-        // Import icons
-        const iconSet = await importDirectory(source.dir, {
-          prefix: source.prefix
-        })
-
-        // Validate, clean up, fix palette, etc.
-        await iconSet.forEach(async (name, type) => {
-          if (type !== 'icon') return
-
-          // Get SVG instance for parsing
-          const svg = iconSet.toSVG(name)
-
-          if (!svg) {
-            // Invalid icon
-            iconSet.remove(name)
-
-            return
+          if (source.monotone) {
+            // Replace color with currentColor, add if missing
+            // If icon is not monotone, remove this code
+            await parseColors(svg, {
+              defaultColor: "currentColor",
+              callback: (attr, colorStr, color) => {
+                return !color || isEmptyColor(color) ? colorStr : "currentColor";
+              }
+            });
           }
 
-          // Clean up and optimise icons
-          try {
-            // Clean up icon code
-            await cleanupSVG(svg)
+          // Optimise
+          await runSVGO(svg);
+        } catch (err) {
+          // Invalid icon
+          console.error(`Error parsing ${name} from ${source.dir}:`, err);
+          iconSet.remove(name);
 
-            if (source.monotone) {
-              // Replace color with currentColor, add if missing
-              // If icon is not monotone, remove this code
-              await parseColors(svg, {
-                defaultColor: 'currentColor',
-                callback: (attr, colorStr, color) => {
-                  return !color || isEmptyColor(color) ? colorStr : 'currentColor'
-                }
-              })
-            }
+          return;
+        }
 
-            // Optimise
-            await runSVGO(svg)
-          } catch (err) {
-            // Invalid icon
-            console.error(`Error parsing ${name} from ${source.dir}:`, err)
-            iconSet.remove(name)
+        // Update icon from SVG instance
+        iconSet.fromSVG(name, svg);
+      });
 
-            return
-          }
-
-          // Update icon from SVG instance
-          iconSet.fromSVG(name, svg)
-        })
-
-        // Collect the SVG icon
-        allIcons.push(iconSet.export())
-      }
+      // Collect the SVG icon
+      allIcons.push(iconSet.export());
     }
+  }
 
-    // Generate CSS from collected icons
-    const cssContent = allIcons
-      .map(iconSet => getIconsCSS(iconSet, Object.keys(iconSet.icons), { iconSelector: '.{prefix}-{name}' }))
-      .join('\n')
+  // Generate CSS from collected icons
+  const cssContent = allIcons
+    .map(iconSet => getIconsCSS(iconSet, Object.keys(iconSet.icons), { iconSelector: ".{prefix}-{name}" }))
+    .join("\n");
 
-    // Save the CSS to a file
-    await fs.writeFile(target, cssContent, 'utf8')
-  })().catch(err => {
-    console.error(err)
-  })
+  // Save the CSS to a file
+  await fs.writeFile(target, cssContent, "utf8");
+})().catch(err => {
+  console.error(err);
+});
 
 /**
  * Sort icon names by prefix
  */
 function organizeIconsList(icons: string[]): Record<string, string[]> {
-  const sorted: Record<string, string[]> = Object.create(null)
+  const sorted: Record<string, string[]> = Object.create(null);
 
   icons.forEach(icon => {
-    const item = stringToIcon(icon)
+    const item = stringToIcon(icon);
 
-    if (!item) return
+    if (!item) return;
 
-    const prefix = item.prefix
-    const prefixList = sorted[prefix] ? sorted[prefix] : (sorted[prefix] = [])
+    const prefix = item.prefix;
+    const prefixList = sorted[prefix] ? sorted[prefix] : (sorted[prefix] = []);
 
-    const name = item.name
+    const name = item.name;
 
-    if (!prefixList.includes(name)) prefixList.push(name)
-  })
+    if (!prefixList.includes(name)) prefixList.push(name);
+  });
 
-  return sorted
+  return sorted;
 }

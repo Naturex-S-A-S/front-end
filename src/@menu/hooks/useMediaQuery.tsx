@@ -1,29 +1,29 @@
-'use client'
+"use client";
 
 // React Imports
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
 const useMediaQuery = (breakpoint?: string): boolean => {
   // States
-  const [matches, setMatches] = useState(breakpoint === 'always')
+  const [matches, setMatches] = useState(breakpoint === "always");
 
   useEffect(() => {
-    if (breakpoint && breakpoint !== 'always') {
-      const media = window.matchMedia(`(max-width: ${breakpoint})`)
+    if (breakpoint && breakpoint !== "always") {
+      const media = window.matchMedia(`(max-width: ${breakpoint})`);
 
       if (media.matches !== matches) {
-        setMatches(media.matches)
+        setMatches(media.matches);
       }
 
-      const listener = () => setMatches(media.matches)
+      const listener = () => setMatches(media.matches);
 
-      window.addEventListener('resize', listener)
+      window.addEventListener("resize", listener);
 
-      return () => window.removeEventListener('resize', listener)
+      return () => window.removeEventListener("resize", listener);
     }
-  }, [matches, breakpoint])
+  }, [matches, breakpoint]);
 
-  return matches
-}
+  return matches;
+};
 
-export default useMediaQuery
+export default useMediaQuery;

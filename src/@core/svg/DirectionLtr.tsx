@@ -1,5 +1,5 @@
 // React Imports
-import type { SVGAttributes } from 'react'
+import type { SVGAttributes } from "react";
 
 const DirectionLtr = (props: SVGAttributes<SVGElement>) => {
   return (
@@ -90,7 +90,7 @@ const DirectionLtr = (props: SVGAttributes<SVGElement>) => {
         fillOpacity='0.3'
       />
     </svg>
-  )
-}
+  );
+};
 
-export default DirectionLtr
+export default DirectionLtr;

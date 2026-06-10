@@ -1,32 +1,32 @@
-'use client'
+"use client";
 
 // MUI Imports
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
-import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
-import TimelineItem from '@mui/lab/TimelineItem'
-import TimelineSeparator from '@mui/lab/TimelineSeparator'
-import TimelineConnector from '@mui/lab/TimelineConnector'
-import TimelineContent from '@mui/lab/TimelineContent'
-import TimelineDot from '@mui/lab/TimelineDot'
-import Avatar from '@mui/material/Avatar'
-import AvatarGroup from '@mui/material/AvatarGroup'
-import { styled } from '@mui/material/styles'
-import MuiTimeline from '@mui/lab/Timeline'
-import type { TimelineProps } from '@mui/lab/Timeline'
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import TimelineItem from "@mui/lab/TimelineItem";
+import TimelineSeparator from "@mui/lab/TimelineSeparator";
+import TimelineConnector from "@mui/lab/TimelineConnector";
+import TimelineContent from "@mui/lab/TimelineContent";
+import TimelineDot from "@mui/lab/TimelineDot";
+import Avatar from "@mui/material/Avatar";
+import AvatarGroup from "@mui/material/AvatarGroup";
+import { styled } from "@mui/material/styles";
+import MuiTimeline from "@mui/lab/Timeline";
+import type { TimelineProps } from "@mui/lab/Timeline";
 
 //Component Imports
-import CustomAvatar from '@core/components/mui/Avatar'
+import CustomAvatar from "@core/components/mui/Avatar";
 
 // Styled Components
 const Timeline = styled(MuiTimeline)<TimelineProps>({
-  '& .MuiTimelineItem-root': {
-    '&:before': {
-      display: 'none'
+  "& .MuiTimelineItem-root": {
+    "&:before": {
+      display: "none"
     }
   }
-})
+});
 
 const ActivityTimeline = () => {
   return (
@@ -34,7 +34,7 @@ const ActivityTimeline = () => {
       <CardHeader
         title='Activity Timeline'
         avatar={<i className='tabler-chart-bar text-textSecondary' />}
-        titleTypographyProps={{ variant: 'h5' }}
+        titleTypographyProps={{ variant: "h5" }}
       />
       <CardContent>
         <Timeline>
@@ -100,7 +100,7 @@ const ActivityTimeline = () => {
         </Timeline>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default ActivityTimeline
+export default ActivityTimeline;

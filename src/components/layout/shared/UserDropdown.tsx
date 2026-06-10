@@ -1,75 +1,75 @@
 /* eslint-disable import/order */
-'use client'
+"use client";
 
 // React Imports
-import { useRef, useState } from 'react'
-import type { MouseEvent } from 'react'
+import { useRef, useState } from "react";
+import type { MouseEvent } from "react";
 
 // Next Imports
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 // MUI Imports
-import { styled } from '@mui/material/styles'
-import Badge from '@mui/material/Badge'
-import Popper from '@mui/material/Popper'
-import Fade from '@mui/material/Fade'
-import Paper from '@mui/material/Paper'
-import ClickAwayListener from '@mui/material/ClickAwayListener'
-import MenuList from '@mui/material/MenuList'
-import Typography from '@mui/material/Typography'
-import Divider from '@mui/material/Divider'
-import MenuItem from '@mui/material/MenuItem'
-import Button from '@mui/material/Button'
+import { styled } from "@mui/material/styles";
+import Badge from "@mui/material/Badge";
+import Popper from "@mui/material/Popper";
+import Fade from "@mui/material/Fade";
+import Paper from "@mui/material/Paper";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import MenuList from "@mui/material/MenuList";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import MenuItem from "@mui/material/MenuItem";
+import Button from "@mui/material/Button";
 
 // Hook Imports
-import { useSettings } from '@core/hooks/useSettings'
+import { useSettings } from "@core/hooks/useSettings";
 
-import { signOut, useSession } from 'next-auth/react'
-import Link from 'next/link'
-import { Avatar } from '@mui/material'
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
+import { Avatar } from "@mui/material";
 
 // Styled component for badge content
-const BadgeContentSpan = styled('span')({
+const BadgeContentSpan = styled("span")({
   width: 8,
   height: 8,
-  borderRadius: '50%',
-  cursor: 'pointer',
-  backgroundColor: 'var(--mui-palette-success-main)',
-  boxShadow: '0 0 0 2px var(--mui-palette-background-paper)'
-})
+  borderRadius: "50%",
+  cursor: "pointer",
+  backgroundColor: "var(--mui-palette-success-main)",
+  boxShadow: "0 0 0 2px var(--mui-palette-background-paper)"
+});
 
 const UserDropdown = () => {
   // States
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   // Refs
-  const anchorRef = useRef<HTMLDivElement>(null)
+  const anchorRef = useRef<HTMLDivElement>(null);
 
   // Hooks
-  const { data: session } = useSession()
-  const router = useRouter()
+  const { data: session } = useSession();
+  const router = useRouter();
 
-  const { settings } = useSettings()
+  const { settings } = useSettings();
 
   const handleDropdownOpen = () => {
-    !open ? setOpen(true) : setOpen(false)
-  }
+    !open ? setOpen(true) : setOpen(false);
+  };
 
   const handleDropdownClose = (event?: MouseEvent<HTMLLIElement> | (MouseEvent | TouchEvent), url?: string) => {
     if (url) {
-      router.push(url)
+      router.push(url);
     }
 
     if (anchorRef.current && anchorRef.current.contains(event?.target as HTMLElement)) {
-      return
+      return;
     }
 
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const handleUserLogout = async () => {
-    signOut({ callbackUrl: '/login' })
-  }
+    signOut({ callbackUrl: "/login" });
+  };
 
   return (
     <>
@@ -77,7 +77,7 @@ const UserDropdown = () => {
         ref={anchorRef}
         overlap='circular'
         badgeContent={<BadgeContentSpan onClick={handleDropdownOpen} />}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         className='mis-2'
       >
         <Avatar className='bs-[36px] is-[36px] cursor-pointer' onClick={handleDropdownOpen} />
@@ -94,10 +94,10 @@ const UserDropdown = () => {
           <Fade
             {...TransitionProps}
             style={{
-              transformOrigin: placement === 'bottom-end' ? 'right top' : 'left top'
+              transformOrigin: placement === "bottom-end" ? "right top" : "left top"
             }}
           >
-            <Paper className={settings.skin === 'bordered' ? 'border shadow-none' : 'shadow-lg'}>
+            <Paper className={settings.skin === "bordered" ? "border shadow-none" : "shadow-lg"}>
               <ClickAwayListener onClickAway={e => handleDropdownClose(e as MouseEvent | TouchEvent)}>
                 <MenuList>
                   <div className='flex items-center plb-2 pli-6 gap-2' tabIndex={-1}>
@@ -136,7 +136,7 @@ const UserDropdown = () => {
                       size='small'
                       endIcon={<i className='tabler-logout' />}
                       onClick={handleUserLogout}
-                      sx={{ '& .MuiButton-endIcon': { marginInlineStart: 1.5 } }}
+                      sx={{ "& .MuiButton-endIcon": { marginInlineStart: 1.5 } }}
                     >
                       Cerrar Sesión
                     </Button>
@@ -148,7 +148,7 @@ const UserDropdown = () => {
         )}
       </Popper>
     </>
-  )
-}
+  );
+};
 
-export default UserDropdown
+export default UserDropdown;

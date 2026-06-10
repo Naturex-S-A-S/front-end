@@ -1,19 +1,19 @@
 // MUI Imports
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
 
 // import CardMedia from '@mui/material/CardMedia'
 
 // Type Imports
-import type { ProfileData } from '@/types/pages/profile'
+import type { ProfileData } from "@/types/pages/profile";
 
 const UserProfileHeader = ({ data }: { data?: ProfileData }) => {
   return (
     <Card>
       <CardContent className='flex gap-5 justify-center flex-col items-center md:items-end md:flex-row !pt-16 md:justify-start'>
         <div className='flex rounded-bs-md mbs-[-40px] border-[5px] mis-[-5px] border-be-0  border-backgroundPaper bg-backgroundPaper'>
-          <img height={120} width={120} src={'/images/avatars/1.png'} className='rounded' alt='Profile Background' />
+          <img height={120} width={120} src={"/images/avatars/1.png"} className='rounded' alt='Profile Background' />
         </div>
         <div className='flex is-full justify-start self-end flex-col items-center gap-6 sm-gap-0 sm:flex-row sm:justify-between sm:items-end '>
           <div className='flex flex-col items-center sm:items-start gap-2'>
@@ -36,7 +36,7 @@ const UserProfileHeader = ({ data }: { data?: ProfileData }) => {
         </div>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default UserProfileHeader
+export default UserProfileHeader;

@@ -1,23 +1,23 @@
-import { Icon } from '@iconify/react'
-import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
+import { Icon } from "@iconify/react";
+import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 
 type Props = {
-  maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-  title: string
-  children?: React.ReactNode
-  open: boolean
-  toogleDialog: () => void
-}
+  maxWidth?: "xs" | "sm" | "md" | "lg" | "xl";
+  title: string;
+  children?: React.ReactNode;
+  open: boolean;
+  toogleDialog: () => void;
+};
 
-const CustomDialog: React.FC<Props> = ({ open, toogleDialog, children, title, maxWidth = 'md' }) => {
+const CustomDialog: React.FC<Props> = ({ open, toogleDialog, children, title, maxWidth = "md" }) => {
   return (
     <Dialog open={open} onClose={toogleDialog} fullWidth maxWidth={maxWidth}>
-      <DialogTitle textAlign={'center'}>{title}</DialogTitle>
+      <DialogTitle textAlign={"center"}>{title}</DialogTitle>
       <IconButton
         aria-label='close'
         onClick={toogleDialog}
         sx={theme => ({
-          position: 'absolute',
+          position: "absolute",
           right: 8,
           top: 8,
           color: theme.palette.grey[500]
@@ -27,7 +27,7 @@ const CustomDialog: React.FC<Props> = ({ open, toogleDialog, children, title, ma
       </IconButton>
       <DialogContent>{children}</DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default CustomDialog
+export default CustomDialog;

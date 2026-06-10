@@ -1,15 +1,15 @@
-import { getProfileServer } from '@/api/user/profile'
-import UserProfile from '@views/pages/user-profile'
+import { getProfileServer } from "@/api/user/profile";
+import UserProfile from "@views/pages/user-profile";
 
 export const metadata = {
-  title: 'Perfil - Naturex',
-  description: ''
-}
+  title: "Perfil - Naturex",
+  description: ""
+};
 
 const ProfilePage = async () => {
-  const profile = await getProfileServer()
+  const profile = await getProfileServer();
 
-  return <UserProfile profile={profile} />
-}
+  return <UserProfile profile={profile} />;
+};
 
-export default ProfilePage
+export default ProfilePage;

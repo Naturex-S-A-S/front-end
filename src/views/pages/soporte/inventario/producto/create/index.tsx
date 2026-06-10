@@ -1,28 +1,28 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm } from "react-hook-form";
 
-import { yupResolver } from '@hookform/resolvers/yup'
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
-import CreateButton from '@/components/layout/shared/CreateButton'
-import CustomDialog from '@/@core/components/mui/Dialog'
-import Form from './form'
-import { productSchema } from '@/utils/schemas/inventory/product'
-import { postProduct } from '@/api/product'
-import { alertMessageErrors } from '@/utils/messages'
+import CreateButton from "@/components/layout/shared/CreateButton";
+import CustomDialog from "@/@core/components/mui/Dialog";
+import Form from "./form";
+import { productSchema } from "@/utils/schemas/inventory/product";
+import { postProduct } from "@/api/product";
+import { alertMessageErrors } from "@/utils/messages";
 
 const Create = () => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const toogleDialog = () => {
-    setOpen(!open)
-  }
+    setOpen(!open);
+  };
 
   const methods = useForm({
     defaultValues: {
@@ -34,36 +34,36 @@ const Create = () => {
     },
 
     resolver: yupResolver(productSchema)
-  })
+  });
 
-  const { handleSubmit, reset } = methods
+  const { handleSubmit, reset } = methods;
 
   useEffect(() => {
     if (!open) {
-      reset()
+      reset();
     }
-  }, [open, reset])
+  }, [open, reset]);
 
   const { mutate, isPending } = useMutation({
     mutationFn: postProduct,
     onSuccess: () => {
-      toast.success('Producto creado con éxito')
-      queryClient.invalidateQueries({ queryKey: ['getProducts'] })
-      queryClient.invalidateQueries({ queryKey: ['productList'] })
-      reset()
-      toogleDialog()
+      toast.success("Producto creado con éxito");
+      queryClient.invalidateQueries({ queryKey: ["getProducts"] });
+      queryClient.invalidateQueries({ queryKey: ["productList"] });
+      reset();
+      toogleDialog();
     },
     onError: (error: any) => {
-      alertMessageErrors(error, 'Error al crear el producto')
+      alertMessageErrors(error, "Error al crear el producto");
     }
-  })
+  });
 
   const onSubmit = (values: any) => {
     mutate({
       ...values,
       unit: values.unit.id
-    })
-  }
+    });
+  };
 
   return (
     <div>
@@ -77,7 +77,7 @@ const Create = () => {
         </FormProvider>
       </CustomDialog>
     </div>
-  )
-}
+  );
+};
 
-export default Create
+export default Create;

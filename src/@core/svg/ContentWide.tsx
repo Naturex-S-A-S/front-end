@@ -1,5 +1,5 @@
 // React Imports
-import type { SVGAttributes } from 'react'
+import type { SVGAttributes } from "react";
 
 const ContentWide = (props: SVGAttributes<SVGElement>) => {
   return (
@@ -14,7 +14,7 @@ const ContentWide = (props: SVGAttributes<SVGElement>) => {
       <rect x='6.6875' y='19.6135' width='26.4888' height='17.6' rx='2' fill='currentColor' fillOpacity='0.08' />
       <rect x='6.6875' y='42.4545' width='90.6244' height='17.6' rx='2' fill='currentColor' fillOpacity='0.08' />
     </svg>
-  )
-}
+  );
+};
 
-export default ContentWide
+export default ContentWide;

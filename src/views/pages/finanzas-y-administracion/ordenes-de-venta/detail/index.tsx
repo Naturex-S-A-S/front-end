@@ -12,20 +12,20 @@ import {
   TableHead,
   TableRow,
   Typography
-} from '@mui/material'
+} from "@mui/material";
 
-import { formatDate } from '@/utils/format'
-import type { ISaleOrder } from '@/types/pages/saleOrder'
-import Kardex from './kardex'
+import { formatDate } from "@/utils/format";
+import type { ISaleOrder } from "@/types/pages/saleOrder";
+import Kardex from "./kardex";
 
 interface Props {
-  saleOrder: ISaleOrder
+  saleOrder: ISaleOrder;
 }
 
 const TYPE_LABEL: Record<string, string> = {
-  remision_venta: 'Remisión de venta',
-  ventas_siigo: 'Ventas Siigo'
-}
+  remision_venta: "Remisión de venta",
+  ventas_siigo: "Ventas Siigo"
+};
 
 const Detail: React.FC<Props> = ({ saleOrder }) => {
   return (
@@ -52,7 +52,7 @@ const Detail: React.FC<Props> = ({ saleOrder }) => {
                   <Typography
                     variant='body2'
                     fontWeight={600}
-                    sx={{ maxWidth: 180, textAlign: 'right', wordBreak: 'break-word' }}
+                    sx={{ maxWidth: 180, textAlign: "right", wordBreak: "break-word" }}
                   >
                     {saleOrder.userFullName}
                   </Typography>
@@ -95,7 +95,7 @@ const Detail: React.FC<Props> = ({ saleOrder }) => {
             <Typography variant='h6' mb={2}>
               Productos vendidos
             </Typography>
-            <TableContainer sx={{ width: '100%', overflowX: 'auto' }}>
+            <TableContainer sx={{ width: "100%", overflowX: "auto" }}>
               <Table>
                 <TableHead>
                   <TableRow>
@@ -109,13 +109,13 @@ const Detail: React.FC<Props> = ({ saleOrder }) => {
                 <TableBody>
                   {!saleOrder.details?.length ? (
                     <TableRow>
-                      <TableCell colSpan={5} sx={{ textAlign: 'center' }}>
+                      <TableCell colSpan={5} sx={{ textAlign: "center" }}>
                         Sin productos registrados
                       </TableCell>
                     </TableRow>
                   ) : (
                     saleOrder.details.map(item => (
-                      <TableRow key={item.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                      <TableRow key={item.id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                         <TableCell>{item.finalProduct.id}</TableCell>
                         <TableCell>{item.finalProduct.name}</TableCell>
                         <TableCell>
@@ -141,7 +141,7 @@ const Detail: React.FC<Props> = ({ saleOrder }) => {
         <Kardex data={saleOrder.kardexProducts} />
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default Detail
+export default Detail;

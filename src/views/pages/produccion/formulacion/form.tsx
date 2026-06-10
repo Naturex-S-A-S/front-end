@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from 'react'
+import { Fragment, useEffect } from "react";
 
 import {
   Alert,
@@ -12,47 +12,47 @@ import {
   TableCell,
   TableHead,
   TableRow
-} from '@mui/material'
+} from "@mui/material";
 
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
+import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 
-import { Icon } from '@iconify/react'
+import { Icon } from "@iconify/react";
 
-import CustomTextField from '@/@core/components/mui/TextField'
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import CustomButton from '@/@core/components/mui/Button'
-import useGetFeedstockList from '@/hooks/feedstock/useGetFeedstockList'
-import useGetProductList from '@/hooks/product/useGetProductList'
+import CustomTextField from "@/@core/components/mui/TextField";
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import CustomButton from "@/@core/components/mui/Button";
+import useGetFeedstockList from "@/hooks/feedstock/useGetFeedstockList";
+import useGetProductList from "@/hooks/product/useGetProductList";
 
 type Props = {
-  isPending: boolean
-  isNewVersion?: boolean
-}
+  isPending: boolean;
+  isNewVersion?: boolean;
+};
 
 const Form: React.FC<Props> = ({ isPending, isNewVersion = false }) => {
-  const { productList } = useGetProductList()
-  const { feedstockList } = useGetFeedstockList()
+  const { productList } = useGetProductList();
+  const { feedstockList } = useGetFeedstockList();
 
   const {
     register,
     formState: { errors },
     control
-  }: any = useFormContext()
+  }: any = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'details'
-  })
+    name: "details"
+  });
 
   const handleAddDetail = () => {
-    append({ idMaterial: null, quantity: null })
-  }
+    append({ idMaterial: null, quantity: null });
+  };
 
   useEffect(() => {
     if (fields.length === 0) {
-      append({ idMaterial: null, quantity: null })
+      append({ idMaterial: null, quantity: null });
     }
-  }, [fields, append])
+  }, [fields, append]);
 
   return (
     <Grid container spacing={4}>
@@ -67,7 +67,7 @@ const Form: React.FC<Props> = ({ isPending, isNewVersion = false }) => {
       {!isNewVersion && (
         <Grid item xs={12} md={6}>
           <CustomTextField
-            {...register('name')}
+            {...register("name")}
             autoFocus
             fullWidth
             label='Nombre'
@@ -80,7 +80,7 @@ const Form: React.FC<Props> = ({ isPending, isNewVersion = false }) => {
 
       <Grid item xs={12} md={6}>
         <CustomTextField
-          {...register('comment')}
+          {...register("comment")}
           autoFocus
           fullWidth
           label='Comentario'
@@ -100,9 +100,9 @@ const Form: React.FC<Props> = ({ isPending, isNewVersion = false }) => {
                 value={value}
                 multiple
                 options={productList}
-                getOptionLabel={(option: any) => option?.completeName || option?.name || ''}
+                getOptionLabel={(option: any) => option?.completeName || option?.name || ""}
                 onChange={(e, value: any) => {
-                  onChange(value)
+                  onChange(value);
                 }}
                 renderInput={params => (
                   <CustomTextField
@@ -141,7 +141,7 @@ const Form: React.FC<Props> = ({ isPending, isNewVersion = false }) => {
                         value={value}
                         options={feedstockList || []}
                         onChange={(e, value: any) => {
-                          onChange(value)
+                          onChange(value);
                         }}
                         renderInput={params => (
                           <CustomTextField
@@ -205,7 +205,7 @@ const Form: React.FC<Props> = ({ isPending, isNewVersion = false }) => {
 
       {isNewVersion && (
         <Grid item xs={12} md={6}>
-          <FormControlLabel control={<Checkbox {...register('active')} />} label='Activar esta versión' />
+          <FormControlLabel control={<Checkbox {...register("active")} />} label='Activar esta versión' />
         </Grid>
       )}
 
@@ -218,7 +218,7 @@ const Form: React.FC<Props> = ({ isPending, isNewVersion = false }) => {
         <CustomButton text='Guardar' type='submit' isLoading={isPending} />
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default Form
+export default Form;

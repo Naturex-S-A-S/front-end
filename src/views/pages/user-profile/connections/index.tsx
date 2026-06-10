@@ -1,19 +1,19 @@
 // MUI Imports
-import Grid from '@mui/material/Grid'
-import Avatar from '@mui/material/Avatar'
-import Chip from '@mui/material/Chip'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
+import Grid from "@mui/material/Grid";
+import Avatar from "@mui/material/Avatar";
+import Chip from "@mui/material/Chip";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 // Type Imports
-import type { ConnectionsTabType } from '@/types/pages/profileTypes'
+import type { ConnectionsTabType } from "@/types/pages/profileTypes";
 
 // Component Imports
-import OptionMenu from '@core/components/option-menu'
-import Link from '@components/Link'
-import CustomIconButton from '@core/components/mui/IconButton'
+import OptionMenu from "@core/components/option-menu";
+import Link from "@components/Link";
+import CustomIconButton from "@core/components/mui/IconButton";
 
 const Connections = ({ data }: { data?: ConnectionsTabType[] }) => {
   return (
@@ -26,15 +26,15 @@ const Connections = ({ data }: { data?: ConnectionsTabType[] }) => {
                 <OptionMenu
                   iconClassName='text-textDisabled'
                   options={[
-                    'Share Connection',
-                    'Block Connection',
+                    "Share Connection",
+                    "Block Connection",
                     { divider: true },
                     {
-                      text: 'Delete',
-                      menuItemProps: { className: 'text-error hover:bg-[var(--mui-palette-error-lightOpacity)]' }
+                      text: "Delete",
+                      menuItemProps: { className: "text-error hover:bg-[var(--mui-palette-error-lightOpacity)]" }
                     }
                   ]}
-                  iconButtonProps={{ className: 'absolute top-6 end-5 text-textDisabled' }}
+                  iconButtonProps={{ className: "absolute top-6 end-5 text-textDisabled" }}
                 />
                 <CardContent className='flex items-center flex-col gap-6'>
                   <Avatar src={item.avatar} className='!mbs-5 bs-[100px] is-[100px]' />
@@ -65,10 +65,10 @@ const Connections = ({ data }: { data?: ConnectionsTabType[] }) => {
                   </div>
                   <div className='flex items-center gap-4'>
                     <Button
-                      variant={item.isConnected ? 'contained' : 'tonal'}
-                      startIcon={<i className={item.isConnected ? 'tabler-user-check' : 'tabler-user-plus'} />}
+                      variant={item.isConnected ? "contained" : "tonal"}
+                      startIcon={<i className={item.isConnected ? "tabler-user-check" : "tabler-user-plus"} />}
                     >
-                      {item.isConnected ? 'Connected' : 'Connect'}
+                      {item.isConnected ? "Connected" : "Connect"}
                     </Button>
                     <CustomIconButton variant='tonal' color='secondary'>
                       <i className='tabler-mail' />
@@ -77,10 +77,10 @@ const Connections = ({ data }: { data?: ConnectionsTabType[] }) => {
                 </CardContent>
               </Card>
             </Grid>
-          )
+          );
         })}
     </Grid>
-  )
-}
+  );
+};
 
-export default Connections
+export default Connections;

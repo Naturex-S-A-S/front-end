@@ -1,43 +1,43 @@
-import { useForm, Controller } from 'react-hook-form'
+import { useForm, Controller } from "react-hook-form";
 
-import { Grid, MenuItem } from '@mui/material'
+import { Grid, MenuItem } from "@mui/material";
 
-import CustomCard from '@/@core/components/mui/Card'
-import CustomTextField from '@/@core/components/mui/TextField'
-import CustomButton from '@/@core/components/mui/Button'
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import useGetProductList from '@/hooks/product/useGetProductList'
-import useGetStatuses from '@/hooks/metadata/useGetStatuses'
+import CustomCard from "@/@core/components/mui/Card";
+import CustomTextField from "@/@core/components/mui/TextField";
+import CustomButton from "@/@core/components/mui/Button";
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import useGetProductList from "@/hooks/product/useGetProductList";
+import useGetStatuses from "@/hooks/metadata/useGetStatuses";
 
 type Filters = {
   product?: {
-    id: number
-  }
-  status?: string
-}
+    id: number;
+  };
+  status?: string;
+};
 
 type Props = {
-  defaultValues?: Filters
-  onApplyFilters?: (filters: any) => void
-}
+  defaultValues?: Filters;
+  onApplyFilters?: (filters: any) => void;
+};
 
 const Filter = ({ defaultValues, onApplyFilters }: Props) => {
-  const { control, handleSubmit, reset } = useForm<Filters>({ defaultValues })
+  const { control, handleSubmit, reset } = useForm<Filters>({ defaultValues });
 
-  const { productList } = useGetProductList()
-  const { statuses } = useGetStatuses()
+  const { productList } = useGetProductList();
+  const { statuses } = useGetStatuses();
 
   const submit = (data: Filters) => {
     onApplyFilters?.({
       productId: data?.product?.id || undefined,
       status: data.status || undefined
-    })
-  }
+    });
+  };
 
   const clear = () => {
-    reset(defaultValues)
-    onApplyFilters?.(defaultValues)
-  }
+    reset(defaultValues);
+    onApplyFilters?.(defaultValues);
+  };
 
   return (
     <CustomCard title='Filtros'>
@@ -51,7 +51,7 @@ const Filter = ({ defaultValues, onApplyFilters }: Props) => {
                 <CustomAutocomplete
                   value={value}
                   options={productList}
-                  getOptionLabel={(option: any) => option?.fullName || ''}
+                  getOptionLabel={(option: any) => option?.fullName || ""}
                   onChange={(_, v: any | null) => onChange(v)}
                   renderInput={(params: any) => (
                     <CustomTextField {...params} label='Elegir producto' placeholder='Seleccione un producto' />
@@ -89,7 +89,7 @@ const Filter = ({ defaultValues, onApplyFilters }: Props) => {
         </Grid>
       </form>
     </CustomCard>
-  )
-}
+  );
+};
 
-export default Filter
+export default Filter;

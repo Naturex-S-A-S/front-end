@@ -1,50 +1,40 @@
-'use client'
+"use client";
 
-import {
-  Alert,
-  Button,
-  FormHelperText,
-  Grid,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow
-} from '@mui/material'
+import { Alert, Button, FormHelperText, Grid, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
+import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 
-import { Icon } from '@iconify/react'
+import { Icon } from "@iconify/react";
 
-import CustomTextField from '@/@core/components/mui/TextField'
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import CustomButton from '@/@core/components/mui/Button'
-import useGetProductList from '@/hooks/product/useGetProductList'
-import useGetPackagingList from '@/hooks/packaging/useGetPackagingList'
+import CustomTextField from "@/@core/components/mui/TextField";
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import CustomButton from "@/@core/components/mui/Button";
+import useGetProductList from "@/hooks/product/useGetProductList";
+import useGetPackagingList from "@/hooks/packaging/useGetPackagingList";
 
 type Props = {
-  isPending: boolean
-  productName?: string
-}
+  isPending: boolean;
+  productName?: string;
+};
 
 const Form: React.FC<Props> = ({ isPending, productName }) => {
-  const { productList } = useGetProductList()
-  const { packagingList } = useGetPackagingList()
+  const { productList } = useGetProductList();
+  const { packagingList } = useGetPackagingList();
 
   const {
     register,
     formState: { errors },
     control
-  }: any = useFormContext()
+  }: any = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'details'
-  })
+    name: "details"
+  });
 
   const handleAddDetail = () => {
-    append({ packaging: null, quantity: null })
-  }
+    append({ packaging: null, quantity: null });
+  };
 
   return (
     <Grid container spacing={4}>
@@ -55,21 +45,14 @@ const Form: React.FC<Props> = ({ isPending, productName }) => {
               Editando materiales de empaque para: <b>{productName}</b>
             </span>
           ) : (
-            <span>
-              Seleccione el producto y los materiales de empaque requeridos con sus cantidades
-            </span>
+            <span>Seleccione el producto y los materiales de empaque requeridos con sus cantidades</span>
           )}
         </Alert>
       </Grid>
 
       {productName ? (
         <Grid item xs={12} md={6}>
-          <CustomTextField
-            label='Producto'
-            value={productName}
-            InputProps={{ readOnly: true }}
-            fullWidth
-          />
+          <CustomTextField label='Producto' value={productName} InputProps={{ readOnly: true }} fullWidth />
         </Grid>
       ) : (
         <Grid item xs={12} md={6}>
@@ -80,9 +63,9 @@ const Form: React.FC<Props> = ({ isPending, productName }) => {
               <CustomAutocomplete
                 value={value}
                 options={productList}
-                getOptionLabel={(option: any) => option?.completeName || option?.name || ''}
+                getOptionLabel={(option: any) => option?.completeName || option?.name || ""}
                 onChange={(e: any, value: any) => {
-                  onChange(value)
+                  onChange(value);
                 }}
                 renderInput={(params: any) => (
                   <CustomTextField
@@ -119,9 +102,9 @@ const Form: React.FC<Props> = ({ isPending, productName }) => {
                       <CustomAutocomplete
                         value={value}
                         options={packagingList || []}
-                        getOptionLabel={(option: any) => option?.name || ''}
+                        getOptionLabel={(option: any) => option?.name || ""}
                         onChange={(e: any, value: any) => {
-                          onChange(value)
+                          onChange(value);
                         }}
                         renderInput={(params: any) => (
                           <CustomTextField
@@ -182,7 +165,7 @@ const Form: React.FC<Props> = ({ isPending, productName }) => {
         <CustomButton text='Guardar' type='submit' isLoading={isPending} />
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default Form
+export default Form;

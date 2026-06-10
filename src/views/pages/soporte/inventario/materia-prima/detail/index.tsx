@@ -1,35 +1,35 @@
-import { useEffect } from 'react'
+import { useEffect } from "react";
 
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
+import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
 
-import { Checkbox, FormControlLabel, Grid } from '@mui/material'
+import { Checkbox, FormControlLabel, Grid } from "@mui/material";
 
-import CustomCard from '@/@core/components/mui/Card'
-import CustomTextField from '@/@core/components/mui/TextField'
-import CustomButton from '@/@core/components/mui/Button'
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import { mockUnitWeight } from '@/utils/mocks'
-import usePatchFeedstock from '@/hooks/feedstock/usePatchFeedstock'
-import type { IFeedstock } from '@/hooks/feedstock/useGetFeedstockById'
-import Categories from '../../../../../../@core/components/inventory/categories'
-import Providers from '../../../../../../@core/components/inventory/providers'
-import useGetCategory from '@/hooks/feedstock/useGetCategory'
+import CustomCard from "@/@core/components/mui/Card";
+import CustomTextField from "@/@core/components/mui/TextField";
+import CustomButton from "@/@core/components/mui/Button";
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import { mockUnitWeight } from "@/utils/mocks";
+import usePatchFeedstock from "@/hooks/feedstock/usePatchFeedstock";
+import type { IFeedstock } from "@/hooks/feedstock/useGetFeedstockById";
+import Categories from "../../../../../../@core/components/inventory/categories";
+import Providers from "../../../../../../@core/components/inventory/providers";
+import useGetCategory from "@/hooks/feedstock/useGetCategory";
 
 interface Props {
-  feedstock: IFeedstock
+  feedstock: IFeedstock;
 }
 
 const Detail: React.FC<Props> = ({ feedstock }) => {
-  const { mutate, isPending } = usePatchFeedstock()
-  const { categories } = useGetCategory()
+  const { mutate, isPending } = usePatchFeedstock();
+  const { categories } = useGetCategory();
 
   const methods = useForm({
     defaultValues: {
       name: feedstock.name,
       allergen: feedstock.allergen,
       measureUnit: {
-        label: 'Gramo',
-        value: 'g'
+        label: "Gramo",
+        value: "g"
       },
       quantity: feedstock.quantityG,
       charge: feedstock.chargeG,
@@ -40,7 +40,7 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
       provider:
         Array.isArray(feedstock.providers) && feedstock.providers.length > 0 ? feedstock.providers[0] : undefined
     }
-  })
+  });
 
   const {
     handleSubmit,
@@ -48,19 +48,19 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
     formState: { errors },
     control,
     setValue
-  } = methods
+  } = methods;
 
   const onSubmit = (values: any) => {
     const req = {
       name: values.name,
       allergen: values.allergen
-    }
+    };
 
     mutate({
       id: feedstock.id,
       data: req
-    })
-  }
+    });
+  };
 
   const updateCategories = (newCategories: any) => {
     mutate({
@@ -68,29 +68,29 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
       data: {
         category: newCategories
       }
-    })
-  }
+    });
+  };
 
   const measureUnitWatch = useWatch({
     control,
-    name: 'measureUnit'
-  })
+    name: "measureUnit"
+  });
 
   useEffect(() => {
     if (measureUnitWatch) {
       switch (measureUnitWatch.value) {
-        case 'g':
-          setValue('quantity', feedstock.quantityG)
-          setValue('charge', feedstock.chargeG)
-          break
-        case 'kg':
-          setValue('quantity', feedstock.quantityK)
-          setValue('charge', feedstock.chargeKg)
-          break
-        case 't':
-          setValue('quantity', feedstock.quantityT)
-          setValue('charge', feedstock.chargeT)
-          break
+        case "g":
+          setValue("quantity", feedstock.quantityG);
+          setValue("charge", feedstock.chargeG);
+          break;
+        case "kg":
+          setValue("quantity", feedstock.quantityK);
+          setValue("charge", feedstock.chargeKg);
+          break;
+        case "t":
+          setValue("quantity", feedstock.quantityT);
+          setValue("charge", feedstock.chargeT);
+          break;
       }
     }
   }, [
@@ -102,7 +102,7 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
     feedstock.quantityT,
     measureUnitWatch,
     setValue
-  ])
+  ]);
 
   return (
     <Grid container spacing={2}>
@@ -113,7 +113,7 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
               <Grid container spacing={4}>
                 <Grid item xs={12} md={6} lg={3}>
                   <CustomTextField
-                    {...register('name')}
+                    {...register("name")}
                     fullWidth
                     label='Nombre'
                     placeholder='Ingrese el nombre'
@@ -123,7 +123,7 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
                 </Grid>
                 <Grid item xs={12} md={6} lg={3}>
                   <CustomTextField
-                    {...register('minimumStandard')}
+                    {...register("minimumStandard")}
                     disabled
                     fullWidth
                     type='number'
@@ -140,7 +140,7 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
                         value={value}
                         options={mockUnitWeight}
                         onChange={(e, value: any) => {
-                          onChange(value)
+                          onChange(value);
                         }}
                         renderInput={params => (
                           <CustomTextField
@@ -155,7 +155,7 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
                 </Grid>
                 <Grid item xs={12} md={6} lg={3}>
                   <CustomTextField
-                    {...register('quantity')}
+                    {...register("quantity")}
                     disabled
                     fullWidth
                     type='number'
@@ -165,7 +165,7 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
                 </Grid>
                 <Grid item xs={12} md={6} lg={3}>
                   <CustomTextField
-                    {...register('charge')}
+                    {...register("charge")}
                     disabled
                     fullWidth
                     type='number'
@@ -175,7 +175,7 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
                 </Grid>
                 <Grid item xs={12} md={6} lg={3}>
                   <CustomTextField
-                    {...register('total')}
+                    {...register("total")}
                     disabled
                     fullWidth
                     type='number'
@@ -190,7 +190,7 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
                     control={control}
                     render={({ field: { value } }: any) => (
                       <FormControlLabel
-                        control={<Checkbox {...register('allergen')} checked={value} />}
+                        control={<Checkbox {...register("allergen")} checked={value} />}
                         label='Alérgeno'
                       />
                     )}
@@ -218,7 +218,7 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
         </Grid>
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default Detail
+export default Detail;

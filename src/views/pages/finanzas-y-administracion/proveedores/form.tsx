@@ -1,25 +1,25 @@
-import { Grid } from '@mui/material'
-import { useFormContext } from 'react-hook-form'
+import { Grid } from "@mui/material";
+import { useFormContext } from "react-hook-form";
 
-import CustomTextField from '@/@core/components/mui/TextField'
-import CustomButton from '@/@core/components/mui/Button'
+import CustomTextField from "@/@core/components/mui/TextField";
+import CustomButton from "@/@core/components/mui/Button";
 
 interface FormProps {
-  isPending: boolean
-  isEdit?: boolean
+  isPending: boolean;
+  isEdit?: boolean;
 }
 
 const Form = ({ isPending, isEdit = false }: FormProps) => {
   const {
     register,
     formState: { errors }
-  } = useFormContext()
+  } = useFormContext();
 
   return (
     <Grid container spacing={4}>
       <Grid item xs={12} md={6}>
         <CustomTextField
-          {...register('name')}
+          {...register("name")}
           autoFocus
           fullWidth
           label='Nombre'
@@ -32,7 +32,7 @@ const Form = ({ isPending, isEdit = false }: FormProps) => {
 
       <Grid item xs={12} md={6}>
         <CustomTextField
-          {...register('address')}
+          {...register("address")}
           fullWidth
           label='Dirección'
           placeholder='Ingrese la dirección del proveedor'
@@ -44,7 +44,7 @@ const Form = ({ isPending, isEdit = false }: FormProps) => {
 
       <Grid item xs={12} md={6}>
         <CustomTextField
-          {...register('phone')}
+          {...register("phone")}
           fullWidth
           label='Teléfono'
           placeholder='Ingrese el teléfono del proveedor'
@@ -60,7 +60,7 @@ const Form = ({ isPending, isEdit = false }: FormProps) => {
         </Grid>
       )}
     </Grid>
-  )
-}
+  );
+};
 
-export default Form
+export default Form;

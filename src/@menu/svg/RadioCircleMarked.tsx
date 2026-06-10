@@ -1,5 +1,5 @@
 // React Imports
-import type { SVGAttributes } from 'react'
+import type { SVGAttributes } from "react";
 
 const RadioCircleMarked = (props: SVGAttributes<SVGElement>) => {
   return (
@@ -10,7 +10,7 @@ const RadioCircleMarked = (props: SVGAttributes<SVGElement>) => {
       />
       <path fill='currentColor' d='M12 9c-1.627 0-3 1.373-3 3s1.373 3 3 3 3-1.373 3-3-1.373-3-3-3z' />
     </svg>
-  )
-}
+  );
+};
 
-export default RadioCircleMarked
+export default RadioCircleMarked;

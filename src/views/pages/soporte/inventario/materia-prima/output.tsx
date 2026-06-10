@@ -1,26 +1,26 @@
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm } from "react-hook-form";
 
-import { Grid } from '@mui/material'
+import { Grid } from "@mui/material";
 
-import { yupResolver } from '@hookform/resolvers/yup'
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import CustomTextField from '@/@core/components/mui/TextField'
-import { outputKardexSchema } from '@/utils/schemas/inventory/output'
-import { mockUnitWeight } from '@/utils/mocks'
-import CustomButton from '@/@core/components/mui/Button'
-import { useAbility } from '@/hooks/casl/useAbility'
-import useKardexOutput from '@/hooks/feedstock/kardex/useKardexOutput'
-import { ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
-import useGetFeedstockList from '@/hooks/feedstock/useGetFeedstockList'
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import CustomTextField from "@/@core/components/mui/TextField";
+import { outputKardexSchema } from "@/utils/schemas/inventory/output";
+import { mockUnitWeight } from "@/utils/mocks";
+import CustomButton from "@/@core/components/mui/Button";
+import { useAbility } from "@/hooks/casl/useAbility";
+import useKardexOutput from "@/hooks/feedstock/kardex/useKardexOutput";
+import { ABILITY_FIELDS, ABILITY_SUBJECT } from "@/utils/constant";
+import useGetFeedstockList from "@/hooks/feedstock/useGetFeedstockList";
 
 const Output = () => {
-  const { mutateAsync, isPending } = useKardexOutput()
-  const { feedstockList } = useGetFeedstockList()
+  const { mutateAsync, isPending } = useKardexOutput();
+  const { feedstockList } = useGetFeedstockList();
 
-  const ability = useAbility()
+  const ability = useAbility();
 
-  const canReadSalidas = ability.can('create', ABILITY_SUBJECT.FEEDSTOCK, ABILITY_FIELDS.SALIDAS)
+  const canReadSalidas = ability.can("create", ABILITY_SUBJECT.FEEDSTOCK, ABILITY_FIELDS.SALIDAS);
 
   const methods = useForm({
     defaultValues: {
@@ -29,9 +29,9 @@ const Output = () => {
       unit: undefined,
       batch: undefined
     },
-    mode: 'onBlur',
+    mode: "onBlur",
     resolver: yupResolver(outputKardexSchema)
-  })
+  });
 
   const {
     handleSubmit,
@@ -39,7 +39,7 @@ const Output = () => {
     control,
     formState: { errors },
     reset
-  } = methods
+  } = methods;
 
   const onSubmit = (values: any) => {
     const req = {
@@ -47,12 +47,12 @@ const Output = () => {
       idMaterial: values.material.id,
       quantity: Number(values.quantity),
       unit: values.unit.value
-    }
+    };
 
     mutateAsync(req).then(() => {
-      reset()
-    })
-  }
+      reset();
+    });
+  };
 
   return (
     <div>
@@ -67,7 +67,7 @@ const Output = () => {
                   value={value}
                   options={feedstockList || []}
                   onChange={(e, value: any) => {
-                    onChange(value)
+                    onChange(value);
                   }}
                   renderInput={params => (
                     <CustomTextField
@@ -84,7 +84,7 @@ const Output = () => {
           </Grid>
           <Grid item xs={12} sm={6} lg={4}>
             <CustomTextField
-              {...register('batch')}
+              {...register("batch")}
               label='Lote'
               placeholder='Ingrese el lote'
               error={!!errors.batch}
@@ -101,7 +101,7 @@ const Output = () => {
                   value={value}
                   options={mockUnitWeight}
                   onChange={(e, value: any) => {
-                    onChange(value)
+                    onChange(value);
                   }}
                   renderInput={params => (
                     <CustomTextField
@@ -119,7 +119,7 @@ const Output = () => {
 
           <Grid item xs={12} sm={6} lg={2}>
             <CustomTextField
-              {...register('quantity')}
+              {...register("quantity")}
               fullWidth
               label='Cantidad'
               placeholder='Ingrese la cantidad'
@@ -148,7 +148,7 @@ const Output = () => {
         </Grid>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Output
+export default Output;

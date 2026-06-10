@@ -1,5 +1,5 @@
 // React Imports
-import type { SVGAttributes } from 'react'
+import type { SVGAttributes } from "react";
 
 const SkinDefault = (props: SVGAttributes<SVGElement>) => {
   return (
@@ -51,7 +51,7 @@ const SkinDefault = (props: SVGAttributes<SVGElement>) => {
       <rect x='34.6152' y='20.1134' width='18.0455' height='16.6' rx='1.5' stroke='currentColor' strokeOpacity='0.12' />
       <rect x='34.6152' y='42.9545' width='63.7547' height='16.6' rx='1.5' stroke='currentColor' strokeOpacity='0.12' />
     </svg>
-  )
-}
+  );
+};
 
-export default SkinDefault
+export default SkinDefault;

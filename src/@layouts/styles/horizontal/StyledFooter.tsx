@@ -1,16 +1,16 @@
 // Third-party Imports
-import styled from '@emotion/styled'
-import type { CSSObject } from '@emotion/styled'
+import styled from "@emotion/styled";
+import type { CSSObject } from "@emotion/styled";
 
 // Config Imports
-import themeConfig from '@configs/themeConfig'
+import themeConfig from "@configs/themeConfig";
 
 // Util Imports
-import { horizontalLayoutClasses } from '@layouts/utils/layoutClasses'
+import { horizontalLayoutClasses } from "@layouts/utils/layoutClasses";
 
 type StyledFooterProps = {
-  overrideStyles?: CSSObject
-}
+  overrideStyles?: CSSObject;
+};
 
 const StyledFooter = styled.footer<StyledFooterProps>`
   &.${horizontalLayoutClasses.footerFixed} {
@@ -19,10 +19,10 @@ const StyledFooter = styled.footer<StyledFooterProps>`
     z-index: var(--footer-z-index);
     background-color: var(--mui-palette-background-paper);
     box-shadow: 0 3px 12px 0px rgb(var(--mui-mainColorChannels-lightShadow) / 0.14);
-    [data-mui-color-scheme='dark'] & {
+    [data-mui-color-scheme="dark"] & {
       box-shadow: 0 3px 12px 0px rgb(var(--mui-mainColorChannels-darkShadow) / 0.14);
     }
-    [data-skin='bordered'] & {
+    [data-skin="bordered"] & {
       box-shadow: none;
       border-block-start: 1px solid var(--border-color);
     }
@@ -39,6 +39,6 @@ const StyledFooter = styled.footer<StyledFooterProps>`
   }
 
   ${({ overrideStyles }) => overrideStyles}
-`
+`;
 
-export default StyledFooter
+export default StyledFooter;

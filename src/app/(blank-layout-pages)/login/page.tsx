@@ -1,22 +1,22 @@
 // Next Imports
-import type { Metadata } from 'next'
+import type { Metadata } from "next";
 
 // Component Imports
-import Login from '@views/Login'
+import Login from "@views/Login";
 
 // Server Action Imports
-import { getServerMode } from '@core/utils/serverHelpers'
+import { getServerMode } from "@core/utils/serverHelpers";
 
 export const metadata: Metadata = {
-  title: 'Login',
-  description: 'Iniciar sesión - Naturex'
-}
+  title: "Login",
+  description: "Iniciar sesión - Naturex"
+};
 
 const LoginPage = () => {
   // Vars
-  const mode = getServerMode()
+  const mode = getServerMode();
 
-  return <Login mode={mode} />
-}
+  return <Login mode={mode} />;
+};
 
-export default LoginPage
+export default LoginPage;

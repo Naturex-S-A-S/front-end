@@ -1,47 +1,47 @@
-import { memo, useDeferredValue, useMemo } from 'react'
+import { memo, useDeferredValue, useMemo } from "react";
 
-import { useForm, Controller } from 'react-hook-form'
+import { useForm, Controller } from "react-hook-form";
 
-import { Grid } from '@mui/material'
+import { Grid } from "@mui/material";
 
-import CustomCard from '@/@core/components/mui/Card'
-import CustomTextField from '@/@core/components/mui/TextField'
-import CustomButton from '@/@core/components/mui/Button'
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import useGetProductList from '@/hooks/product/useGetProductList'
+import CustomCard from "@/@core/components/mui/Card";
+import CustomTextField from "@/@core/components/mui/TextField";
+import CustomButton from "@/@core/components/mui/Button";
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import useGetProductList from "@/hooks/product/useGetProductList";
 
 type Filters = {
   product?: {
-    id: number
-  }
-  status?: string
-}
+    id: number;
+  };
+  status?: string;
+};
 
 type Props = {
-  defaultValues?: Filters
-  onApplyFilters?: (filters: any) => void
-}
+  defaultValues?: Filters;
+  onApplyFilters?: (filters: any) => void;
+};
 
 const Filter = memo(({ defaultValues, onApplyFilters }: Props) => {
-  const { control, handleSubmit, reset } = useForm<Filters>({ defaultValues })
+  const { control, handleSubmit, reset } = useForm<Filters>({ defaultValues });
 
-  const { productList } = useGetProductList()
+  const { productList } = useGetProductList();
 
   const submit = (data: Filters) => {
     onApplyFilters?.({
       productId: data?.product?.id || undefined,
       status: data.status || undefined
-    })
-  }
+    });
+  };
 
   const clear = () => {
-    reset(defaultValues)
-    onApplyFilters?.(defaultValues)
-  }
+    reset(defaultValues);
+    onApplyFilters?.(defaultValues);
+  };
 
-  const productListDeferred = useDeferredValue(productList)
+  const productListDeferred = useDeferredValue(productList);
 
-  const getOptionLabel = useMemo(() => (option: any) => option?.fullName || '', [])
+  const getOptionLabel = useMemo(() => (option: any) => option?.fullName || "", []);
 
   return (
     <CustomCard title='Filtros'>
@@ -76,9 +76,9 @@ const Filter = memo(({ defaultValues, onApplyFilters }: Props) => {
         </Grid>
       </form>
     </CustomCard>
-  )
-})
+  );
+});
 
-Filter.displayName = 'Filter'
+Filter.displayName = "Filter";
 
-export default Filter
+export default Filter;

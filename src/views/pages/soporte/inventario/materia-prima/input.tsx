@@ -1,32 +1,32 @@
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm } from "react-hook-form";
 
-import { Grid } from '@mui/material'
+import { Grid } from "@mui/material";
 
-import moment from 'moment'
+import moment from "moment";
 
-import { yupResolver } from '@hookform/resolvers/yup'
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import CustomButton from '@/@core/components/mui/Button'
-import { useAbility } from '@/hooks/casl/useAbility'
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import CustomTextField from '@/@core/components/mui/TextField'
-import { mockUnitWeight } from '@/utils/mocks'
-import DatePickerWrapper from '@/@core/styles/libs/react-datepicker'
-import CustomDatePicker from '@/@core/components/react-datepicker'
-import { kardexFeedstockInputSchema } from '@/utils/schemas/inventory/input'
-import useKardexInput from '@/hooks/feedstock/kardex/useKardexInput'
-import { ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
-import useGetFeedstockList from '@/hooks/feedstock/useGetFeedstockList'
-import useGetProvidersList from '@/hooks/provider/useGetProvidersList'
-import { formatDate } from '@/utils/format'
+import CustomButton from "@/@core/components/mui/Button";
+import { useAbility } from "@/hooks/casl/useAbility";
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import CustomTextField from "@/@core/components/mui/TextField";
+import { mockUnitWeight } from "@/utils/mocks";
+import DatePickerWrapper from "@/@core/styles/libs/react-datepicker";
+import CustomDatePicker from "@/@core/components/react-datepicker";
+import { kardexFeedstockInputSchema } from "@/utils/schemas/inventory/input";
+import useKardexInput from "@/hooks/feedstock/kardex/useKardexInput";
+import { ABILITY_FIELDS, ABILITY_SUBJECT } from "@/utils/constant";
+import useGetFeedstockList from "@/hooks/feedstock/useGetFeedstockList";
+import useGetProvidersList from "@/hooks/provider/useGetProvidersList";
+import { formatDate } from "@/utils/format";
 
 const Input = () => {
-  const { mutateAsync, isPending } = useKardexInput()
-  const { providersList } = useGetProvidersList()
-  const { feedstockList } = useGetFeedstockList()
-  const ability = useAbility()
+  const { mutateAsync, isPending } = useKardexInput();
+  const { providersList } = useGetProvidersList();
+  const { feedstockList } = useGetFeedstockList();
+  const ability = useAbility();
 
-  const canReadEntradas = ability.can('create', ABILITY_SUBJECT.FEEDSTOCK, ABILITY_FIELDS.ENTRADAS)
+  const canReadEntradas = ability.can("create", ABILITY_SUBJECT.FEEDSTOCK, ABILITY_FIELDS.ENTRADAS);
 
   const methods = useForm({
     defaultValues: {
@@ -42,9 +42,9 @@ const Input = () => {
       expirationDate1: undefined,
       expirationDate2: undefined
     },
-    mode: 'onBlur',
+    mode: "onBlur",
     resolver: yupResolver(kardexFeedstockInputSchema)
-  })
+  });
 
   const {
     handleSubmit,
@@ -52,7 +52,7 @@ const Input = () => {
     control,
     formState: { errors },
     reset
-  } = methods
+  } = methods;
 
   const onSubmit = (values: any) => {
     const req = {
@@ -67,12 +67,12 @@ const Input = () => {
       rack: values.rack,
       expirationDate1: formatDate(values.expirationDate1),
       expirationDate2: formatDate(values.expirationDate2)
-    }
+    };
 
     mutateAsync(req).then(() => {
-      reset()
-    })
-  }
+      reset();
+    });
+  };
 
   return (
     <div>
@@ -88,7 +88,7 @@ const Input = () => {
                     value={value}
                     options={feedstockList || []}
                     onChange={(e, value: any) => {
-                      onChange(value)
+                      onChange(value);
                     }}
                     renderInput={params => (
                       <CustomTextField
@@ -113,7 +113,7 @@ const Input = () => {
                     value={value}
                     options={providersList || []}
                     onChange={(e, value: any) => {
-                      onChange(value)
+                      onChange(value);
                     }}
                     renderInput={params => (
                       <CustomTextField
@@ -131,7 +131,7 @@ const Input = () => {
 
             <Grid item xs={12} md={6} lg={2}>
               <CustomTextField
-                {...register('batch')}
+                {...register("batch")}
                 fullWidth
                 label='Lote'
                 placeholder='Ingrese el lote'
@@ -142,7 +142,7 @@ const Input = () => {
 
             <Grid item xs={12} md={6} lg={2}>
               <CustomTextField
-                {...register('document')}
+                {...register("document")}
                 fullWidth
                 label='Documento'
                 placeholder='Ingrese el documento'
@@ -152,7 +152,7 @@ const Input = () => {
             </Grid>
             <Grid item xs={12} md={6} lg={2}>
               <CustomTextField
-                {...register('location')}
+                {...register("location")}
                 fullWidth
                 label='Ubicación'
                 placeholder='Ingrese la ubicación'
@@ -162,7 +162,7 @@ const Input = () => {
             </Grid>
             <Grid item xs={12} md={6} lg={2}>
               <CustomTextField
-                {...register('rack')}
+                {...register("rack")}
                 fullWidth
                 label='Estantería'
                 placeholder='Ingrese el estante'
@@ -180,7 +180,7 @@ const Input = () => {
                     value={value}
                     options={mockUnitWeight}
                     onChange={(e, value: any) => {
-                      onChange(value)
+                      onChange(value);
                     }}
                     renderInput={params => (
                       <CustomTextField
@@ -198,7 +198,7 @@ const Input = () => {
 
             <Grid item xs={12} md={6} lg={2}>
               <CustomTextField
-                {...register('quantity')}
+                {...register("quantity")}
                 fullWidth
                 label='Cantidad'
                 placeholder='Ingrese la cantidad'
@@ -209,7 +209,7 @@ const Input = () => {
 
             <Grid item xs={12} md={6} lg={4}>
               <CustomTextField
-                {...register('charge')}
+                {...register("charge")}
                 fullWidth
                 label='Valor total'
                 placeholder='Ingrese el valor total'
@@ -222,7 +222,7 @@ const Input = () => {
               <CustomDatePicker
                 control={control}
                 errors={errors.expirationDate1}
-                minDate={moment().add(1, 'day').toDate()}
+                minDate={moment().add(1, "day").toDate()}
                 name='expirationDate1'
                 label='Fecha de vencimiento 1'
               />
@@ -232,7 +232,7 @@ const Input = () => {
               <CustomDatePicker
                 control={control}
                 errors={errors.expirationDate2}
-                minDate={moment().add(1, 'day').toDate()}
+                minDate={moment().add(1, "day").toDate()}
                 name='expirationDate2'
                 label='Fecha de vencimiento 2'
               />
@@ -259,7 +259,7 @@ const Input = () => {
         </form>
       </DatePickerWrapper>
     </div>
-  )
-}
+  );
+};
 
-export default Input
+export default Input;

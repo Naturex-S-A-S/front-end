@@ -1,42 +1,42 @@
-'use client'
+"use client";
 
 // Next Imports
-import Link from 'next/link'
+import Link from "next/link";
 
 // MUI Imports
-import useMediaQuery from '@mui/material/useMediaQuery'
-import { styled, useTheme } from '@mui/material/styles'
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { styled, useTheme } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 
 // Third-party Imports
-import classnames from 'classnames'
+import classnames from "classnames";
 
 // Type Imports
-import type { SystemMode } from '@core/types'
+import type { SystemMode } from "@core/types";
 
 // Hook Imports
-import { useImageVariant } from '@core/hooks/useImageVariant'
+import { useImageVariant } from "@core/hooks/useImageVariant";
 
 // Styled Components
-const MaskImg = styled('img')({
-  blockSize: 'auto',
+const MaskImg = styled("img")({
+  blockSize: "auto",
   maxBlockSize: 355,
-  inlineSize: '100%',
-  position: 'absolute',
+  inlineSize: "100%",
+  position: "absolute",
   insetBlockEnd: 0,
   zIndex: -1
-})
+});
 
 const NotFound = ({ mode }: { mode: SystemMode }) => {
   // Vars
-  const darkImg = '/images/pages/misc-mask-dark.png'
-  const lightImg = '/images/pages/misc-mask-light.png'
+  const darkImg = "/images/pages/misc-mask-dark.png";
+  const lightImg = "/images/pages/misc-mask-light.png";
 
   // Hooks
-  const theme = useTheme()
-  const hidden = useMediaQuery(theme.breakpoints.down('md'))
-  const miscBackground = useImageVariant(mode, lightImg, darkImg)
+  const theme = useTheme();
+  const hidden = useMediaQuery(theme.breakpoints.down("md"));
+  const miscBackground = useImageVariant(mode, lightImg, darkImg);
 
   return (
     <div className='flex items-center justify-center min-bs-[100dvh] relative p-6 overflow-x-hidden'>
@@ -61,11 +61,11 @@ const NotFound = ({ mode }: { mode: SystemMode }) => {
         <MaskImg
           alt='mask'
           src={miscBackground}
-          className={classnames({ 'scale-x-[-1]': theme.direction === 'rtl' })}
+          className={classnames({ "scale-x-[-1]": theme.direction === "rtl" })}
         />
       )}
     </div>
-  )
-}
+  );
+};
 
-export default NotFound
+export default NotFound;

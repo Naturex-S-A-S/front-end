@@ -1,11 +1,11 @@
-import CustomBox from '@/@core/components/mui/Box'
-import Create from '@/views/pages/finanzas-y-administracion/ordenes-de-venta/create'
-import List from '@/views/pages/finanzas-y-administracion/ordenes-de-venta/list'
+import CustomBox from "@/@core/components/mui/Box";
+import Create from "@/views/pages/finanzas-y-administracion/ordenes-de-venta/create";
+import List from "@/views/pages/finanzas-y-administracion/ordenes-de-venta/list";
 
 export const metadata = {
-  title: 'Órdenes de Venta - Naturex',
-  description: ''
-}
+  title: "Órdenes de Venta - Naturex",
+  description: ""
+};
 
 const Page = () => {
   return (
@@ -13,7 +13,7 @@ const Page = () => {
       <Create />
       <List />
     </CustomBox>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;

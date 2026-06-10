@@ -1,11 +1,11 @@
-import { Card, CardContent, Typography } from '@mui/material'
+import { Card, CardContent, Typography } from "@mui/material";
 
-import type { ISaleOrderKardex } from '@/types/pages/saleOrder'
-import CustomDataGrid from '@/@core/components/mui/DataGrid'
-import { columns } from '@/utils/columns/saleOrderKardex'
+import type { ISaleOrderKardex } from "@/types/pages/saleOrder";
+import CustomDataGrid from "@/@core/components/mui/DataGrid";
+import { columns } from "@/utils/columns/saleOrderKardex";
 
 interface IProps {
-  data: ISaleOrderKardex[]
+  data: ISaleOrderKardex[];
 }
 
 const Kardex: React.FC<IProps> = ({ data }) => {
@@ -24,7 +24,7 @@ const Kardex: React.FC<IProps> = ({ data }) => {
         )}
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default Kardex
+export default Kardex;

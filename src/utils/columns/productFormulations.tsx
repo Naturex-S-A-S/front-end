@@ -1,23 +1,23 @@
-'use client'
-import Link from 'next/link'
+"use client";
+import Link from "next/link";
 
-import type { GridColDef } from '@mui/x-data-grid'
+import type { GridColDef } from "@mui/x-data-grid";
 
-import { Icon } from '@iconify/react'
+import { Icon } from "@iconify/react";
 
-import { Box, Chip } from '@mui/material'
+import { Box, Chip } from "@mui/material";
 
-import { formatDate } from '../format'
+import { formatDate } from "../format";
 
 interface Params {
-  toggleDrawer: (newOpen: boolean, formulationId: number) => void
+  toggleDrawer: (newOpen: boolean, formulationId: number) => void;
 }
 
 export const columns = ({ toggleDrawer }: Params): GridColDef[] => {
   return [
     {
-      field: 'id',
-      headerName: 'Id',
+      field: "id",
+      headerName: "Id",
       width: 80,
       renderCell: params => (
         <Link href={`/produccion/formulacion/detail/${params.row.id}`} className='text-blue-500 hover:text-blue-400'>
@@ -25,17 +25,17 @@ export const columns = ({ toggleDrawer }: Params): GridColDef[] => {
         </Link>
       )
     },
-    { field: 'name', headerName: 'Nombre', width: 200 },
+    { field: "name", headerName: "Nombre", width: 200 },
     {
-      field: 'activeVersion',
-      headerName: 'Version Actual',
+      field: "activeVersion",
+      headerName: "Version Actual",
       width: 120,
       renderCell: params => (
-        <Box className='flex justify-center items-center' style={{ height: '100%' }}>
+        <Box className='flex justify-center items-center' style={{ height: "100%" }}>
           {Array.isArray(params.row.versions) && (
             <Chip
               label={`v${params.row.versions?.find((version: any) => version.active)?.sequentialNumber}`}
-              color={'default'}
+              color={"default"}
               variant='outlined'
             />
           )}
@@ -54,8 +54,8 @@ export const columns = ({ toggleDrawer }: Params): GridColDef[] => {
       )
     },*/
     {
-      field: 'versions',
-      headerName: 'Versiones',
+      field: "versions",
+      headerName: "Versiones",
       width: 120,
       renderCell: params => (
         <span
@@ -67,10 +67,10 @@ export const columns = ({ toggleDrawer }: Params): GridColDef[] => {
       )
     },
     {
-      field: 'dateCreated',
-      headerName: 'Fecha de creación',
+      field: "dateCreated",
+      headerName: "Fecha de creación",
       width: 150,
       renderCell: params => formatDate(params.row.dateCreated)
     }
-  ]
-}
+  ];
+};

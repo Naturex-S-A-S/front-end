@@ -1,134 +1,134 @@
-'use client'
+"use client";
 
-import { useCallback, useState } from 'react'
+import { useCallback, useState } from "react";
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
-import { Box, Typography } from '@mui/material'
+import { Box, Typography } from "@mui/material";
 
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm } from "react-hook-form";
 
-import { yupResolver } from '@hookform/resolvers/yup'
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import { useMutation } from '@tanstack/react-query'
+import { useMutation } from "@tanstack/react-query";
 
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 
-import moment from 'moment'
+import moment from "moment";
 
-import { useAbility } from '@/hooks/casl/useAbility'
-import Form from './form'
-import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
-import { alertMessageErrors } from '@/utils/messages'
-import { orderSchema } from '@/utils/schemas/order'
-import { orderDefaultValues } from '@/utils/defaultValues/order'
-import { getOrderCalculate, postOrder } from '@/api/order'
+import { useAbility } from "@/hooks/casl/useAbility";
+import Form from "./form";
+import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from "@/utils/constant";
+import { alertMessageErrors } from "@/utils/messages";
+import { orderSchema } from "@/utils/schemas/order";
+import { orderDefaultValues } from "@/utils/defaultValues/order";
+import { getOrderCalculate, postOrder } from "@/api/order";
 
 const Create = () => {
-  const [isChanged, setIsChanged] = useState(false)
+  const [isChanged, setIsChanged] = useState(false);
 
-  const router = useRouter()
-  const ability = useAbility()
+  const router = useRouter();
+  const ability = useAbility();
 
   const canCreateFormulation = ability.can(
     ABILITY_ACTIONS.CREATE as any,
     ABILITY_SUBJECT.PRODUCTION,
     ABILITY_FIELDS.ORDERS
-  )
+  );
 
   const methods = useForm({
     defaultValues: orderDefaultValues,
     resolver: yupResolver(orderSchema) as any
-  })
+  });
 
-  const { handleSubmit, setValue, getValues }: any = methods
+  const { handleSubmit, setValue, getValues }: any = methods;
 
   const { isPending, mutateAsync: createOrder } = useMutation({
     mutationFn: postOrder,
     onSuccess: response => {
-      router.replace(`/produccion/ordenes/${response.orderId}`)
+      router.replace(`/produccion/ordenes/${response.orderId}`);
     },
     onError: (error: any) => {
-      alertMessageErrors(error, 'Error al crear la orden')
+      alertMessageErrors(error, "Error al crear la orden");
     }
-  })
+  });
 
   const { mutateAsync: mutateOrderCalculate, isPending: isPendingOrderCalculate } = useMutation({
     mutationFn: getOrderCalculate,
     onSuccess: (res: any) => {
-      setValue('calculatedData', res)
-      toast.success('Cálculo realizado con éxito')
+      setValue("calculatedData", res);
+      toast.success("Cálculo realizado con éxito");
     },
     onError: (error: any) => {
-      alertMessageErrors(error, 'Error al realizar el cálculo')
+      alertMessageErrors(error, "Error al realizar el cálculo");
     }
-  })
+  });
 
   const orderCalculate = useCallback(async () => {
-    const { product, presentations } = getValues()
+    const { product, presentations } = getValues();
 
     try {
       await mutateOrderCalculate({
         baseProductId: product.id,
-        productIds: presentations.map((p: any) => p.id).join(','),
-        quantities: presentations.map((p: any) => p.quantityG).join(',')
-      })
-      setIsChanged(false)
+        productIds: presentations.map((p: any) => p.id).join(","),
+        quantities: presentations.map((p: any) => p.quantityG).join(",")
+      });
+      setIsChanged(false);
 
-      return true
+      return true;
     } catch (_) {
-      return false
+      return false;
     }
-  }, [mutateOrderCalculate, getValues])
+  }, [mutateOrderCalculate, getValues]);
 
   const onSubmit = (values: any) => {
     if (values?.calculatedData?.totalQuantityMissing !== 0) {
       Swal.fire({
         title: `No hay material suficiente. ¿Desea calcular con la cantidad disponible?`,
-        icon: 'warning',
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#009541',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Continuar',
-        cancelButtonText: 'Cancelar'
+        confirmButtonColor: "#009541",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Continuar",
+        cancelButtonText: "Cancelar"
       }).then(result => {
         if (result.isConfirmed) {
-          const presentations = values.presentations
+          const presentations = values.presentations;
 
           for (const product of values.calculatedData.possibleProducts) {
-            const presentationIndex = presentations.findIndex((p: any) => p.id === product.id)
+            const presentationIndex = presentations.findIndex((p: any) => p.id === product.id);
 
             if (presentationIndex !== -1) {
-              setValue(`presentations.${presentationIndex}.quantityG`, product.units)
-              orderCalculate()
+              setValue(`presentations.${presentationIndex}.quantityG`, product.units);
+              orderCalculate();
             }
           }
         }
-      })
+      });
     } else {
       const quantityExpected = values.presentations.reduce(
         (acc: number, presentation: any) => acc + presentation.quantityG,
         0
-      )
+      );
 
       const req = {
         quantityExpected,
         batch: values.batch,
-        date_expiration: moment(values.expirationDate1).format('YYYY-MM-DD'),
+        date_expiration: moment(values.expirationDate1).format("YYYY-MM-DD"),
         products: values.presentations.map((product: any) => ({
           id: product.id,
           quantity: product.quantityG,
           base: product.id === values.product.id
         }))
-      }
+      };
 
-      createOrder(req)
+      createOrder(req);
     }
-  }
+  };
 
-  if (!canCreateFormulation) return null
+  if (!canCreateFormulation) return null;
 
   return (
     <Box>
@@ -148,7 +148,7 @@ const Create = () => {
         </form>
       </FormProvider>
     </Box>
-  )
-}
+  );
+};
 
-export default Create
+export default Create;

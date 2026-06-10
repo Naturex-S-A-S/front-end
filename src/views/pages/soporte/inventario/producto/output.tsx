@@ -1,25 +1,25 @@
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm } from "react-hook-form";
 
-import { Grid } from '@mui/material'
+import { Grid } from "@mui/material";
 
-import { yupResolver } from '@hookform/resolvers/yup'
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import CustomTextField from '@/@core/components/mui/TextField'
-import { kardexProductOutputSchema } from '@/utils/schemas/inventory/output'
-import CustomButton from '@/@core/components/mui/Button'
-import { useAbility } from '@/hooks/casl/useAbility'
-import useKardexOutput from '@/hooks/product/kardex/useKardexOutput'
-import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
-import useGetProductList from '@/hooks/product/useGetProductList'
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import CustomTextField from "@/@core/components/mui/TextField";
+import { kardexProductOutputSchema } from "@/utils/schemas/inventory/output";
+import CustomButton from "@/@core/components/mui/Button";
+import { useAbility } from "@/hooks/casl/useAbility";
+import useKardexOutput from "@/hooks/product/kardex/useKardexOutput";
+import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from "@/utils/constant";
+import useGetProductList from "@/hooks/product/useGetProductList";
 
 const Output = () => {
-  const { mutateAsync, isPending } = useKardexOutput()
-  const { productList } = useGetProductList()
+  const { mutateAsync, isPending } = useKardexOutput();
+  const { productList } = useGetProductList();
 
-  const ability = useAbility()
+  const ability = useAbility();
 
-  const canReadSalidas = ability.can(ABILITY_ACTIONS.CREATE as any, ABILITY_SUBJECT.PRODUCT, ABILITY_FIELDS.SALIDAS)
+  const canReadSalidas = ability.can(ABILITY_ACTIONS.CREATE as any, ABILITY_SUBJECT.PRODUCT, ABILITY_FIELDS.SALIDAS);
 
   const methods = useForm({
     defaultValues: {
@@ -29,9 +29,9 @@ const Output = () => {
       batch: undefined,
       observation: undefined
     },
-    mode: 'onBlur',
+    mode: "onBlur",
     resolver: yupResolver(kardexProductOutputSchema)
-  })
+  });
 
   const {
     handleSubmit,
@@ -39,7 +39,7 @@ const Output = () => {
     control,
     formState: { errors },
     reset
-  } = methods
+  } = methods;
 
   const onSubmit = (values: any) => {
     const req = {
@@ -48,12 +48,12 @@ const Output = () => {
       observation: values.observation,
       quantity: Number(values.quantity),
       idOrder: values.order
-    }
+    };
 
     mutateAsync(req).then(() => {
-      reset()
-    })
-  }
+      reset();
+    });
+  };
 
   return (
     <div>
@@ -68,7 +68,7 @@ const Output = () => {
                   value={value}
                   options={productList}
                   onChange={(e, value: any) => {
-                    onChange(value)
+                    onChange(value);
                   }}
                   renderInput={params => (
                     <CustomTextField
@@ -86,7 +86,7 @@ const Output = () => {
 
           <Grid item xs={12} md={6} lg={2}>
             <CustomTextField
-              {...register('order')}
+              {...register("order")}
               fullWidth
               label='Orden'
               placeholder='Ingrese el orden'
@@ -97,7 +97,7 @@ const Output = () => {
 
           <Grid item xs={12} md={6} lg={2}>
             <CustomTextField
-              {...register('quantity')}
+              {...register("quantity")}
               fullWidth
               label='Cantidad'
               placeholder='Ingrese la cantidad'
@@ -108,7 +108,7 @@ const Output = () => {
 
           <Grid item xs={12} md={6} lg={2}>
             <CustomTextField
-              {...register('batch')}
+              {...register("batch")}
               fullWidth
               label='Lote'
               placeholder='Ingrese el lote'
@@ -119,7 +119,7 @@ const Output = () => {
 
           <Grid item xs={12} md={6} lg={4}>
             <CustomTextField
-              {...register('observation')}
+              {...register("observation")}
               fullWidth
               label='Observación'
               placeholder='Ingrese la observación'
@@ -150,7 +150,7 @@ const Output = () => {
         </Grid>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Output
+export default Output;

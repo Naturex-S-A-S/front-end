@@ -1,112 +1,112 @@
-'use client'
+"use client";
 
-import { useCallback, useState } from 'react'
+import { useCallback, useState } from "react";
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
-import { Box, Typography } from '@mui/material'
+import { Box, Typography } from "@mui/material";
 
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm } from "react-hook-form";
 
-import { yupResolver } from '@hookform/resolvers/yup'
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import { useMutation } from '@tanstack/react-query'
+import { useMutation } from "@tanstack/react-query";
 
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
-import moment from 'moment'
+import moment from "moment";
 
-import { useAbility } from '@/hooks/casl/useAbility'
-import Form from './form'
-import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
-import { alertMessageErrors } from '@/utils/messages'
-import { orderSchema } from '@/utils/schemas/order'
-import { orderDefaultValues } from '@/utils/defaultValues/order'
-import { getOrderSupplyCalculate, postOrderSupply } from '@/api/order'
+import { useAbility } from "@/hooks/casl/useAbility";
+import Form from "./form";
+import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from "@/utils/constant";
+import { alertMessageErrors } from "@/utils/messages";
+import { orderSchema } from "@/utils/schemas/order";
+import { orderDefaultValues } from "@/utils/defaultValues/order";
+import { getOrderSupplyCalculate, postOrderSupply } from "@/api/order";
 
 const Create = () => {
-  const [isChanged, setIsChanged] = useState(false)
+  const [isChanged, setIsChanged] = useState(false);
 
-  const router = useRouter()
-  const ability = useAbility()
+  const router = useRouter();
+  const ability = useAbility();
 
   const canCreateProvisioning = ability.can(
     ABILITY_ACTIONS.CREATE as any,
     ABILITY_SUBJECT.PRODUCTION,
     ABILITY_FIELDS.PROVISIONING
-  )
+  );
 
   const methods = useForm({
     defaultValues: orderDefaultValues,
     resolver: yupResolver(orderSchema) as any
-  })
+  });
 
-  const { handleSubmit, setValue, getValues }: any = methods
+  const { handleSubmit, setValue, getValues }: any = methods;
 
   const { isPending, mutateAsync: createOrder } = useMutation({
     mutationFn: postOrderSupply,
     onSuccess: response => {
-      router.replace(`/produccion/aprovisionamiento/${response.id}`)
+      router.replace(`/produccion/aprovisionamiento/${response.id}`);
     },
     onError: (error: any) => {
-      alertMessageErrors(error, 'Error al crear la orden')
+      alertMessageErrors(error, "Error al crear la orden");
     }
-  })
+  });
 
   const { mutateAsync: mutateOrderSupplyCalculate, isPending: isPendingOrderCalculate } = useMutation({
     mutationFn: getOrderSupplyCalculate,
     onSuccess: (res: any) => {
-      setValue('calculatedData', res)
-      toast.success('Cálculo realizado con éxito')
+      setValue("calculatedData", res);
+      toast.success("Cálculo realizado con éxito");
     },
     onError: (error: any) => {
-      alertMessageErrors(error, 'Error al realizar el cálculo')
+      alertMessageErrors(error, "Error al realizar el cálculo");
     }
-  })
+  });
 
   const orderCalculate = useCallback(async () => {
-    const { presentations } = getValues()
+    const { presentations } = getValues();
 
     if (!presentations || !presentations.length) {
-      toast.error('No hay presentaciones para calcular.')
+      toast.error("No hay presentaciones para calcular.");
 
-      return false
+      return false;
     }
 
     try {
       await mutateOrderSupplyCalculate({
-        productIds: presentations.map((p: any) => p.id).join(','),
-        quantities: presentations.map((p: any) => p.quantityG).join(',')
-      })
-      setIsChanged(false)
+        productIds: presentations.map((p: any) => p.id).join(","),
+        quantities: presentations.map((p: any) => p.quantityG).join(",")
+      });
+      setIsChanged(false);
 
-      return true
+      return true;
     } catch (error: any) {
-      return false
+      return false;
     }
-  }, [mutateOrderSupplyCalculate, getValues])
+  }, [mutateOrderSupplyCalculate, getValues]);
 
   const onSubmit = (values: any) => {
     const quantityExpected = values.presentations.reduce(
       (acc: number, presentation: any) => acc + presentation.quantityG,
       0
-    )
+    );
 
     const req = {
       quantityExpected,
       batch: values.batch,
-      date_expiration: moment(values.expirationDate1).format('YYYY-MM-DD'),
+      date_expiration: moment(values.expirationDate1).format("YYYY-MM-DD"),
       products: values.presentations.map((product: any, index: number) => ({
         id: product.id,
         quantity: product.quantityG,
         base: index === 0
       }))
-    }
+    };
 
-    createOrder(req)
-  }
+    createOrder(req);
+  };
 
-  if (!canCreateProvisioning) return null
+  if (!canCreateProvisioning) return null;
 
   return (
     <Box>
@@ -126,7 +126,7 @@ const Create = () => {
         </form>
       </FormProvider>
     </Box>
-  )
-}
+  );
+};
 
-export default Create
+export default Create;

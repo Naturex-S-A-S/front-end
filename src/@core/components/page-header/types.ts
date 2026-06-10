@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react'
+import type { ReactNode } from "react";
 
 export type PageHeaderProps = {
-  title: ReactNode
-  subtitle?: ReactNode
-}
+  title: ReactNode;
+  subtitle?: ReactNode;
+};

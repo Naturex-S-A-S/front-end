@@ -1,19 +1,19 @@
-import { useMutation } from '@tanstack/react-query'
-import toast from 'react-hot-toast'
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
-import { postKardexOutput } from '@/api/feedstock'
-import { alertMessageErrors } from '@/utils/messages'
+import { postKardexOutput } from "@/api/feedstock";
+import { alertMessageErrors } from "@/utils/messages";
 
 const useKardexOutput = () => {
   return useMutation({
     mutationFn: postKardexOutput,
     onSuccess: () => {
-      toast.success('Salida de materia prima registrada con éxito')
+      toast.success("Salida de materia prima registrada con éxito");
     },
     onError: (error: any) => {
-      alertMessageErrors(error, 'Error al registrar la salida de materia prima')
+      alertMessageErrors(error, "Error al registrar la salida de materia prima");
     }
-  })
-}
+  });
+};
 
-export default useKardexOutput
+export default useKardexOutput;

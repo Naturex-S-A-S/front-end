@@ -1,13 +1,13 @@
-import { API } from "../instances"
+import { API } from "../instances";
 
 export const getOrderStatuses = async () => {
-    const response = await API().get("/metadata/order/statuses")
+  const response = await API().get("/metadata/order/statuses");
 
-    return response.data
-}
+  return response.data;
+};
 
 export const getFileTypes = async () => {
-    const response = await API().get("/metadata/sales-order/file-types")
+  const response = await API().get("/metadata/sales-order/file-types");
 
-    return response.data
-}
+  return response.data;
+};

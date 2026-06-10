@@ -1,27 +1,27 @@
-'use client'
-import { Box } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
+"use client";
+import { Box } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
-import Loader from '@/@core/components/react-spinners'
-import Header from '@/components/layout/detail/inventory/Header'
-import useGetProviderById from '@/hooks/provider/useGetProviderById'
-import NotFound from '@/views/NotFound'
-import Detail from '@/views/pages/finanzas-y-administracion/proveedores/detail'
+import Loader from "@/@core/components/react-spinners";
+import Header from "@/components/layout/detail/inventory/Header";
+import useGetProviderById from "@/hooks/provider/useGetProviderById";
+import NotFound from "@/views/NotFound";
+import Detail from "@/views/pages/finanzas-y-administracion/proveedores/detail";
 
 type Props = {
-  params: { id: string }
-}
+  params: { id: string };
+};
 
 const Page = ({ params }: Props) => {
-  const { provider, isLoading } = useGetProviderById(params.id)
-  const mode = useTheme().palette.mode
+  const { provider, isLoading } = useGetProviderById(params.id);
+  const mode = useTheme().palette.mode;
 
   if (isLoading) {
-    return <Loader type='page' />
+    return <Loader type='page' />;
   }
 
   if (!provider) {
-    return <NotFound mode={mode} />
+    return <NotFound mode={mode} />;
   }
 
   return (
@@ -34,7 +34,7 @@ const Page = ({ params }: Props) => {
       />
       <Detail provider={provider} />
     </Box>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;

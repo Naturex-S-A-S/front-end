@@ -1,23 +1,23 @@
 // Third-party Imports
-import styled from '@emotion/styled'
-import type { CSSObject } from '@emotion/styled'
+import styled from "@emotion/styled";
+import type { CSSObject } from "@emotion/styled";
 
 // Type Imports
-import type { MenuItemProps } from '../../components/vertical-menu/MenuItem'
+import type { MenuItemProps } from "../../components/vertical-menu/MenuItem";
 
 // Util Imports
-import { menuClasses } from '../../utils/menuClasses'
+import { menuClasses } from "../../utils/menuClasses";
 
 // Style Imports
-import { menuButtonStyles } from '../../components/vertical-menu/menuButtonStyles'
+import { menuButtonStyles } from "../../components/vertical-menu/menuButtonStyles";
 
-type StyledVerticalMenuItemProps = Pick<MenuItemProps, 'rootStyles' | 'disabled'> & {
-  level: number
-  menuItemStyles?: CSSObject
-  isCollapsed?: boolean
-  isPopoutWhenCollapsed?: boolean
-  buttonStyles?: CSSObject
-}
+type StyledVerticalMenuItemProps = Pick<MenuItemProps, "rootStyles" | "disabled"> & {
+  level: number;
+  menuItemStyles?: CSSObject;
+  isCollapsed?: boolean;
+  isPopoutWhenCollapsed?: boolean;
+  buttonStyles?: CSSObject;
+};
 
 const StyledVerticalMenuItem = styled.li<StyledVerticalMenuItemProps>`
   position: relative;
@@ -35,6 +35,6 @@ const StyledVerticalMenuItem = styled.li<StyledVerticalMenuItemProps>`
       })};
     ${({ buttonStyles }) => buttonStyles};
   }
-`
+`;
 
-export default StyledVerticalMenuItem
+export default StyledVerticalMenuItem;

@@ -1,20 +1,20 @@
 // MUI Imports
-import type { Theme } from '@mui/material/styles'
+import type { Theme } from "@mui/material/styles";
 
 // Third-party Imports
-import styled from '@emotion/styled'
-import type { CSSObject } from '@emotion/styled'
+import styled from "@emotion/styled";
+import type { CSSObject } from "@emotion/styled";
 
 // Config Imports
-import themeConfig from '@configs/themeConfig'
+import themeConfig from "@configs/themeConfig";
 
 // Util Imports
-import { verticalLayoutClasses } from '@layouts/utils/layoutClasses'
+import { verticalLayoutClasses } from "@layouts/utils/layoutClasses";
 
 type StyledHeaderProps = {
-  theme: Theme
-  overrideStyles?: CSSObject
-}
+  theme: Theme;
+  overrideStyles?: CSSObject;
+};
 
 const StyledHeader = styled.header<StyledHeaderProps>`
   display: flex;
@@ -64,7 +64,7 @@ const StyledHeader = styled.header<StyledHeaderProps>`
     &.${verticalLayoutClasses.headerDetached} .${verticalLayoutClasses.navbar} {
       box-shadow: var(--mui-customShadows-sm);
 
-      [data-skin='bordered'] & {
+      [data-skin="bordered"] & {
         box-shadow: none;
         border-inline: 1px solid var(--border-color);
         border-block-end: 1px solid var(--border-color);
@@ -95,7 +95,7 @@ const StyledHeader = styled.header<StyledHeaderProps>`
 
       &.${verticalLayoutClasses.headerFloating} {
         &:before {
-          content: '';
+          content: "";
           position: absolute;
           z-index: -1;
           inset-block-start: 0;
@@ -120,7 +120,7 @@ const StyledHeader = styled.header<StyledHeaderProps>`
     &.${verticalLayoutClasses.headerAttached}.scrolled {
       box-shadow: var(--mui-customShadows-sm);
 
-      [data-skin='bordered'] & {
+      [data-skin="bordered"] & {
         box-shadow: none;
         border-block-end: 1px solid var(--border-color);
       }
@@ -132,7 +132,7 @@ const StyledHeader = styled.header<StyledHeaderProps>`
       &:not(.${verticalLayoutClasses.headerFloating}).${verticalLayoutClasses.headerDetached}
       .${verticalLayoutClasses.navbar} {
       ${({ theme }) =>
-        `transition: ${theme.transitions.create(['box-shadow', 'border-width', 'padding-inline', 'backdrop-filter'])}`};
+        `transition: ${theme.transitions.create(["box-shadow", "border-width", "padding-inline", "backdrop-filter"])}`};
     }
     &:not(.${verticalLayoutClasses.headerFloating}).${verticalLayoutClasses.headerAttached}
       .${verticalLayoutClasses.navbar},
@@ -151,7 +151,7 @@ const StyledHeader = styled.header<StyledHeaderProps>`
       padding-inline: 16px;
       box-shadow: var(--mui-customShadows-sm);
 
-      [data-skin='bordered'] & {
+      [data-skin="bordered"] & {
         box-shadow: none;
         border: 1px solid var(--border-color);
       }
@@ -178,6 +178,6 @@ const StyledHeader = styled.header<StyledHeaderProps>`
   }
 
   ${({ overrideStyles }) => overrideStyles}
-`
+`;
 
-export default StyledHeader
+export default StyledHeader;

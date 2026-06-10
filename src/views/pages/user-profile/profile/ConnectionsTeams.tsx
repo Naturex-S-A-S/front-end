@@ -1,29 +1,29 @@
 // MUI Imports
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
-import CardContent from '@mui/material/CardContent'
-import CardActions from '@mui/material/CardActions'
-import Typography from '@mui/material/Typography'
-import Grid from '@mui/material/Grid'
-import Chip from '@mui/material/Chip'
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Chip from "@mui/material/Chip";
 
 // Type Imports
-import type { ProfileTeamsTechType, ProfileConnectionsType } from '@/types/pages/profileTypes'
+import type { ProfileTeamsTechType, ProfileConnectionsType } from "@/types/pages/profileTypes";
 
 // Component Imports
-import OptionMenu from '@core/components/option-menu'
-import CustomAvatar from '@core/components/mui/Avatar'
-import CustomIconButton from '@core/components/mui/IconButton'
-import Link from '@components/Link'
+import OptionMenu from "@core/components/option-menu";
+import CustomAvatar from "@core/components/mui/Avatar";
+import CustomIconButton from "@core/components/mui/IconButton";
+import Link from "@components/Link";
 
 type Props = {
-  teamsTech?: ProfileTeamsTechType[]
-  connections?: ProfileConnectionsType[]
-}
+  teamsTech?: ProfileTeamsTechType[];
+  connections?: ProfileConnectionsType[];
+};
 
 const ConnectionsTeams = (props: Props) => {
   // props
-  const { teamsTech, connections } = props
+  const { teamsTech, connections } = props;
 
   return (
     <>
@@ -31,7 +31,7 @@ const ConnectionsTeams = (props: Props) => {
         <Card>
           <CardHeader
             title='Connections'
-            action={<OptionMenu options={['Share Connections', 'Suggest Edits', { divider: true }, 'Report Bug']} />}
+            action={<OptionMenu options={["Share Connections", "Suggest Edits", { divider: true }, "Report Bug"]} />}
           />
           <CardContent className='flex flex-col gap-4'>
             {connections &&
@@ -46,8 +46,8 @@ const ConnectionsTeams = (props: Props) => {
                       <Typography variant='body2'>{connection.connections} Connections</Typography>
                     </div>
                   </div>
-                  <CustomIconButton color='primary' variant={connection.isFriend ? 'tonal' : 'contained'}>
-                    <i className={connection.isFriend ? 'tabler-user-check' : 'tabler-user-x'} />
+                  <CustomIconButton color='primary' variant={connection.isFriend ? "tonal" : "contained"}>
+                    <i className={connection.isFriend ? "tabler-user-check" : "tabler-user-x"} />
                   </CustomIconButton>
                 </div>
               ))}
@@ -63,7 +63,7 @@ const ConnectionsTeams = (props: Props) => {
         <Card>
           <CardHeader
             title='Teams'
-            action={<OptionMenu options={['Share Teams', 'Suggest Edits', { divider: true }, 'Report Bug']} />}
+            action={<OptionMenu options={["Share Teams", "Suggest Edits", { divider: true }, "Report Bug"]} />}
           />
           <CardContent className='flex flex-col gap-4'>
             {teamsTech &&
@@ -90,7 +90,7 @@ const ConnectionsTeams = (props: Props) => {
         </Card>
       </Grid>
     </>
-  )
-}
+  );
+};
 
-export default ConnectionsTeams
+export default ConnectionsTeams;

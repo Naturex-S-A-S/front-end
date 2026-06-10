@@ -1,56 +1,56 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm } from "react-hook-form";
 
-import { yupResolver } from '@hookform/resolvers/yup'
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
-import CustomDialog from '@/@core/components/mui/Dialog'
-import CreateButton from '@/components/layout/shared/CreateButton'
-import { formulationVersionDefaultValues } from '@/utils/defaultValues/formulation'
-import { formulationVersionSchema } from '@/utils/schemas/formulation'
-import Form from '../form'
+import CustomDialog from "@/@core/components/mui/Dialog";
+import CreateButton from "@/components/layout/shared/CreateButton";
+import { formulationVersionDefaultValues } from "@/utils/defaultValues/formulation";
+import { formulationVersionSchema } from "@/utils/schemas/formulation";
+import Form from "../form";
 
-import { postFormulationVersion } from '@/api/formulation'
-import { alertMessageErrors } from '@/utils/messages'
+import { postFormulationVersion } from "@/api/formulation";
+import { alertMessageErrors } from "@/utils/messages";
 
 interface Props {
-  formulationId: number
+  formulationId: number;
 }
 
 const CreateVersion = ({ formulationId }: Props) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const methods = useForm({
     defaultValues: formulationVersionDefaultValues,
     resolver: yupResolver(formulationVersionSchema)
-  })
+  });
 
   const toogleDialog = () => {
-    setOpen(!open)
-  }
+    setOpen(!open);
+  };
 
-  const { handleSubmit, reset } = methods
+  const { handleSubmit, reset } = methods;
 
   const { mutate, isPending } = useMutation({
     mutationFn: postFormulationVersion,
     onSuccess: () => {
-      toast.success('Fórmula creada con éxito')
+      toast.success("Fórmula creada con éxito");
       queryClient.invalidateQueries({
-        queryKey: ['getFormulationById', formulationId]
-      })
-      reset(formulationVersionDefaultValues)
-      toogleDialog()
+        queryKey: ["getFormulationById", formulationId]
+      });
+      reset(formulationVersionDefaultValues);
+      toogleDialog();
     },
     onError: (error: any) => {
-      alertMessageErrors(error, 'Error al crear una nueva versión')
+      alertMessageErrors(error, "Error al crear una nueva versión");
     }
-  })
+  });
 
   const onSubmit = (values: any) => {
     const req = {
@@ -58,10 +58,10 @@ const CreateVersion = ({ formulationId }: Props) => {
       comment: values.comment,
       active: values.active,
       details: values.details.map((detail: any) => ({ idMaterial: detail.material.id, quantity: detail.quantity }))
-    }
+    };
 
-    mutate(req)
-  }
+    mutate(req);
+  };
 
   return (
     <div>
@@ -75,7 +75,7 @@ const CreateVersion = ({ formulationId }: Props) => {
         </FormProvider>
       </CustomDialog>
     </div>
-  )
-}
+  );
+};
 
-export default CreateVersion
+export default CreateVersion;

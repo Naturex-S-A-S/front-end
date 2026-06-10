@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 const Icon = () => {
   return (
@@ -9,8 +9,8 @@ const Icon = () => {
         strokeWidth='2'
       />
     </svg>
-  )
-}
+  );
+};
 
 const IndeterminateIcon = () => {
   return (
@@ -24,8 +24,8 @@ const IndeterminateIcon = () => {
         strokeLinejoin='round'
       />
     </svg>
-  )
-}
+  );
+};
 
 const CheckedIcon = () => {
   return (
@@ -39,7 +39,7 @@ const CheckedIcon = () => {
         strokeLinejoin='round'
       />
     </svg>
-  )
-}
+  );
+};
 
-export { Icon, IndeterminateIcon, CheckedIcon }
+export { Icon, IndeterminateIcon, CheckedIcon };

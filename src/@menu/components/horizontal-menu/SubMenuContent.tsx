@@ -1,31 +1,31 @@
 // React Imports
-import { forwardRef } from 'react'
-import type { ForwardRefRenderFunction, HTMLAttributes } from 'react'
+import { forwardRef } from "react";
+import type { ForwardRefRenderFunction, HTMLAttributes } from "react";
 
 // Third-party Imports
-import PerfectScrollbar from 'react-perfect-scrollbar'
+import PerfectScrollbar from "react-perfect-scrollbar";
 
 // Type Imports
-import type { ChildrenType, RootStylesType } from '../../types'
+import type { ChildrenType, RootStylesType } from "../../types";
 
 // Styled Component Imports
-import StyledHorizontalSubMenuContent from '../../styles/horizontal/StyledHorizontalSubMenuContent'
+import StyledHorizontalSubMenuContent from "../../styles/horizontal/StyledHorizontalSubMenuContent";
 
 // Style Imports
-import styles from '../../styles/styles.module.css'
+import styles from "../../styles/styles.module.css";
 
 export type SubMenuContentProps = HTMLAttributes<HTMLDivElement> &
   RootStylesType &
   Partial<ChildrenType> & {
-    open?: boolean
-    browserScroll?: boolean
-    firstLevel?: boolean
-    top?: number
-  }
+    open?: boolean;
+    browserScroll?: boolean;
+    firstLevel?: boolean;
+    top?: number;
+  };
 
 const SubMenuContent: ForwardRefRenderFunction<HTMLDivElement, SubMenuContentProps> = (props, ref) => {
   // Props
-  const { children, open, firstLevel, top, browserScroll, ...rest } = props
+  const { children, open, firstLevel, top, browserScroll, ...rest } = props;
 
   return (
     <StyledHorizontalSubMenuContent
@@ -48,7 +48,7 @@ const SubMenuContent: ForwardRefRenderFunction<HTMLDivElement, SubMenuContentPro
         <ul className={styles.ul}>{children}</ul>
       )}
     </StyledHorizontalSubMenuContent>
-  )
-}
+  );
+};
 
-export default forwardRef(SubMenuContent)
+export default forwardRef(SubMenuContent);

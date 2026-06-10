@@ -1,58 +1,58 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from "@tanstack/react-query";
 
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
-import CustomDataGrid from '@/@core/components/mui/DataGrid'
-import { columns } from '@/utils/columns/movements'
-import Filter from './filter'
-import { getKardexMovements } from '@/api/kardex'
-import { MaterialType } from '@/utils/enum'
+import CustomDataGrid from "@/@core/components/mui/DataGrid";
+import { columns } from "@/utils/columns/movements";
+import Filter from "./filter";
+import { getKardexMovements } from "@/api/kardex";
+import { MaterialType } from "@/utils/enum";
 
 interface IProps {
-  materialType: MaterialType
+  materialType: MaterialType;
 }
 
 const defaultFilters = {
   kardexType: null,
   providerId: null,
-  batch: '',
+  batch: "",
   materialType: MaterialType.FEEDSTOCK,
-  measureUnit: { label: 'Gramo', value: 'g' }
-}
+  measureUnit: { label: "Gramo", value: "g" }
+};
 
 const Movements: React.FC<IProps> = ({ materialType }) => {
   const [filters, setFilters] = useState({
     ...defaultFilters
-  })
+  });
 
   useEffect(() => {
     setFilters(prev => ({
       ...prev,
       materialType
-    }))
-  }, [materialType])
+    }));
+  }, [materialType]);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['getKardexMovements', filters],
+    queryKey: ["getKardexMovements", filters],
     queryFn: () => getKardexMovements(filters)
-  })
+  });
 
   const onApplyFilters = (filters: any) => {
     setFilters({
       ...filters,
       materialType
-    })
-  }
+    });
+  };
 
   const handleEdit = (id: string) => {
-    toast(`${id} Pendiente`)
-  }
+    toast(`${id} Pendiente`);
+  };
 
   const handleDelete = (id: string) => {
-    toast(`${id} Pendiente`)
-  }
+    toast(`${id} Pendiente`);
+  };
 
   return (
     <div className='flex flex-col gap-2'>
@@ -60,12 +60,12 @@ const Movements: React.FC<IProps> = ({ materialType }) => {
       <Filter onApplyFilters={onApplyFilters} defaultValues={defaultFilters} />
       <CustomDataGrid
         columns={columns({ handleEdit, handleDelete, filters })}
-        getRowClassName={(params: any) => (params.row.type === 'input' ? 'input' : 'output')}
+        getRowClassName={(params: any) => (params.row.type === "input" ? "input" : "output")}
         data={data}
         isLoading={isLoading}
       />
     </div>
-  )
-}
+  );
+};
 
-export default Movements
+export default Movements;

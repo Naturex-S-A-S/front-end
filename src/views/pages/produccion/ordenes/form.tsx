@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from "react";
 
-import type { Theme } from '@mui/material'
+import type { Theme } from "@mui/material";
 import {
   Box,
   Card,
@@ -16,54 +16,54 @@ import {
   Typography,
   useMediaQuery,
   Alert
-} from '@mui/material'
+} from "@mui/material";
 
-import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form'
+import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
-import classNames from 'classnames'
+import classNames from "classnames";
 
-import moment from 'moment'
+import moment from "moment";
 
-import { useMutation } from '@tanstack/react-query'
+import { useMutation } from "@tanstack/react-query";
 
-import CustomTextField from '@/@core/components/mui/TextField'
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import CustomButton from '@/@core/components/mui/Button'
-import useGetProductList from '@/hooks/product/useGetProductList'
-import CustomDatePicker from '@/@core/components/react-datepicker'
-import { getProductsRelated } from '@/api/product'
+import CustomTextField from "@/@core/components/mui/TextField";
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import CustomButton from "@/@core/components/mui/Button";
+import useGetProductList from "@/hooks/product/useGetProductList";
+import CustomDatePicker from "@/@core/components/react-datepicker";
+import { getProductsRelated } from "@/api/product";
 
 type Props = {
-  isPending: boolean
-  isChanged: boolean
-  setIsChanged: (value: boolean) => void
-  orderCalculate: () => Promise<boolean>
-  isPendingOrderCalculate: boolean
-}
+  isPending: boolean;
+  isChanged: boolean;
+  setIsChanged: (value: boolean) => void;
+  orderCalculate: () => Promise<boolean>;
+  isPendingOrderCalculate: boolean;
+};
 
 type Product = {
-  id: string | number
-  fullName?: string
-  [k: string]: any
-}
+  id: string | number;
+  fullName?: string;
+  [k: string]: any;
+};
 
 type Presentation = {
-  id: string
-  fullName?: string
-  quantityG?: number | string
-  [k: string]: any
-}
+  id: string;
+  fullName?: string;
+  quantityG?: number | string;
+  [k: string]: any;
+};
 
 const LoaderInfo = () => (
   <>
-    <Skeleton variant='rectangular' width='100%' height={30} sx={{ borderRadius: '8px' }} />
-    <Skeleton variant='rectangular' width='100%' height={30} sx={{ borderRadius: '8px' }} />
-    <Skeleton variant='rectangular' width='100%' height={30} sx={{ borderRadius: '8px' }} />
-    <Skeleton variant='rectangular' width='100%' height={30} sx={{ borderRadius: '8px' }} />
-    <Skeleton variant='rectangular' width='100%' height={30} sx={{ borderRadius: '8px' }} />
-    <Skeleton variant='rectangular' width='100%' height={30} sx={{ borderRadius: '8px' }} />
+    <Skeleton variant='rectangular' width='100%' height={30} sx={{ borderRadius: "8px" }} />
+    <Skeleton variant='rectangular' width='100%' height={30} sx={{ borderRadius: "8px" }} />
+    <Skeleton variant='rectangular' width='100%' height={30} sx={{ borderRadius: "8px" }} />
+    <Skeleton variant='rectangular' width='100%' height={30} sx={{ borderRadius: "8px" }} />
+    <Skeleton variant='rectangular' width='100%' height={30} sx={{ borderRadius: "8px" }} />
+    <Skeleton variant='rectangular' width='100%' height={30} sx={{ borderRadius: "8px" }} />
   </>
-)
+);
 
 const Form: React.FC<Props> = ({
   isPending: isPendingCreate,
@@ -72,12 +72,12 @@ const Form: React.FC<Props> = ({
   orderCalculate,
   isPendingOrderCalculate
 }) => {
-  const [step, setStep] = useState<number>(0)
+  const [step, setStep] = useState<number>(0);
 
-  const { productList } = useGetProductList()
+  const { productList } = useGetProductList();
 
-  const isBelowMdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
-  const isBelowSmScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'))
+  const isBelowMdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
+  const isBelowSmScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 
   const {
     register,
@@ -87,55 +87,55 @@ const Form: React.FC<Props> = ({
     trigger,
     setValue,
     getValues
-  }: any = useFormContext()
+  }: any = useFormContext();
 
   const { mutateAsync: mutateProductsRelated, isPending: isPendingProductsRelated } = useMutation({
     mutationFn: getProductsRelated
-  })
+  });
 
   const { fields, replace } = useFieldArray({
     control,
-    name: 'presentations'
-  })
+    name: "presentations"
+  });
 
-  const productWatch = useWatch({ control, name: 'product' })
-  const calculatedData = useWatch({ control, name: 'calculatedData' })
+  const productWatch = useWatch({ control, name: "product" });
+  const calculatedData = useWatch({ control, name: "calculatedData" });
 
   const handleContinue = useCallback(async () => {
-    const result = await trigger('presentations')
+    const result = await trigger("presentations");
 
     if (result) {
-      const success = await orderCalculate()
+      const success = await orderCalculate();
 
-      success ? setStep(2) : setStep(1)
+      success ? setStep(2) : setStep(1);
     }
-  }, [orderCalculate, setStep, trigger])
+  }, [orderCalculate, setStep, trigger]);
 
   const handleChangeQuantity = (newValue: string, index: number) => {
-    const oldValue = getValues(`presentations.${index}.quantityG`)
+    const oldValue = getValues(`presentations.${index}.quantityG`);
 
-    if (newValue !== oldValue) setIsChanged(true)
-  }
+    if (newValue !== oldValue) setIsChanged(true);
+  };
 
   useEffect(() => {
     if (productWatch?.id) {
       mutateProductsRelated(productWatch.id).then((res: Presentation[] = []) => {
-        replace(res)
-        setStep(1)
-      })
+        replace(res);
+        setStep(1);
+      });
     } else {
-      setStep(0)
-      reset()
-      replace([])
+      setStep(0);
+      reset();
+      replace([]);
     }
-  }, [mutateProductsRelated, replace, productWatch?.id, reset])
+  }, [mutateProductsRelated, replace, productWatch?.id, reset]);
 
   const getCardClass = useCallback(() => {
     return classNames({
-      '[&:nth-of-type(odd)>div]:pie-6 [&:nth-of-type(odd)>div]:border-ie': isBelowMdScreen && !isBelowSmScreen,
-      '[&:not(:last-child)>div]:pie-6 [&:not(:last-child)>div]:border-ie': !isBelowMdScreen
-    })
-  }, [isBelowMdScreen, isBelowSmScreen])
+      "[&:nth-of-type(odd)>div]:pie-6 [&:nth-of-type(odd)>div]:border-ie": isBelowMdScreen && !isBelowSmScreen,
+      "[&:not(:last-child)>div]:pie-6 [&:not(:last-child)>div]:border-ie": !isBelowMdScreen
+    });
+  }, [isBelowMdScreen, isBelowSmScreen]);
 
   return (
     <Grid container spacing={4}>
@@ -152,7 +152,7 @@ const Form: React.FC<Props> = ({
                       <CustomAutocomplete
                         value={value}
                         options={productList}
-                        getOptionLabel={(option: Product) => option?.fullName || ''}
+                        getOptionLabel={(option: Product) => option?.fullName || ""}
                         onChange={(_, v: Product | null) => onChange(v)}
                         renderInput={(params: any) => (
                           <CustomTextField {...params} label='Elegir producto' placeholder='Seleccione un producto' />
@@ -176,14 +176,14 @@ const Form: React.FC<Props> = ({
                             type='number'
                             autoComplete='off'
                             onBlur={e => {
-                              handleChangeQuantity(e.target.value, index)
+                              handleChangeQuantity(e.target.value, index);
                             }}
                             onChange={e => {
-                              const value = e.target.value
+                              const value = e.target.value;
 
-                              handleChangeQuantity(value, index)
+                              handleChangeQuantity(value, index);
 
-                              setValue(`presentations.${index}.quantityG`, value)
+                              setValue(`presentations.${index}.quantityG`, value);
                             }}
                             fullWidth
                             label={`${presentation.fullName}`}
@@ -198,7 +198,7 @@ const Form: React.FC<Props> = ({
                           <>
                             <Divider />
                             <CustomTextField
-                              {...register('batch')}
+                              {...register("batch")}
                               fullWidth
                               label='Lote'
                               placeholder='Ej: 11997'
@@ -207,7 +207,7 @@ const Form: React.FC<Props> = ({
                             />
                             <CustomDatePicker
                               control={control}
-                              minDate={moment().add(1, 'day').toDate()}
+                              minDate={moment().add(1, "day").toDate()}
                               name='expirationDate1'
                               label='Fecha de vencimiento'
                               errors={errors?.expirationDate1?.message}
@@ -233,15 +233,15 @@ const Form: React.FC<Props> = ({
       <Grid item xs={12} md={8}>
         {isPendingProductsRelated || isPendingOrderCalculate ? (
           <>
-            <Skeleton variant='rectangular' width='100%' height={90} sx={{ borderRadius: '8px', marginBottom: 4 }} />
-            <Skeleton variant='rectangular' width='100%' height={200} sx={{ borderRadius: '8px', marginBottom: 4 }} />
-            <Skeleton variant='rectangular' width='100%' height={200} sx={{ borderRadius: '8px' }} />
+            <Skeleton variant='rectangular' width='100%' height={90} sx={{ borderRadius: "8px", marginBottom: 4 }} />
+            <Skeleton variant='rectangular' width='100%' height={200} sx={{ borderRadius: "8px", marginBottom: 4 }} />
+            <Skeleton variant='rectangular' width='100%' height={200} sx={{ borderRadius: "8px" }} />
           </>
         ) : (
           <Grid container spacing={4}>
             {calculatedData?.message && step === 2 && (
               <Grid item xs={12}>
-                <Alert severity={calculatedData?.totalQuantityMissing === 0 ? 'success' : 'warning'}>
+                <Alert severity={calculatedData?.totalQuantityMissing === 0 ? "success" : "warning"}>
                   {calculatedData.message}
                 </Alert>
               </Grid>
@@ -312,13 +312,13 @@ const Form: React.FC<Props> = ({
                     <TableBody>
                       {step !== 2 ? (
                         <TableRow>
-                          <TableCell colSpan={4} sx={{ textAlign: 'center' }}>
+                          <TableCell colSpan={4} sx={{ textAlign: "center" }}>
                             Ingrese las cantidades de las presentaciones
                           </TableCell>
                         </TableRow>
                       ) : (
                         calculatedData?.materials.map((item: any, index: number) => (
-                          <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                          <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                             <TableCell>{item.id}</TableCell>
                             <TableCell>{item.name}</TableCell>
                             <TableCell>{item.quantityFormulation}</TableCell>
@@ -353,7 +353,7 @@ const Form: React.FC<Props> = ({
         )}
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default Form
+export default Form;

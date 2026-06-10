@@ -1,9 +1,9 @@
-import { Card, CardContent, CardHeader } from '@mui/material'
+import { Card, CardContent, CardHeader } from "@mui/material";
 
 interface Props {
-  title?: React.ReactNode
-  children: React.ReactNode
-  action?: React.ReactNode
+  title?: React.ReactNode;
+  children: React.ReactNode;
+  action?: React.ReactNode;
 }
 
 const CustomCard: React.FC<Props> = ({ title, children, action }) => {
@@ -12,7 +12,7 @@ const CustomCard: React.FC<Props> = ({ title, children, action }) => {
       {title && <CardHeader title={title} action={action} />}
       <CardContent>{children}</CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default CustomCard
+export default CustomCard;

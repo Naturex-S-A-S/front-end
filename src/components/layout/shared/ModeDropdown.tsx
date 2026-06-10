@@ -1,70 +1,70 @@
-'use client'
+"use client";
 
 // React Imports
-import { useRef, useState } from 'react'
+import { useRef, useState } from "react";
 
 // MUI Imports
-import Tooltip from '@mui/material/Tooltip'
-import IconButton from '@mui/material/IconButton'
-import Popper from '@mui/material/Popper'
-import Fade from '@mui/material/Fade'
-import Paper from '@mui/material/Paper'
-import ClickAwayListener from '@mui/material/ClickAwayListener'
-import MenuList from '@mui/material/MenuList'
-import MenuItem from '@mui/material/MenuItem'
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import Popper from "@mui/material/Popper";
+import Fade from "@mui/material/Fade";
+import Paper from "@mui/material/Paper";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import MenuList from "@mui/material/MenuList";
+import MenuItem from "@mui/material/MenuItem";
 
 // Type Imports
-import type { Mode } from '@core/types'
+import type { Mode } from "@core/types";
 
 // Hook Imports
-import { useSettings } from '@core/hooks/useSettings'
+import { useSettings } from "@core/hooks/useSettings";
 
 const ModeDropdown = () => {
   // States
-  const [open, setOpen] = useState(false)
-  const [tooltipOpen, setTooltipOpen] = useState(false)
+  const [open, setOpen] = useState(false);
+  const [tooltipOpen, setTooltipOpen] = useState(false);
 
   // Refs
-  const anchorRef = useRef<HTMLButtonElement>(null)
+  const anchorRef = useRef<HTMLButtonElement>(null);
 
   // Hooks
-  const { settings, updateSettings } = useSettings()
+  const { settings, updateSettings } = useSettings();
 
   const handleClose = () => {
-    setOpen(false)
-    setTooltipOpen(false)
-  }
+    setOpen(false);
+    setTooltipOpen(false);
+  };
 
   const handleToggle = () => {
-    setOpen(prevOpen => !prevOpen)
-  }
+    setOpen(prevOpen => !prevOpen);
+  };
 
   const handleModeSwitch = (mode: Mode) => {
-    handleClose()
+    handleClose();
 
     if (settings.mode !== mode) {
-      updateSettings({ mode: mode })
+      updateSettings({ mode: mode });
     }
-  }
+  };
 
   const getModeIcon = () => {
-    if (settings.mode === 'system') {
-      return 'tabler-device-laptop'
-    } else if (settings.mode === 'dark') {
-      return 'tabler-moon-stars'
+    if (settings.mode === "system") {
+      return "tabler-device-laptop";
+    } else if (settings.mode === "dark") {
+      return "tabler-moon-stars";
     } else {
-      return 'tabler-sun'
+      return "tabler-sun";
     }
-  }
+  };
 
   return (
     <>
       <Tooltip
-        title={settings.mode + ' Mode'}
+        title={settings.mode + " Mode"}
         onOpen={() => setTooltipOpen(true)}
         onClose={() => setTooltipOpen(false)}
         open={open ? false : tooltipOpen ? true : false}
-        PopperProps={{ className: 'capitalize' }}
+        PopperProps={{ className: "capitalize" }}
       >
         <IconButton ref={anchorRef} onClick={handleToggle} className='text-textPrimary'>
           <i className={getModeIcon()} />
@@ -81,31 +81,31 @@ const ModeDropdown = () => {
         {({ TransitionProps, placement }) => (
           <Fade
             {...TransitionProps}
-            style={{ transformOrigin: placement === 'bottom-start' ? 'left top' : 'right top' }}
+            style={{ transformOrigin: placement === "bottom-start" ? "left top" : "right top" }}
           >
-            <Paper className={settings.skin === 'bordered' ? 'border shadow-none' : 'shadow-lg'}>
+            <Paper className={settings.skin === "bordered" ? "border shadow-none" : "shadow-lg"}>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList onKeyDown={handleClose}>
                   <MenuItem
                     className='gap-3'
-                    onClick={() => handleModeSwitch('light')}
-                    selected={settings.mode === 'light'}
+                    onClick={() => handleModeSwitch("light")}
+                    selected={settings.mode === "light"}
                   >
                     <i className='tabler-sun' />
                     Light
                   </MenuItem>
                   <MenuItem
                     className='gap-3'
-                    onClick={() => handleModeSwitch('dark')}
-                    selected={settings.mode === 'dark'}
+                    onClick={() => handleModeSwitch("dark")}
+                    selected={settings.mode === "dark"}
                   >
                     <i className='tabler-moon-stars' />
                     Dark
                   </MenuItem>
                   <MenuItem
                     className='gap-3'
-                    onClick={() => handleModeSwitch('system')}
-                    selected={settings.mode === 'system'}
+                    onClick={() => handleModeSwitch("system")}
+                    selected={settings.mode === "system"}
                   >
                     <i className='tabler-device-laptop' />
                     System
@@ -117,7 +117,7 @@ const ModeDropdown = () => {
         )}
       </Popper>
     </>
-  )
-}
+  );
+};
 
-export default ModeDropdown
+export default ModeDropdown;

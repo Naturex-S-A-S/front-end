@@ -1,11 +1,11 @@
-import CustomBox from '@/@core/components/mui/Box'
-import Create from '@/views/order/create'
-import List from '@/views/pages/produccion/ordenes/list'
+import CustomBox from "@/@core/components/mui/Box";
+import Create from "@/views/order/create";
+import List from "@/views/pages/produccion/ordenes/list";
 
 export const metadata = {
-  title: 'Órdenes - Naturex',
-  description: ''
-}
+  title: "Órdenes - Naturex",
+  description: ""
+};
 
 const OrderPage = () => {
   return (
@@ -13,7 +13,7 @@ const OrderPage = () => {
       <Create />
       <List />
     </CustomBox>
-  )
-}
+  );
+};
 
-export default OrderPage
+export default OrderPage;

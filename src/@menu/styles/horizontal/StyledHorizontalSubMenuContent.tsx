@@ -1,8 +1,8 @@
 // Third-party Imports
-import styled from '@emotion/styled'
+import styled from "@emotion/styled";
 
 // Type Imports
-import type { SubMenuContentProps } from '../../components/horizontal-menu/SubMenuContent'
+import type { SubMenuContentProps } from "../../components/horizontal-menu/SubMenuContent";
 
 const StyledHorizontalSubMenuContent = styled.div<SubMenuContentProps>`
   inline-size: 260px;
@@ -16,6 +16,6 @@ const StyledHorizontalSubMenuContent = styled.div<SubMenuContentProps>`
   ${({ browserScroll, top }) =>
     browserScroll && `overflow-y: auto; max-block-size: calc((var(--vh, 1vh) * 100) - ${top}px);`}
   ${({ rootStyles }) => rootStyles};
-`
+`;
 
-export default StyledHorizontalSubMenuContent
+export default StyledHorizontalSubMenuContent;

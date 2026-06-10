@@ -1,27 +1,27 @@
-import { Grid } from '@mui/material'
+import { Grid } from "@mui/material";
 
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext } from "react-hook-form";
 
-import CustomTextField from '@/@core/components/mui/TextField'
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import { mockDocumentTypes } from '@/utils/mocks'
-import CustomButton from '@/@core/components/mui/Button'
-import TextFieldPassword from '@/components/layout/shared/TextFieldPassword'
-import useGetRoles from '@/hooks/role/useGetRoles'
+import CustomTextField from "@/@core/components/mui/TextField";
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import { mockDocumentTypes } from "@/utils/mocks";
+import CustomButton from "@/@core/components/mui/Button";
+import TextFieldPassword from "@/components/layout/shared/TextFieldPassword";
+import useGetRoles from "@/hooks/role/useGetRoles";
 
 type Props = {
-  isPending: boolean
-  isEdit?: boolean
-}
+  isPending: boolean;
+  isEdit?: boolean;
+};
 
 const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
-  const { data: roles } = useGetRoles()
+  const { data: roles } = useGetRoles();
 
   const {
     register,
     formState: { errors },
     control
-  }: any = useFormContext()
+  }: any = useFormContext();
 
   return (
     <Grid container spacing={4}>
@@ -36,7 +36,7 @@ const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
                   value={value}
                   options={mockDocumentTypes || []}
                   onChange={(e, value: any) => {
-                    onChange(value)
+                    onChange(value);
                   }}
                   renderInput={params => (
                     <CustomTextField
@@ -53,7 +53,7 @@ const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
           </Grid>
           <Grid item xs={12} md={4}>
             <CustomTextField
-              {...register('dni')}
+              {...register("dni")}
               disabled={isEdit}
               autoFocus
               fullWidth
@@ -68,7 +68,7 @@ const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
 
       <Grid item xs={12} md={4}>
         <CustomTextField
-          {...register('name')}
+          {...register("name")}
           autoFocus
           fullWidth
           label='Nombres'
@@ -79,7 +79,7 @@ const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
       </Grid>
       <Grid item xs={12} md={4}>
         <CustomTextField
-          {...register('lastName')}
+          {...register("lastName")}
           autoFocus
           fullWidth
           label='Apellidos'
@@ -90,7 +90,7 @@ const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
       </Grid>
       <Grid item xs={12} md={4}>
         <CustomTextField
-          {...register('email')}
+          {...register("email")}
           autoFocus
           fullWidth
           label='Correo'
@@ -101,7 +101,7 @@ const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
       </Grid>
       <Grid item xs={12} md={4}>
         <CustomTextField
-          {...register('address')}
+          {...register("address")}
           autoFocus
           fullWidth
           label='Direccion'
@@ -112,7 +112,7 @@ const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
       </Grid>
       <Grid item xs={12} md={4}>
         <CustomTextField
-          {...register('phone')}
+          {...register("phone")}
           autoFocus
           fullWidth
           label='Telefono'
@@ -130,7 +130,7 @@ const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
               value={value}
               options={roles?.map(role => ({ label: role.name, value: role.id })) || []}
               onChange={(e, value: any) => {
-                onChange(value)
+                onChange(value);
               }}
               renderInput={params => (
                 <CustomTextField
@@ -168,7 +168,7 @@ const Form: React.FC<Props> = ({ isPending, isEdit = false }) => {
         <CustomButton text='Guardar' type='submit' isLoading={isPending} />
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default Form
+export default Form;

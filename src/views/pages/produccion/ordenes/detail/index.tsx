@@ -1,4 +1,4 @@
-import type { Theme } from '@mui/material'
+import type { Theme } from "@mui/material";
 import {
   Box,
   Card,
@@ -13,31 +13,31 @@ import {
   TableRow,
   Typography,
   useMediaQuery
-} from '@mui/material'
+} from "@mui/material";
 
-import classNames from 'classnames'
+import classNames from "classnames";
 
-import { formatDate } from '@/utils/format'
-import type { IOrder } from '@/types/pages/order'
-import Adjustment from './adjustment'
-import { STATUS_COLOR, STATUS_LABEL } from '@/utils/constant'
+import { formatDate } from "@/utils/format";
+import type { IOrder } from "@/types/pages/order";
+import Adjustment from "./adjustment";
+import { STATUS_COLOR, STATUS_LABEL } from "@/utils/constant";
 
 interface Props {
-  order: IOrder
+  order: IOrder;
 }
 
 const Detail: React.FC<Props> = ({ order }) => {
-  const isBelowMdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
-  const isBelowSmScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'))
+  const isBelowMdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
+  const isBelowSmScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 
   const getCardClass = () =>
     classNames({
-      '[&:nth-of-type(odd)>div]:pie-6 [&:nth-of-type(odd)>div]:border-ie': isBelowMdScreen && !isBelowSmScreen,
-      '[&:not(:last-child)>div]:pie-6 [&:not(:last-child)>div]:border-ie': !isBelowMdScreen
-    })
+      "[&:nth-of-type(odd)>div]:pie-6 [&:nth-of-type(odd)>div]:border-ie": isBelowMdScreen && !isBelowSmScreen,
+      "[&:not(:last-child)>div]:pie-6 [&:not(:last-child)>div]:border-ie": !isBelowMdScreen
+    });
 
-  const totalQuantityG = order.details?.reduce((a, b) => a + b.quantity, 0) ?? 0
-  const totalQuantityTotal = order.details?.reduce((a, b) => a + b.quantityTotal, 0) ?? 0
+  const totalQuantityG = order.details?.reduce((a, b) => a + b.quantity, 0) ?? 0;
+  const totalQuantityTotal = order.details?.reduce((a, b) => a + b.quantityTotal, 0) ?? 0;
 
   return (
     <Grid container spacing={4}>
@@ -55,7 +55,7 @@ const Detail: React.FC<Props> = ({ order }) => {
                 </Box>
                 <Chip
                   label={STATUS_LABEL[order.status] ?? order.status}
-                  color={STATUS_COLOR[order.status] ?? 'default'}
+                  color={STATUS_COLOR[order.status] ?? "default"}
                   size='small'
                 />
               </Box>
@@ -71,7 +71,7 @@ const Detail: React.FC<Props> = ({ order }) => {
                     <Typography
                       variant='body2'
                       fontWeight={600}
-                      sx={{ whiteSpace: 'normal', wordBreak: 'break-word', overflowWrap: 'anywhere' }}
+                      sx={{ whiteSpace: "normal", wordBreak: "break-word", overflowWrap: "anywhere" }}
                     >
                       {order.userFullName}
                     </Typography>
@@ -98,7 +98,7 @@ const Detail: React.FC<Props> = ({ order }) => {
                     Fecha de vencimiento
                   </Typography>
                   <Typography variant='body2' fontWeight={600}>
-                    {order.dateExpiration ? formatDate(order.dateExpiration) : '-'}
+                    {order.dateExpiration ? formatDate(order.dateExpiration) : "-"}
                   </Typography>
                 </Box>
                 <Box display='flex' justifyContent='space-between'>
@@ -106,7 +106,7 @@ const Detail: React.FC<Props> = ({ order }) => {
                     Fecha de creación
                   </Typography>
                   <Typography variant='body2' fontWeight={600}>
-                    {order.dateCreated ? formatDate(order.dateCreated) : '-'}
+                    {order.dateCreated ? formatDate(order.dateCreated) : "-"}
                   </Typography>
                 </Box>
                 {order.dateClosed && (
@@ -137,11 +137,11 @@ const Detail: React.FC<Props> = ({ order }) => {
                   <Box sx={{ flex: 1, minWidth: 0 }}>
                     <Typography
                       variant='body2'
-                      sx={{ whiteSpace: 'normal', wordBreak: 'break-word', overflowWrap: 'anywhere' }}
+                      sx={{ whiteSpace: "normal", wordBreak: "break-word", overflowWrap: "anywhere" }}
                     >
                       {item.finalProduct.name}
                     </Typography>
-                    <Typography variant='caption' color='textSecondary' sx={{ display: 'block' }}></Typography>
+                    <Typography variant='caption' color='textSecondary' sx={{ display: "block" }}></Typography>
                   </Box>
                   <Box display='flex' gap={1} sx={{ flexShrink: 0 }}>
                     <Chip label={`${item.quantityU} u`} size='small' color='primary' variant='outlined' />
@@ -223,17 +223,17 @@ const Detail: React.FC<Props> = ({ order }) => {
                   <TableBody>
                     {!order.details?.length ? (
                       <TableRow>
-                        <TableCell colSpan={5} sx={{ textAlign: 'center' }}>
+                        <TableCell colSpan={5} sx={{ textAlign: "center" }}>
                           Sin materiales registrados
                         </TableCell>
                       </TableRow>
                     ) : (
                       order.details.map(item => (
-                        <TableRow key={item.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                        <TableRow key={item.id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                           <TableCell>{item.idMaterial}</TableCell>
                           <TableCell>{item.nameMaterial}</TableCell>
                           <TableCell>
-                            <Chip label={item.typeMaterial.replace('_', ' ')} size='small' variant='outlined' />
+                            <Chip label={item.typeMaterial.replace("_", " ")} size='small' variant='outlined' />
                           </TableCell>
                           <TableCell>{item.quantity}</TableCell>
                           <TableCell>{item.quantityTotal}</TableCell>
@@ -258,7 +258,7 @@ const Detail: React.FC<Props> = ({ order }) => {
         />
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default Detail
+export default Detail;

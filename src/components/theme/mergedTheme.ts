@@ -7,23 +7,23 @@
  */
 
 // MUI Imports
-import { deepmerge } from '@mui/utils'
-import type { Theme } from '@mui/material/styles'
+import { deepmerge } from "@mui/utils";
+import type { Theme } from "@mui/material/styles";
 
 // Type Imports
-import type { Settings } from '@core/contexts/settingsContext'
-import type { SystemMode } from '@core/types'
+import type { Settings } from "@core/contexts/settingsContext";
+import type { SystemMode } from "@core/types";
 
 // Core Theme Imports
-import coreTheme from '@core/theme'
+import coreTheme from "@core/theme";
 
-const mergedTheme = (settings: Settings, mode: SystemMode, direction: Theme['direction']) => {
+const mergedTheme = (settings: Settings, mode: SystemMode, direction: Theme["direction"]) => {
   // Vars
   const userTheme = {
     // Write your overrides here.
-  } as Theme
+  } as Theme;
 
-  return deepmerge(coreTheme(settings, mode, direction), userTheme)
-}
+  return deepmerge(coreTheme(settings, mode, direction), userTheme);
+};
 
-export default mergedTheme
+export default mergedTheme;

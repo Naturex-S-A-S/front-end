@@ -1,4 +1,4 @@
-import type { Theme } from '@mui/material'
+import type { Theme } from "@mui/material";
 import {
   Box,
   Card,
@@ -13,26 +13,26 @@ import {
   TableRow,
   Typography,
   useMediaQuery
-} from '@mui/material'
+} from "@mui/material";
 
-import classNames from 'classnames'
+import classNames from "classnames";
 
-import { formatDate } from '@/utils/format'
-import type { IOrderSupply } from '@/types/pages/order'
+import { formatDate } from "@/utils/format";
+import type { IOrderSupply } from "@/types/pages/order";
 
 interface Props {
-  orderSupply: IOrderSupply
+  orderSupply: IOrderSupply;
 }
 
 const Detail: React.FC<Props> = ({ orderSupply }) => {
-  const isBelowMdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
-  const isBelowSmScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'))
+  const isBelowMdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
+  const isBelowSmScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 
   const getCardClass = () =>
     classNames({
-      '[&:nth-of-type(odd)>div]:pie-6 [&:nth-of-type(odd)>div]:border-ie': isBelowMdScreen && !isBelowSmScreen,
-      '[&:not(:last-child)>div]:pie-6 [&:not(:last-child)>div]:border-ie': !isBelowMdScreen
-    })
+      "[&:nth-of-type(odd)>div]:pie-6 [&:nth-of-type(odd)>div]:border-ie": isBelowMdScreen && !isBelowSmScreen,
+      "[&:not(:last-child)>div]:pie-6 [&:not(:last-child)>div]:border-ie": !isBelowMdScreen
+    });
 
   return (
     <Grid container spacing={4}>
@@ -59,7 +59,7 @@ const Detail: React.FC<Props> = ({ orderSupply }) => {
                     <Typography
                       variant='body2'
                       fontWeight={600}
-                      sx={{ whiteSpace: 'normal', wordBreak: 'break-word', overflowWrap: 'anywhere' }}
+                      sx={{ whiteSpace: "normal", wordBreak: "break-word", overflowWrap: "anywhere" }}
                     >
                       {orderSupply.userName}
                     </Typography>
@@ -71,7 +71,7 @@ const Detail: React.FC<Props> = ({ orderSupply }) => {
                     Fecha de creación
                   </Typography>
                   <Typography variant='body2' fontWeight={600}>
-                    {orderSupply.dateCreated ? formatDate(orderSupply.dateCreated) : '-'}
+                    {orderSupply.dateCreated ? formatDate(orderSupply.dateCreated) : "-"}
                   </Typography>
                 </Box>
               </Box>
@@ -81,17 +81,11 @@ const Detail: React.FC<Props> = ({ orderSupply }) => {
               <Typography variant='h6'>Productos</Typography>
 
               {orderSupply.products?.map(product => (
-                <Box
-                  key={product.id}
-                  display='flex'
-                  justifyContent='space-between'
-                  alignItems='center'
-                  gap={2}
-                >
+                <Box key={product.id} display='flex' justifyContent='space-between' alignItems='center' gap={2}>
                   <Box sx={{ flex: 1, minWidth: 0 }}>
                     <Typography
                       variant='body2'
-                      sx={{ whiteSpace: 'normal', wordBreak: 'break-word', overflowWrap: 'anywhere' }}
+                      sx={{ whiteSpace: "normal", wordBreak: "break-word", overflowWrap: "anywhere" }}
                     >
                       {product.fullName}
                     </Typography>
@@ -161,13 +155,13 @@ const Detail: React.FC<Props> = ({ orderSupply }) => {
                   <TableBody>
                     {!orderSupply.materials?.length ? (
                       <TableRow>
-                        <TableCell colSpan={6} sx={{ textAlign: 'center' }}>
+                        <TableCell colSpan={6} sx={{ textAlign: "center" }}>
                           Sin materiales registrados
                         </TableCell>
                       </TableRow>
                     ) : (
                       orderSupply.materials.map(item => (
-                        <TableRow key={item.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                        <TableRow key={item.id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                           <TableCell>{item.id}</TableCell>
                           <TableCell>{item.name}</TableCell>
                           <TableCell>{item.quantityAvailable}</TableCell>
@@ -175,7 +169,7 @@ const Detail: React.FC<Props> = ({ orderSupply }) => {
                             <Chip
                               label={item.quantityMissing}
                               size='small'
-                              color={item.quantityMissing > 0 ? 'error' : 'success'}
+                              color={item.quantityMissing > 0 ? "error" : "success"}
                               variant='outlined'
                             />
                           </TableCell>
@@ -192,7 +186,7 @@ const Detail: React.FC<Props> = ({ orderSupply }) => {
         </Grid>
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default Detail
+export default Detail;

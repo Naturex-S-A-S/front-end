@@ -1,22 +1,22 @@
-import type { IPacking, IPostPacking, IPutPacking } from "@/types/pages/packing"
-import { API } from "../instances"
+import type { IPacking, IPostPacking, IPutPacking } from "@/types/pages/packing";
+import { API } from "../instances";
 
 export const postPacking = async (data: IPostPacking) => {
-    const response = await API().post("/packing", data)
+  const response = await API().post("/packing", data);
 
-    return response.data
-}
+  return response.data;
+};
 
 export const getPacking = async (): Promise<IPacking[]> => {
-    const response = await API().get("/packing")
+  const response = await API().get("/packing");
 
-    return response.data
-}
+  return response.data;
+};
 
 export const putPackingProduct = async (data: IPutPacking) => {
-    const { productId, ...rest } = data
+  const { productId, ...rest } = data;
 
-    const response = await API().put(`/packing/product/${productId}`, rest)
+  const response = await API().put(`/packing/product/${productId}`, rest);
 
-    return response.data
-}
+  return response.data;
+};

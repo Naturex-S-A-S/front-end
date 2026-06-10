@@ -1,5 +1,5 @@
 // React Imports
-import type { SVGAttributes } from 'react'
+import type { SVGAttributes } from "react";
 
 const LayoutVertical = (props: SVGAttributes<SVGElement>) => {
   return (
@@ -56,7 +56,7 @@ const LayoutVertical = (props: SVGAttributes<SVGElement>) => {
       <rect x='32.1523' y='19.6134' width='19.0455' height='17.6' rx='2' fill='currentColor' fillOpacity='0.08' />
       <rect x='32.1523' y='42.4545' width='65.1591' height='17.6' rx='2' fill='currentColor' fillOpacity='0.08' />
     </svg>
-  )
-}
+  );
+};
 
-export default LayoutVertical
+export default LayoutVertical;

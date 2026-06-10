@@ -1,7 +1,7 @@
 // MUI Imports
-import type { Theme } from '@mui/material/styles'
+import type { Theme } from "@mui/material/styles";
 
-const list: Theme['components'] = {
+const list: Theme["components"] = {
   MuiListItem: {
     styleOverrides: {
       root: ({ theme }) => ({
@@ -18,7 +18,7 @@ const list: Theme['components'] = {
   MuiListItemAvatar: {
     styleOverrides: {
       root: {
-        minInlineSize: 'unset'
+        minInlineSize: "unset"
       }
     }
   },
@@ -26,10 +26,10 @@ const list: Theme['components'] = {
     styleOverrides: {
       root: {
         minInlineSize: 0,
-        color: 'var(--mui-palette-text-primary)',
-        fontSize: '1.375rem',
-        '& > svg, & > i': {
-          fontSize: 'inherit'
+        color: "var(--mui-palette-text-primary)",
+        fontSize: "1.375rem",
+        "& > svg, & > i": {
+          fontSize: "inherit"
         }
       }
     }
@@ -42,16 +42,16 @@ const list: Theme['components'] = {
           paddingBlock: theme.spacing(2)
         }),
         paddingInlineStart: theme.spacing(5),
-        '&.Mui-selected': {
-          backgroundColor: 'var(--mui-palette-primary-lightOpacity)',
-          '&:hover, &.Mui-focused, &.Mui-focusVisible': {
-            backgroundColor: 'var(--mui-palette-primary-mainOpacity)'
+        "&.Mui-selected": {
+          backgroundColor: "var(--mui-palette-primary-lightOpacity)",
+          "&:hover, &.Mui-focused, &.Mui-focusVisible": {
+            backgroundColor: "var(--mui-palette-primary-mainOpacity)"
           },
-          '& .MuiTypography-root': {
-            color: 'var(--mui-palette-primary-main)'
+          "& .MuiTypography-root": {
+            color: "var(--mui-palette-primary-main)"
           },
-          '& + .MuiListItemSecondaryAction-root .MuiIconButton-root': {
-            color: 'var(--mui-palette-primary-main)'
+          "& + .MuiListItemSecondaryAction-root .MuiIconButton-root": {
+            color: "var(--mui-palette-primary-main)"
           }
         }
       })
@@ -63,7 +63,7 @@ const list: Theme['components'] = {
         margin: 0
       },
       primary: {
-        color: 'var(--mui-palette-text-primary)'
+        color: "var(--mui-palette-text-primary)"
       }
     }
   },
@@ -76,6 +76,6 @@ const list: Theme['components'] = {
       })
     }
   }
-}
+};
 
-export default list
+export default list;

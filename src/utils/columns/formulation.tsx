@@ -1,19 +1,19 @@
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
-import type { GridColDef } from '@mui/x-data-grid'
+import type { GridColDef } from "@mui/x-data-grid";
 
-import { Box, Chip, Tooltip } from '@mui/material'
+import { Box, Chip, Tooltip } from "@mui/material";
 
-import { ActionButton } from './components/ActionButton'
-import { formatDate } from '../format'
+import { ActionButton } from "./components/ActionButton";
+import { formatDate } from "../format";
 
 export const useColumns = (): GridColDef[] => {
-  const router = useRouter()
+  const router = useRouter();
 
   return [
     {
-      field: 'actions',
-      headerName: 'Acciones',
+      field: "actions",
+      headerName: "Acciones",
       width: 100,
       renderCell: params => {
         return (
@@ -21,47 +21,47 @@ export const useColumns = (): GridColDef[] => {
             icon='mdi:eye-outline'
             onClick={() => router.push(`/produccion/formulacion/detail/${params.row.id}`)}
           />
-        )
+        );
       }
     },
-    { field: 'name', headerName: 'Nombre', width: 150 },
+    { field: "name", headerName: "Nombre", width: 150 },
     {
-      field: 'activeVersion',
-      headerName: 'Version Actual',
+      field: "activeVersion",
+      headerName: "Version Actual",
       width: 120,
       renderCell: params => (
-        <Box className='flex justify-center items-center' style={{ height: '100%' }}>
+        <Box className='flex justify-center items-center' style={{ height: "100%" }}>
           {params.row.activeVersion && (
-            <Chip label={`v${params.row.activeVersion}`} color={'default'} variant='outlined' />
+            <Chip label={`v${params.row.activeVersion}`} color={"default"} variant='outlined' />
           )}
         </Box>
       )
     },
     {
-      field: 'totalVersions',
-      headerName: 'Total de versiones',
+      field: "totalVersions",
+      headerName: "Total de versiones",
       width: 150,
       renderCell: params => (
-        <Box className='flex justify-center items-center' style={{ height: '100%' }}>
+        <Box className='flex justify-center items-center' style={{ height: "100%" }}>
           {params.row.totalVersions}
         </Box>
       )
     },
     {
-      field: 'products',
-      headerName: 'Productos',
+      field: "products",
+      headerName: "Productos",
       width: 200,
       renderCell: params => {
-        const visible = params.row.products.slice(0, 1)
-        const remaining = params.row.products.slice(1)
+        const visible = params.row.products.slice(0, 1);
+        const remaining = params.row.products.slice(1);
 
         return (
-          <div className='flex gap-2 justify-center items-center' style={{ height: '100%' }}>
+          <div className='flex gap-2 justify-center items-center' style={{ height: "100%" }}>
             {visible.map((category: any) => (
               <Tooltip key={category.id ?? category.name} title={category.name}>
                 <Chip
                   key={category.id ?? category.name}
-                  label={`${category.name.slice(0, 10)} ${category.name.length > 10 ? '...' : ''}`}
+                  label={`${category.name.slice(0, 10)} ${category.name.length > 10 ? "..." : ""}`}
                   variant='outlined'
                 />
               </Tooltip>
@@ -81,14 +81,14 @@ export const useColumns = (): GridColDef[] => {
               </Tooltip>
             )}
           </div>
-        )
+        );
       }
     },
     {
-      field: 'dateCreated',
-      headerName: 'Fecha de movimiento',
+      field: "dateCreated",
+      headerName: "Fecha de movimiento",
       width: 150,
       renderCell: params => formatDate(params.row.dateCreated)
     }
-  ]
-}
+  ];
+};

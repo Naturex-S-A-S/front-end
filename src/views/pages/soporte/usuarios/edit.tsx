@@ -1,66 +1,66 @@
-'use client'
+"use client";
 
-import { useEffect } from 'react'
+import { useEffect } from "react";
 
-import { Box } from '@mui/material'
+import { Box } from "@mui/material";
 
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm } from "react-hook-form";
 
-import { yupResolver } from '@hookform/resolvers/yup'
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
-import { useAbility } from '@/hooks/casl/useAbility'
-import CustomDialog from '@/@core/components/mui/Dialog'
-import { updateUserSchema } from '@/utils/schemas/user'
-import { defaultUserValues } from '@/utils/defaultValues/user'
-import { putUser } from '@/api/user'
-import Form from './form'
-import { mockDocumentTypes } from '@/utils/mocks'
-import { alertMessageErrors } from '@/utils/messages'
+import { useAbility } from "@/hooks/casl/useAbility";
+import CustomDialog from "@/@core/components/mui/Dialog";
+import { updateUserSchema } from "@/utils/schemas/user";
+import { defaultUserValues } from "@/utils/defaultValues/user";
+import { putUser } from "@/api/user";
+import Form from "./form";
+import { mockDocumentTypes } from "@/utils/mocks";
+import { alertMessageErrors } from "@/utils/messages";
 
 type Props = {
-  open: boolean
-  toogleDialog: () => void
-  defaultValues: any
-}
+  open: boolean;
+  toogleDialog: () => void;
+  defaultValues: any;
+};
 
 const Edit: React.FC<Props> = ({ open, toogleDialog, defaultValues }) => {
-  const queryClient = useQueryClient()
-  const ability = useAbility()
+  const queryClient = useQueryClient();
+  const ability = useAbility();
 
   const methods = useForm({
     defaultValues: defaultUserValues,
-    reValidateMode: 'onChange',
+    reValidateMode: "onChange",
     resolver: yupResolver(updateUserSchema)
-  })
+  });
 
-  const { handleSubmit } = methods
+  const { handleSubmit } = methods;
 
   const { mutate, isPending } = useMutation({
     mutationFn: putUser,
     onSuccess: () => {
-      toast.success('Usuario actualizado con éxito')
-      queryClient.invalidateQueries({ queryKey: ['getUsers'] })
-      toogleDialog()
+      toast.success("Usuario actualizado con éxito");
+      queryClient.invalidateQueries({ queryKey: ["getUsers"] });
+      toogleDialog();
     },
     onError: (error: any) => {
-      alertMessageErrors(error, 'Error al actualizar usuario')
+      alertMessageErrors(error, "Error al actualizar usuario");
     }
-  })
+  });
 
   const onSubmit = (values: any) => {
     mutate({
       ...values,
       dniType: values.dniType.value,
       roleId: values.roleId.value
-    })
-  }
+    });
+  };
 
   useEffect(() => {
-    if (!open) return
+    if (!open) return;
 
     methods.reset({
       ...defaultValues,
@@ -70,10 +70,10 @@ const Edit: React.FC<Props> = ({ open, toogleDialog, defaultValues }) => {
         label: defaultValues.role.name,
         roleName: defaultValues.role.name
       }
-    })
-  }, [defaultValues, methods, open])
+    });
+  }, [defaultValues, methods, open]);
 
-  if (!ability.can('update', 'Soporte', 'Usuarios')) return null
+  if (!ability.can("update", "Soporte", "Usuarios")) return null;
 
   return (
     <Box>
@@ -85,7 +85,7 @@ const Edit: React.FC<Props> = ({ open, toogleDialog, defaultValues }) => {
         </FormProvider>
       </CustomDialog>
     </Box>
-  )
-}
+  );
+};
 
-export default Edit
+export default Edit;

@@ -1,16 +1,16 @@
 // Third-party Imports
-import styled from '@emotion/styled'
-import type { CSSObject } from '@emotion/styled'
+import styled from "@emotion/styled";
+import type { CSSObject } from "@emotion/styled";
 
 // Config Imports
-import themeConfig from '@configs/themeConfig'
+import themeConfig from "@configs/themeConfig";
 
 // Util Imports
-import { verticalLayoutClasses } from '@layouts/utils/layoutClasses'
+import { verticalLayoutClasses } from "@layouts/utils/layoutClasses";
 
 type StyledFooterProps = {
-  overrideStyles?: CSSObject
-}
+  overrideStyles?: CSSObject;
+};
 
 const StyledFooter = styled.footer<StyledFooterProps>`
   &.${verticalLayoutClasses.footerContentCompact} {
@@ -43,13 +43,13 @@ const StyledFooter = styled.footer<StyledFooterProps>`
       & .${verticalLayoutClasses.footerContentWrapper} {
         pointer-events: auto;
         box-shadow: 0 3px 12px 0px rgb(var(--mui-mainColorChannels-lightShadow) / 0.14);
-        [data-mui-color-scheme='dark'] & {
+        [data-mui-color-scheme="dark"] & {
           box-shadow: 0 3px 12px 0px rgb(var(--mui-mainColorChannels-darkShadow) / 0.14);
         }
         border-start-start-radius: var(--border-radius);
         border-start-end-radius: var(--border-radius);
 
-        [data-skin='bordered'] & {
+        [data-skin="bordered"] & {
           box-shadow: none;
           border-inline: 1px solid var(--border-color);
           border-block-start: 1px solid var(--border-color);
@@ -59,10 +59,10 @@ const StyledFooter = styled.footer<StyledFooterProps>`
 
     &.${verticalLayoutClasses.footerAttached} {
       box-shadow: 0 3px 12px 0px rgb(var(--mui-mainColorChannels-lightShadow) / 0.14);
-      [data-mui-color-scheme='dark'] & {
+      [data-mui-color-scheme="dark"] & {
         box-shadow: 0 3px 12px 0px rgb(var(--mui-mainColorChannels-darkShadow) / 0.14);
       }
-      [data-skin='bordered'] & {
+      [data-skin="bordered"] & {
         box-shadow: none;
         border-block-start: 1px solid var(--border-color);
       }
@@ -75,6 +75,6 @@ const StyledFooter = styled.footer<StyledFooterProps>`
   }
 
   ${({ overrideStyles }) => overrideStyles}
-`
+`;
 
-export default StyledFooter
+export default StyledFooter;

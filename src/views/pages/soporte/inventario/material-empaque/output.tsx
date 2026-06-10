@@ -1,25 +1,25 @@
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm } from "react-hook-form";
 
-import { Grid } from '@mui/material'
+import { Grid } from "@mui/material";
 
-import { yupResolver } from '@hookform/resolvers/yup'
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import CustomTextField from '@/@core/components/mui/TextField'
-import { kardexPackagingOutputSchema } from '@/utils/schemas/inventory/output'
-import CustomButton from '@/@core/components/mui/Button'
-import { useAbility } from '@/hooks/casl/useAbility'
-import useKardexOutput from '@/hooks/packaging/kardex/useKardexOutput'
-import { ABILITY_FIELDS, ABILITY_SUBJECT } from '@/utils/constant'
-import useGetPackagingList from '@/hooks/packaging/useGetPackagingList'
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import CustomTextField from "@/@core/components/mui/TextField";
+import { kardexPackagingOutputSchema } from "@/utils/schemas/inventory/output";
+import CustomButton from "@/@core/components/mui/Button";
+import { useAbility } from "@/hooks/casl/useAbility";
+import useKardexOutput from "@/hooks/packaging/kardex/useKardexOutput";
+import { ABILITY_FIELDS, ABILITY_SUBJECT } from "@/utils/constant";
+import useGetPackagingList from "@/hooks/packaging/useGetPackagingList";
 
 const Output = () => {
-  const { mutateAsync, isPending } = useKardexOutput()
-  const { packagingList } = useGetPackagingList()
+  const { mutateAsync, isPending } = useKardexOutput();
+  const { packagingList } = useGetPackagingList();
 
-  const ability = useAbility()
+  const ability = useAbility();
 
-  const canReadSalidas = ability.can('create', ABILITY_SUBJECT.PACKAGING, ABILITY_FIELDS.SALIDAS)
+  const canReadSalidas = ability.can("create", ABILITY_SUBJECT.PACKAGING, ABILITY_FIELDS.SALIDAS);
 
   const methods = useForm({
     defaultValues: {
@@ -27,9 +27,9 @@ const Output = () => {
       quantity: undefined,
       batch: undefined
     },
-    mode: 'onBlur',
+    mode: "onBlur",
     resolver: yupResolver(kardexPackagingOutputSchema)
-  })
+  });
 
   const {
     handleSubmit,
@@ -37,19 +37,19 @@ const Output = () => {
     control,
     formState: { errors },
     reset
-  } = methods
+  } = methods;
 
   const onSubmit = (values: any) => {
     const req = {
       batch: values.batch,
       idMaterial: values.material.id,
       quantity: Number(values.quantity)
-    }
+    };
 
     mutateAsync(req).then(() => {
-      reset()
-    })
-  }
+      reset();
+    });
+  };
 
   return (
     <div>
@@ -64,7 +64,7 @@ const Output = () => {
                   value={value}
                   options={packagingList || []}
                   onChange={(e, value: any) => {
-                    onChange(value)
+                    onChange(value);
                   }}
                   renderInput={params => (
                     <CustomTextField
@@ -81,7 +81,7 @@ const Output = () => {
           </Grid>
           <Grid item xs={12} sm={6} lg={4}>
             <CustomTextField
-              {...register('batch')}
+              {...register("batch")}
               label='Lote'
               placeholder='Ingrese el lote'
               error={!!errors.batch}
@@ -91,7 +91,7 @@ const Output = () => {
 
           <Grid item xs={12} sm={6} lg={2}>
             <CustomTextField
-              {...register('quantity')}
+              {...register("quantity")}
               fullWidth
               label='Cantidad'
               placeholder='Ingrese la cantidad'
@@ -122,7 +122,7 @@ const Output = () => {
         </Grid>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Output
+export default Output;

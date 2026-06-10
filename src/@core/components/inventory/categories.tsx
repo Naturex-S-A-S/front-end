@@ -1,50 +1,50 @@
-import { useState, type FC } from 'react'
+import { useState, type FC } from "react";
 
-import { Icon } from '@iconify/react'
+import { Icon } from "@iconify/react";
 
-import { Chip, Grid, Stack } from '@mui/material'
+import { Chip, Grid, Stack } from "@mui/material";
 
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm } from "react-hook-form";
 
-import CustomButton from '@/@core/components/mui/Button'
-import CustomCard from '@/@core/components/mui/Card'
-import CustomDialog from '@/@core/components/mui/Dialog'
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import CustomTextField from '@/@core/components/mui/TextField'
+import CustomButton from "@/@core/components/mui/Button";
+import CustomCard from "@/@core/components/mui/Card";
+import CustomDialog from "@/@core/components/mui/Dialog";
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import CustomTextField from "@/@core/components/mui/TextField";
 
 interface Props {
   data: {
-    id: string
-    name: string
-  }[]
+    id: string;
+    name: string;
+  }[];
   list: {
-    id: string
-    name: string
-  }[]
-  update: (newCategories: string[]) => void
-  isPending?: boolean
+    id: string;
+    name: string;
+  }[];
+  update: (newCategories: string[]) => void;
+  isPending?: boolean;
 }
 
 const Categories: FC<Props> = ({ data, list, update, isPending }) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
       category: null
     }
-  })
+  });
 
-  const toogleDialog = () => setOpen(!open)
+  const toogleDialog = () => setOpen(!open);
 
   const handleAdd = (values: any) => {
-    update(data.map(item => item.id).concat(values.category.id))
-    reset()
-    toogleDialog()
-  }
+    update(data.map(item => item.id).concat(values.category.id));
+    reset();
+    toogleDialog();
+  };
 
   const handleDelete = (id: string) => {
-    update(data.filter(item => item.id !== id).map(item => item.id))
-  }
+    update(data.filter(item => item.id !== id).map(item => item.id));
+  };
 
   return (
     <CustomCard
@@ -81,7 +81,7 @@ const Categories: FC<Props> = ({ data, list, update, isPending }) => {
                     value={value}
                     options={list}
                     onChange={(e, value: any) => {
-                      onChange(value)
+                      onChange(value);
                     }}
                     renderInput={params => (
                       <CustomTextField {...params} label='Categoria' placeholder='Seleccione una categoria' />
@@ -90,7 +90,7 @@ const Categories: FC<Props> = ({ data, list, update, isPending }) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} display={'flex'} justifyContent={'center'}>
+            <Grid item xs={12} display={"flex"} justifyContent={"center"}>
               <CustomButton size='small' type='submit'>
                 Agregar
               </CustomButton>
@@ -99,7 +99,7 @@ const Categories: FC<Props> = ({ data, list, update, isPending }) => {
         </form>
       </CustomDialog>
     </CustomCard>
-  )
-}
+  );
+};
 
-export default Categories
+export default Categories;

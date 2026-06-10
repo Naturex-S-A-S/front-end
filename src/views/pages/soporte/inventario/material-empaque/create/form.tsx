@@ -1,31 +1,31 @@
-import { Grid } from '@mui/material'
+import { Grid } from "@mui/material";
 
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext } from "react-hook-form";
 
-import CustomButton from '@/@core/components/mui/Button'
-import CustomTextField from '@/@core/components/mui/TextField'
-import useGetCategory from '@/hooks/packaging/useGetCategory'
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
+import CustomButton from "@/@core/components/mui/Button";
+import CustomTextField from "@/@core/components/mui/TextField";
+import useGetCategory from "@/hooks/packaging/useGetCategory";
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
 
 type Props = {
-  isPending: boolean
-  isEdit?: boolean
-}
+  isPending: boolean;
+  isEdit?: boolean;
+};
 
 const Form: React.FC<Props> = ({ isPending }) => {
-  const { categories } = useGetCategory()
+  const { categories } = useGetCategory();
 
   const {
     register,
     formState: { errors },
     control
-  }: any = useFormContext()
+  }: any = useFormContext();
 
   return (
     <Grid container spacing={4}>
       <Grid item xs={12} md={6}>
         <CustomTextField
-          {...register('name')}
+          {...register("name")}
           autoFocus
           fullWidth
           label='Nombre'
@@ -44,7 +44,7 @@ const Form: React.FC<Props> = ({ isPending }) => {
               multiple
               options={categories}
               onChange={(e, value: any) => {
-                onChange(value)
+                onChange(value);
               }}
               renderInput={params => (
                 <CustomTextField {...params} label='Categoria' placeholder='Seleccione una categoria' />
@@ -55,7 +55,7 @@ const Form: React.FC<Props> = ({ isPending }) => {
       </Grid>
       <Grid item xs={12} md={6}>
         <CustomTextField
-          {...register('minimumStandard')}
+          {...register("minimumStandard")}
           autoFocus
           fullWidth
           type='number'
@@ -67,7 +67,7 @@ const Form: React.FC<Props> = ({ isPending }) => {
       </Grid>
       <Grid item xs={12} md={6}>
         <CustomTextField
-          {...register('color')}
+          {...register("color")}
           autoFocus
           fullWidth
           label='Color'
@@ -81,7 +81,7 @@ const Form: React.FC<Props> = ({ isPending }) => {
         <CustomButton text='Guardar' type='submit' isLoading={isPending} />
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default Form
+export default Form;

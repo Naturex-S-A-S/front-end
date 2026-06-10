@@ -1,5 +1,5 @@
 // React Imports
-import type { SVGAttributes } from 'react'
+import type { SVGAttributes } from "react";
 
 const LayoutHorizontal = (props: SVGAttributes<SVGElement>) => {
   return (
@@ -39,7 +39,7 @@ const LayoutHorizontal = (props: SVGAttributes<SVGElement>) => {
         fillOpacity='0.3'
       />
     </svg>
-  )
-}
+  );
+};
 
-export default LayoutHorizontal
+export default LayoutHorizontal;

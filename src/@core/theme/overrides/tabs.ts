@@ -1,50 +1,50 @@
 // MUI Imports
-import type { Theme } from '@mui/material/styles'
+import type { Theme } from "@mui/material/styles";
 
-const tabs: Theme['components'] = {
+const tabs: Theme["components"] = {
   MuiTabs: {
     styleOverrides: {
       root: ({ theme, ownerState }) => ({
         minBlockSize: 38,
-        ...(ownerState.orientation === 'horizontal'
+        ...(ownerState.orientation === "horizontal"
           ? {
-              borderBlockEnd: '1px solid var(--mui-palette-divider)'
+              borderBlockEnd: "1px solid var(--mui-palette-divider)"
             }
           : {
-              borderInlineEnd: '1px solid var(--mui-palette-divider)'
+              borderInlineEnd: "1px solid var(--mui-palette-divider)"
             }),
-        '& .MuiTab-root:hover': {
-          ...(ownerState.orientation === 'horizontal'
+        "& .MuiTab-root:hover": {
+          ...(ownerState.orientation === "horizontal"
             ? {
                 paddingBlockEnd: theme.spacing(1.5),
-                ...(ownerState.textColor === 'secondary'
+                ...(ownerState.textColor === "secondary"
                   ? {
-                      color: 'var(--mui-palette-secondary-main)',
-                      borderBlockEnd: '2px solid var(--mui-palette-secondary-lightOpacity)'
+                      color: "var(--mui-palette-secondary-main)",
+                      borderBlockEnd: "2px solid var(--mui-palette-secondary-lightOpacity)"
                     }
                   : {
-                      color: 'var(--mui-palette-primary-main)',
-                      borderBlockEnd: '2px solid var(--mui-palette-primary-lightOpacity)'
+                      color: "var(--mui-palette-primary-main)",
+                      borderBlockEnd: "2px solid var(--mui-palette-primary-lightOpacity)"
                     })
               }
             : {
                 paddingInlineEnd: theme.spacing(4.5),
-                ...(ownerState.textColor === 'secondary'
+                ...(ownerState.textColor === "secondary"
                   ? {
-                      color: 'var(--mui-palette-secondary-main)',
-                      borderInlineEnd: '2px solid var(--mui-palette-secondary-mainOpacity)'
+                      color: "var(--mui-palette-secondary-main)",
+                      borderInlineEnd: "2px solid var(--mui-palette-secondary-mainOpacity)"
                     }
                   : {
-                      color: 'var(--mui-palette-primary-main)',
-                      borderInlineEnd: '2px solid var(--mui-palette-primary-mainOpacity)'
+                      color: "var(--mui-palette-primary-main)",
+                      borderInlineEnd: "2px solid var(--mui-palette-primary-mainOpacity)"
                     })
               }),
-          '& .MuiTabScrollButton-root': {
-            borderRadius: 'var(--mui-shape-borderRadius)'
+          "& .MuiTabScrollButton-root": {
+            borderRadius: "var(--mui-shape-borderRadius)"
           }
         },
-        '& ~ .MuiTabPanel-root': {
-          ...(ownerState.orientation === 'horizontal'
+        "& ~ .MuiTabPanel-root": {
+          ...(ownerState.orientation === "horizontal"
             ? {
                 paddingBlockStart: theme.spacing(6)
               }
@@ -55,7 +55,7 @@ const tabs: Theme['components'] = {
       }),
       vertical: {
         minWidth: 131,
-        '& .MuiTab-root': {
+        "& .MuiTab-root": {
           minWidth: 130
         }
       }
@@ -70,19 +70,19 @@ const tabs: Theme['components'] = {
         lineHeight: 1.4667,
         padding: theme.spacing(2, 5),
         minBlockSize: 38,
-        color: 'var(--mui-palette-text-primary)',
-        '& > .MuiTab-iconWrapper': {
-          fontSize: '1.125rem',
-          ...(ownerState.iconPosition === 'top' && {
+        color: "var(--mui-palette-text-primary)",
+        "& > .MuiTab-iconWrapper": {
+          fontSize: "1.125rem",
+          ...(ownerState.iconPosition === "top" && {
             marginBlockEnd: theme.spacing(1.5)
           }),
-          ...(ownerState.iconPosition === 'bottom' && {
+          ...(ownerState.iconPosition === "bottom" && {
             marginBlockStart: theme.spacing(1.5)
           }),
-          ...(ownerState.iconPosition === 'start' && {
+          ...(ownerState.iconPosition === "start" && {
             marginInlineEnd: theme.spacing(1.5)
           }),
-          ...(ownerState.iconPosition === 'end' && {
+          ...(ownerState.iconPosition === "end" && {
             marginInlineStart: theme.spacing(1.5)
           })
         }
@@ -96,6 +96,6 @@ const tabs: Theme['components'] = {
       }
     }
   }
-}
+};
 
-export default tabs
+export default tabs;

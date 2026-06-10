@@ -1,86 +1,86 @@
-'use client'
+"use client";
 
 // MUI Imports
-import { useState } from 'react'
+import { useState } from "react";
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
-import useMediaQuery from '@mui/material/useMediaQuery'
-import { styled, useTheme } from '@mui/material/styles'
-import Typography from '@mui/material/Typography'
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { styled, useTheme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 
 // Third-party Imports
-import classnames from 'classnames'
+import classnames from "classnames";
 
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
 // Type Imports
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm } from "react-hook-form";
 
-import { signIn } from 'next-auth/react'
+import { signIn } from "next-auth/react";
 
-import { yupResolver } from '@hookform/resolvers/yup'
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import type { SystemMode } from '@core/types'
+import type { SystemMode } from "@core/types";
 
 // Component Imports
-import Link from '@components/Link'
-import Logo from '@components/layout/shared/Logo'
-import CustomTextField from '@core/components/mui/TextField'
+import Link from "@components/Link";
+import Logo from "@components/layout/shared/Logo";
+import CustomTextField from "@core/components/mui/TextField";
 
 // Config Imports
-import themeConfig from '@configs/themeConfig'
+import themeConfig from "@configs/themeConfig";
 
 // Hook Imports
-import { useImageVariant } from '@core/hooks/useImageVariant'
-import { useSettings } from '@core/hooks/useSettings'
-import { loginSchema } from '@/utils/schemas/login'
-import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import { mockDocumentTypes } from '@/utils/mocks'
-import CustomButton from '@/@core/components/mui/Button'
-import TextFieldPassword from '@/components/layout/shared/TextFieldPassword'
+import { useImageVariant } from "@core/hooks/useImageVariant";
+import { useSettings } from "@core/hooks/useSettings";
+import { loginSchema } from "@/utils/schemas/login";
+import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import { mockDocumentTypes } from "@/utils/mocks";
+import CustomButton from "@/@core/components/mui/Button";
+import TextFieldPassword from "@/components/layout/shared/TextFieldPassword";
 
 // Styled Custom Components
-const LoginIllustration = styled('img')(({ theme }) => ({
+const LoginIllustration = styled("img")(({ theme }) => ({
   zIndex: 2,
-  blockSize: 'auto',
+  blockSize: "auto",
   maxBlockSize: 680,
-  maxInlineSize: '100%',
+  maxInlineSize: "100%",
   margin: theme.spacing(12),
   [theme.breakpoints.down(1536)]: {
     maxBlockSize: 550
   },
-  [theme.breakpoints.down('lg')]: {
+  [theme.breakpoints.down("lg")]: {
     maxBlockSize: 450
   }
-}))
+}));
 
-const MaskImg = styled('img')({
-  blockSize: 'auto',
+const MaskImg = styled("img")({
+  blockSize: "auto",
   maxBlockSize: 355,
-  inlineSize: '100%',
-  position: 'absolute',
+  inlineSize: "100%",
+  position: "absolute",
   insetBlockEnd: 0,
   zIndex: -1
-})
+});
 
 const LoginV2 = ({ mode }: { mode: SystemMode }) => {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   // Vars
-  const darkImg = '/images/pages/auth-mask-dark.png'
-  const lightImg = '/images/pages/auth-mask-light.png'
-  const darkIllustration = '/images/illustrations/auth/naturex-logo.avif'
-  const lightIllustration = '/images/illustrations/auth/naturex-logo.avif'
-  const borderedDarkIllustration = '/images/illustrations/auth/v2-login-dark-border.png'
-  const borderedLightIllustration = '/images/illustrations/auth/v2-login-light-border.png'
+  const darkImg = "/images/pages/auth-mask-dark.png";
+  const lightImg = "/images/pages/auth-mask-light.png";
+  const darkIllustration = "/images/illustrations/auth/naturex-logo.avif";
+  const lightIllustration = "/images/illustrations/auth/naturex-logo.avif";
+  const borderedDarkIllustration = "/images/illustrations/auth/v2-login-dark-border.png";
+  const borderedLightIllustration = "/images/illustrations/auth/v2-login-light-border.png";
 
   // Hooks
-  const { settings } = useSettings()
-  const theme = useTheme()
-  const hidden = useMediaQuery(theme.breakpoints.down('md'))
-  const authBackground = useImageVariant(mode, lightImg, darkImg)
+  const { settings } = useSettings();
+  const theme = useTheme();
+  const hidden = useMediaQuery(theme.breakpoints.down("md"));
+  const authBackground = useImageVariant(mode, lightImg, darkImg);
 
   const {
     handleSubmit,
@@ -96,7 +96,7 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
       password: undefined
     },
     resolver: yupResolver(loginSchema)
-  })
+  });
 
   const characterIllustration = useImageVariant(
     mode,
@@ -104,46 +104,46 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
     darkIllustration,
     borderedLightIllustration,
     borderedDarkIllustration
-  )
+  );
 
   const handleOnSubmit = async (values: any) => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
 
-      const params = new URLSearchParams(window.location.search)
-      const callbackUrl = params.get('callbackUrl') ?? '/home'
+      const params = new URLSearchParams(window.location.search);
+      const callbackUrl = params.get("callbackUrl") ?? "/home";
 
-      const res = await signIn('credentials', {
+      const res = await signIn("credentials", {
         document: values.document,
         password: values.password,
         documentType: values.documentType.value,
         redirect: false,
         callbackUrl
-      })
+      });
 
-      const redirectTo = res?.url
+      const redirectTo = res?.url;
 
       if (redirectTo) {
-        router.replace(redirectTo)
+        router.replace(redirectTo);
       } else {
-        toast.error('Credenciales incorrectas', {
+        toast.error("Credenciales incorrectas", {
           duration: 5000
-        })
+        });
       }
     } catch (error) {
-      console.error(error)
+      console.error(error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className='flex bs-full justify-center'>
       <div
         className={classnames(
-          'flex bs-full items-center justify-center flex-1 min-bs-[100dvh] relative p-6 max-md:hidden',
+          "flex bs-full items-center justify-center flex-1 min-bs-[100dvh] relative p-6 max-md:hidden",
           {
-            'border-ie': settings.skin === 'bordered'
+            "border-ie": settings.skin === "bordered"
           }
         )}
       >
@@ -152,7 +152,7 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
           <MaskImg
             alt='mask'
             src={authBackground}
-            className={classnames({ 'scale-x-[-1]': theme.direction === 'rtl' })}
+            className={classnames({ "scale-x-[-1]": theme.direction === "rtl" })}
           />
         )}
       </div>
@@ -174,7 +174,7 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
                   value={value}
                   options={mockDocumentTypes || []}
                   onChange={(e, value: any) => {
-                    onChange(value)
+                    onChange(value);
                   }}
                   renderInput={params => (
                     <CustomTextField
@@ -190,7 +190,7 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
             />
 
             <CustomTextField
-              {...register('document')}
+              {...register("document")}
               fullWidth
               label='Documento de identidad'
               placeholder='Ingrese su documento de identidad'
@@ -238,7 +238,7 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LoginV2
+export default LoginV2;
