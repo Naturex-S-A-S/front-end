@@ -3,15 +3,18 @@
 import CustomCard from "@/@core/components/mui/Card";
 import CustomDataGrid from "@/@core/components/mui/DataGrid";
 import { useColumns } from "@/utils/columns/supplier";
-import useGetProviders from "@/hooks/provider/useGetProviders";
+import type { IProvider } from "@/types/pages/financeAdministation";
 
-export default function List() {
-  const { providers, isLoading } = useGetProviders();
+interface Props {
+  initialData: IProvider[];
+}
+
+export default function List({ initialData }: Props) {
   const colDefs = useColumns();
 
   return (
     <CustomCard>
-      <CustomDataGrid columns={colDefs} data={providers} isLoading={isLoading} />
+      <CustomDataGrid columns={colDefs} data={initialData} />
     </CustomCard>
   );
 }

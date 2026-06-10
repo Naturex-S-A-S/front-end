@@ -1,5 +1,5 @@
 /* eslint-disable lines-around-comment */
-import { useState, type ChangeEvent } from "react";
+import { memo, useState, type ChangeEvent } from "react";
 
 // MUI
 import { DataGrid } from "@mui/x-data-grid";
@@ -104,4 +104,4 @@ const CustomDataGrid: React.FC<Props> = ({ columns, data, getRowClassName, isLoa
   );
 };
 
-export default CustomDataGrid;
+export default memo(CustomDataGrid);

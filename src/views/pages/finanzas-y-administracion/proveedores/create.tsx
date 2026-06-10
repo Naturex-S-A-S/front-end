@@ -1,13 +1,15 @@
 "use client";
 import { useState } from "react";
 
+import { useRouter } from "next/navigation";
+
 import { Box } from "@mui/material";
 
 import { FormProvider, useForm } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
 
@@ -23,7 +25,7 @@ import { postProvider } from "@/api/providers";
 
 const Create = () => {
   const [open, setOpen] = useState(false);
-  const queryClient = useQueryClient();
+  const router = useRouter();
   const ability = useAbility();
 
   const canCreateFormulation = ability.can(
@@ -47,7 +49,7 @@ const Create = () => {
     mutationFn: postProvider,
     onSuccess: () => {
       toast.success("Proveedor creado con éxito");
-      queryClient.invalidateQueries({ queryKey: ["getProviders"] });
+      router.refresh();
       reset();
       toogleDialog();
     },
