@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getCategories } from "@/api/packaging";
+import { getCategoriesPackaging } from "@/api/general-parameters/categories-packaging";
 
 const useGetCategory = () => {
     const { data: categories, isLoading } = useQuery({
-        queryKey: ['getCategories'],
-        queryFn: getCategories
+        queryKey: ['getCategoriesPackaging'],
+        queryFn: getCategoriesPackaging
     })
 
     return {

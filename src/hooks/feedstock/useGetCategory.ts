@@ -4,7 +4,7 @@ import { getCategoriesFeedstock } from "@/api/general-parameters/categories-feed
 
 const useGetCategory = () => {
     const { data: categories, isLoading } = useQuery({
-        queryKey: ['getCategories'],
+        queryKey: ['getCategoriesFeedstock'],
         queryFn: getCategoriesFeedstock
     })
 
