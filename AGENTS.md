@@ -100,6 +100,138 @@ pnpm build:icons  # compile Iconify icons → src/assets/iconify-icons/generated
 - `files.insertFinalNewline: true`
 - `typescript.tsdk` points to local `node_modules/typescript/lib`
 
+## SSR / Suspense Refactoring Pattern
+
+Use this recipe to convert a page from Client Component (React Query) to Server Component with Suspense streaming.
+
+### 1. Create a server fetch function
+
+File: `src/api/<domain>/server.ts`
+```ts
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/nextAuthOptions'
+
+export async function get<Domain>Server(tags?: string[]) {
+  const session = await getServerSession(authOptions)
+  const res = await fetch(`${process.env.API_BASE_URL}/<endpoint>`, {
+    headers: { Authorization: `Bearer ${session?.access_token}` },
+    next: { tags }    // for on-demand revalidation with revalidateTag()
+  })
+  if (!res.ok) throw new Error(`Failed to fetch <domain>: ${res.status}`)
+  return res.json()
+}
+```
+
+**Rules:**
+- Use native `fetch` + `getServerSession` (NOT axios, NOT `ApiServer` helper, NOT `cache: 'no-store'`)
+- The path alias is `@/api/...` not `@api/...`
+- Type the return with a generic or explicit type
+
+### 2. Create a shared TableSkeleton (if not exists)
+
+File: `src/@core/components/table-skeleton.tsx`
+```tsx
+export default function TableSkeleton() {
+  return (
+    <div className='animate-pulse space-y-3 p-4'>
+      <div className='h-10 w-full rounded bg-gray-200' />
+      <div className='h-8 w-full rounded bg-gray-200' />
+      <div className='h-8 w-3/4 rounded bg-gray-200' />
+    </div>
+  )
+}
+```
+
+**Rules:**
+- Pure Server Component (NO `"use client"`)
+- Use Tailwind `animate-pulse`
+
+### 3. Refactor the page
+
+File: `src/app/(dashboard)/<route>/page.tsx`
+```tsx
+import { Suspense } from 'react'
+
+import CustomBox from '@/@core/components/mui/Box'
+import Create from '@/views/pages/<route>/create'
+import List from '@/views/pages/<route>/list'
+import { get<Domain>Server } from '@/api/<domain>/server'
+import TableSkeleton from '@/@core/components/table-skeleton'
+
+export const metadata = {
+  title: '...',
+  description: '...'
+}
+
+const Page = () => {             // ← MUST be sync (no async)
+  return (
+    <CustomBox title='...'>
+      <Create />
+      <Suspense fallback={<TableSkeleton />}>
+        <DataFetcher />
+      </Suspense>
+    </CustomBox>
+  )
+}
+
+async function DataFetcher() {
+  const data = await get<Domain>Server()
+  return <List initialData={data} />
+}
+
+export default Page
+```
+
+**Rules:**
+- `Page` MUST be sync (no `async`). Only the inner Server Component (`DataFetcher`) is async. An async page makes Next.js block the entire response until the page promise resolves, defeating Suspense streaming.
+- Metadata (`title`, `description`) exported as static object.
+- The `Create` button renders immediately (even if it's a Client Component — it streams via SSR).
+- `List` accepts `initialData` prop instead of calling `useGet<Domain>()` internally.
+
+### 4. Modify the List component
+
+File: `src/views/pages/<route>/list/index.tsx`
+```diff
+- import { useGet<Domain>() } from '@/api/<domain>'
++ // `initialData` is provided by the parent Server Component
+- const { data } = useGet<Domain>()
+- const rows = data || []
++ const rows = initialData || []
+```
+
+- Accept `initialData` prop (typed as the API response type).
+- Remove React Query hook call.
+- Keep `"use client"` if the component uses client hooks (`useRouter`, `useAbility`, etc.).
+
+### 5. Modify the Create component (if needed)
+
+File: `src/views/pages/<route>/create.tsx`
+
+On successful mutation:
+```diff
+- queryClient.invalidateQueries({ queryKey: ['<domain>'] })
++ router.refresh()    // re-fetches the Server Component tree
+```
+
+- Replace `invalidateQueries` with `router.refresh()` from `next/navigation`.
+- Keeps the form as a Client Component.
+
+### 6. Verification
+
+```bash
+npx tsc --noEmit     # type-check (pnpm lint fails due to ESLint cache EACCES)
+pnpm format          # Prettier
+pnpm dev             # manual smoke test — confirm fallback skeleton appears immediately
+```
+
+### Pages converted so far
+
+| Page | Server fetch | Status |
+|---|---|---|
+| `/home` | inline | Done |
+| `/produccion/empaque` | `src/api/packing/server.ts` | Done |
+| `/finanzas-y-administracion/proveedores` | `src/api/providers/server.ts` | Done |
+
 ## Key quirks
 
 - **Iconify icons:** custom build step — icons are compiled from `src/assets/iconify-icons/bundle-icons-css.ts` into CSS. Run `pnpm build:icons` or `pnpm install` to regenerate.
