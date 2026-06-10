@@ -161,9 +161,11 @@ const Detail: React.FC<IProps> = ({ product }) => {
         <CustomCard
           title='Materiales de empaque'
           action={
-            <IconButton onClick={() => setOpenEditPackagings(true)}>
-              <Icon icon='mdi:pencil' />
-            </IconButton>
+            product.packagings?.length > 0 && (
+              <IconButton onClick={() => setOpenEditPackagings(true)}>
+                <Icon icon='mdi:pencil' />
+              </IconButton>
+            )
           }
         >
           <PackagingsList list={product.packagings ?? []} />

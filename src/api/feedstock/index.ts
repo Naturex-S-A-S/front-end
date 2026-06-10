@@ -42,12 +42,6 @@ export const patchFeedstock = async (id: number, data: any) => {
     return response.data
 }
 
-export const getCategories = async () => {
-    const response = await API().get("/feedstock/category")
-
-    return response.data
-}
-
 export const getFeedstockList = async () => {
     const response = await API().get("/feedstock/list")
 

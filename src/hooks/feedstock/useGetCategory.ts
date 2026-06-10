@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getCategories } from "@/api/feedstock";
+import { getCategoriesFeedstock } from "@/api/general-parameters/categories-feedstock";
 
 const useGetCategory = () => {
     const { data: categories, isLoading } = useQuery({
         queryKey: ['getCategories'],
-        queryFn: getCategories
+        queryFn: getCategoriesFeedstock
     })
 
     return {

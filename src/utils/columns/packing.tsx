@@ -27,16 +27,6 @@ export const useColumns = (): GridColDef<IPacking>[] => {
     { field: 'id', headerName: 'Código', width: 100 },
     { field: 'name', headerName: 'Nombre', width: 200 },
     {
-      field: 'packagingTotal',
-      headerName: 'Total de empaques',
-      width: 200,
-      renderCell: params => (
-        <div className='flex gap-2 justify-center items-center' style={{ height: '100%' }}>
-          <Chip label={params.row.packagingTotal} />
-        </div>
-      )
-    },
-    {
       field: 'measurement',
       headerName: 'Medida',
       width: 100,
@@ -44,6 +34,16 @@ export const useColumns = (): GridColDef<IPacking>[] => {
         <span>
           {Number(params.row.measurement).toFixed(2)} {params.row.unit}
         </span>
+      )
+    },
+    {
+      field: 'packagingTotal',
+      headerName: 'Total de empaques',
+      width: 200,
+      renderCell: params => (
+        <div className='flex gap-2 justify-center items-center' style={{ height: '100%' }}>
+          <Chip label={params.row.packagingTotal} />
+        </div>
       )
     },
     {
