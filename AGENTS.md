@@ -337,6 +337,7 @@ pnpm dev             # manual smoke test — confirm fallback spinner appears im
 | `/produccion/empaque` | `src/api/packing/server.ts` | Done |
 | `/finanzas-y-administracion/proveedores` | `src/api/providers/server.ts` | Done |
 | `/produccion/ordenes` | `src/api/order/server.ts` | Done |
+| `/finanzas-y-administracion/ordenes-de-venta` | `src/api/order/server.ts` | Done |
 
 ## Key quirks
 

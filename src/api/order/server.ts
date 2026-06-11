@@ -1,5 +1,6 @@
 import { apiFetch } from "@/api/apiFetch";
 import type { IOrderList } from "@/types/pages/order";
+import type { ISaleOrder } from "@/types/pages/saleOrder";
 
 export async function getOrdersServer(params?: { productId?: string; status?: string }): Promise<IOrderList[]> {
   try {
@@ -17,5 +18,21 @@ export async function getOrdersServer(params?: { productId?: string; status?: st
     return data.map(r => ({ ...r, id: r.orderId }));
   } catch {
     return [];
+  }
+}
+
+export async function getSalesOrderServer(): Promise<ISaleOrder[]> {
+  try {
+    return await apiFetch<ISaleOrder[]>("sales-order", { tags: ["sales-order"] });
+  } catch {
+    return [];
+  }
+}
+
+export async function getSalesOrderByIdServer(id: string): Promise<ISaleOrder | null> {
+  try {
+    return await apiFetch<ISaleOrder>(`sales-order/${id}`, { tags: ["sales-order"] });
+  } catch {
+    return null;
   }
 }

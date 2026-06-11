@@ -1,4 +1,3 @@
-/* eslint-disable lines-around-comment */
 import { memo, useState, type ChangeEvent } from "react";
 
 // MUI

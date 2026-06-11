@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { type Resolver, FormProvider, useForm } from "react-hook-form";
 
 import { useMutation } from "@tanstack/react-query";
@@ -33,6 +35,8 @@ const SALE_ORDER_TYPE_1 = "remision_venta";
 const SALE_ORDER_TYPE_2 = "ventas_siigo";
 
 const Create = () => {
+  const router = useRouter();
+
   const methods = useForm<FormValues>({
     defaultValues: { fileType: undefined, file: null },
     resolver: yupResolver(schema) as Resolver<FormValues>
@@ -54,10 +58,12 @@ const Create = () => {
     },
     onSuccess: (result: any) => {
       methods.reset();
+      router.refresh();
 
       toast.success(result);
     },
     onError: (error: any) => {
+      methods.reset();
       alertMessageErrors(error, "Error al procesar el archivo");
     }
   });

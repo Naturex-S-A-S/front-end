@@ -1,37 +1,38 @@
-"use client";
+import { Suspense } from "react";
 
-import { Box } from "@mui/material";
-
-import { useTheme } from "@mui/material/styles";
+import { notFound } from "next/navigation";
 
 import Loader from "@/@core/components/react-spinners";
 import Header from "@/components/layout/detail/inventory/Header";
-import NotFound from "@/views/NotFound";
 import Detail from "@/views/pages/finanzas-y-administracion/ordenes-de-venta/detail";
-import useGetSalesOrderById from "@/hooks/order/useGetSalesOrderById";
+import { getSalesOrderByIdServer } from "@/api/order/server";
 
-type Props = {
-  params: { id: string };
+export const metadata = {
+  title: "Detalle de Orden de Venta - Naturex",
+  description: "Detalle de la orden de venta"
 };
 
-const Page: React.FC<Props> = ({ params }) => {
-  const { saleOrder, isLoading } = useGetSalesOrderById(params.id);
-  const mode = useTheme().palette.mode;
+const Page = ({ params }: { params: { id: string } }) => {
+  return (
+    <Suspense fallback={<Loader type='component' />}>
+      <DataFetcher id={params.id} />
+    </Suspense>
+  );
+};
 
-  if (isLoading) {
-    return <Loader type='page' />;
-  }
+async function DataFetcher({ id }: { id: string }) {
+  const saleOrder = await getSalesOrderByIdServer(id);
 
   if (!saleOrder) {
-    return <NotFound mode={mode} />;
+    notFound();
   }
 
   return (
-    <Box display='flex' flexDirection='column' gap={2}>
+    <div className='flex flex-col gap-2'>
       <Header name={saleOrder.fileName} />
       <Detail saleOrder={saleOrder} />
-    </Box>
+    </div>
   );
-};
+}
 
 export default Page;

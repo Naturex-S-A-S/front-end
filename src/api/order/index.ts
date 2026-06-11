@@ -51,18 +51,6 @@ export const postSaleOrderType2 = async (data: any) => {
   return response.data;
 };
 
-export const getSalesOrder = async () => {
-  const response = await API().get(`/sales-order`);
-
-  return response.data;
-};
-
-export const getSalesOrderById = async (id: string) => {
-  const response = await API().get(`/sales-order/${id}`);
-
-  return response.data;
-};
-
 export const getOrderSupplyCalculate = async (data: any) => {
   const response = await API().get(`/orders/supply/calculate`, {
     params: {
