@@ -8,3 +8,13 @@ export async function getProvidersServer(): Promise<IProvider[]> {
     return [];
   }
 }
+
+export async function getProviderByIdServer(id: string): Promise<IProvider | null> {
+  try {
+    return await apiFetch<IProvider>(`providers/${id}`, {
+      tags: ["providers"]
+    });
+  } catch {
+    return null;
+  }
+}

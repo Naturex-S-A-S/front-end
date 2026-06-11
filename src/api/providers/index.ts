@@ -13,12 +13,6 @@ export const getProviders = async () => {
   return response.data;
 };
 
-export const getProviderById = async (id: string) => {
-  const response = await API().get(`/providers/${id}`);
-
-  return response.data;
-};
-
 export const getProvidersList = async () => {
   const response = await API().get("/providers/list");
 
