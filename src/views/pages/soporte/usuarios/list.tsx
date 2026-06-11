@@ -1,7 +1,9 @@
 "use client";
 import { useState } from "react";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+
+import { useMutation } from "@tanstack/react-query";
 
 import Swal from "sweetalert2";
 
@@ -9,26 +11,26 @@ import toast from "react-hot-toast";
 
 import CustomCard from "@/@core/components/mui/Card";
 import CustomDataGrid from "@/@core/components/mui/DataGrid";
-import { deleteUser, getUsers } from "@/api/user";
+import { deleteUser } from "@/api/user";
 import { useColumns } from "@/utils/columns/user";
 import Edit from "./edit";
 import { alertMessageErrors } from "@/utils/messages";
+import type { IUser } from "@/types/pages/user";
 
-const List = () => {
+type Props = {
+  initialData: IUser[];
+};
+
+const List = ({ initialData }: Props) => {
   const [userEdit, setUserEdit] = useState(undefined);
   const [open, setOpen] = useState(false);
 
-  const queryClient = useQueryClient();
-
-  const { data } = useQuery({
-    queryKey: ["getUsers"],
-    queryFn: getUsers
-  });
+  const router = useRouter();
 
   const { mutate: deleteUserMutation } = useMutation({
     mutationFn: deleteUser,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getUsers"] });
+      router.refresh();
       toast.success("Usuario eliminado con éxito");
     },
     onError: (error: any) => {
@@ -68,7 +70,7 @@ const List = () => {
   return (
     <CustomCard title=''>
       <Edit open={open} toogleDialog={handleDialog} defaultValues={userEdit} />
-      <CustomDataGrid columns={colDefs} data={data} />
+      <CustomDataGrid columns={colDefs} data={initialData} />
     </CustomCard>
   );
 };

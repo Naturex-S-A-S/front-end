@@ -2,13 +2,15 @@
 
 import { useEffect } from "react";
 
+import { useRouter } from "next/navigation";
+
 import { Box } from "@mui/material";
 
 import { FormProvider, useForm } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
 
@@ -28,7 +30,7 @@ type Props = {
 };
 
 const Edit: React.FC<Props> = ({ open, toogleDialog, defaultValues }) => {
-  const queryClient = useQueryClient();
+  const router = useRouter();
   const ability = useAbility();
 
   const methods = useForm({
@@ -43,7 +45,7 @@ const Edit: React.FC<Props> = ({ open, toogleDialog, defaultValues }) => {
     mutationFn: putUser,
     onSuccess: () => {
       toast.success("Usuario actualizado con éxito");
-      queryClient.invalidateQueries({ queryKey: ["getUsers"] });
+      router.refresh();
       toogleDialog();
     },
     onError: (error: any) => {
@@ -64,7 +66,7 @@ const Edit: React.FC<Props> = ({ open, toogleDialog, defaultValues }) => {
 
     methods.reset({
       ...defaultValues,
-      dniType: mockDocumentTypes.find(option => option.value === defaultValues.dniType),
+      dniType: mockDocumentTypes.find((option: any) => option.value === defaultValues.dniType),
       roleId: {
         value: defaultValues.role.id,
         label: defaultValues.role.name,

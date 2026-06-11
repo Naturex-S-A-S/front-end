@@ -14,12 +14,6 @@ export const postUser = async (data: IUser) => {
   return response.data;
 };
 
-export const getUsers = async () => {
-  const response = await API().get("/users");
-
-  return response.data;
-};
-
 export const putUser = async (data: IUser) => {
   const response = await API().put(`/users/${data.id}`, data);
 
