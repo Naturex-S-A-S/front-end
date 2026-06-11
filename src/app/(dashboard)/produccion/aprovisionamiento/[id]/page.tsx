@@ -1,37 +1,46 @@
-"use client";
+import { Suspense } from "react";
+
+import { notFound } from "next/navigation";
 
 import { Box } from "@mui/material";
-
-import { useTheme } from "@mui/material/styles";
 
 import Loader from "@/@core/components/react-spinners";
 import Header from "@/components/layout/detail/inventory/Header";
 import Detail from "@/views/pages/produccion/aprovisionamiento/detail";
-import NotFound from "@/views/NotFound";
-import useGetOrderSupplyById from "@/hooks/order/useGetOrderSupplyById";
+import { getOrderSupplyByIdServer } from "@/api/order/server";
+
+export const metadata = {
+  title: "Aprovisionamiento - Naturex",
+  description: "Detalle de aprovisionamiento"
+};
 
 type Props = {
   params: { id: string };
 };
 
-const Page: React.FC<Props> = ({ params }) => {
-  const { orderSupply, isLoading } = useGetOrderSupplyById(params.id);
-  const mode = useTheme().palette.mode;
-
-  if (isLoading) {
-    return <Loader type='page' />;
-  }
-
-  if (!orderSupply) {
-    return <NotFound mode={mode} />;
-  }
-
+const Page = ({ params }: Props) => {
   return (
     <Box display='flex' flexDirection='column' gap={2}>
-      <Header id={params.id} name={orderSupply.batch} createdAt={orderSupply.dateCreated} />
-      <Detail orderSupply={orderSupply} />
+      <Suspense fallback={<Loader type='component' />}>
+        <DataFetcher id={params.id} />
+      </Suspense>
     </Box>
   );
 };
+
+async function DataFetcher({ id }: { id: string }) {
+  const orderSupply = await getOrderSupplyByIdServer(id);
+
+  if (!orderSupply) {
+    notFound();
+  }
+
+  return (
+    <>
+      <Header id={id} name={orderSupply.batch} createdAt={orderSupply.dateCreated} />
+      <Detail orderSupply={orderSupply} />
+    </>
+  );
+}
 
 export default Page;

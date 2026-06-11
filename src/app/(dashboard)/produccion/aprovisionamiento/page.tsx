@@ -1,34 +1,31 @@
 import { Suspense } from "react";
 
-import dynamic from "next/dynamic";
-
 import CustomBox from "@/@core/components/mui/Box";
-
+import Loader from "@/@core/components/react-spinners";
 import Create from "@/views/aprovisionamiento/create";
-
-const List = dynamic(() => import("@/views/pages/produccion/aprovisionamiento/list"), {
-  ssr: false,
-  loading: () => (
-    <CustomBox title=''>
-      <div className='animate-pulse h-48 bg-gray-100 rounded-lg' />
-    </CustomBox>
-  )
-});
+import List from "@/views/pages/produccion/aprovisionamiento/list";
+import { getOrderSupplyServer } from "@/api/order/server";
 
 export const metadata = {
   title: "Aprovisionamiento - Naturex",
   description: ""
 };
 
-const Page = () => {
+const Page = ({ searchParams }: { searchParams?: { productId?: string; status?: string } }) => {
   return (
     <CustomBox title='Aprovisionamiento'>
       <Create />
-      <Suspense fallback={<div className='animate-pulse h-48 bg-gray-100 rounded-lg' />}>
-        <List />
+      <Suspense fallback={<Loader type='component' />}>
+        <DataFetcher searchParams={searchParams} />
       </Suspense>
     </CustomBox>
   );
 };
+
+async function DataFetcher({ searchParams }: { searchParams?: { productId?: string; status?: string } }) {
+  const data = await getOrderSupplyServer(searchParams);
+
+  return <List initialData={data} />;
+}
 
 export default Page;
