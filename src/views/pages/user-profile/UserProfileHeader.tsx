@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 
 // Type Imports
 import type { ProfileData } from "@/types/pages/profile";
+import { getDniTypeLabel } from "@/utils/enum";
 
 const UserProfileHeader = ({ data }: { data?: ProfileData }) => {
   return (
@@ -24,7 +25,7 @@ const UserProfileHeader = ({ data }: { data?: ProfileData }) => {
               <div className='flex items-center gap-2'>
                 <i className='tabler-user' />
                 <Typography className='font-medium'>
-                  {data?.dniType}: {data?.dni}
+                  {data?.dniType && getDniTypeLabel(data.dniType)}: {data?.dni}
                 </Typography>
               </div>
             </div>

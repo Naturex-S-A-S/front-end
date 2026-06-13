@@ -1,8 +1,5 @@
-import { Suspense } from "react";
-
 import { notFound } from "next/navigation";
 
-import Loader from "@/@core/components/react-spinners";
 import Header from "@/components/layout/detail/inventory/Header";
 import Detail from "@/views/pages/finanzas-y-administracion/ordenes-de-venta/detail";
 import { getSalesOrderByIdServer } from "@/api/order/server";
@@ -12,16 +9,8 @@ export const metadata = {
   description: "Detalle de la orden de venta"
 };
 
-const Page = ({ params }: { params: { id: string } }) => {
-  return (
-    <Suspense fallback={<Loader type='component' />}>
-      <DataFetcher id={params.id} />
-    </Suspense>
-  );
-};
-
-async function DataFetcher({ id }: { id: string }) {
-  const saleOrder = await getSalesOrderByIdServer(id);
+const Page = async ({ params }: { params: { id: string } }) => {
+  const saleOrder = await getSalesOrderByIdServer(params.id);
 
   if (!saleOrder) {
     notFound();
@@ -33,6 +22,6 @@ async function DataFetcher({ id }: { id: string }) {
       <Detail saleOrder={saleOrder} />
     </div>
   );
-}
+};
 
 export default Page;

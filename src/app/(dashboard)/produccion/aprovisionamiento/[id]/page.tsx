@@ -1,10 +1,7 @@
-import { Suspense } from "react";
-
 import { notFound } from "next/navigation";
 
 import { Box } from "@mui/material";
 
-import Loader from "@/@core/components/react-spinners";
 import Header from "@/components/layout/detail/inventory/Header";
 import Detail from "@/views/pages/produccion/aprovisionamiento/detail";
 import { getOrderSupplyByIdServer } from "@/api/order/server";
@@ -18,29 +15,19 @@ type Props = {
   params: { id: string };
 };
 
-const Page = ({ params }: Props) => {
-  return (
-    <Box display='flex' flexDirection='column' gap={2}>
-      <Suspense fallback={<Loader type='component' />}>
-        <DataFetcher id={params.id} />
-      </Suspense>
-    </Box>
-  );
-};
-
-async function DataFetcher({ id }: { id: string }) {
-  const orderSupply = await getOrderSupplyByIdServer(id);
+const Page = async ({ params }: Props) => {
+  const orderSupply = await getOrderSupplyByIdServer(params.id);
 
   if (!orderSupply) {
     notFound();
   }
 
   return (
-    <>
-      <Header id={id} name={orderSupply.batch} createdAt={orderSupply.dateCreated} />
+    <Box display='flex' flexDirection='column' gap={2}>
+      <Header id={params.id} name={orderSupply.batch} createdAt={orderSupply.dateCreated} />
       <Detail orderSupply={orderSupply} />
-    </>
+    </Box>
   );
-}
+};
 
 export default Page;
