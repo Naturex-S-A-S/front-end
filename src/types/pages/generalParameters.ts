@@ -11,3 +11,39 @@ export interface ICategory extends IBaseCategory {
 export type IPutCategory = ICategory;
 
 export type IPostCategory = IBaseCategory;
+
+// Endpoint /warehouses
+interface IBaseWarehouse {
+  name: string;
+  address: string;
+  phone: string;
+}
+
+export interface IWarehouse extends IBaseWarehouse {
+  id: string;
+  racks: IRack[];
+  active: boolean;
+  dateCreated: string;
+}
+
+export interface IRack {
+  id: string;
+  name: string;
+  description: string;
+  active: boolean;
+  dateCreated: string;
+  idWarehouse: string;
+}
+
+export type IPostWarehouse = IBaseWarehouse;
+
+export type IPutWarehouse = Pick<IWarehouse, "address">;
+
+// Endpoint /racks
+export type IPostRack = {
+  name: string;
+  description: string;
+  idWarehouse: string;
+};
+
+export type IPutRack = Pick<IRack, "name">;

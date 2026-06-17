@@ -46,7 +46,6 @@ const Update = ({ open, toogleDialog, category }: Props) => {
   });
 
   const onSubmit = (data: any) => {
-    console.log(data);
     mutate({
       id: category.id,
       name: data.name,

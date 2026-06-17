@@ -13,6 +13,8 @@ export const ABILITY_FIELDS = {
   SALIDAS: "Control de salidas",
   MOVIMIENTOS: "Historial de movimientos",
   CATEGORIES: "Categorias",
+  COLOR: "Color",
+  BODEGAS: "Bodegas",
   FORMULATION: "Formulación",
   SUPPLIERS: "Proveedores",
   ORDERS: "Ordenes",
