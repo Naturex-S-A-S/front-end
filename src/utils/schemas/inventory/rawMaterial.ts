@@ -8,6 +8,14 @@ export const rawMaterialSchema = yup
       .min(0, "El minimo estandar debe ser mayor o igual a 0")
       .typeError("El minimo estandar debe ser un número")
       .required("El minimo estandar es requerido"),
-    allergen: yup.boolean().required()
+    allergen: yup.boolean().required(),
+    category: yup
+      .array()
+      .of(
+        yup.object({
+          id: yup.string().required("El categoría es requerida")
+        })
+      )
+      .required("Las categorías son requeridas")
   })
   .required();

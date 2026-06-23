@@ -50,7 +50,13 @@ const Form: React.FC<Props> = ({ isPending }) => {
                 onChange(value);
               }}
               renderInput={params => (
-                <CustomTextField {...params} label='Categoria' placeholder='Seleccione una categoria' />
+                <CustomTextField
+                  {...params}
+                  label='Categoria'
+                  placeholder='Seleccione una categoria'
+                  error={!!errors.category?.message}
+                  helperText={errors.category?.message}
+                />
               )}
             />
           )}
