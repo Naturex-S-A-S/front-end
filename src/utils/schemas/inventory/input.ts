@@ -22,8 +22,7 @@ export const kardexFeedstockInputSchema = yup
     charge: yup.string().typeError("El costo debe ser un número").required("El costo es requerido"),
     document: yup.string().optional(),
     batch: yup.string().required("El lote es requerido"),
-    location: yup.string().optional(),
-    rack: yup.string().optional(),
+    rack: yup.object().shape({ id: yup.string() }).optional(),
     expirationDate1: yup.date().required("La fecha de expiración es requerida"),
     expirationDate2: yup.date().optional()
   })
@@ -47,8 +46,7 @@ export const kardexPackagingInputSchema = yup
     charge: yup.string().typeError("El costo debe ser un número").required("El costo es requerido"),
     document: yup.string().optional(),
     batch: yup.string().required("El lote es requerido"),
-    location: yup.string().optional(),
-    rack: yup.string().optional()
+    rack: yup.object().shape({ id: yup.string() }).optional()
   })
   .required();
 
@@ -65,8 +63,7 @@ export const kardexProductInputSchema = yup
       .typeError("La cantidad debe ser un número")
       .required("La cantidad es requerida"),
     batch: yup.string().required("El lote es requerido"),
-    location: yup.string().optional(),
-    rack: yup.string().optional(),
+    rack: yup.object().shape({ id: yup.string() }).optional(),
     expirationDate1: yup.date().required("La fecha de expiración es requerida"),
     observation: yup.string().optional()
   })

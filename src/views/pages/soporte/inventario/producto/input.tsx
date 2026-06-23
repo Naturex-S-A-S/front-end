@@ -17,13 +17,16 @@ import useGetProductList from "@/hooks/product/useGetProductList";
 import CustomDatePicker from "@/@core/components/react-datepicker";
 import { kardexProductInputSchema } from "@/utils/schemas/inventory/input";
 import { formatDate } from "@/utils/format";
+import GroupedAutocomplete from "@/@core/components/mui/GroupedAutocomplete";
+import useGetWarehouseList from "@/hooks/warehouse/useGetWarehouse";
 
 const Input = () => {
   const { mutateAsync, isPending } = useKardexInput();
   const { productList } = useGetProductList();
+  const { warehouseList } = useGetWarehouseList();
   const ability = useAbility();
 
-  const canReadEntradas = ability.can(ABILITY_ACTIONS.READ as any, ABILITY_SUBJECT.PRODUCT, ABILITY_FIELDS.ENTRADAS);
+  const canReadEntradas = ability.can(ABILITY_ACTIONS.CREATE as any, ABILITY_SUBJECT.PRODUCT, ABILITY_FIELDS.ENTRADAS);
 
   const methods = useForm({
     defaultValues: {
@@ -32,7 +35,6 @@ const Input = () => {
       quantity: undefined,
       batch: undefined,
       rack: undefined,
-      location: undefined,
       expirationDate1: undefined,
       observation: undefined
     },
@@ -53,8 +55,7 @@ const Input = () => {
       idFinalProduct: values.product.id,
       batch: values.batch,
       observation: values.observation,
-      rack: values.rack,
-      location: values.location,
+      idRack: values.rack?.id,
       quantity: Number(values.quantity),
       expirationDate1: formatDate(values.expirationDate1),
       idOrder: values.order
@@ -127,24 +128,31 @@ const Input = () => {
                 helperText={errors.batch?.message}
               />
             </Grid>
-            <Grid item xs={12} md={6} lg={2}>
-              <CustomTextField
-                {...register("location")}
-                fullWidth
-                label='Ubicación'
-                placeholder='Ingrese la ubicación'
-                error={!!errors.location}
-                helperText={errors.location?.message}
-              />
-            </Grid>
-            <Grid item xs={12} md={6} lg={2}>
-              <CustomTextField
-                {...register("rack")}
-                fullWidth
-                label='Estantería'
-                placeholder='Ingrese el estante'
-                error={!!errors.rack}
-                helperText={errors.rack?.message}
+
+            <Grid item xs={12} md={6} lg={4}>
+              <Controller
+                name='rack'
+                control={control}
+                render={({ field: { value, onChange } }: any) => (
+                  <GroupedAutocomplete
+                    value={value}
+                    groups={warehouseList || []}
+                    getOptionLabel={(option: any) => option?.name || ""}
+                    groupOptionsKey='racks'
+                    onChange={(e: any, value: any) => {
+                      onChange(value);
+                    }}
+                    renderInput={(params: any) => (
+                      <CustomTextField
+                        {...params}
+                        label='Estante'
+                        placeholder='Seleccione un estante'
+                        error={!!errors.rack?.id}
+                        helperText={errors.rack?.id?.message}
+                      />
+                    )}
+                  />
+                )}
               />
             </Grid>
 

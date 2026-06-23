@@ -48,8 +48,7 @@ export const adjustmentMaterialSchema = yup.object({
   batch: yup.string().nullable().required("Ingrese el batch"),
   observation: yup.string().nullable().required("Ingrese una observación"),
   expiration_date_1: yup.string().nullable().notRequired(),
-  location: yup.string().nullable().notRequired(),
-  rack: yup.string().nullable().notRequired()
+  rack: yup.object().shape({ id: yup.string() }).optional()
 });
 
 export const adjustmentProductSchema = yup.object({
@@ -61,9 +60,8 @@ export const adjustmentProductSchema = yup.object({
     .integer("Debe ser un entero")
     .min(1, "Cantidad mínima 1")
     .required("Ingrese la cantidad"),
-  location: yup.string().nullable().required("Debe ingresar el lugar de almacenamiento"),
   observation: yup.string().nullable().required("Ingrese una observación"),
   batch: yup.string().nullable().required("Ingrese el batch"),
-  rack: yup.string().nullable().notRequired(),
+  rack: yup.object().shape({ id: yup.string() }).optional(),
   expiration_date_1: yup.string().nullable().required("Ingrese la fecha de expiración")
 });

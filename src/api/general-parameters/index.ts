@@ -12,3 +12,9 @@ export const getWarehouseById = async (id: string): Promise<IWarehouse> => {
 
   return response.data;
 };
+
+export const getWarehouses = async (): Promise<IWarehouse[]> => {
+  const response = await API().get(`/warehouses`);
+
+  return response.data;
+};

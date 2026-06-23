@@ -26,6 +26,8 @@ import {
 
 import { postKardexInputAdjustment as postKardexInputAdjustmentProduct } from "@/api/product";
 import { alertMessageErrors } from "@/utils/messages";
+import GroupedAutocomplete from "@/@core/components/mui/GroupedAutocomplete";
+import useGetWarehouseList from "@/hooks/warehouse/useGetWarehouse";
 
 type Option = { id: number; label: string };
 
@@ -37,10 +39,9 @@ interface AdjustmentFormValues {
   charge?: string | null;
   quantity?: number | null;
   observation?: string | null;
-  location?: string | null;
   classification?: string | null;
   batch?: string | null;
-  rack?: string | null;
+  rack?: { id: string } | null;
   expiration_date_1?: string | null;
   expiration_date_2?: string | null;
 }
@@ -56,6 +57,7 @@ interface IProps {
 const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreate }) => {
   const [open, setOpen] = useState(false);
 
+  const { warehouseList } = useGetWarehouseList();
   const queryClient = useQueryClient();
 
   const { control, handleSubmit, watch, reset, setValue } = useForm<AdjustmentFormValues>({
@@ -67,10 +69,9 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
       charge: "",
       quantity: null,
       observation: "",
-      location: "",
       classification: "",
       batch: "",
-      rack: "",
+      rack: null,
       expiration_date_1: "",
       expiration_date_2: ""
     },
@@ -151,8 +152,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
         batch: values.batch,
         expirationDate1: values.expiration_date_1,
         observation: values.observation,
-        location: values.location,
-        rack: values.rack
+        idRack: values.rack?.id
       };
 
       if (values.type === "IN") {
@@ -166,10 +166,9 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
         idFinalProduct: values.product?.id,
         batch: values.batch,
         quantity: values.quantity,
-        location: values.location,
         observation: values.observation,
         expirationDate1: values.expiration_date_1,
-        rack: values?.rack
+        idRack: values.rack?.id
       };
 
       mutateInputProduct(payload);
@@ -185,10 +184,9 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
       charge: "",
       quantity: null,
       observation: "",
-      location: "",
       classification: "",
       batch: "",
-      rack: "",
+      rack: null,
       expiration_date_1: "",
       expiration_date_2: ""
     });
@@ -341,29 +339,23 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                     />
                   </Grid>
 
-                  <Grid item xs={6}>
-                    <Controller
-                      name='location'
-                      control={control}
-                      rules={{ required: "Debe ingresar el lugar de almacenamiento" }}
-                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
-                        <CustomTextField
-                          label='Ubicación'
-                          value={value ?? ""}
-                          onChange={e => onChange(e.target.value)}
-                          error={!!error}
-                          helperText={error?.message}
-                        />
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6} lg={4}>
                     <Controller
                       name='rack'
                       control={control}
                       render={({ field: { value, onChange } }: any) => (
-                        <CustomTextField label='Rack' value={value ?? ""} onChange={e => onChange(e.target.value)} />
+                        <GroupedAutocomplete
+                          value={value}
+                          groups={warehouseList || []}
+                          getOptionLabel={(option: any) => option?.name || ""}
+                          groupOptionsKey='racks'
+                          onChange={(e: any, value: any) => {
+                            onChange(value);
+                          }}
+                          renderInput={(params: any) => (
+                            <CustomTextField {...params} label='Estante' placeholder='Seleccione un estante' />
+                          )}
+                        />
                       )}
                     />
                   </Grid>
@@ -430,28 +422,22 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                     />
                   </Grid>
 
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6} lg={4}>
                     <Controller
                       name='rack'
                       control={control}
                       render={({ field: { value, onChange } }: any) => (
-                        <CustomTextField label='Rack' value={value ?? ""} onChange={e => onChange(e.target.value)} />
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={6}>
-                    <Controller
-                      name='location'
-                      control={control}
-                      rules={{ required: "Debe ingresar el lugar de almacenamiento" }}
-                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
-                        <CustomTextField
-                          label='Ubicación'
-                          value={value ?? ""}
-                          onChange={e => onChange(e.target.value)}
-                          error={!!error}
-                          helperText={error?.message}
+                        <GroupedAutocomplete
+                          value={value}
+                          groups={warehouseList || []}
+                          getOptionLabel={(option: any) => option?.name || ""}
+                          groupOptionsKey='racks'
+                          onChange={(e: any, value: any) => {
+                            onChange(value);
+                          }}
+                          renderInput={(params: any) => (
+                            <CustomTextField {...params} label='Estante' placeholder='Seleccione un estante' />
+                          )}
                         />
                       )}
                     />

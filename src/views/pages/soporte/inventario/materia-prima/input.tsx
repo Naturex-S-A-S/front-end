@@ -9,6 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import CustomButton from "@/@core/components/mui/Button";
 import { useAbility } from "@/hooks/casl/useAbility";
 import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
+import GroupedAutocomplete from "@/@core/components/mui/GroupedAutocomplete";
 import CustomTextField from "@/@core/components/mui/TextField";
 import { mockUnitWeight } from "@/utils/mocks";
 import DatePickerWrapper from "@/@core/styles/libs/react-datepicker";
@@ -19,11 +20,13 @@ import { ABILITY_FIELDS, ABILITY_SUBJECT } from "@/utils/constant";
 import useGetFeedstockList from "@/hooks/feedstock/useGetFeedstockList";
 import useGetProvidersList from "@/hooks/provider/useGetProvidersList";
 import { formatDate } from "@/utils/format";
+import useGetWarehouseList from "@/hooks/warehouse/useGetWarehouse";
 
 const Input = () => {
   const { mutateAsync, isPending } = useKardexInput();
   const { providersList } = useGetProvidersList();
   const { feedstockList } = useGetFeedstockList();
+  const { warehouseList } = useGetWarehouseList();
   const ability = useAbility();
 
   const canReadEntradas = ability.can("create", ABILITY_SUBJECT.FEEDSTOCK, ABILITY_FIELDS.ENTRADAS);
@@ -37,7 +40,6 @@ const Input = () => {
       charge: undefined,
       document: undefined,
       batch: undefined,
-      location: undefined,
       rack: undefined,
       expirationDate1: undefined,
       expirationDate2: undefined
@@ -63,8 +65,7 @@ const Input = () => {
       unit: values.unit.value,
       charge: Number(values.charge),
       document: values.document,
-      location: values.location,
-      rack: values.rack,
+      idRack: values.rack?.id,
       expirationDate1: formatDate(values.expirationDate1),
       expirationDate2: formatDate(values.expirationDate2)
     };
@@ -150,24 +151,31 @@ const Input = () => {
                 helperText={errors.document?.message}
               />
             </Grid>
-            <Grid item xs={12} md={6} lg={2}>
-              <CustomTextField
-                {...register("location")}
-                fullWidth
-                label='Ubicación'
-                placeholder='Ingrese la ubicación'
-                error={!!errors.location}
-                helperText={errors.location?.message}
-              />
-            </Grid>
-            <Grid item xs={12} md={6} lg={2}>
-              <CustomTextField
-                {...register("rack")}
-                fullWidth
-                label='Estantería'
-                placeholder='Ingrese el estante'
-                error={!!errors.rack}
-                helperText={errors.rack?.message}
+
+            <Grid item xs={12} md={6} lg={4}>
+              <Controller
+                name='rack'
+                control={control}
+                render={({ field: { value, onChange } }: any) => (
+                  <GroupedAutocomplete
+                    value={value}
+                    groups={warehouseList || []}
+                    getOptionLabel={(option: any) => option?.name || ""}
+                    groupOptionsKey='racks'
+                    onChange={(e: any, value: any) => {
+                      onChange(value);
+                    }}
+                    renderInput={(params: any) => (
+                      <CustomTextField
+                        {...params}
+                        label='Estante'
+                        placeholder='Seleccione un estante'
+                        error={!!errors.rack?.id}
+                        helperText={errors.rack?.id?.message}
+                      />
+                    )}
+                  />
+                )}
               />
             </Grid>
 
