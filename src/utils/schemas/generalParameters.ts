@@ -17,13 +17,14 @@ export const warehouseSchema = yup
   .object({
     name: yup.string().required("El nombre es requerido"),
     address: yup.string().required("La dirección es requerida"),
-    phone: yup.string().required("El teléfono es requerido")
+    phone: yup.string()
   })
   .required();
 
 export const rackSchema = yup
   .object({
     name: yup.string().required("El nombre es requerido"),
-    description: yup.string().required("La descripción es requerida")
+    active: yup.boolean().required("El estado es requerido"),
+    description: yup.string()
   })
   .required();

@@ -22,7 +22,7 @@ const CreateRack = ({ idWarehouse, onSuccess }: Props) => {
   const [isPending, startTransition] = useTransition();
 
   const methods = useForm({
-    defaultValues: { name: "", description: "" },
+    defaultValues: { name: "", description: "", active: false },
     resolver: yupResolver(rackSchema)
   });
 
@@ -46,7 +46,7 @@ const CreateRack = ({ idWarehouse, onSuccess }: Props) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <RackForm isPending={isPending} onCancel={onSuccess} />
+        <RackForm isPending={isPending} onCancel={onSuccess} isCreate />
       </form>
     </FormProvider>
   );

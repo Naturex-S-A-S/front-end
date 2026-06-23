@@ -14,25 +14,25 @@ interface Props {
 }
 
 const List = ({ initialData }: Props) => {
-  const [updateData, setUpdateData] = useState<{ open: boolean; warehouse: IWarehouse | undefined }>({
+  const [updateData, setUpdateData] = useState<{ open: boolean; warehouseId: string | undefined }>({
     open: false,
-    warehouse: undefined
+    warehouseId: undefined
   });
 
   const toogleDialog = () => {
-    setUpdateData({ open: false, warehouse: undefined });
+    setUpdateData({ open: false, warehouseId: undefined });
   };
 
   const handleEdit = (warehouse: IWarehouse) => {
-    setUpdateData({ warehouse, open: true });
+    setUpdateData({ warehouseId: warehouse.id, open: true });
   };
 
   const colDefs = useColumns({ handleEdit });
 
   return (
     <div className='flex flex-col items-center gap-2'>
-      {updateData.warehouse && (
-        <Update open={updateData.open} onClose={toogleDialog} warehouse={updateData.warehouse} />
+      {updateData.warehouseId && (
+        <Update open={updateData.open} onClose={toogleDialog} warehouseId={updateData.warehouseId} />
       )}
       <Create />
       <CustomCard>

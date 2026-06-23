@@ -23,7 +23,7 @@ export async function createWarehouse(data: IPostWarehouse) {
 export async function updateWarehouse(id: string, data: IPutWarehouse) {
   try {
     await apiFetch(`warehouses/${id}`, {
-      method: "PUT",
+      method: "PATCH",
       body: JSON.stringify(data),
       tags: ["warehouses"]
     });
@@ -54,6 +54,7 @@ export async function createRack(data: IPostRack) {
       method: "POST",
       body: JSON.stringify(data)
     });
+
     revalidateTag("warehouses");
 
     return { success: true };
@@ -65,7 +66,7 @@ export async function createRack(data: IPostRack) {
 export async function updateRack(id: string, data: IPutRack) {
   try {
     await apiFetch(`racks/${id}`, {
-      method: "PUT",
+      method: "PATCH",
       body: JSON.stringify(data)
     });
     revalidateTag("warehouses");

@@ -1,18 +1,20 @@
-import { Grid } from "@mui/material";
-import { useFormContext } from "react-hook-form";
+import { Checkbox, FormControlLabel, Grid } from "@mui/material";
+import { Controller, useFormContext } from "react-hook-form";
 
 import CustomButton from "@/@core/components/mui/Button";
 import CustomTextField from "@/@core/components/mui/TextField";
 
 interface Props {
   isPending: boolean;
+  isCreate?: boolean;
   onCancel: () => void;
 }
 
-const RackForm = ({ isPending, onCancel }: Props) => {
+const RackForm = ({ isPending, onCancel, isCreate = false }: Props) => {
   const {
     register,
-    formState: { errors }
+    formState: { errors },
+    control
   }: any = useFormContext();
 
   return (
@@ -38,6 +40,17 @@ const RackForm = ({ isPending, onCancel }: Props) => {
           helperText={errors.description?.message as string}
         />
       </Grid>
+      {!isCreate && (
+        <Grid item xs={12}>
+          <Controller
+            name='active'
+            control={control}
+            render={({ field: { value } }: any) => (
+              <FormControlLabel control={<Checkbox {...register("active")} checked={value} />} label='Activo' />
+            )}
+          />
+        </Grid>
+      )}
       <Grid item xs={12} className='flex justify-center gap-2'>
         <CustomButton text='Cancelar' variant='outlined' onClick={onCancel} />
         <CustomButton text='Guardar' type='submit' isLoading={isPending} />

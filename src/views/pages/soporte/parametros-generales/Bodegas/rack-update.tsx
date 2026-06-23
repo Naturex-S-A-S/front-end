@@ -23,7 +23,7 @@ const UpdateRack = ({ rack, onSuccess }: Props) => {
   const [isPending, startTransition] = useTransition();
 
   const methods = useForm({
-    defaultValues: { name: rack.name, description: rack.description },
+    defaultValues: { name: rack.name, description: rack.description, active: rack.active },
     resolver: yupResolver(rackSchema)
   });
 
@@ -37,7 +37,7 @@ const UpdateRack = ({ rack, onSuccess }: Props) => {
 
   const onSubmit = (data: any) => {
     startTransition(async () => {
-      const result = await updateRack(rack.id, { name: data.name });
+      const result = await updateRack(rack.id, { ...data });
 
       if (result.success) {
         toast.success("Rack actualizado con éxito");

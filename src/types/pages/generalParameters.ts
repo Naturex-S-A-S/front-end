@@ -46,4 +46,4 @@ export type IPostRack = {
   idWarehouse: string;
 };
 
-export type IPutRack = Pick<IRack, "name">;
+export type IPutRack = Partial<Pick<IRack, "name" | "description" | "active">>;
