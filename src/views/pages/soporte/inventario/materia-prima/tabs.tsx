@@ -9,12 +9,11 @@ import TabPanel from "@mui/lab/TabPanel";
 import CustomTabList from "@/@core/components/mui/TabList";
 import Create from "./create";
 import List from "./list";
-import Movements from "../movements";
+import Movements from "./movements";
 import CustomCard from "@/@core/components/mui/Card";
 import { useAbility } from "@/hooks/casl/useAbility";
 import Input from "./input";
 import Output from "./output";
-import { MaterialType } from "@/utils/enum";
 
 const Tabs = () => {
   const [activeTab, setActiveTab] = useState("1");
@@ -95,7 +94,7 @@ const Tabs = () => {
             <Output />
           </TabPanel>
           <TabPanel value='4'>
-            <Movements materialType={MaterialType.FEEDSTOCK} />
+            <Movements />
           </TabPanel>
         </TabContext>
       </CustomCard>

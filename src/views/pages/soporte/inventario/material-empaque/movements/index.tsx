@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -6,43 +6,32 @@ import toast from "react-hot-toast";
 
 import CustomDataGrid from "@/@core/components/mui/DataGrid";
 import { columns } from "@/utils/columns/movements";
-import Filter from "./filter";
-import { getKardexMovements } from "@/api/kardex";
+import { getMovements } from "@/api/packaging";
 import { MaterialType } from "@/utils/enum";
-
-interface IProps {
-  materialType: MaterialType;
-}
+import Filter from "../../movements/filter";
 
 const defaultFilters = {
   kardexType: null,
   providerId: null,
   batch: "",
-  materialType: MaterialType.FEEDSTOCK,
+  materialType: MaterialType.PACKAGING,
   measureUnit: { label: "Gramo", value: "g" }
 };
 
-const Movements: React.FC<IProps> = ({ materialType }) => {
+const Movements = () => {
   const [filters, setFilters] = useState({
     ...defaultFilters
   });
 
-  useEffect(() => {
-    setFilters(prev => ({
-      ...prev,
-      materialType
-    }));
-  }, [materialType]);
-
   const { data, isLoading } = useQuery({
-    queryKey: ["getKardexMovements", filters],
-    queryFn: () => getKardexMovements(filters)
+    queryKey: ["getPackagingMovements", filters],
+    queryFn: () => getMovements(filters)
   });
 
   const onApplyFilters = (filters: any) => {
     setFilters({
       ...filters,
-      materialType
+      materialType: MaterialType.PACKAGING
     });
   };
 
@@ -56,7 +45,6 @@ const Movements: React.FC<IProps> = ({ materialType }) => {
 
   return (
     <div className='flex flex-col gap-2'>
-      {/*<Edit open={open} toogleDialog={handleDialog} defaultValues={userEdit} />*/}
       <Filter onApplyFilters={onApplyFilters} defaultValues={defaultFilters} />
       <CustomDataGrid
         columns={columns({ handleEdit, handleDelete, filters })}

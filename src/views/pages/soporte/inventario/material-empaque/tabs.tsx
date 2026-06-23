@@ -14,8 +14,7 @@ import List from "./list";
 import Input from "./input";
 import Output from "./output";
 import { ABILITY_FIELDS, ABILITY_SUBJECT } from "@/utils/constant";
-import Movements from "../movements";
-import { MaterialType } from "@/utils/enum";
+import Movements from "./movements";
 
 const Tabs = () => {
   const [activeTab, setActiveTab] = useState("1");
@@ -98,7 +97,7 @@ const Tabs = () => {
             <Output />
           </TabPanel>
           <TabPanel value='4'>
-            <Movements materialType={MaterialType.PACKAGING} />
+            <Movements />
           </TabPanel>
         </TabContext>
       </CustomCard>

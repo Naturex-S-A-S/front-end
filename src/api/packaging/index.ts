@@ -41,3 +41,16 @@ export const getPackagingList = async () => {
 
   return response.data;
 };
+
+export const getMovements = async (params: any) => {
+  const response = await API().get("/packaging-kardex/movements", {
+    params: {
+      kardexType: params?.kardexType?.value || undefined,
+      providerId: params?.providerId?.id || undefined,
+      batch: params.batch || undefined,
+      materialType: params?.materialType || undefined
+    }
+  });
+
+  return response.data;
+};
