@@ -67,6 +67,7 @@ const CustomTabList = (props: CustomTabListProps) => {
     <TabList
       color={color}
       {...rest}
+      pill='true'
       sx={props.centered ? { "& .MuiTabs-flexContainer": { justifyContent: "center" } } : {}}
     />
   );

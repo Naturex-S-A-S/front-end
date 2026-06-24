@@ -4,13 +4,14 @@ interface Props {
   title?: React.ReactNode;
   children: React.ReactNode;
   action?: React.ReactNode;
+  className?: string;
 }
 
-const CustomCard: React.FC<Props> = ({ title, children, action }) => {
+const CustomCard: React.FC<Props> = ({ title, children, action, className }) => {
   return (
-    <Card className='w-full'>
+    <Card className={`w-full`}>
       {title && <CardHeader title={title} action={action} />}
-      <CardContent>{children}</CardContent>
+      <CardContent className={`${className}`}>{children}</CardContent>
     </Card>
   );
 };

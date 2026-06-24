@@ -98,7 +98,9 @@ pnpm build:icons  # compile Iconify icons → src/assets/iconify-icons/generated
 - **Stylelint:** enforces CSS logical properties (e.g. `margin-inline` not `margin-left`) via `stylelint-use-logical-spec`
 - **Tailwind:** `preflight: false` (MUI provides reset); `important: '#__next'`; uses `tailwindcss-logical` plugin + `@core/tailwind/plugin`
 - **MUI + Tailwind coexist:** MUI for components, Tailwind for utilities and layout
+- **Typography:** Evitar anidar componentes o etiquetas HTML dentro de `<Typography>`. Si se necesita alinear un Chip, icono u otro elemento junto a un texto, usar `<Stack direction='row' spacing={1} alignItems='center'>` en lugar de `<Typography component='span'>` o `<span>` con clases de margen
 - **PostCSS:** tailwind/nesting/autoprefixer (standard)
+- **Date pickers:** Usar `CustomDatePicker` de `@/@core/components/react-datepicker` para todos los campos de fecha (no usar `type='date'` en CustomTextField). CustomDatePicker recibe `control`, `errors`, `name`, `label` (y opcionalmente `minDate`). Los valores se manejan como objetos Date y deben convertirse a string con `moment().format("YYYY-MM-DD")` al enviar al API.
 
 ## VS Code conventions
 
