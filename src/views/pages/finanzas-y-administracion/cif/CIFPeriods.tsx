@@ -61,7 +61,6 @@ const CIFPeriods = ({ data }: CIFPeriodsProps) => {
                 bgcolor: selectedId === String(item.id) ? "action.selected" : undefined,
                 cursor: "pointer"
               }}
-              onClick={() => router.push(`/finanzas-y-administracion/cif/${item.id}`)}
             >
               <Box
                 sx={{
