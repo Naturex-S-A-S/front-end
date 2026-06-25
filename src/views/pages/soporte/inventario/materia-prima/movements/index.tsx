@@ -47,7 +47,7 @@ const Movements = () => {
     <div className='flex flex-col gap-2'>
       <Filter onApplyFilters={onApplyFilters} defaultValues={defaultFilters} />
       <CustomDataGrid
-        columns={columns({ handleEdit, handleDelete, filters })}
+        columns={columns({ handleEdit, handleDelete, filters, type: "feedStock" })}
         getRowClassName={(params: any) => (params.row.type === "input" ? "input" : "output")}
         data={data}
         isLoading={isLoading}

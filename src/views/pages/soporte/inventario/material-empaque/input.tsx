@@ -51,7 +51,7 @@ const Input = () => {
 
   const onSubmit = (values: any) => {
     const req = {
-      idMaterial: values.material.id,
+      idPackaging: values.material.id,
       idProvider: values.provider.id,
       quantity: Number(values.quantity),
       charge: Number(values.charge),

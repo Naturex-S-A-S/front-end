@@ -42,7 +42,7 @@ const Output = () => {
   const onSubmit = (values: any) => {
     const req = {
       batch: values.batch,
-      idMaterial: values.material.id,
+      idPackaging: values.material.id,
       quantity: Number(values.quantity)
     };
 

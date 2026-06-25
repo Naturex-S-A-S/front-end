@@ -7,13 +7,13 @@ export const postPackaging = async (data: any) => {
 };
 
 export const postKardexInput = async (data: any) => {
-  const response = await API().post("/kardex/packaging/input", data);
+  const response = await API().post("/packaging-kardex/input", data);
 
   return response.data;
 };
 
 export const postKardexOutput = async (data: any) => {
-  const response = await API().post("/kardex/packaging/output", data);
+  const response = await API().post("/packaging-kardex/output", data);
 
   return response.data;
 };
