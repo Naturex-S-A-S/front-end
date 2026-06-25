@@ -26,7 +26,18 @@ export interface IPeriod {
   notes?: string;
   nameUser: string;
   dateCreated: string;
-  items: any[];
+  items: IItemPeriod[];
+}
+export interface IItemPeriod {
+  id: number;
+  amount: number;
+  description: string;
+  idCifType: number;
+  cifTypeName: string;
+  cifTypeCostBasis: string;
+  idPeriod: number;
+  nameUser: string;
+  dateCreated: string;
 }
 
 export interface IPostPeriod {

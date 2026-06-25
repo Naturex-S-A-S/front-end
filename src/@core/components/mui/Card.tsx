@@ -1,16 +1,16 @@
+import type { CardProps } from "@mui/material";
 import { Card, CardContent, CardHeader } from "@mui/material";
 
-interface Props {
-  title?: React.ReactNode;
+interface Props extends CardProps {
+  title?: React.ReactNode | any;
   children: React.ReactNode;
   action?: React.ReactNode;
-  className?: string;
 }
 
-const CustomCard: React.FC<Props> = ({ title, children, action, className }) => {
+const CustomCard: React.FC<Props> = ({ title, children, action, className, ...props }) => {
   return (
-    <Card className={`w-full`}>
-      {title && <CardHeader title={title} action={action} />}
+    <Card className={`w-full `} {...props}>
+      {title && <CardHeader title={title} action={action} className={`${className}`} />}
       <CardContent className={`${className}`}>{children}</CardContent>
     </Card>
   );

@@ -5,7 +5,7 @@ export const cifTypeSchema = yup
     name: yup.string().required("El nombre es requerido"),
     costBasis: yup
       .string()
-      .oneOf(["fixed", "variable"], "Seleccione una opción")
+      .oneOf(["fixed", "per_kg"], "Seleccione una opción")
       .required("La base de costo es requerida"),
     active: yup.boolean().required("El estado es requerido")
   })

@@ -175,7 +175,7 @@ const CifTypeDialog = ({ open, toogleDialog, item }: DialogProps) => {
                     helperText={methods.formState.errors.costBasis?.message as string}
                   >
                     <MenuItem value='fixed'>Fijo</MenuItem>
-                    <MenuItem value='variable'>Variable</MenuItem>
+                    <MenuItem value='per_kg'>Variable</MenuItem>
                   </CustomTextField>
                 )}
               />

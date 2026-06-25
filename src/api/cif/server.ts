@@ -5,8 +5,6 @@ import { apiFetch } from "../apiFetch";
 
 export const getCifTypesServer = cache(async (): Promise<ICifType[]> => {
   try {
-    console.log("Fetching CIF types...");
-
     return await apiFetch<ICifType[]>("costs/cif/types", { tags: ["cif-types"] });
   } catch {
     return [];
@@ -15,8 +13,6 @@ export const getCifTypesServer = cache(async (): Promise<ICifType[]> => {
 
 export const getPeriodsServer = cache(async (): Promise<IPeriod[]> => {
   try {
-    console.log("Fetching CIF periods...");
-
     return await apiFetch<IPeriod[]>("costs/cif/periods", { tags: ["cif-periods"] });
   } catch {
     return [];
@@ -25,7 +21,7 @@ export const getPeriodsServer = cache(async (): Promise<IPeriod[]> => {
 
 export async function getPeriodByIdServer(id: number): Promise<IPeriod | null> {
   try {
-    return await apiFetch<IPeriod>(`costs/cif/periods/${id}`, { tags: ["cif-periods"] });
+    return await apiFetch<IPeriod>(`costs/cif/periods/${id}`, { tags: [`cif-periods-${id}`] });
   } catch {
     return null;
   }
