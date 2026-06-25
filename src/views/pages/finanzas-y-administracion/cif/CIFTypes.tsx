@@ -16,6 +16,7 @@ import { createCifType, updateCifType } from "@/api/cif/actions";
 import { cifTypeSchema } from "@/utils/schemas/cif";
 import type { ICifType, IPostCifType } from "@/types/pages/cif";
 import CustomIconButton from "@/@core/components/mui/IconButton";
+import { usePagination, PaginationBar } from "@/@core/components/pagination";
 
 interface TiposCIFPanelProps {
   data: ICifType[];
@@ -27,6 +28,8 @@ const TiposCIFPanel = ({ data }: TiposCIFPanelProps) => {
   const handleEdit = (item: ICifType) => {
     setDialogItem(item);
   };
+
+  const { paginatedData, page, setPage, pageCount } = usePagination(data, 6);
 
   return (
     <>
@@ -47,7 +50,7 @@ const TiposCIFPanel = ({ data }: TiposCIFPanelProps) => {
         }
       >
         <Box display='flex' flexDirection='column' gap={2}>
-          {data.map(item => (
+          {paginatedData.map(item => (
             <Card key={item.id} variant='outlined'>
               <Box
                 sx={{
@@ -76,6 +79,7 @@ const TiposCIFPanel = ({ data }: TiposCIFPanelProps) => {
             </Card>
           ))}
         </Box>
+        <PaginationBar page={page} count={pageCount} onChange={setPage} />
       </CustomCard>
       {dialogItem && (
         <CifTypeDialog

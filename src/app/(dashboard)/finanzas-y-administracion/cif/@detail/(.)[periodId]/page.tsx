@@ -15,7 +15,11 @@ const Page = ({ params }: { params: { periodId: string } }) => {
 async function DataFetcher({ periodId }: { periodId: string }) {
   const [period, cifTypes] = await Promise.all([getPeriodByIdServer(Number(periodId)), getCifTypesServer()]);
 
-  return <PeriodDetail period={period} cifTypes={cifTypes} />;
+  return (
+    <div key={periodId}>
+      <PeriodDetail period={period} cifTypes={cifTypes} />
+    </div>
+  );
 }
 
 export default Page;

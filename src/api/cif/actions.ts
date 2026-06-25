@@ -117,6 +117,7 @@ export async function closePeriod(id: number): Promise<ActionResult> {
     await apiFetch(`costs/cif/periods/${id}/close`, {
       method: "POST"
     });
+
     revalidateTag("cif-periods");
     revalidateTag(`cif-periods-${id}`);
 

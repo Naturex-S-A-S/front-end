@@ -51,7 +51,6 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
   const [isPending, startTransition] = useTransition();
   const [items, setItems] = useState<IItemForm[]>([]);
   const [closeDialogOpen, setCloseDialogOpen] = useState(false);
-  const [localClosed, setLocalClosed] = useState(false);
 
   useEffect(() => {
     if (!period) return;
@@ -68,7 +67,7 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
     );
   }, [period, period?.id]);
 
-  const isClosed = period?.status === "closed" || localClosed;
+  const isClosed = period?.status === "closed";
 
   if (!period) {
     return (
@@ -178,9 +177,8 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
 
       if (result.success) {
         toast.success("Período cerrado con éxito");
-        setCloseDialogOpen(false);
-        setLocalClosed(true);
         router.refresh();
+        setCloseDialogOpen(false);
       } else {
         toast.error(result.error || "Error al cerrar el período");
       }

@@ -4,6 +4,8 @@ import { useState, useTransition } from "react";
 
 import { useRouter, usePathname } from "next/navigation";
 
+import Link from "next/link";
+
 import { FormProvider, useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import toast from "react-hot-toast";
@@ -22,6 +24,7 @@ import { createPeriod } from "@/api/cif/actions";
 import { periodSchema } from "@/utils/schemas/cif";
 import type { IPeriod, IPostPeriod } from "@/types/pages/cif";
 import CustomIconButton from "@/@core/components/mui/IconButton";
+import { usePagination, PaginationBar } from "@/@core/components/pagination";
 
 interface CIFPeriodsProps {
   data: IPeriod[];
@@ -29,9 +32,10 @@ interface CIFPeriodsProps {
 
 const CIFPeriods = ({ data }: CIFPeriodsProps) => {
   const [open, setOpen] = useState(false);
-  const router = useRouter();
   const pathname = usePathname();
   const selectedId = pathname.match(/\/(\d+)$/)?.[1] || null;
+
+  const { paginatedData, page, setPage, pageCount } = usePagination(data, 6);
 
   return (
     <>
@@ -52,7 +56,7 @@ const CIFPeriods = ({ data }: CIFPeriodsProps) => {
         }
       >
         <Box display='flex' flexDirection='column' gap={2}>
-          {data.map(item => (
+          {paginatedData.map(item => (
             <Card
               key={item.id}
               variant='outlined'
@@ -86,18 +90,16 @@ const CIFPeriods = ({ data }: CIFPeriodsProps) => {
                     {item.startDate} a {item.endDate}
                   </Typography>
                 </Stack>
-                <CustomIconButton
-                  onClick={e => {
-                    e.stopPropagation();
-                    router.push(`/finanzas-y-administracion/cif/${item.id}`);
-                  }}
-                >
-                  <Icon icon='mingcute:right-fill' fontSize={15} />
-                </CustomIconButton>
+                <Link href={`/finanzas-y-administracion/cif/${item.id}`}>
+                  <CustomIconButton>
+                    <Icon icon='mingcute:right-fill' fontSize={15} />
+                  </CustomIconButton>
+                </Link>
               </Box>
             </Card>
           ))}
         </Box>
+        <PaginationBar page={page} count={pageCount} onChange={setPage} />
       </CustomCard>
       {open && (
         <CreatePeriodDialog
@@ -118,6 +120,7 @@ interface DialogProps {
 
 const CreatePeriodDialog = ({ open, onClose }: DialogProps) => {
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const methods = useForm<any>({
     defaultValues: { name: "", month: undefined, year: undefined, startDate: null, endDate: null, notes: "" },
@@ -140,6 +143,7 @@ const CreatePeriodDialog = ({ open, onClose }: DialogProps) => {
         toast.success("Período creado con éxito");
         reset();
         onClose();
+        router.refresh();
       } else {
         toast.error(result.error || "Error al crear el período");
       }
