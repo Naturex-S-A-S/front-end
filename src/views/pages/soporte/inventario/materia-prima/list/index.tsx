@@ -9,7 +9,7 @@ import usePatchFeedstock from "@/hooks/feedstock/usePatchFeedstock";
 const defaultFilters = {
   category: undefined,
   measureUnit: { label: "Gramo", value: "g" },
-  allergen: false,
+  allergen: undefined,
   active: true
 };
 

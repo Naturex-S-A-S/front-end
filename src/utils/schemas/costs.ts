@@ -20,3 +20,13 @@ export const costConfigSchema = yup.object({
     .max(1000, "Máximo 1000%")
     .required("Requerido")
 }).required();
+
+export const costEstimateSchema = yup.object({
+  productId: yup.string().required("Seleccione un producto"),
+  quantityKg: yup
+    .number()
+    .typeError("Requerido")
+    .min(0.1, "Mínimo 0.1 kg")
+    .required("Requerido"),
+  notes: yup.string().nullable()
+}).required();

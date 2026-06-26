@@ -40,3 +40,5 @@ export const STATUS_LABEL: any = {
   finalizada: "Completada",
   cancelada: "Cancelada"
 };
+
+export const TAX_PERCENTAGE = 19.0;

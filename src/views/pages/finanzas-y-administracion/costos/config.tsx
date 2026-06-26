@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 
 import { useRouter } from "next/navigation";
 
@@ -36,11 +36,23 @@ const ConfigForm = ({ initialData, periodsCount }: Props) => {
     [config]
   );
 
-  const [mode, setMode] = useState<Mode>(() => {
-    if (periodsCount === 0) return "no-periods";
+  const [mode, setMode] = useState<Mode>(hasData ? "view" : "edit");
 
-    return hasData ? "view" : "edit";
-  });
+  const prevPeriodsCount = useRef(periodsCount);
+
+  useEffect(() => {
+    setConfig(initialData);
+  }, [initialData]);
+
+  useEffect(() => {
+    if (periodsCount === 0) {
+      setMode("no-periods");
+    } else if (prevPeriodsCount.current === 0 && periodsCount > 0) {
+      setMode(hasData ? "view" : "edit");
+    }
+
+    prevPeriodsCount.current = periodsCount;
+  }, [periodsCount, hasData]);
 
   const methods = useForm<IPutCostConfig>({
     defaultValues: config ?? { cifAveragingMonths: 0, defaultWastePct: 0, defaultMarginPct: 0 },
@@ -73,7 +85,7 @@ const ConfigForm = ({ initialData, periodsCount }: Props) => {
     });
   };
 
-  const handleUpdateClick = () => {
+  const handleEditClick = () => {
     if (periodsCount === 0) {
       setMode("no-periods");
 
@@ -81,6 +93,11 @@ const ConfigForm = ({ initialData, periodsCount }: Props) => {
     }
 
     setMode("edit");
+  };
+
+  const handleCancel = () => {
+    reset(config ?? { cifAveragingMonths: 0, defaultWastePct: 0, defaultMarginPct: 0 });
+    setMode("view");
   };
 
   if (mode === "no-periods") {
@@ -116,40 +133,57 @@ const ConfigForm = ({ initialData, periodsCount }: Props) => {
             <span>Configuración de Costos</span>
           </Stack>
         }
+        action={
+          <CustomButton size='small' onClick={handleEditClick}>
+            Editar
+          </CustomButton>
+        }
       >
         <Grid container spacing={4}>
-          <Grid item xs={4} sm={3}>
-            <Stack spacing={1}>
-              <Typography variant='body2' color='text.secondary'>
-                Meses de Promedio CIF
-              </Typography>
-              <Typography variant='body1' fontWeight={600}>
-                {config.cifAveragingMonths}
-              </Typography>
-            </Stack>
+          <Grid item xs={12} md={4}>
+            <Box className='rounded-lg border border-gray-200 p-4'>
+              <Stack spacing={1.5} textAlign={"center"}>
+                <Stack direction='row' spacing={1} alignItems='center' justifyContent='center'>
+                  <Icon icon='mdi:calendar-clock' fontSize={20} className='text-gray-500' />
+                  <Typography variant='body2' color='text.secondary'>
+                    Meses de Promedio CIF
+                  </Typography>
+                </Stack>
+                <Typography variant='h3' fontWeight={700} color='primary.main'>
+                  {config.cifAveragingMonths}
+                </Typography>
+              </Stack>
+            </Box>
           </Grid>
-          <Grid item xs={4} sm={3}>
-            <Stack spacing={1}>
-              <Typography variant='body2' color='text.secondary'>
-                % Merma por Defecto
-              </Typography>
-              <Typography variant='body1' fontWeight={600}>
-                {config.defaultWastePct}%
-              </Typography>
-            </Stack>
+          <Grid item xs={12} md={4}>
+            <Box className='rounded-lg border border-gray-200 p-4'>
+              <Stack spacing={1.5} textAlign={"center"}>
+                <Stack direction='row' spacing={1} alignItems='center' justifyContent='center'>
+                  <Icon icon='mdi:package-variant-closed' fontSize={20} className='text-gray-500' />
+                  <Typography variant='body2' color='text.secondary'>
+                    % Merma por Defecto
+                  </Typography>
+                </Stack>
+                <Typography variant='h3' fontWeight={700} color='primary.main'>
+                  {config.defaultWastePct}%
+                </Typography>
+              </Stack>
+            </Box>
           </Grid>
-          <Grid item xs={4} sm={3}>
-            <Stack spacing={1}>
-              <Typography variant='body2' color='text.secondary'>
-                % Margen por Defecto
-              </Typography>
-              <Typography variant='body1' fontWeight={600}>
-                {config.defaultMarginPct}%
-              </Typography>
-            </Stack>
-          </Grid>
-          <Grid item xs={12} sm={3} className='flex justify-center'>
-            <CustomButton onClick={handleUpdateClick}>Actualizar</CustomButton>
+          <Grid item xs={12} md={4}>
+            <Box className='rounded-lg border border-gray-200 p-4'>
+              <Stack spacing={1.5} textAlign={"center"}>
+                <Stack direction='row' spacing={1} alignItems='center' justifyContent='center'>
+                  <Icon icon='mdi:percent' fontSize={20} className='text-gray-500' />
+                  <Typography variant='body2' color='text.secondary'>
+                    % Margen por Defecto
+                  </Typography>
+                </Stack>
+                <Typography variant='h3' fontWeight={700} color='primary.main'>
+                  {config.defaultMarginPct}%
+                </Typography>
+              </Stack>
+            </Box>
           </Grid>
         </Grid>
       </CustomCard>
@@ -167,8 +201,8 @@ const ConfigForm = ({ initialData, periodsCount }: Props) => {
     >
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={4}>
-            <Grid item xs={12} sm={3}>
+          <Grid container spacing={4} alignItems='flex-end'>
+            <Grid item xs={12} sm={4} lg={3}>
               <Controller
                 name='cifAveragingMonths'
                 control={control}
@@ -186,7 +220,7 @@ const ConfigForm = ({ initialData, periodsCount }: Props) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={4} lg={3}>
               <Controller
                 name='defaultWastePct'
                 control={control}
@@ -204,7 +238,7 @@ const ConfigForm = ({ initialData, periodsCount }: Props) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={4} lg={3}>
               <Controller
                 name='defaultMarginPct'
                 control={control}
@@ -222,9 +256,12 @@ const ConfigForm = ({ initialData, periodsCount }: Props) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={3} className='flex justify-center'>
+            <Grid item xs={12} lg={3} gap={2} display={"flex"} justifyContent={"center"}>
+              <CustomButton variant='outlined' onClick={handleCancel} disabled={isPending}>
+                Cancelar
+              </CustomButton>
               <CustomButton type='submit' isLoading={isPending}>
-                Guardar Configuración
+                Guardar
               </CustomButton>
             </Grid>
           </Grid>

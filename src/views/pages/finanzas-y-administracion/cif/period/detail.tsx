@@ -6,8 +6,6 @@ import { useRouter } from "next/navigation";
 import {
   Box,
   Card,
-  CardContent,
-  CardHeader,
   Chip,
   Grid,
   MenuItem,
@@ -31,6 +29,7 @@ import type { ICifType, IPeriod } from "@/types/pages/cif";
 import { addItemToPeriod, closePeriod, deleteItemInPeriod, updateItemInPeriod } from "@/api/cif/actions";
 import CustomButton from "@/@core/components/mui/Button";
 import CustomDialog from "@/@core/components/mui/Dialog";
+import { formatCurrency } from "@/utils/format";
 
 // ---
 
@@ -230,33 +229,38 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
       <Grid container spacing={3} className='mt-2'>
         <Grid item xs={4}>
           <Card variant='outlined' className='h-full'>
-            <CardHeader title={"CIF Total del periodo"} className='p-2' />
-            <CardContent className='p-2'>
-              <Typography variant='h4'>$ {cifTotal.toFixed(2)}</Typography>
-            </CardContent>
+            <Box textAlign='center' py={2}>
+              <Typography variant='caption' color='text.secondary'>
+                CIF Total del periodo
+              </Typography>
+              <Typography variant='h5' fontWeight={600} color='primary.main'>
+                {formatCurrency(cifTotal)}
+              </Typography>
+            </Box>
           </Card>
         </Grid>
         <Grid item xs={4}>
           <Card variant='outlined' className='h-full'>
-            <CardHeader title={"Kg producidos"} className='p-2' />
-            <CardContent className='p-2'>
-              <TextField
-                placeholder='0.0'
-                defaultValue={period.totalKgProduced ?? ""}
-                className='w-full'
-                disabled={isClosed}
-                type='number'
-                size='small'
-              />
-            </CardContent>
+            <Box textAlign='center' py={2}>
+              <Typography variant='caption' color='text.secondary'>
+                Kg producidos
+              </Typography>
+              <Typography variant='h5' fontWeight={600} color='primary.main'>
+                {period.totalKgProduced}
+              </Typography>
+            </Box>
           </Card>
         </Grid>
         <Grid item xs={4}>
           <Card variant='outlined' className='h-full'>
-            <CardHeader title={"CIF / Kg"} className='p-2' />
-            <CardContent className='p-2'>
-              <Typography variant='h4'>$ {cifPerKg.toFixed(2)}</Typography>
-            </CardContent>
+            <Box textAlign='center' py={2}>
+              <Typography variant='caption' color='text.secondary'>
+                CIF / Kg
+              </Typography>
+              <Typography variant='h5' fontWeight={600} color='primary.main'>
+                {formatCurrency(cifPerKg)}
+              </Typography>
+            </Box>
           </Card>
         </Grid>
 
