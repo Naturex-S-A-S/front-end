@@ -197,14 +197,6 @@ const Form: React.FC<Props> = ({
                         {step === 2 && (
                           <>
                             <Divider />
-                            <CustomTextField
-                              {...register("batch")}
-                              fullWidth
-                              label='Lote'
-                              placeholder='Ej: 11997'
-                              error={!!errors.batch}
-                              helperText={errors.batch?.message}
-                            />
                             <CustomDatePicker
                               control={control}
                               minDate={moment().add(1, "day").toDate()}

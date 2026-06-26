@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Box, Card, CardContent, CardHeader, Grid, MenuItem } from "@mui/material";
 
@@ -50,11 +50,12 @@ interface IProps {
   materials: IOrderDetail[];
   products: IOrderItem[];
   kardex: IOrderKardex[];
+  batch: string;
   orderId: number;
   canCreate: boolean;
 }
 
-const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreate }) => {
+const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, canCreate }) => {
   const [open, setOpen] = useState(false);
 
   const { warehouseList } = useGetWarehouseList();
@@ -175,7 +176,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
     }
   };
 
-  const handleOnReset = (value?: any) => {
+  const handleOnReset = useCallback((value?: any) => {
     reset({
       category: value,
       material: null,
@@ -185,12 +186,16 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
       quantity: null,
       observation: "",
       classification: "",
-      batch: "",
+      batch,
       rack: null,
       expiration_date_1: "",
       expiration_date_2: ""
     });
-  };
+  }, []);
+
+  useEffect(() => {
+    handleOnReset();
+  }, [batch, handleOnReset]);
 
   const handleOnChangeCategory = (_: any, value: any) => {
     setValue("category", value);
@@ -295,6 +300,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                       control={control}
                       render={({ field: { value, onChange }, fieldState: { error } }: any) => (
                         <CustomTextField
+                          disabled
                           label='Lote'
                           value={value ?? ""}
                           onChange={e => onChange(e.target.value)}
@@ -412,6 +418,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
                       control={control}
                       render={({ field: { value, onChange }, fieldState: { error } }: any) => (
                         <CustomTextField
+                          disabled
                           label='Lote'
                           value={value ?? ""}
                           onChange={e => onChange(e.target.value)}

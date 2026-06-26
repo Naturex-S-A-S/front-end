@@ -254,6 +254,7 @@ const Detail: React.FC<Props> = ({ order }) => {
           products={order.items}
           orderId={order.id}
           kardex={order.kardex}
+          batch={order.batch}
           canCreate={order.status === STATUS_LABEL.en_proceso}
         />
       </Grid>

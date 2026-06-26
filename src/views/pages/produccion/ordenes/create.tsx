@@ -115,7 +115,6 @@ const Create = () => {
 
       const req = {
         quantityExpected,
-        batch: values.batch,
         date_expiration: moment(values.expirationDate1).format("YYYY-MM-DD"),
         products: values.presentations.map((product: any) => ({
           id: product.id,

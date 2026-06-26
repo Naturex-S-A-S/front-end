@@ -105,7 +105,6 @@ export interface IOrderSupply {
 
 export interface IOrderCreate {
   quantityExpected: number;
-  batch: string;
   date_expiration: string;
   products: {
     id: string;
