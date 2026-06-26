@@ -36,7 +36,7 @@ export const STATUS_COLOR: Record<string, "warning" | "success" | "error" | "def
 };
 
 export const STATUS_LABEL: any = {
-  en_proceso: "En proceso",
+  en_proceso: "en_proceso",
   finalizada: "Completada",
   cancelada: "Cancelada"
 };
