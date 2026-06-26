@@ -4,8 +4,10 @@ import { Grid, Typography } from "@mui/material";
 
 import Loader from "@/@core/components/react-spinners";
 import PageHeader from "@/@core/components/page-header";
+import Tabs from "@/views/pages/finanzas-y-administracion/cif/tabs";
+import { getCifTypesServer, getPeriodsServer } from "@/api/cif/server";
 
-export default function CifLayout({ children, detail }: { children: React.ReactNode; detail: React.ReactNode }) {
+export default function CifLayout({ children }: { children: React.ReactNode }) {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -18,11 +20,19 @@ export default function CifLayout({ children, detail }: { children: React.ReactN
         </Typography>
       </Grid>
       <Grid item xs={12} lg={4}>
-        <Suspense fallback={<Loader type='component' />}>{children}</Suspense>
+        <Suspense fallback={<Loader type='component' />}>
+          <ListFetcher />
+        </Suspense>
       </Grid>
       <Grid item xs={12} lg={8}>
-        <Suspense fallback={<Loader type='component' />}>{detail}</Suspense>
+        <Suspense fallback={<Loader type='component' />}>{children}</Suspense>
       </Grid>
     </Grid>
   );
+}
+
+async function ListFetcher() {
+  const [initialCifTypes, initialPeriods] = await Promise.all([getCifTypesServer(), getPeriodsServer()]);
+
+  return <Tabs initialCifTypes={initialCifTypes} initialPeriods={initialPeriods} />;
 }

@@ -334,7 +334,7 @@ const EstimateView = () => {
                     )}
                     {estimate.cifIncomplete && (
                       <Alert severity='warning' icon={<Icon icon='mdi:alert-outline' />}>
-                        No hay períodos CIF disponibles. El costo CIF no está incluido en la estimación.
+                        El costo CIF no está incluido en la estimación.
                       </Alert>
                     )}
                   </Box>

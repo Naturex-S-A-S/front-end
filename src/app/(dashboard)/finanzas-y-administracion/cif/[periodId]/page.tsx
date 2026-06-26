@@ -1,21 +1,25 @@
 import { Suspense } from "react";
 
 import Loader from "@/@core/components/react-spinners";
-import Tabs from "@/views/pages/finanzas-y-administracion/cif/tabs";
-import { getCifTypesServer, getPeriodsServer } from "@/api/cif/server";
+import { getCifTypesServer, getPeriodByIdServer } from "@/api/cif/server";
+import PeriodDetail from "@/views/pages/finanzas-y-administracion/cif/period/detail";
 
-const Page = () => {
+const Page = ({ params }: { params: { periodId: string } }) => {
   return (
     <Suspense fallback={<Loader type='component' />}>
-      <DataFetcher />
+      <DataFetcher periodId={params.periodId} />
     </Suspense>
   );
 };
 
-async function DataFetcher() {
-  const [initialCifTypes, initialPeriods] = await Promise.all([getCifTypesServer(), getPeriodsServer()]);
+async function DataFetcher({ periodId }: { periodId: string }) {
+  const [period, cifTypes] = await Promise.all([getPeriodByIdServer(Number(periodId)), getCifTypesServer()]);
 
-  return <Tabs initialCifTypes={initialCifTypes} initialPeriods={initialPeriods} />;
+  return (
+    <div key={periodId}>
+      <PeriodDetail period={period} cifTypes={cifTypes} />
+    </div>
+  );
 }
 
 export default Page;

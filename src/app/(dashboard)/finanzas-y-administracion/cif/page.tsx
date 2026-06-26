@@ -1,8 +1,8 @@
-import { Suspense } from "react";
+import { Box, Typography } from "@mui/material";
 
-import Loader from "@/@core/components/react-spinners";
-import Tabs from "@/views/pages/finanzas-y-administracion/cif/tabs";
-import { getCifTypesServer, getPeriodsServer } from "@/api/cif/server";
+import { Icon } from "@iconify/react";
+
+import CustomCard from "@/@core/components/mui/Card";
 
 export const metadata = {
   title: "CIF - Naturex",
@@ -11,16 +11,18 @@ export const metadata = {
 
 const Page = () => {
   return (
-    <Suspense fallback={<Loader type='component' />}>
-      <DataFetcher />
-    </Suspense>
+    <CustomCard>
+      <Box display='flex' flexDirection='column' alignItems='center' gap={2} py={8}>
+        <Icon icon='mdi:calendar-month' fontSize={48} color='text.secondary' />
+        <Typography variant='h6' color='text.secondary'>
+          Seleccione un período
+        </Typography>
+        <Typography variant='body2' color='text.disabled'>
+          Elija un período de la lista para ver su detalle
+        </Typography>
+      </Box>
+    </CustomCard>
   );
 };
-
-async function DataFetcher() {
-  const [initialCifTypes, initialPeriods] = await Promise.all([getCifTypesServer(), getPeriodsServer()]);
-
-  return <Tabs initialCifTypes={initialCifTypes} initialPeriods={initialPeriods} />;
-}
 
 export default Page;
