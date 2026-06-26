@@ -63,7 +63,7 @@ const Detail: React.FC<IProps> = ({ product }) => {
 
     reset({
       name: product.name ?? "",
-      measurement: product.measurement?.toString() ?? "",
+      measurement: product.measurement ?? 0,
       unit: units.find((u: any) => u.id === product.unit) ?? undefined,
       minimumStandard: product.minimumStandard ?? undefined
     });
