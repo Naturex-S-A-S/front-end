@@ -189,6 +189,7 @@ const EstimateView = () => {
         setLastSavedSnapshotId(null);
         fetchCurrentPrice(selectedProduct!.id);
         fetchPriceHistory(selectedProduct!.id);
+        setEstimate(null);
       } else {
         toast.error(result.error || "Error al registrar el precio");
       }

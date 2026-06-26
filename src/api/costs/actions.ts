@@ -26,9 +26,7 @@ export async function getCostEstimateAction(
   quantityKg: number
 ): Promise<{ success: true; data: ICostEstimate } | { success: false; error: string }> {
   try {
-    const data = await apiFetch<ICostEstimate>(
-      `costs/products/${productId}/estimate?quantityKg=${quantityKg}`
-    );
+    const data = await apiFetch<ICostEstimate>(`costs/products/${productId}/estimate?quantityKg=${quantityKg}`);
 
     return { success: true, data };
   } catch (e: any) {
@@ -55,9 +53,7 @@ export async function saveCostEstimate(
 
 export async function getProductSnapshotsAction(
   productId: string
-): Promise<
-  { success: true; data: ICostSnapshotSummary[] } | { success: false; error: string }
-> {
+): Promise<{ success: true; data: ICostSnapshotSummary[] } | { success: false; error: string }> {
   try {
     const data = await apiFetch<ICostSnapshotSummary[]>(`costs/products/${productId}/snapshots`);
 
@@ -95,7 +91,6 @@ export async function registerProductPrice(
       method: "POST",
       body: JSON.stringify(data)
     });
-    revalidateTag(`costs-products-${productId}`);
 
     return { success: true };
   } catch (e: any) {
@@ -103,9 +98,7 @@ export async function registerProductPrice(
   }
 }
 
-export async function getCurrentPriceAction(
-  productId: string
-): Promise<{ success: true; data: IProductPrice | null }> {
+export async function getCurrentPriceAction(productId: string): Promise<{ success: true; data: IProductPrice | null }> {
   try {
     const data = await apiFetch<IProductPrice>(`costs/products/${productId}/price/current`);
 
@@ -115,9 +108,7 @@ export async function getCurrentPriceAction(
   }
 }
 
-export async function getPriceHistoryAction(
-  productId: string
-): Promise<{ success: true; data: IProductPrice[] }> {
+export async function getPriceHistoryAction(productId: string): Promise<{ success: true; data: IProductPrice[] }> {
   try {
     const data = await apiFetch<IProductPrice[]>(`costs/products/${productId}/price/history`);
 
