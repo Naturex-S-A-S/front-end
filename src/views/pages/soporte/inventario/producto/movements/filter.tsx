@@ -61,6 +61,7 @@ const Filter = ({ defaultValues, onApplyFilters, onClear }: Props) => {
                 <CustomAutocomplete
                   value={value}
                   options={productList}
+                  getOptionLabel={(option: any) => option?.fullName || option?.name || ""}
                   onChange={(e, value: any) => {
                     onChange(value);
                   }}
