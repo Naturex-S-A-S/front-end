@@ -6,10 +6,9 @@ import type { ICostEstimate, ICostEstimateMaterial } from "@/types/pages/costs";
 interface Props {
   estimate: ICostEstimate;
   formatCurrency: (v: number | null | undefined) => string;
-  noWrapper?: boolean;
 }
 
-const CostBreakdown = ({ estimate, formatCurrency, noWrapper }: Props) => {
+const CostBreakdown = ({ estimate, formatCurrency }: Props) => {
   const feedstockMaterials = estimate.materials?.filter(m => m.materialType === "feedstock") ?? [];
   const packagingMaterials = estimate.materials?.filter(m => m.materialType === "packaging") ?? [];
 
@@ -57,8 +56,6 @@ const CostBreakdown = ({ estimate, formatCurrency, noWrapper }: Props) => {
       )}
     </>
   );
-
-  if (noWrapper) return content;
 
   return (
     <Grid container spacing={4}>

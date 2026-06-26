@@ -295,22 +295,6 @@ const EstimateView = () => {
                 <CustomCard>
                   <Box textAlign='center' py={2}>
                     <Typography variant='caption' color='text.secondary'>
-                      Costo por Tonelada
-                    </Typography>
-                    <Typography variant='h5' fontWeight={600} color='primary.main'>
-                      {formatCurrency(estimate.costTotalTon)}
-                    </Typography>
-                    <Typography variant='caption' color='text.secondary'>
-                      Material: {formatCurrency(estimate.stdCostMaterialTon)} | CIF:{" "}
-                      {formatCurrency(estimate.costCifTon)}
-                    </Typography>
-                  </Box>
-                </CustomCard>
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <CustomCard>
-                  <Box textAlign='center' py={2}>
-                    <Typography variant='caption' color='text.secondary'>
                       Costo por Unidad
                     </Typography>
                     <Typography variant='h5' fontWeight={600} color='primary.main'>
@@ -319,6 +303,22 @@ const EstimateView = () => {
                     <Typography variant='caption' color='text.secondary'>
                       Material: {formatCurrency(estimate.stdCostMaterialUnit)} | CIF:{" "}
                       {formatCurrency(estimate.costCifUnit)}
+                    </Typography>
+                  </Box>
+                </CustomCard>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <CustomCard>
+                  <Box textAlign='center' py={2}>
+                    <Typography variant='caption' color='text.secondary'>
+                      Costo Total por Kg
+                    </Typography>
+                    <Typography variant='h5' fontWeight={600} color='primary.main'>
+                      {formatCurrency(estimate.costTotalKg * estimate.quantityKg)}
+                    </Typography>
+                    <Typography variant='caption' color='text.secondary'>
+                      Material: {formatCurrency(estimate.stdCostMaterialKg * estimate.quantityKg)} | CIF:{" "}
+                      {formatCurrency(estimate.costCifKg * estimate.quantityKg)}
                     </Typography>
                   </Box>
                 </CustomCard>
@@ -342,7 +342,7 @@ const EstimateView = () => {
               )}
 
               <Grid item xs={12} md={8}>
-                <CostBreakdown estimate={estimate} formatCurrency={formatCurrency} noWrapper />
+                <CostBreakdown estimate={estimate} formatCurrency={formatCurrency} />
               </Grid>
               <Grid item xs={12} md={4}>
                 {lastSavedSnapshotId === null && (
