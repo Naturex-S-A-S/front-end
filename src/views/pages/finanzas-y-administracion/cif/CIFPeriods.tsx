@@ -66,36 +66,36 @@ const CIFPeriods = ({ data }: CIFPeriodsProps) => {
                 cursor: "pointer"
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "8px 16px"
-                }}
-              >
-                <Stack direction={"column"} spacing={2}>
-                  <Stack direction='row' spacing={4} alignItems='center'>
-                    <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
-                      {item.name}
+              <Link href={`/finanzas-y-administracion/cif/${item.id}`}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "8px 16px"
+                  }}
+                >
+                  <Stack direction={"column"} spacing={2}>
+                    <Stack direction='row' spacing={4} alignItems='center'>
+                      <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
+                        {item.name}
+                      </Typography>
+                      <Chip
+                        label={item.status === "open" ? "Abierto" : "Cerrado"}
+                        size='small'
+                        color={item.status === "open" ? "success" : "default"}
+                        variant='outlined'
+                      />
+                    </Stack>
+                    <Typography variant='subtitle2' sx={{ color: "text.secondary" }}>
+                      {item.startDate} a {item.endDate}
                     </Typography>
-                    <Chip
-                      label={item.status === "open" ? "Abierto" : "Cerrado"}
-                      size='small'
-                      color={item.status === "open" ? "success" : "default"}
-                      variant='outlined'
-                    />
                   </Stack>
-                  <Typography variant='subtitle2' sx={{ color: "text.secondary" }}>
-                    {item.startDate} a {item.endDate}
-                  </Typography>
-                </Stack>
-                <Link href={`/finanzas-y-administracion/cif/${item.id}`}>
                   <CustomIconButton>
                     <Icon icon='mingcute:right-fill' fontSize={15} />
                   </CustomIconButton>
-                </Link>
-              </Box>
+                </Box>
+              </Link>
             </Card>
           ))}
         </Box>

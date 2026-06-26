@@ -44,7 +44,7 @@ export const kardexProductOutputSchema = yup.object({
     id: yup.string().required("El material es requerido"),
     name: yup.string().required("El label es requerido")
   }),
-  order: yup.number().typeError("El orden debe ser un número").required("El orden es requerido"),
+  order: yup.number().typeError("La orden debe ser un número").required("El orden es requerido"),
   quantity: yup
     .string()
     .min(1, "La cantidad debe ser mayor o igual a 1")
