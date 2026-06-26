@@ -135,7 +135,7 @@ const EstimateView = () => {
         setWastePct(result.data.wastePct);
         setTaxPct(TAX_PERCENTAGE);
       } else {
-        setError(result.error);
+        toast.error(result.error);
         setEstimate(null);
       }
     });
@@ -208,6 +208,18 @@ const EstimateView = () => {
 
     return { costBase, wastePct, wasteAmount, costWithWaste, taxPct: effectiveTaxPct, taxAmount, costWithTax };
   }, [estimate, wastePct, taxPct, applyTax]);
+
+  const profitMargin = useMemo(() => {
+    const price = Number(finalPrice);
+
+    if (!price || price <= 0 || !waterfall) return null;
+
+    const cost = waterfall.costWithTax;
+    const profit = price - cost;
+    const marginPct = (profit / price) * 100;
+
+    return { profit: Number(profit.toFixed(2)), marginPct: Number(marginPct.toFixed(2)) };
+  }, [finalPrice, waterfall]);
 
   return (
     <Grid container spacing={4}>
@@ -459,6 +471,17 @@ const EstimateView = () => {
                         "& input": { fontWeight: 700, fontSize: "1.1rem" }
                       }}
                     />
+                    {profitMargin && (
+                      <Alert
+                        severity={profitMargin.marginPct < 0 ? "warning" : "info"}
+                        icon={
+                          <Icon icon={profitMargin.marginPct < 0 ? "mdi:alert-outline" : "mdi:information-outline"} />
+                        }
+                        sx={{ mb: 2 }}
+                      >
+                        Margen de ganancia: {formatCurrency(profitMargin.profit)} ({profitMargin.marginPct.toFixed(2)}%)
+                      </Alert>
+                    )}
                     <CustomTextField
                       label='Notas'
                       placeholder='Ej: Precio revisado con CIF de Q2 2026'
