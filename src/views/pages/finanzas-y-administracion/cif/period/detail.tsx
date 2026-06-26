@@ -54,16 +54,20 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
   useEffect(() => {
     if (!period) return;
 
-    setItems(
-      period.items.map(item => ({
+    setItems(prev => {
+      const serverItems: IItemForm[] = period.items.map(item => ({
         localId: genLocalId(),
         id: item.id,
         idCifType: item.idCifType,
         description: item.description,
         amount: item.amount,
         saved: true
-      }))
-    );
+      }));
+
+      const unsavedItems = prev.filter(item => !item.id);
+
+      return [...serverItems, ...unsavedItems];
+    });
   }, [period, period?.id]);
 
   const isClosed = period?.status === "closed";
@@ -167,6 +171,12 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
   };
 
   const handleAdd = () => {
+    const lastItem = items[items.length - 1];
+
+    if (lastItem && !lastItem.saved && lastItem.idCifType && lastItem.amount !== "" && lastItem.amount !== 0) {
+      handleSave(lastItem.localId);
+    }
+
     setItems(prev => [...prev, { localId: genLocalId(), idCifType: "", description: "", amount: "", saved: false }]);
   };
 

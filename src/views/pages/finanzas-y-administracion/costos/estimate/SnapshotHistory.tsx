@@ -1,4 +1,4 @@
-import { Box, Chip, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 import moment from "moment";
 
@@ -18,12 +18,6 @@ interface Props {
 const typeConfig: Record<string, { label: string; icon: string; color: string }> = {
   estimation: { label: "Estimación", icon: "mdi:calculator-variant-outline", color: "info.main" },
   order_close: { label: "Cierre de orden", icon: "mdi:package-variant-closed", color: "success.main" }
-};
-
-const statusConfig: Record<string, { label: string; color: "warning" | "success" | "default" }> = {
-  draft: { label: "Borrador", color: "warning" },
-  completed: { label: "Completado", color: "success" },
-  transient: { label: "Transitorio", color: "default" }
 };
 
 const SnapshotHistory = ({ snapshots, onViewDetail, formatCurrency }: Props) => {
@@ -48,7 +42,6 @@ const SnapshotHistory = ({ snapshots, onViewDetail, formatCurrency }: Props) => 
               <TableCell>Tipo</TableCell>
               <TableCell align='right'>Cantidad (kg)</TableCell>
               <TableCell align='right'>Costo Total ($/kg)</TableCell>
-              <TableCell>Estado</TableCell>
               <TableCell>Notas</TableCell>
               <TableCell align='center' />
             </TableRow>
@@ -56,7 +49,6 @@ const SnapshotHistory = ({ snapshots, onViewDetail, formatCurrency }: Props) => 
           <TableBody>
             {paginatedData.map(snapshot => {
               const type = typeConfig[snapshot.snapshotType] ?? typeConfig.estimation;
-              const status = statusConfig[snapshot.status] ?? statusConfig.transient;
 
               return (
                 <TableRow key={snapshot.id}>
@@ -71,9 +63,6 @@ const SnapshotHistory = ({ snapshots, onViewDetail, formatCurrency }: Props) => 
                   </TableCell>
                   <TableCell align='right'>{snapshot.quantityKg}</TableCell>
                   <TableCell align='right'>{formatCurrency(snapshot.costTotalKg)}</TableCell>
-                  <TableCell>
-                    <Chip label={status.label} color={status.color} size='small' variant='outlined' />
-                  </TableCell>
                   <TableCell>
                     <Typography variant='body2' color='text.secondary' sx={{ maxWidth: 200 }} noWrap>
                       {snapshot.notes || "—"}
