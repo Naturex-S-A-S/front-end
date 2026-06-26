@@ -59,6 +59,7 @@ export const columns = ({ filters, type }: params): GridColDef[] => {
         renderCell: params => Number(params.row.charge).toFixed(2)
       },
       { field: "providerName", headerName: "Proveedor", width: 150 },
+      { field: "classification", headerName: "Clasificación", width: 150 },
       {
         field: "dateCreated",
         headerName: "Fecha de creación",
@@ -113,6 +114,7 @@ export const columns = ({ filters, type }: params): GridColDef[] => {
       renderCell: params => Number(params.row.charge).toFixed(2)
     },
     { field: "providerName", headerName: "Proveedor", width: 150 },
+    { field: "classification", headerName: "Clasificación", width: 150 },
     {
       field: "expirationDate1",
       headerName: "Fecha de vencimiento",
