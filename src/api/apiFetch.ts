@@ -35,8 +35,19 @@ export async function apiFetch<T>(
 
     if (!res.ok) {
       const text = await res.text().catch(() => "");
+      let message = `apiFetch ${res.status} ${res.statusText}`;
 
-      throw new Error(`apiFetch ${res.status} ${res.statusText}${text ? `: ${text}` : ""}`);
+      if (text) {
+        try {
+          const json = JSON.parse(text);
+
+          message = json.message || text;
+        } catch {
+          message += `: ${text}`;
+        }
+      }
+
+      throw new Error(message);
     }
 
     if (res.headers.get("content-length") === "0" || res.status === 204) {

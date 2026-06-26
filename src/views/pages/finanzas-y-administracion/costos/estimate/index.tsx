@@ -422,7 +422,7 @@ const EstimateView = () => {
                     <Divider sx={{ my: 0.5, borderStyle: "dashed" }} />
                     <Box display='flex' justifyContent='space-between' alignItems='center' py={0.5}>
                       <Typography variant='body2' color='text.secondary'>
-                        Costo Total
+                        Costo Sugerido
                       </Typography>
                       <Typography variant='body2' fontWeight={600}>
                         {formatCurrency(waterfall.costWithTax)}
