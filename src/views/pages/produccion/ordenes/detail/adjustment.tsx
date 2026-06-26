@@ -101,7 +101,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, orderId, canCreat
 
   const productOptions = products.map((product: any) => ({
     id: product.finalProduct.id,
-    label: product.finalProduct.name
+    label: `${product.finalProduct.name} ${product.finalProduct.measurement}${product.finalProduct.unit}`
   }));
 
   const { mutate: mutateInputProduct, isPending: isPendingInputProduct } = useMutation({
