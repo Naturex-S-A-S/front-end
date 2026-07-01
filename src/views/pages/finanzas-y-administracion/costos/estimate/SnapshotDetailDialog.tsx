@@ -1,6 +1,6 @@
 import { useEffect, useState, useTransition } from "react";
 
-import { Box, Chip, Divider, Grid, Typography } from "@mui/material";
+import { Box, Divider, Grid, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 import moment from "moment";
 
@@ -21,11 +21,11 @@ const typeConfig: Record<string, { label: string; icon: string; color: string }>
   order_close: { label: "Cierre de orden", icon: "mdi:package-variant-closed", color: "#388e3c" }
 };
 
-const statusConfig: Record<string, { label: string; color: "warning" | "success" | "default" }> = {
+/*const statusConfig: Record<string, { label: string; color: "warning" | "success" | "default" }> = {
   draft: { label: "Borrador", color: "warning" },
   completed: { label: "Completado", color: "success" },
   transient: { label: "Transitorio", color: "default" }
-};
+};*/
 
 const SnapshotDetailDialog = ({ snapshotId, open, onClose }: Props) => {
   const [data, setData] = useState<ICostEstimate | null>(null);
@@ -55,7 +55,8 @@ const SnapshotDetailDialog = ({ snapshotId, open, onClose }: Props) => {
   };
 
   const type = data ? typeConfig[data.snapshotType] ?? typeConfig.estimation : null;
-  const status = data ? statusConfig[data.status] ?? statusConfig.transient : null;
+
+  // const status = data ? statusConfig[data.status] ?? statusConfig.transient : null;
 
   return (
     <CustomDialog
@@ -85,17 +86,21 @@ const SnapshotDetailDialog = ({ snapshotId, open, onClose }: Props) => {
                 <Grid item>
                   <Box display='flex' alignItems='center' gap={1}>
                     <Icon icon={type.icon} fontSize={20} color={type.color} />
-                    <Typography variant='body2' fontWeight={600}>
-                      {type.label}
-                    </Typography>
+                    {data.idOrder && (
+                      <Grid item>
+                        <Typography variant='caption' color='text.secondary'>
+                          Orden: <strong>{data.idOrder}</strong>
+                        </Typography>
+                      </Grid>
+                    )}
                   </Box>
                 </Grid>
               )}
-              {status && (
+              {/*status && (
                 <Grid item>
                   <Chip label={status.label} color={status.color} size='small' variant='outlined' />
                 </Grid>
-              )}
+              )*/}
               <Grid item>
                 <Typography variant='body2' color='text.secondary'>
                   {moment(data.dateSnapshot).format("DD/MM/YYYY HH:mm")}

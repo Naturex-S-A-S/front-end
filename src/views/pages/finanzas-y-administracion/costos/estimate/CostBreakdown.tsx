@@ -75,8 +75,8 @@ const MaterialTable = ({
     <TableHead>
       <TableRow>
         <TableCell>Material</TableCell>
-        <TableCell align='right'>Cantidad Estándar</TableCell>
-        <TableCell align='right'>Costo Unitario</TableCell>
+        <TableCell align='right'>Cantidad (Kg)</TableCell>
+        <TableCell align='right'>Costo (Kg)</TableCell>
         <TableCell align='right'>Costo Total</TableCell>
       </TableRow>
     </TableHead>
@@ -84,9 +84,9 @@ const MaterialTable = ({
       {materials.map((mat, idx) => (
         <TableRow key={idx}>
           <TableCell>{mat.materialName}</TableCell>
-          <TableCell align='right'>{mat.stdQuantity}</TableCell>
+          <TableCell align='right'>{mat.realQuantity}</TableCell>
           <TableCell align='right'>{formatCurrency(mat.stdUnitCost)}</TableCell>
-          <TableCell align='right'>{formatCurrency(mat.stdTotalCost)}</TableCell>
+          <TableCell align='right'>{formatCurrency(mat.realTotalCost)}</TableCell>
         </TableRow>
       ))}
     </TableBody>
