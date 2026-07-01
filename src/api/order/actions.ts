@@ -18,3 +18,19 @@ export async function updateOrderStatus(orderId: number, status: string) {
     return { success: false, error: e.message };
   }
 }
+
+export async function createOrderSupply(data: any) {
+  try {
+    const result = await apiFetch<any>("orders/supply", {
+      method: "POST",
+      body: JSON.stringify(data),
+      tags: ["orders-supply"]
+    });
+
+    revalidateTag("orders-supply");
+
+    return { success: true, id: result.id };
+  } catch (e: any) {
+    return { success: false, error: e.message };
+  }
+}

@@ -22,10 +22,13 @@ import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-
 
 import classNames from "classnames";
 
+import moment from "moment";
+
 import CustomTextField from "@/@core/components/mui/TextField";
 import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
 import CustomButton from "@/@core/components/mui/Button";
 import useGetProductList from "@/hooks/product/useGetProductList";
+import CustomDatePicker from "@/@core/components/react-datepicker";
 
 type Props = {
   isPending: boolean;
@@ -195,21 +198,13 @@ const Form: React.FC<Props> = ({
                         {step === 2 && (
                           <>
                             <Divider />
-                            {/*<CustomTextField
-                              {...register('batch')}
-                              fullWidth
-                              label='Lote'
-                              placeholder='Ej: 11997'
-                              error={!!errors.batch}
-                              helperText={errors.batch?.message}
-                            />
                             <CustomDatePicker
                               control={control}
-                              minDate={moment().add(1, 'day').toDate()}
+                              minDate={moment().add(1, "day").toDate()}
                               name='expirationDate1'
                               label='Fecha de vencimiento'
                               errors={errors?.expirationDate1?.message}
-                            />*/}
+                            />
                             <CustomButton
                               text='Generar aprovisionamiento'
                               type='submit'

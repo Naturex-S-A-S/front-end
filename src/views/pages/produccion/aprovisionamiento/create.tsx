@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useState, useTransition } from "react";
 
 import { useRouter } from "next/navigation";
 
@@ -22,10 +22,12 @@ import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from "@/utils/consta
 import { alertMessageErrors } from "@/utils/messages";
 import { orderSchema } from "@/utils/schemas/order";
 import { orderDefaultValues } from "@/utils/defaultValues/order";
-import { getOrderSupplyCalculate, postOrderSupply } from "@/api/order";
+import { getOrderSupplyCalculate } from "@/api/order";
+import { createOrderSupply } from "@/api/order/actions";
 
 const Create = () => {
   const [isChanged, setIsChanged] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const router = useRouter();
   const ability = useAbility();
@@ -42,16 +44,6 @@ const Create = () => {
   });
 
   const { handleSubmit, setValue, getValues }: any = methods;
-
-  const { isPending, mutateAsync: createOrder } = useMutation({
-    mutationFn: postOrderSupply,
-    onSuccess: response => {
-      router.replace(`/produccion/aprovisionamiento/${response.id}`);
-    },
-    onError: (error: any) => {
-      alertMessageErrors(error, "Error al crear la orden");
-    }
-  });
 
   const { mutateAsync: mutateOrderSupplyCalculate, isPending: isPendingOrderCalculate } = useMutation({
     mutationFn: getOrderSupplyCalculate,
@@ -94,7 +86,6 @@ const Create = () => {
 
     const req = {
       quantityExpected,
-      batch: values.batch,
       date_expiration: moment(values.expirationDate1).format("YYYY-MM-DD"),
       products: values.presentations.map((product: any, index: number) => ({
         id: product.id,
@@ -103,7 +94,16 @@ const Create = () => {
       }))
     };
 
-    createOrder(req);
+    startTransition(async () => {
+      const result = await createOrderSupply(req);
+
+      if (result.success) {
+        toast.success("Orden creada con éxito");
+        router.replace(`/produccion/aprovisionamiento/${result.id}`);
+      } else {
+        toast.error(result.error || "Error al crear la orden");
+      }
+    });
   };
 
   if (!canCreateProvisioning) return null;
