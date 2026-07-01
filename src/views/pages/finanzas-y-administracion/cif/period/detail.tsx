@@ -198,7 +198,7 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
     <CustomCard
       title={
         <div className='flex items-center gap-2'>
-          {period.name}{" "}
+          {period.name} ({period.month}/{period.year})
           <Chip
             label={period.status === "open" ? "Abierto" : "Cerrado"}
             size='small'
