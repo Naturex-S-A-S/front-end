@@ -50,6 +50,7 @@ export interface IOrder {
   idUser: string;
   idFormulation: number;
   idVersion: number;
+  sequentialVersionNumber: number;
   formulationName: string;
   userFullName: string;
   items: IOrderItem[];

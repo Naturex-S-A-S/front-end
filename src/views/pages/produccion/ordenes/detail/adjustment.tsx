@@ -1,6 +1,8 @@
 import type { FC } from "react";
 import { useCallback, useEffect, useState } from "react";
 
+import { useRouter } from "next/navigation";
+
 import { Box, Card, CardContent, CardHeader, Grid, MenuItem } from "@mui/material";
 
 import { Controller, useForm } from "react-hook-form";
@@ -58,6 +60,8 @@ interface IProps {
 const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, canCreate }) => {
   const [open, setOpen] = useState(false);
 
+  const router = useRouter();
+
   const { warehouseList } = useGetWarehouseList();
   const queryClient = useQueryClient();
 
@@ -112,6 +116,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
       toogleDialog();
       queryClient.invalidateQueries({ queryKey: ["getOrderById", Number(orderId)] });
       toast.success("Ajuste registrado correctamente");
+      router.refresh();
     },
     onError: (error: any) => {
       alertMessageErrors(error, "Error al registrar el ajuste");
@@ -125,6 +130,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
       toogleDialog();
       queryClient.invalidateQueries({ queryKey: ["getOrderById", Number(orderId)] });
       toast.success("Ajuste registrado correctamente");
+      router.refresh();
     },
     onError: (error: any) => {
       alertMessageErrors(error, "Error al registrar el ajuste");
@@ -138,6 +144,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
       toogleDialog();
       queryClient.invalidateQueries({ queryKey: ["getOrderById", Number(orderId)] });
       toast.success("Ajuste registrado correctamente");
+      router.refresh();
     },
     onError: (error: any) => {
       alertMessageErrors(error, "Error al registrar el ajuste");
