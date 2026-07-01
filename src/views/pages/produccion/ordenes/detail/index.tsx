@@ -1,4 +1,3 @@
-import type { Theme } from "@mui/material";
 import {
   Box,
   Card,
@@ -11,11 +10,8 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Typography,
-  useMediaQuery
+  Typography
 } from "@mui/material";
-
-import classNames from "classnames";
 
 import { formatDate } from "@/utils/format";
 import type { IOrder } from "@/types/pages/order";
@@ -26,16 +22,10 @@ interface Props {
   order: IOrder;
 }
 
+const cardBorderClass =
+  "sm:[&:nth-of-type(odd)>div]:pie-6 sm:[&:nth-of-type(odd)>div]:border-ie md:[&:not(:last-child)>div]:pie-6 md:[&:not(:last-child)>div]:border-ie";
+
 const Detail: React.FC<Props> = ({ order }) => {
-  const isBelowMdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
-  const isBelowSmScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
-
-  const getCardClass = () =>
-    classNames({
-      "[&:nth-of-type(odd)>div]:pie-6 [&:nth-of-type(odd)>div]:border-ie": isBelowMdScreen && !isBelowSmScreen,
-      "[&:not(:last-child)>div]:pie-6 [&:not(:last-child)>div]:border-ie": !isBelowMdScreen
-    });
-
   const totalQuantityG = order.details?.reduce((a, b) => a + b.quantity, 0) ?? 0;
   const totalQuantityTotal = order.details?.reduce((a, b) => a + b.quantityTotal, 0) ?? 0;
 
@@ -90,7 +80,7 @@ const Detail: React.FC<Props> = ({ order }) => {
                     Versión
                   </Typography>
                   <Typography variant='body2' fontWeight={600}>
-                    v{order.idVersion}
+                    v{order.sequentialVersionNumber}
                   </Typography>
                 </Box>
                 <Box display='flex' justifyContent='space-between'>
@@ -166,7 +156,7 @@ const Detail: React.FC<Props> = ({ order }) => {
             <Card>
               <CardContent>
                 <Grid container spacing={6}>
-                  <Grid item xs={12} sm={6} md={3} className={getCardClass()}>
+                  <Grid item xs={12} sm={6} md={3} className={cardBorderClass}>
                     <div className='flex h-full'>
                       <div className='flex flex-col justify-between'>
                         <Typography variant='caption'>Cantidad esperada</Typography>
@@ -175,7 +165,7 @@ const Detail: React.FC<Props> = ({ order }) => {
                     </div>
                   </Grid>
 
-                  <Grid item xs={12} sm={6} md={3} className={getCardClass()}>
+                  <Grid item xs={12} sm={6} md={3} className={cardBorderClass}>
                     <div className='flex h-full'>
                       <div className='flex flex-col justify-between'>
                         <Typography variant='caption'>Cantidad producida</Typography>
@@ -184,7 +174,7 @@ const Detail: React.FC<Props> = ({ order }) => {
                     </div>
                   </Grid>
 
-                  <Grid item xs={12} sm={6} md={3} className={getCardClass()}>
+                  <Grid item xs={12} sm={6} md={3} className={cardBorderClass}>
                     <div className='flex h-full'>
                       <div className='flex flex-col justify-between'>
                         <Typography variant='caption'>Total base (g)</Typography>
@@ -193,7 +183,7 @@ const Detail: React.FC<Props> = ({ order }) => {
                     </div>
                   </Grid>
 
-                  <Grid item xs={12} sm={6} md={3} className={getCardClass()}>
+                  <Grid item xs={12} sm={6} md={3} className={cardBorderClass}>
                     <div className='flex h-full'>
                       <div className='flex flex-col justify-between'>
                         <Typography variant='caption'>Total general (g)</Typography>
