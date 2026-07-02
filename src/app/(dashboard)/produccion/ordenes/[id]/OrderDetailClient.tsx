@@ -13,6 +13,7 @@ import NotFound from "@/views/NotFound";
 import { updateOrderStatus } from "@/api/order/actions";
 import type { IOrder } from "@/types/pages/order";
 import Swal from "@/lib/swal";
+import { STATUS } from "@/utils/constant";
 
 type Props = {
   order: IOrder | null;
@@ -74,12 +75,12 @@ const OrderDetailClient = ({ order }: Props) => {
         createdAt={order.dateCreated}
         actions={
           <>
-            {order.status === "en_proceso" && (
+            {order.status === STATUS.en_proceso && (
               <Button variant='contained' color='primary' onClick={handleFinalize}>
                 Finalizar
               </Button>
             )}
-            {order.status === "en_proceso" && (
+            {order.status === STATUS.en_proceso && (
               <Button variant='outlined' color='error' onClick={handleCancel}>
                 Cancelar
               </Button>

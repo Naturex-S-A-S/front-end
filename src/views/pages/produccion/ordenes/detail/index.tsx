@@ -16,7 +16,7 @@ import {
 import { formatDate } from "@/utils/format";
 import type { IOrder } from "@/types/pages/order";
 import Adjustment from "./adjustment";
-import { STATUS_COLOR, STATUS_LABEL } from "@/utils/constant";
+import { STATUS, STATUS_COLOR, STATUS_LABEL } from "@/utils/constant";
 
 interface Props {
   order: IOrder;
@@ -44,7 +44,7 @@ const Detail: React.FC<Props> = ({ order }) => {
                   <Typography variant='h6'>{order.formulationName}</Typography>
                 </Box>
                 <Chip
-                  label={STATUS_LABEL[order.status] ?? order.status}
+                  label={order.statusName ?? STATUS_LABEL[order.status]}
                   color={STATUS_COLOR[order.status] ?? "default"}
                   size='small'
                 />
@@ -245,7 +245,7 @@ const Detail: React.FC<Props> = ({ order }) => {
           orderId={order.id}
           kardex={order.kardex}
           batch={order.batch}
-          canCreate={order.status === STATUS_LABEL.en_proceso}
+          canCreate={order.status === STATUS.en_proceso}
         />
       </Grid>
     </Grid>

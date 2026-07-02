@@ -41,6 +41,7 @@ export interface IOrder {
   classification: string;
   batch: string;
   status: string;
+  statusName: string;
   quantityExpected: number;
   quantityProduced: number;
   charge: number;
@@ -65,6 +66,7 @@ export interface IOrderList {
   dateCreated: string;
   quantityExpected: number;
   status: string;
+  statusName: string;
   productNames: string[];
 }
 

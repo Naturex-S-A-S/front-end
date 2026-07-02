@@ -38,7 +38,7 @@ export const useColumns = (): GridColDef[] => {
       renderCell: params => (
         <Box className='flex items-center' style={{ height: "100%" }}>
           <Chip
-            label={STATUS_LABEL[params.row.status] ?? params.row.status}
+            label={params.row.statusName ?? STATUS_LABEL[params.row.status]}
             color={STATUS_COLOR[params.row.status] ?? "default"}
             size='small'
           />

@@ -35,10 +35,16 @@ export const STATUS_COLOR: Record<string, "warning" | "success" | "error" | "def
   cancelada: "error"
 };
 
-export const STATUS_LABEL: any = {
+export const STATUS_LABEL: Record<string, string> = {
   en_proceso: "En proceso",
   finalizada: "Finalizada",
   cancelada: "Cancelada"
+};
+
+export const STATUS = {
+  en_proceso: "en_proceso",
+  finalizada: "finalizada",
+  cancelada: "cancelada"
 };
 
 export const TAX_PERCENTAGE = 19.0;
