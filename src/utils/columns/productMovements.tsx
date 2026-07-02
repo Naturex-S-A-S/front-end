@@ -39,6 +39,7 @@ export const columns = (): GridColDef[] => {
         );
       }
     },
+    { field: "rack", headerName: "Ubicación", width: 150, renderCell: params => params.row.rack?.name },
     { field: "classification", headerName: "Clasificación", width: 150 },
     { field: "observation", headerName: "Observaciones", width: 150 },
     {

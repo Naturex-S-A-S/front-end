@@ -57,6 +57,18 @@ export const useColumns = ({ handleStatus, isPending }: params): GridColDef[] =>
       width: 150
     },
     {
+      field: "productHistoryComplete",
+      headerName: "Cantidad completa",
+      width: 150,
+      renderCell: params => params.row.productHistory?.reduce((acc: any, item: any) => acc + item.quantityCompleted, 0)
+    },
+    {
+      field: "productHistoryInProcess",
+      headerName: "Cantidad en proceso",
+      width: 150,
+      renderCell: params => params.row.productHistory?.reduce((acc: any, item: any) => acc + item.quantityInProcess, 0)
+    },
+    {
       field: "active",
       headerName: "Activo",
       width: 80,

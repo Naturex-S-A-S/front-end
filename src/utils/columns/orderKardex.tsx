@@ -29,8 +29,7 @@ export const columns = (): GridColDef[] => {
       }
     },
     { field: "batch", headerName: "Lote", width: 120 },
-    { field: "location", headerName: "Ubicación", width: 120 },
-    { field: "rack", headerName: "Estante", width: 120 },
+    { field: "rack", headerName: "Ubicación", width: 150, renderCell: params => params.row.rack?.name },
     { field: "observations", headerName: "Observaciones", flex: 1, minWidth: 200 },
     { field: "dateCreate", headerName: "Fecha de creación", width: 180 }
   ];
