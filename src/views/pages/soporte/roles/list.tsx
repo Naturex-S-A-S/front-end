@@ -15,8 +15,6 @@ import CardContent from "@mui/material/CardContent";
 
 import { Icon } from "@iconify/react";
 
-import Swal from "sweetalert2";
-
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
@@ -30,8 +28,9 @@ import Loader from "@/@core/components/react-spinners";
 import type { Role } from "@/types/pages/role";
 
 import { deleteRole, getRoleById, updateRole } from "@/api/role";
-import { useSettings } from "@/@core/hooks/useSettings";
+
 import { alertMessageErrors } from "@/utils/messages";
+import Swal from "@/lib/swal";
 
 const List = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -39,7 +38,6 @@ const List = () => {
 
   const queryClient = useQueryClient();
 
-  const { settings } = useSettings();
   const { data: roles, isLoading, isRefetching, isFetching } = useGetRoles();
   const ability = useAbility();
 
@@ -95,13 +93,7 @@ const List = () => {
       title: "¿Estás seguro?",
       text: "Eliminar el rol, no se puede deshacer",
       icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#009541",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Eliminar",
-      cancelButtonText: "Cancelar",
-      theme: settings.mode === "dark" ? "dark" : "light",
-      background: settings.mode === "dark" ? "#2f3349" : "#ffffff"
+      confirmButtonText: "Eliminar"
     }).then(result => {
       if (result.isConfirmed) {
         deleteRolMutation(rolId);

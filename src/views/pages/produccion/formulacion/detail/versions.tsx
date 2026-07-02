@@ -13,17 +13,15 @@ import { Badge, Chip, Table, TableBody, TableCell, TableHead, TableRow, Typograp
 
 import { Icon } from "@iconify/react";
 
-import Swal from "sweetalert2";
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
 
 import type { IVersion } from "@/types/pages/formulation";
 import CustomButton from "@/@core/components/mui/Button";
-import { useSettings } from "@/@core/hooks/useSettings";
 import { putActivateFormulationVersion } from "@/api/formulation";
 import CreateVersion from "./createVersion";
+import Swal from "@/lib/swal";
 
 interface Props {
   formulationId: number;
@@ -45,7 +43,6 @@ const Versions: React.FC<Props> = ({ data, formulationId, isDetail = true }) => 
   const [activeStep, setActiveStep] = useState(0);
 
   const queryClient = useQueryClient();
-  const { settings } = useSettings();
 
   useEffect(() => {
     if (data && data.length > 0) {
@@ -80,13 +77,7 @@ const Versions: React.FC<Props> = ({ data, formulationId, isDetail = true }) => 
       title: `Activar versión ${version}`,
       text: "Estas a punto de cambiar la versión activa de la formulación. El producto se actualizará a esta versión.",
       icon: "info",
-      showCancelButton: true,
-      confirmButtonColor: "#009541",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Activar",
-      cancelButtonText: "Cancelar",
-      theme: settings.mode === "dark" ? "dark" : "light",
-      background: settings.mode === "dark" ? "#2f3349" : "#ffffff"
+      confirmButtonText: "Activar"
     }).then(result => {
       if (result.isConfirmed) {
         activateVersion({ formulationId, idVersion: version });

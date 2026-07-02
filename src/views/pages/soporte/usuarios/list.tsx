@@ -5,8 +5,6 @@ import { useRouter } from "next/navigation";
 
 import { useMutation } from "@tanstack/react-query";
 
-import Swal from "sweetalert2";
-
 import toast from "react-hot-toast";
 
 import CustomCard from "@/@core/components/mui/Card";
@@ -16,6 +14,7 @@ import { useColumns } from "@/utils/columns/user";
 import Edit from "./edit";
 import { alertMessageErrors } from "@/utils/messages";
 import type { IUser } from "@/types/pages/user";
+import Swal from "@/lib/swal";
 
 type Props = {
   initialData: IUser[];
@@ -53,11 +52,7 @@ const List = ({ initialData }: Props) => {
       title: "¿Estás seguro?",
       text: "Eliminar el usuario, no se puede deshacer",
       icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#009541",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Eliminar",
-      cancelButtonText: "Cancelar"
+      confirmButtonText: "Eliminar"
     }).then(result => {
       if (result.isConfirmed) {
         deleteUserMutation(userId);

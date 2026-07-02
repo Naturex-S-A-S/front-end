@@ -2,10 +2,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
 
-import Swal from "sweetalert2";
-
 import { patchPackaging } from "@/api/packaging";
 import { alertMessageErrors } from "@/utils/messages";
+import Swal from "@/lib/swal";
 
 const usePatchPackaging = () => {
   const queryClient = useQueryClient();
@@ -27,11 +26,7 @@ const usePatchPackaging = () => {
       Swal.fire({
         title: `¿Estás seguro de ${active ? "desactivar" : "activar"} "${name}"?`,
         icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#009541",
-        cancelButtonColor: "#d33",
-        confirmButtonText: active ? "Desactivar" : "Activar",
-        cancelButtonText: "Cancelar"
+        confirmButtonText: active ? "Desactivar" : "Activar"
       }).then(result => {
         if (result.isConfirmed) {
           mutation.mutateAsync({

@@ -14,8 +14,6 @@ import { useMutation } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
 
-import Swal from "sweetalert2";
-
 import moment from "moment";
 
 import { useAbility } from "@/hooks/casl/useAbility";
@@ -25,6 +23,7 @@ import { alertMessageErrors } from "@/utils/messages";
 import { orderSchema } from "@/utils/schemas/order";
 import { orderDefaultValues } from "@/utils/defaultValues/order";
 import { getOrderCalculate, postOrder } from "@/api/order";
+import Swal from "@/lib/swal";
 
 const Create = () => {
   const [isChanged, setIsChanged] = useState(false);
@@ -88,11 +87,7 @@ const Create = () => {
       Swal.fire({
         title: `No hay material suficiente. ¿Desea calcular con la cantidad disponible?`,
         icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#009541",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Continuar",
-        cancelButtonText: "Cancelar"
+        confirmButtonText: "Continuar"
       }).then(result => {
         if (result.isConfirmed) {
           const presentations = values.presentations;
