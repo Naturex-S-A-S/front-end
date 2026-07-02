@@ -90,8 +90,9 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
   };
 
   const cifTotal = items.reduce((sum, item) => sum + (Number(item.amount) || 0), 0);
-  const kg = Number(period.totalKgProduced) || 0;
-  const cifPerKg = kg > 0 ? cifTotal / kg : 0;
+
+  /*const kg = Number(period.totalKgProduced) || 0;
+  const cifPerKg = kg > 0 ? cifTotal / kg : 0;*/
 
   // --- Mutations ---
 
@@ -236,7 +237,7 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
         <Typography variant='body2'>{period.notes}</Typography>
       </Stack>
 
-      <Grid container spacing={3} className='mt-2'>
+      <Grid container spacing={3} className='mt-2' justifyContent={"center"}>
         <Grid item xs={4}>
           <Card variant='outlined' className='h-full'>
             <Box textAlign='center' py={2}>
@@ -261,7 +262,7 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
             </Box>
           </Card>
         </Grid>
-        <Grid item xs={4}>
+        {/*<Grid item xs={4}>
           <Card variant='outlined' className='h-full'>
             <Box textAlign='center' py={2}>
               <Typography variant='caption' color='text.secondary'>
@@ -272,7 +273,7 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
               </Typography>
             </Box>
           </Card>
-        </Grid>
+        </Grid>*/}
 
         <Grid item xs={12}>
           <TableContainer>

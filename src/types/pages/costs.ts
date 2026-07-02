@@ -20,8 +20,11 @@ export interface ICostEstimateMaterial {
 export interface ICostEstimateCifItem {
   idCifType: number;
   cifTypeName: string;
-  stdCost: number;
-  realCost: number | null;
+  costBasis: string;
+  avgAmount: number | null;
+  ratePerKg: number | null;
+  totalAllocated: number | null;
+  totalAmount: number;
 }
 
 export interface ICostEstimate {

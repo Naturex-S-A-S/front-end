@@ -37,18 +37,27 @@ const CostBreakdown = ({ estimate, formatCurrency }: Props) => {
               <TableHead>
                 <TableRow>
                   <TableCell>Tipo CIF</TableCell>
-                  <TableCell align='right'>Costo Estándar</TableCell>
-                  <TableCell align='right'>Costo Real</TableCell>
+                  <TableCell align='right'>Base</TableCell>
+                  <TableCell align='right'>Total</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {estimate.cifItems.map((item, idx) => (
                   <TableRow key={idx}>
                     <TableCell>{item.cifTypeName}</TableCell>
-                    <TableCell align='right'>{formatCurrency(item.stdCost)}</TableCell>
-                    <TableCell align='right'>{formatCurrency(item.realCost)}</TableCell>
+                    <TableCell align='right'>{item.costBasis}</TableCell>
+                    <TableCell align='right'>{formatCurrency(item.totalAmount)}</TableCell>
                   </TableRow>
                 ))}
+                <TableRow>
+                  <TableCell sx={{ fontWeight: 700 }}>Totales</TableCell>
+                  <TableCell align='right' sx={{ fontWeight: 700 }}>
+                    —
+                  </TableCell>
+                  <TableCell align='right' sx={{ fontWeight: 700 }}>
+                    {formatCurrency(estimate.cifItems.reduce((acc, item) => acc + item.totalAmount, 0))}
+                  </TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </CustomCard>
@@ -70,27 +79,45 @@ const MaterialTable = ({
 }: {
   materials: ICostEstimateMaterial[];
   formatCurrency: (v: number | null | undefined) => string;
-}) => (
-  <Table>
-    <TableHead>
-      <TableRow>
-        <TableCell>Material</TableCell>
-        <TableCell align='right'>Cantidad (Kg)</TableCell>
-        <TableCell align='right'>Costo (Kg)</TableCell>
-        <TableCell align='right'>Costo Total</TableCell>
-      </TableRow>
-    </TableHead>
-    <TableBody>
-      {materials.map((mat, idx) => (
-        <TableRow key={idx}>
-          <TableCell>{mat.materialName}</TableCell>
-          <TableCell align='right'>{mat.realQuantity}</TableCell>
-          <TableCell align='right'>{formatCurrency(mat.stdUnitCost)}</TableCell>
-          <TableCell align='right'>{formatCurrency(mat.realTotalCost)}</TableCell>
+}) => {
+  const totalRealQuantity = materials.reduce((acc, m) => acc + (m.realQuantity ?? 0), 0);
+  const totalStdTotalCost = materials.reduce((acc, m) => acc + m.stdTotalCost, 0);
+
+  return (
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Material</TableCell>
+          <TableCell align='right'>Cantidad base (Kg)</TableCell>
+          <TableCell align='right'>Costo base (Kg)</TableCell>
+          <TableCell align='right'>Cantidad total (Kg)</TableCell>
+          <TableCell align='right'>Costo Total</TableCell>
         </TableRow>
-      ))}
-    </TableBody>
-  </Table>
-);
+      </TableHead>
+      <TableBody>
+        {materials.map((mat, idx) => (
+          <TableRow key={idx}>
+            <TableCell>{mat.materialName}</TableCell>
+            <TableCell align='right'>{mat.stdQuantity}</TableCell>
+            <TableCell align='right'>{formatCurrency(mat.stdUnitCost)}</TableCell>
+            <TableCell align='right'>{mat.realQuantity?.toFixed(2)}</TableCell>
+            <TableCell align='right'>{formatCurrency(mat.stdTotalCost)}</TableCell>
+          </TableRow>
+        ))}
+        <TableRow>
+          <TableCell sx={{ fontWeight: 700 }}>Totales</TableCell>
+          <TableCell />
+          <TableCell />
+          <TableCell align='right' sx={{ fontWeight: 700 }}>
+            {totalRealQuantity.toFixed(2)}
+          </TableCell>
+          <TableCell align='right' sx={{ fontWeight: 700 }}>
+            {formatCurrency(totalStdTotalCost)}
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  );
+};
 
 export default CostBreakdown;
