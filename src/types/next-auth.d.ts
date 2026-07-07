@@ -19,13 +19,14 @@ export interface IChild {
 declare module "next-auth" {
   interface Session {
     access_token?: string;
+    refresh_token?: string;
     tokenExpires: number;
     user?: {
       id?: string;
       name?: string;
       email?: string;
     };
-    role: string;
+    role: any;
     modules: any;
     permissions?: IPermissions[];
   }
@@ -34,13 +35,14 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     access_token?: string;
+    refresh_token?: string;
     tokenExpires: number;
     user?: {
       id?: string;
       name?: string;
       email?: string;
     };
-    role: string;
+    role: any;
     permissions?: IPermissions[];
   }
 }

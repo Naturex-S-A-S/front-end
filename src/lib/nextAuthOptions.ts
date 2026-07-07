@@ -3,6 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 import { authentication } from "@/api/user";
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+
 export const authOptions = {
   providers: [
     CredentialsProvider({
@@ -32,8 +34,15 @@ export const authOptions = {
         }
 
         return {
-          id: "",
-          access_token: res.token
+          id: res.userId,
+          access_token: res.token,
+          refresh_token: res.refreshToken,
+          userId: res.userId,
+          userName: res.userName,
+          userLastName: res.userLastName,
+          email: res.email,
+          role: res.role,
+          modules: res.modules
         };
       }
     })
@@ -42,28 +51,46 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, user }: any) {
       if (user) {
+        // Login: user info viene del body, exp y modules del JWT
+        const payload: any = decodeJwt(user.access_token as string);
+
         token.access_token = user.access_token;
+        token.refresh_token = user.refresh_token;
+        token.user = {
+          id: user.userId,
+          name: `${user.userName} ${user.userLastName}`.trim(),
+          email: user.email
+        };
+        token.permissions = user.modules;
+        token.role = user.role;
+        token.tokenExpires = payload.exp;
+      }
 
+      // Refresh si el token está próximo a expirar
+      if (token.tokenExpires && Date.now() / 1000 > token.tokenExpires) {
         try {
-          // Decode JWT
-          const payload: any = decodeJwt(user.access_token as string);
+          const res = await fetch(`${API_BASE_URL}auth/refresh`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ refreshToken: token.refresh_token })
+          });
 
-          console.log("Decoded JWT payload:", payload);
+          if (!res.ok) {
+            console.error("Token refresh failed:", res.status);
 
-          // User
-          token.user = {
-            id: payload.userId,
-            name: payload?.userName || "Sin nombre",
-            email: payload?.email || ""
-          };
+            return null;
+          }
 
-          token.permissions = payload.modules;
+          const data = await res.json();
+          const payload: any = decodeJwt(data.token);
 
-          token.role = payload.role ?? "";
-
+          token.access_token = data.token;
+          token.refresh_token = data.refreshToken;
           token.tokenExpires = payload.exp;
         } catch (e) {
-          console.error("Failed to decode access_token", e);
+          console.error("Token refresh error:", e);
+
+          return null;
         }
       }
 
@@ -71,9 +98,8 @@ export const authOptions = {
     },
 
     async session({ session, token }: any) {
-      // Send properties to the client
-
       session.access_token = token.access_token;
+      session.refresh_token = token.refresh_token;
       session.user = token.user;
       session.permissions = token.permissions;
       session.role = token.role;
@@ -86,10 +112,4 @@ export const authOptions = {
   pages: {
     signIn: "/login"
   }
-
-  // debug: true,
-
-  /*session: {
-        strategy: "jwt",
-    },*/
 };

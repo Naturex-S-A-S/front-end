@@ -5,10 +5,12 @@ export interface IAuthenticationData {
 }
 
 export interface IAuthenticationResponse {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  };
   token: string;
+  refreshToken: string;
+  userId: string;
+  userName: string;
+  userLastName: string;
+  email: string;
+  role: { id: number; name: string };
+  modules: any[];
 }
