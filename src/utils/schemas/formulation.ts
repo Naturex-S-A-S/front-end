@@ -12,12 +12,16 @@ export const formulationSchema = yup
     details: yup
       .array()
       .required("Los detalles son requeridos")
-      .test("validate-details-except-last", "Debe agregar al menos un detalle", async function (value) {
+      .test("validate-filled-rows", "Debe agregar al menos un material", async function (value) {
         const { path, createError } = this;
         const arr = Array.isArray(value) ? value : [];
 
-        if (arr.length === 0) {
-          return createError({ path, message: "Debe agregar al menos un detalle" });
+        const filledRows = arr.filter(
+          (item: any) => item?.material != null || item?.quantity != null
+        );
+
+        if (filledRows.length === 0) {
+          return createError({ path, message: "Debe agregar al menos un material con su cantidad" });
         }
 
         const itemSchema = yup.object().shape({
@@ -30,16 +34,18 @@ export const formulationSchema = yup
           quantity: yup
             .number()
             .typeError("La cantidad debe ser válida")
-            .test("required", "La cantidad es requerida", value => value !== undefined && value !== null)
             .min(1, "La cantidad debe ser al menos 1")
+            .required("La cantidad es requerida")
         });
 
-        // Validate all items except the last one
-        const toValidate = arr.slice(0, -1);
+        for (let i = 0; i < arr.length; i++) {
+          const item = arr[i];
+          const isBlank = item?.material == null && item?.quantity == null;
 
-        for (let i = 0; i < toValidate.length; i++) {
+          if (isBlank) continue;
+
           try {
-            await itemSchema.validate(toValidate[i]);
+            await itemSchema.validate(item);
           } catch (err: any) {
             return createError({
               path: `${path}[${i}]`,
@@ -59,12 +65,16 @@ export const formulationVersionSchema = yup
     details: yup
       .array()
       .required("Los detalles son requeridos")
-      .test("validate-details-except-last", "Debe agregar al menos un detalle", async function (value) {
+      .test("validate-filled-rows", "Debe agregar al menos un material", async function (value) {
         const { path, createError } = this;
         const arr = Array.isArray(value) ? value : [];
 
-        if (arr.length === 0) {
-          return createError({ path, message: "Debe agregar al menos un detalle" });
+        const filledRows = arr.filter(
+          (item: any) => item?.material != null || item?.quantity != null
+        );
+
+        if (filledRows.length === 0) {
+          return createError({ path, message: "Debe agregar al menos un material con su cantidad" });
         }
 
         const itemSchema = yup.object().shape({
@@ -77,13 +87,18 @@ export const formulationVersionSchema = yup
           quantity: yup
             .number()
             .typeError("La cantidad debe ser válida")
-            .test("required", "La cantidad es requerida", value => value !== undefined && value !== null)
             .min(1, "La cantidad debe ser al menos 1")
+            .required("La cantidad es requerida")
         });
 
         for (let i = 0; i < arr.length; i++) {
+          const item = arr[i];
+          const isBlank = item?.material == null && item?.quantity == null;
+
+          if (isBlank) continue;
+
           try {
-            await itemSchema.validate(arr[i]);
+            await itemSchema.validate(item);
           } catch (err: any) {
             return createError({
               path: `${path}[${i}]`,

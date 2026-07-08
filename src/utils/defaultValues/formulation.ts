@@ -2,7 +2,12 @@ export const formulationDefaultValues = {
   name: "",
   comment: "",
   products: [],
-  details: []
+  details: [
+    {
+      material: null,
+      quantity: null
+    }
+  ]
 };
 
 export const formulationVersionDefaultValues = {

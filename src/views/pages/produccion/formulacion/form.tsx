@@ -1,5 +1,3 @@
-import { Fragment, useEffect } from "react";
-
 import {
   Alert,
   Button,
@@ -14,7 +12,7 @@ import {
   TableRow
 } from "@mui/material";
 
-import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
 import { Icon } from "@iconify/react";
 
@@ -45,14 +43,12 @@ const Form: React.FC<Props> = ({ isPending, isNewVersion = false }) => {
   });
 
   const handleAddDetail = () => {
-    append({ idMaterial: null, quantity: null });
+    append({ material: null, quantity: null });
   };
 
-  useEffect(() => {
-    if (fields.length === 0) {
-      append({ idMaterial: null, quantity: null });
-    }
-  }, [fields, append]);
+  const watchedDetails = useWatch({ control, name: "details" });
+
+  const totalQuantity = watchedDetails?.reduce((sum: number, row: any) => sum + (Number(row?.quantity) || 0), 0) || 0;
 
   return (
     <Grid container spacing={4}>
@@ -131,7 +127,7 @@ const Form: React.FC<Props> = ({ isPending, isNewVersion = false }) => {
           </TableHead>
           <TableBody>
             {fields.map((row, index) => (
-              <TableRow key={index}>
+              <TableRow key={row.id}>
                 <TableCell>
                   <Controller
                     {...register(`details.${index}.material`)}
@@ -144,14 +140,7 @@ const Form: React.FC<Props> = ({ isPending, isNewVersion = false }) => {
                           onChange(value);
                         }}
                         renderInput={params => (
-                          <CustomTextField
-                            {...params}
-                            label=''
-                            placeholder='Seleccione un material'
-
-                            // error={!!errors.products?.[0]?.id}
-                            // helperText={errors.products?.[0]?.id?.message}
-                          />
+                          <CustomTextField {...params} label='' placeholder='Seleccione un material' />
                         )}
                       />
                     )}
@@ -169,38 +158,49 @@ const Form: React.FC<Props> = ({ isPending, isNewVersion = false }) => {
                 </TableCell>
                 <TableCell>
                   <div className='flex justify-center gap-2'>
-                    {/*<Button variant='outlined' color='success' onClick={() => remove(index)}>
-                      <Icon icon='mdi:content-save' />
+                    <Button variant='outlined' color='error' size='small' onClick={() => remove(index)}>
+                      <Icon icon='mdi:trash-can-outline' />
                     </Button>
-                    <Button variant='outlined' color='secondary' onClick={() => remove(index)}>
-                      <Icon icon='mdi:cancel' />
-                    </Button>
-                    <Button variant='outlined' color='secondary' onClick={() => remove(index)}>
-                      <Icon icon='mdi:pen' />
-                    </Button>*/}
-
-                    {index !== 0 ? (
-                      <>
-                        {index === fields.length - 1 && (
-                          <Button variant='outlined' color='success' onClick={() => handleAddDetail()}>
-                            <Icon icon='mdi:plus' />
-                          </Button>
-                        )}
-                        <Button variant='outlined' color='error' onClick={() => remove(index)}>
-                          <Icon icon='mdi:trash-can' />
-                        </Button>
-                      </>
-                    ) : fields.length === 1 ? (
-                      <Button variant='outlined' color='success' onClick={() => handleAddDetail()}>
-                        <Icon icon='mdi:plus' />
-                      </Button>
-                    ) : null}
                   </div>
                 </TableCell>
               </TableRow>
             ))}
+            <TableRow>
+              <TableCell colSpan={3}>
+                <Button variant='text' color='primary' onClick={handleAddDetail} startIcon={<Icon icon='mdi:plus' />}>
+                  Agregar material
+                </Button>
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Alert
+          severity={
+            totalQuantity === 0 ? "info" : totalQuantity === 100 ? "success" : totalQuantity < 100 ? "warning" : "error"
+          }
+          icon={
+            totalQuantity === 0 ? undefined : (
+              <Icon
+                icon={
+                  totalQuantity === 100 ? "mdi:check-circle" : totalQuantity < 100 ? "mdi:alert" : "mdi:close-circle"
+                }
+              />
+            )
+          }
+        >
+          {totalQuantity === 0 ? (
+            <span>
+              Fórmula base para producir <b>100 gramos</b>
+            </span>
+          ) : (
+            <span>
+              Total de materiales: <b>{totalQuantity.toFixed(2)} (g)</b> / <b>100.00 (g)</b>
+            </span>
+          )}
+        </Alert>
       </Grid>
 
       {isNewVersion && (
@@ -215,7 +215,7 @@ const Form: React.FC<Props> = ({ isPending, isNewVersion = false }) => {
         )}
       </Grid>
       <Grid item xs={12} className='flex justify-center'>
-        <CustomButton text='Guardar' type='submit' isLoading={isPending} />
+        <CustomButton text='Guardar' type='submit' isLoading={isPending} disabled={totalQuantity !== 100} />
       </Grid>
     </Grid>
   );
