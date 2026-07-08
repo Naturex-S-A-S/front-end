@@ -159,7 +159,7 @@ const Detail: React.FC<Props> = ({ order }) => {
                   <Grid item xs={12} sm={6} md={3} className={cardBorderClass}>
                     <div className='flex h-full'>
                       <div className='flex flex-col justify-between'>
-                        <Typography variant='caption'>Cantidad esperada</Typography>
+                        <Typography variant='caption'>Cantidad esperada (Kg)</Typography>
                         <Typography variant='h5'>{order.quantityExpected}</Typography>
                       </div>
                     </div>
@@ -168,7 +168,7 @@ const Detail: React.FC<Props> = ({ order }) => {
                   <Grid item xs={12} sm={6} md={3} className={cardBorderClass}>
                     <div className='flex h-full'>
                       <div className='flex flex-col justify-between'>
-                        <Typography variant='caption'>Cantidad producida</Typography>
+                        <Typography variant='caption'>Cantidad producida (Kg)</Typography>
                         <Typography variant='h5'>{order.quantityProduced}</Typography>
                       </div>
                     </div>

@@ -47,7 +47,7 @@ export const useColumns = (): GridColDef[] => {
     },
     {
       field: "quantityExpected",
-      headerName: "Cantidad esperada",
+      headerName: "Cantidad esperada (Kg)",
       width: 150,
       renderCell: params => (
         <Box className='flex items-center' style={{ height: "100%" }}>

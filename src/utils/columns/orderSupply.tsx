@@ -22,7 +22,7 @@ export const columns = (): GridColDef[] => [
   },
   {
     field: "quantityExpected",
-    headerName: "Cantidad esperada",
+    headerName: "Cantidad esperada (Kg)",
     width: 150,
     renderCell: params => <QuantityCell value={params.row.quantityExpected} />
   },

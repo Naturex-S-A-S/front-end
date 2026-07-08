@@ -251,7 +251,7 @@ const EstimateView = () => {
             </Grid>
             <Grid item xs={6} sm={3} md={2}>
               <CustomTextField
-                label='Cantidad (kg)'
+                label='Unidades'
                 type='number'
                 placeholder='Ej: 100'
                 value={quantityKg}
