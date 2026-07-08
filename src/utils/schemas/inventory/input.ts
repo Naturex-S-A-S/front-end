@@ -63,7 +63,10 @@ export const kardexProductInputSchema = yup
       .typeError("La cantidad debe ser un número")
       .required("La cantidad es requerida"),
     batch: yup.string().required("El lote es requerido"),
-    rack: yup.object().shape({ id: yup.string() }).optional(),
+    rack: yup
+      .object()
+      .shape({ id: yup.string().required("La estantería es requerida") })
+      .required("La estantería es requerida"),
     expirationDate1: yup.date().required("La fecha de expiración es requerida"),
     observation: yup.string().optional()
   })
