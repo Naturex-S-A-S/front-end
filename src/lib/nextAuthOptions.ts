@@ -66,7 +66,7 @@ export const authOptions = {
         token.tokenExpires = payload.exp;
       }
 
-      // Refresh si el token está próximo a expirar
+      // Refresh si el token está expirado
       if (token.tokenExpires && Date.now() / 1000 > token.tokenExpires) {
         try {
           const res = await fetch(`${API_BASE_URL}auth/refresh`, {
@@ -76,17 +76,26 @@ export const authOptions = {
           });
 
           if (!res.ok) {
-            console.error("Token refresh failed:", res.status);
+            console.error("Token refresh failed:", res.status, await res.text().catch(() => ""));
 
             return null;
           }
 
           const data = await res.json();
-          const payload: any = decodeJwt(data.token);
 
-          token.access_token = data.token;
-          token.refresh_token = data.refreshToken;
-          token.tokenExpires = payload.exp;
+          console.log("Token refreshed successfully:", data);
+
+          if (data.token) {
+            const payload: any = decodeJwt(data.token);
+
+            token.access_token = data.token;
+            token.tokenExpires = payload.exp;
+
+            // Solo actualizar refreshToken si la API devuelve uno nuevo
+            if (data.refreshToken) {
+              token.refresh_token = data.refreshToken;
+            }
+          }
         } catch (e) {
           console.error("Token refresh error:", e);
 

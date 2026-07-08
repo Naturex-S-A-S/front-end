@@ -8,6 +8,10 @@ export async function apiFetch<T>(
 ): Promise<T> {
   const session = await getServerSession(authOptions);
 
+  if (!session?.access_token) {
+    throw new Error("Sesión expirada o inválida");
+  }
+
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const url = `${baseUrl}${path.startsWith("/") ? path.replace(/^\/+/, "") : path}`;
 

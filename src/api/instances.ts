@@ -60,30 +60,21 @@ api.interceptors.response.use(
     isRefreshing = true;
 
     try {
+      // getSession() dispara el JWT callback de next-auth,
+      // que internamente refresca el token si expiró
       const session = await getSession();
 
-      if (!session?.refresh_token) {
-        throw new Error("No refresh token available");
+      if (session?.access_token) {
+        // JWT callback refrescó exitosamente (o token aún vigente)
+        accessTokenCache = session.access_token;
+        processQueue(null, session.access_token);
+        originalRequest.headers.Authorization = `Bearer ${session.access_token}`;
+
+        return api(originalRequest);
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ refreshToken: session.refresh_token })
-      });
-
-      if (!response.ok) {
-        throw new Error("Token refresh failed");
-      }
-
-      const data = await response.json();
-
-      accessTokenCache = data.token;
-
-      processQueue(null, data.token);
-      originalRequest.headers.Authorization = `Bearer ${data.token}`;
-
-      return api(originalRequest);
+      // Sesión nula o sin token → refresh falló → forzar re-login
+      throw new Error("Session invalid after refresh attempt");
     } catch (refreshError) {
       processQueue(refreshError, null);
       accessTokenCache = null;

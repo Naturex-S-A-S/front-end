@@ -13,12 +13,6 @@ export default withAuth(
         try {
           if (!token) return false;
 
-          const currentTime = Math.floor(Date.now() / 1000);
-
-          if (token.tokenExpires && token.tokenExpires < currentTime) {
-            return false;
-          }
-
           return true;
         } catch {
           return false;
