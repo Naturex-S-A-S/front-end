@@ -4,7 +4,8 @@ export const ABILITY_SUBJECT = {
   PRODUCT: "Producto terminado",
   GENERAL_PARAMETERS: "Parámetros generales",
   PRODUCTION: "Producción",
-  FINANCE_AND_ADMINISTRATION: "Finanzas y administración"
+  FINANCE_AND_ADMINISTRATION: "Finanzas y administración",
+  INVENTORY: "Inventario"
 };
 
 export const ABILITY_FIELDS = {

@@ -30,7 +30,7 @@ const Create = () => {
 
   const canCreateFormulation = ability.can(
     ABILITY_ACTIONS.CREATE as any,
-    ABILITY_SUBJECT.FINANCE_AND_ADMINISTRATION,
+    ABILITY_SUBJECT.INVENTORY,
     ABILITY_FIELDS.SUPPLIERS
   );
 
