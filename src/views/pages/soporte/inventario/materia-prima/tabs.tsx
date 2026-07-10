@@ -7,12 +7,13 @@ import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
 
 import CustomTabList from "@/@core/components/mui/TabList";
-import Create from "./create";
-import List from "./list";
-import Movements from "./movements";
 import CustomCard from "@/@core/components/mui/Card";
 import { useAbility } from "@/hooks/casl/useAbility";
+import List from "./list";
+import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from "@/utils/constant";
+import Create from "./create";
 import Input from "./input";
+import Movements from "./movements";
 import Output from "./output";
 
 const Tabs = () => {
@@ -20,31 +21,33 @@ const Tabs = () => {
 
   const ability = useAbility();
 
+  const canCreate = ability.can(ABILITY_ACTIONS.CREATE as any, ABILITY_SUBJECT.FEEDSTOCK, ABILITY_FIELDS.LISTADO);
+
   const tabs = useMemo(() => {
     return [
       {
         value: "1",
-        label: "Listado",
+        label: ABILITY_FIELDS.LISTADO,
         icon: "tabler-list",
-        allow: ability.can("read", "Materia prima", "Listado")
+        allow: ability.can(ABILITY_ACTIONS.READ as any, ABILITY_SUBJECT.FEEDSTOCK, ABILITY_FIELDS.LISTADO)
       },
       {
         value: "2",
         label: "Entradas",
         icon: "tabler-plus",
-        allow: ability.can("create", "Materia prima", "Control de entradas")
+        allow: ability.can(ABILITY_ACTIONS.CREATE as any, ABILITY_SUBJECT.FEEDSTOCK, ABILITY_FIELDS.ENTRADAS)
       },
       {
         value: "3",
         label: "Salidas",
         icon: "tabler-minus",
-        allow: ability.can("create", "Materia prima", "Control de salidas")
+        allow: ability.can(ABILITY_ACTIONS.CREATE as any, ABILITY_SUBJECT.FEEDSTOCK, ABILITY_FIELDS.SALIDAS)
       },
       {
         value: "4",
         label: "Movimientos",
         icon: "tabler-history",
-        allow: ability.can("read", "Materia prima", "Historial de movimientos")
+        allow: ability.can(ABILITY_ACTIONS.READ as any, ABILITY_SUBJECT.FEEDSTOCK, ABILITY_FIELDS.MOVIMIENTOS)
       }
     ];
   }, [ability]);
@@ -63,7 +66,6 @@ const Tabs = () => {
 
   return (
     <>
-      <Create />
       <CustomCard title=''>
         <TabContext value={validActive}>
           <CustomTabList onChange={handleChange} variant='standard' centered pill='true' sx={{ width: "100%" }}>
@@ -85,6 +87,7 @@ const Tabs = () => {
             })}
           </CustomTabList>
           <TabPanel value='1'>
+            {canCreate && <Create />}
             <List />
           </TabPanel>
           <TabPanel value='2'>

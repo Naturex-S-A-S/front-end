@@ -66,7 +66,6 @@ const Tabs = () => {
 
   return (
     <>
-      {canCreate && <Create />}
       <CustomCard title=''>
         <TabContext value={validActive}>
           <CustomTabList onChange={handleChange} variant='standard' centered pill='true' sx={{ width: "100%" }}>
@@ -88,6 +87,7 @@ const Tabs = () => {
             })}
           </CustomTabList>
           <TabPanel value='1'>
+            {canCreate && <Create />}
             <List />
           </TabPanel>
           <TabPanel value='2'>

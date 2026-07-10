@@ -8,6 +8,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
 
+import { Stack } from "@mui/material";
+
 import CreateButton from "@/components/layout/shared/CreateButton";
 import CustomDialog from "@/@core/components/mui/Dialog";
 import Form from "./form";
@@ -61,12 +63,13 @@ const Create = () => {
   const onSubmit = (values: any) => {
     mutate({
       ...values,
-      unit: values.unit.id
+      unit: values.unit.id,
+      category: values.category.map((item: any) => item.id)
     });
   };
 
   return (
-    <div>
+    <Stack justifyContent={"center"} flexDirection={"row"}>
       <CreateButton onClick={toogleDialog} />
 
       <CustomDialog open={open} toogleDialog={toogleDialog} title='Crear Producto'>
@@ -76,7 +79,7 @@ const Create = () => {
           </form>
         </FormProvider>
       </CustomDialog>
-    </div>
+    </Stack>
   );
 };
 
