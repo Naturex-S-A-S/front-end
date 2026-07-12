@@ -28,8 +28,8 @@ declare module "next-auth" {
       email?: string;
     };
     role: any;
-    modules: any;
-    permissions?: IPermissions[];*/
+    modules: any;*/
+    permissions?: IPermissions[];
   }
 }
 
