@@ -1,3 +1,7 @@
+export interface IAddProductsToFormulation {
+  products: string[];
+}
+
 export interface IPostFormulation {
   name: string;
   comment: string;

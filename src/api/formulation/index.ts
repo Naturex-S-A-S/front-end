@@ -1,4 +1,4 @@
-import type { IPostFormulation, IPostFormulationVersion } from "@/types/pages/formulation";
+import type { IPostFormulation, IPostFormulationVersion, IAddProductsToFormulation } from "@/types/pages/formulation";
 import { API } from "../instances";
 
 export const postFormulation = async (data: IPostFormulation) => {
@@ -37,6 +37,18 @@ export const getFormulations = async (params: any) => {
 
 export const putActivateFormulationVersion = async (id: number, version: number) => {
   const response = await API().put(`/formulations/${id}/version/${version}/activate`);
+
+  return response.data;
+};
+
+export const postProductsToFormulation = async (formulationId: number, data: IAddProductsToFormulation) => {
+  const response = await API().post(`/formulations/${formulationId}/products`, data);
+
+  return response.data;
+};
+
+export const deleteProductFromFormulation = async (formulationId: number, productId: string) => {
+  const response = await API().delete(`/formulations/${formulationId}/products/${productId}`);
 
   return response.data;
 };

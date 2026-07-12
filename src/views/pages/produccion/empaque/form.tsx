@@ -131,26 +131,20 @@ const Form: React.FC<Props> = ({ isPending, productName }) => {
                 </TableCell>
                 <TableCell>
                   <div className='flex justify-center gap-2'>
-                    {index !== 0 ? (
-                      <>
-                        {index === fields.length - 1 && (
-                          <Button variant='outlined' color='success' onClick={() => handleAddDetail()}>
-                            <Icon icon='mdi:plus' />
-                          </Button>
-                        )}
-                        <Button variant='outlined' color='error' onClick={() => remove(index)}>
-                          <Icon icon='mdi:trash-can' />
-                        </Button>
-                      </>
-                    ) : fields.length === 1 ? (
-                      <Button variant='outlined' color='success' onClick={() => handleAddDetail()}>
-                        <Icon icon='mdi:plus' />
-                      </Button>
-                    ) : null}
+                    <Button variant='outlined' color='error' size='small' onClick={() => remove(index)}>
+                      <Icon icon='mdi:trash-can-outline' />
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>
             ))}
+            <TableRow>
+              <TableCell colSpan={3}>
+                <Button variant='text' color='primary' onClick={handleAddDetail} startIcon={<Icon icon='mdi:plus' />}>
+                  Agregar material
+                </Button>
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </Grid>
@@ -159,6 +153,7 @@ const Form: React.FC<Props> = ({ isPending, productName }) => {
         {errors.details && Array.isArray(errors.details) && (
           <FormHelperText error>{errors.details.map((detail: any) => detail?.message)}</FormHelperText>
         )}
+        {errors?.details?.root && <FormHelperText error>{errors.details.root?.message}</FormHelperText>}
       </Grid>
 
       <Grid item xs={12} className='flex justify-center'>

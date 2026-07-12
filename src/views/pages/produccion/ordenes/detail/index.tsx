@@ -196,7 +196,7 @@ const Detail: React.FC<Props> = ({ order }) => {
                     <div className='flex h-full'>
                       <div className='flex flex-col justify-between'>
                         <Typography variant='caption'>Total general (g)</Typography>
-                        <Typography variant='h5'>{totalQuantityTotal}</Typography>
+                        <Typography variant='h5'>{totalQuantityTotal.toFixed(2)}</Typography>
                       </div>
                     </div>
                   </Grid>
