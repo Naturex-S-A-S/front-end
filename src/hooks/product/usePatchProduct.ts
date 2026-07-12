@@ -2,11 +2,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
 
-import { putActivateProduct, putDeactivateProduct, putProduct } from "@/api/product";
+import { patchProduct, putActivateProduct, putDeactivateProduct } from "@/api/product";
 import { alertMessageErrors } from "@/utils/messages";
 import Swal from "@/lib/swal";
 
-const usePutProduct = () => {
+const usePatchProduct = () => {
   const queryClient = useQueryClient();
 
   const updateCache = () => {
@@ -16,7 +16,7 @@ const usePutProduct = () => {
   };
 
   const mutation = useMutation({
-    mutationFn: ({ id, data }: any) => putProduct(id, data),
+    mutationFn: ({ id, data }: any) => patchProduct(id, data),
     onSuccess: () => {
       updateCache();
     },
@@ -70,4 +70,4 @@ const usePutProduct = () => {
   };
 };
 
-export default usePutProduct;
+export default usePatchProduct;

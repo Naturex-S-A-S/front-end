@@ -43,6 +43,12 @@ export const putProduct = async (id: string, data: IUpdateProduct) => {
   return response.data;
 };
 
+export const patchProduct = async (id: string, data: IUpdateProduct) => {
+  const response = await API().patch(`/product/${id}`, data);
+
+  return response.data;
+};
+
 export const getProductList = async () => {
   const response = await API().get("/product/list");
 

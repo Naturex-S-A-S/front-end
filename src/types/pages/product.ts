@@ -44,6 +44,7 @@ export interface IProductPackaging {
 export interface ICreateProduct {
   id: string;
   name: string;
+  categories: string[];
   measurement: number;
   unit: string;
   minimumStandard: number;
@@ -52,6 +53,7 @@ export interface ICreateProduct {
 export interface IUpdateProduct {
   name: string;
   measurement: number;
+  categories: string[];
   unit: string;
   minimumStandard: number;
 }

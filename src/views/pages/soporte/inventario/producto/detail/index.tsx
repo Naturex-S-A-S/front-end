@@ -14,7 +14,7 @@ import CustomTextField from "@/@core/components/mui/TextField";
 import type { IProduct } from "@/types/pages/product";
 import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
 import useGetProductUnit from "@/hooks/product/useGetProductUnit";
-import usePutProduct from "@/hooks/product/usePatchProduct";
+import usePatchProduct from "@/hooks/product/usePatchProduct";
 import History from "./history";
 import FormulationsList from "./formulationsList";
 import PackagingsList from "./packagingsList";
@@ -33,7 +33,7 @@ const Detail: React.FC<IProps> = ({ product }) => {
   const [openEditPackagings, setOpenEditPackagings] = useState(false);
   const { categories } = useGetCategory();
   const { units } = useGetProductUnit();
-  const { mutate, isPending } = usePutProduct();
+  const { mutate, isPending } = usePatchProduct();
   const ability = useAbility();
 
   const canReadFormulation = ability.can(
@@ -76,7 +76,7 @@ const Detail: React.FC<IProps> = ({ product }) => {
     mutate({
       id: product.id,
       data: {
-        category: newCategories
+        categories: newCategories
       }
     });
   };

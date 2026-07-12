@@ -64,7 +64,7 @@ const Create = () => {
     mutate({
       ...values,
       unit: values.unit.id,
-      category: values.category.map((item: any) => item.id)
+      categories: values.category.map((item: any) => item.id)
     });
   };
 
