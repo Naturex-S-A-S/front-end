@@ -20,7 +20,8 @@ declare module "next-auth" {
   interface Session {
     access_token?: string;
     refresh_token?: string;
-    tokenExpires: number;
+
+    /*tokenExpires: number;
     user?: {
       id?: string;
       name?: string;
@@ -28,7 +29,7 @@ declare module "next-auth" {
     };
     role: any;
     modules: any;
-    permissions?: IPermissions[];
+    permissions?: IPermissions[];*/
   }
 }
 
