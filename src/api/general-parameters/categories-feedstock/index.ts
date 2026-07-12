@@ -20,3 +20,9 @@ export const putCategoryFeedstock = async (data: IPutCategory) => {
 
   return response.data;
 };
+
+export const deleteCategoryFeedstock = async (id: string) => {
+  const response = await API().delete(`/categories/feedstock/${id}`);
+
+  return response.data;
+};

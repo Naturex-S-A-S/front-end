@@ -68,6 +68,10 @@ export const mockCategoryTypes = [
   {
     label: "Material de empaque",
     id: CategoryType.PACKAGING
+  },
+  {
+    label: "Producto terminado",
+    id: CategoryType.FINISHED_PRODUCT
   }
 ];
 

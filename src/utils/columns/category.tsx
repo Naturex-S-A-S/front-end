@@ -6,25 +6,49 @@ import type { GridColDef } from "@mui/x-data-grid";
 
 import { useAbility } from "@/hooks/casl/useAbility";
 import { formatDate } from "../format";
+import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from "../constant";
+import type { Actions } from "@/types/next-auth";
 
 type params = {
   handleEdit: (category: any) => void;
+  handleDelete: (category: any) => void;
 };
 
-export const useColumns = ({ handleEdit }: params): GridColDef[] => {
+export const useColumns = ({ handleEdit, handleDelete }: params): GridColDef[] => {
   const ability = useAbility();
+
+  const canEdit = ability.can(
+    ABILITY_ACTIONS.CREATE as Actions,
+    ABILITY_SUBJECT.GENERAL_PARAMETERS,
+    ABILITY_FIELDS.CATEGORIES
+  );
+
+  const canDelete = ability.can(
+    ABILITY_ACTIONS.DELETE as Actions,
+    ABILITY_SUBJECT.GENERAL_PARAMETERS,
+    ABILITY_FIELDS.CATEGORIES
+  );
 
   return [
     {
       field: "actions",
       headerName: "Acciones",
-      width: 80,
+      width: 100,
       renderCell: params => {
         return (
           <>
-            {ability.can("update", "Soporte", "Usuarios") && (
+            {canEdit && (
               <IconButton onMouseDown={e => e.stopPropagation()} onClick={() => handleEdit(params.row)}>
                 <Icon icon='mdi:pencil-outline' width={20} height={20} />
+              </IconButton>
+            )}
+            {canDelete && (
+              <IconButton
+                onClick={() => {
+                  handleDelete(params.row);
+                }}
+              >
+                <Icon icon='mdi:delete-outline' width={20} height={20} />
               </IconButton>
             )}
           </>

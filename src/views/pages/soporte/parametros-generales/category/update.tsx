@@ -11,6 +11,7 @@ import { alertMessageErrors } from "@/utils/messages";
 import { putCategoryFeedstock } from "@/api/general-parameters/categories-feedstock";
 import { CategoryTypeName } from "@/utils/enum";
 import { putCategoryPackaging } from "@/api/general-parameters/categories-packaging";
+import { putCategoryProduct } from "@/api/general-parameters/categories-product";
 
 interface Props {
   category: ICategory;
@@ -32,8 +33,13 @@ const Update = ({ open, toogleDialog, category }: Props) => {
   const { handleSubmit, reset } = methods;
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (data: any) =>
-      data.idType === CategoryTypeName.FEEDSTOCK ? putCategoryFeedstock(data) : putCategoryPackaging(data),
+    mutationFn: (data: any) => {
+      return data.idType === CategoryTypeName.FEEDSTOCK
+        ? putCategoryFeedstock(data)
+        : data.idType === CategoryTypeName.PACKAGING
+          ? putCategoryPackaging(data)
+          : putCategoryProduct(data);
+    },
     onSuccess: () => {
       toast.success("Categoria actualizada con éxito");
       queryClient.invalidateQueries({ queryKey: ["getCategories"] });
@@ -47,17 +53,17 @@ const Update = ({ open, toogleDialog, category }: Props) => {
 
   const onSubmit = (data: any) => {
     mutate({
-      id: category.id,
-      name: data.name,
-      idType: data.type.id
+      id: category.categoryId,
+      idType: data.type.id,
+      name: data.name
     });
   };
 
   return (
-    <CustomDialog open={open} toogleDialog={toogleDialog} title='Editar categoria'>
+    <CustomDialog open={open} toogleDialog={toogleDialog} title='Editar categoria' maxWidth='sm'>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Form isPending={isPending} />
+          <Form isPending={isPending} isEdit />
         </form>
       </FormProvider>
     </CustomDialog>

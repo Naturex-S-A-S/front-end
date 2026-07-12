@@ -4,6 +4,7 @@ interface IBaseCategory {
 
 export interface ICategory extends IBaseCategory {
   id: string;
+  categoryId: string;
   type?: string;
   dateCreated: string;
 }

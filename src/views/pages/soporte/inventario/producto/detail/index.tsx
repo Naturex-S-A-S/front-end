@@ -22,6 +22,8 @@ import EditPackagingsDialog from "./editPackagingsDialog";
 import { useAbility } from "@/hooks/casl/useAbility";
 import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from "@/utils/constant";
 import { updateProductSchema } from "@/utils/schemas/inventory/product";
+import Categories from "@/@core/components/inventory/categories";
+import useGetCategory from "@/hooks/product/useGetCategory";
 
 interface IProps {
   product: IProduct;
@@ -29,6 +31,7 @@ interface IProps {
 
 const Detail: React.FC<IProps> = ({ product }) => {
   const [openEditPackagings, setOpenEditPackagings] = useState(false);
+  const { categories } = useGetCategory();
   const { units } = useGetProductUnit();
   const { mutate, isPending } = usePutProduct();
   const ability = useAbility();
@@ -69,6 +72,15 @@ const Detail: React.FC<IProps> = ({ product }) => {
     });
   }, [product, units, reset]);
 
+  const updateCategories = (newCategories: any) => {
+    mutate({
+      id: product.id,
+      data: {
+        category: newCategories
+      }
+    });
+  };
+
   const onSubmit = (values: any) => {
     mutate({
       id: product.id,
@@ -83,7 +95,7 @@ const Detail: React.FC<IProps> = ({ product }) => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} lg={12}>
+      <Grid item xs={12} lg={8}>
         <CustomCard title='Información'>
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -151,6 +163,9 @@ const Detail: React.FC<IProps> = ({ product }) => {
             </form>
           </FormProvider>
         </CustomCard>
+      </Grid>
+      <Grid item xs={12} lg={4}>
+        <Categories data={product.categories} list={categories} update={updateCategories} isPending={isPending} />
       </Grid>
       <Grid item xs={12}>
         <CustomCard title='Historial'>

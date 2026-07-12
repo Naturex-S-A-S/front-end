@@ -20,3 +20,9 @@ export const putCategoryPackaging = async (data: IPutCategory) => {
 
   return response.data;
 };
+
+export const deleteCategoryPackaging = async (id: string) => {
+  const response = await API().delete(`/categories/packaging/${id}`);
+
+  return response.data;
+};

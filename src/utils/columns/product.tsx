@@ -3,7 +3,7 @@
 
 import { useRouter } from "next/navigation";
 
-import { Switch, Tooltip } from "@mui/material";
+import { Chip, Switch, Tooltip } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
 
 import { useAbility } from "@/hooks/casl/useAbility";
@@ -67,6 +67,37 @@ export const useColumns = ({ handleStatus, isPending }: params): GridColDef[] =>
       headerName: "Cantidad en proceso",
       width: 150,
       renderCell: params => params.row.productHistory?.reduce((acc: any, item: any) => acc + item.quantityInProcess, 0)
+    },
+    {
+      field: "categories",
+      headerName: "Categorias",
+      width: 150,
+      renderCell: params => {
+        const visible = params.row.categories?.slice(0, 1);
+        const remaining = params.row.categories?.slice(1);
+
+        return (
+          <div className='flex gap-2 justify-center items-center' style={{ height: "100%" }}>
+            {visible?.map((category: any) => (
+              <Chip key={category.id ?? category.name} label={category.name} variant='outlined' />
+            ))}
+
+            {remaining?.length > 0 && (
+              <Tooltip
+                title={
+                  <div>
+                    {remaining.map((c: any, i: number) => (
+                      <div key={c.id ?? `${c.name}-${i}`}>{c.name}</div>
+                    ))}
+                  </div>
+                }
+              >
+                <Chip label={`+${remaining.length}`} variant='outlined' />
+              </Tooltip>
+            )}
+          </div>
+        );
+      }
     },
     {
       field: "active",

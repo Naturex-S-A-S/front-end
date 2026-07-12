@@ -6,6 +6,7 @@ import CustomButton from "@/@core/components/mui/Button";
 import CustomTextField from "@/@core/components/mui/TextField";
 import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
 import useGetProductUnit from "@/hooks/product/useGetProductUnit";
+import useGetCategory from "@/hooks/product/useGetCategory";
 
 type Props = {
   isPending: boolean;
@@ -13,6 +14,7 @@ type Props = {
 };
 
 const Form: React.FC<Props> = ({ isPending }) => {
+  const { categories } = useGetCategory();
   const { units } = useGetProductUnit();
 
   const {
@@ -43,6 +45,31 @@ const Form: React.FC<Props> = ({ isPending }) => {
           placeholder='Ingrese el nombre'
           error={!!errors.name}
           helperText={errors.name?.message}
+        />
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <Controller
+          name='category'
+          control={control}
+          render={({ field: { value, onChange } }: any) => (
+            <CustomAutocomplete
+              value={value}
+              options={categories}
+              multiple
+              onChange={(e, value: any) => {
+                onChange(value);
+              }}
+              renderInput={params => (
+                <CustomTextField
+                  {...params}
+                  label='Categoria'
+                  placeholder='Seleccione una categoria'
+                  error={!!errors.category?.message}
+                  helperText={errors.category?.message}
+                />
+              )}
+            />
+          )}
         />
       </Grid>
       <Grid item xs={12} md={6}>

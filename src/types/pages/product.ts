@@ -4,6 +4,7 @@ export interface IProduct {
   measurement: number;
   unit: string;
   minimumStandard: number;
+  categories: ICategory[];
   active: boolean;
   dateCreated: string;
   formulations: any;

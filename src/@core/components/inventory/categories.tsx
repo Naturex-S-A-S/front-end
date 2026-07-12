@@ -58,7 +58,7 @@ const Categories: FC<Props> = ({ data, list, update, isPending }) => {
       {Array.isArray(data) && data.length === 0 && <span>No hay categorias</span>}
 
       <Stack direction='row' spacing={2} flexWrap='wrap'>
-        {data.map(category => (
+        {data?.map(category => (
           <Chip
             key={category.id}
             variant='outlined'

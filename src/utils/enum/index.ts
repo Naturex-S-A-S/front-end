@@ -5,12 +5,14 @@ export enum MaterialType {
 
 export enum CategoryType {
   FEEDSTOCK = "1",
-  PACKAGING = "2"
+  PACKAGING = "2",
+  FINISHED_PRODUCT = "3"
 }
 
 export enum CategoryTypeName {
   FEEDSTOCK = "Materia prima",
-  PACKAGING = "Material de empaque"
+  PACKAGING = "Material de empaque",
+  FINISHED_PRODUCT = "Producto terminado"
 }
 
 export enum DniTTypesFormat {

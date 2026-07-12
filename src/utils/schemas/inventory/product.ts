@@ -13,7 +13,15 @@ export const productSchema = yup
       name: yup.string().required("La etiqueta de la medida es requerida"),
       id: yup.string().required("La medida es requerida")
     }),
-    measurement: yup.number().typeError("La medida debe ser un número").required("La unidad es requerida")
+    measurement: yup.number().typeError("La medida debe ser un número").required("La unidad es requerida"),
+    category: yup
+      .array()
+      .of(
+        yup.object({
+          id: yup.string().required("El categoría es requerida")
+        })
+      )
+      .required("Las categorías son requeridas")
   })
   .required();
 

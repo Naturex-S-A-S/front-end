@@ -1,7 +1,9 @@
 "use client";
 import { useState } from "react";
 
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import toast from "react-hot-toast";
 
 import CustomDataGrid from "@/@core/components/mui/DataGrid";
 import Create from "./create";
@@ -9,8 +11,16 @@ import { useColumns } from "@/utils/columns/category";
 import { getCategories } from "@/api/general-parameters";
 import type { ICategory } from "@/types/pages/generalParameters";
 import Update from "./update";
+import swal from "@/lib/swal";
+import { alertMessageErrors } from "@/utils/messages";
+import { CategoryTypeName } from "@/utils/enum";
+import { deleteCategoryFeedstock } from "@/api/general-parameters/categories-feedstock";
+import { deleteCategoryPackaging } from "@/api/general-parameters/categories-packaging";
+import { deleteCategoryProduct } from "@/api/general-parameters/categories-product";
 
 const Category = () => {
+  const queryClient = useQueryClient();
+
   const [updateData, setUpdateData] = useState<{ open: boolean; category: ICategory | undefined }>({
     open: false,
     category: undefined
@@ -19,6 +29,23 @@ const Category = () => {
   const { data } = useQuery<ICategory[]>({
     queryKey: ["getCategories"],
     queryFn: getCategories
+  });
+
+  const { mutate: deleteCategory } = useMutation({
+    mutationFn: (variables: any) => {
+      return variables.idType === CategoryTypeName.FEEDSTOCK
+        ? deleteCategoryFeedstock(variables.id)
+        : variables.idType === CategoryTypeName.PACKAGING
+          ? deleteCategoryPackaging(variables.id)
+          : deleteCategoryProduct(variables.id);
+    },
+    onSuccess: () => {
+      toast.success("Categoria eliminada con éxito");
+      queryClient.invalidateQueries({ queryKey: ["getCategories"] });
+    },
+    onError: (error: any) => {
+      alertMessageErrors(error, "Error al eliminar la categoria");
+    }
   });
 
   const toogleDialog = () => {
@@ -35,7 +62,27 @@ const Category = () => {
     });
   };
 
-  const colDefs = useColumns({ handleEdit });
+  const handleDelete = (category: ICategory) => {
+    swal
+      .fire({
+        title: "¿Estás seguro?",
+        text: "No podrás deshacer esta acción",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+      })
+      .then(result => {
+        if (result.isConfirmed) {
+          deleteCategory({
+            idType: category.type,
+            id: category.categoryId
+          });
+        }
+      });
+  };
+
+  const colDefs = useColumns({ handleEdit, handleDelete });
 
   return (
     <div className='flex flex-col items-center gap-2'>
@@ -44,7 +91,14 @@ const Category = () => {
       )}
       <Create />
       <div className='w-full'>
-        <CustomDataGrid columns={colDefs} data={data} />
+        <CustomDataGrid
+          columns={colDefs}
+          data={data?.map((category, index) => ({
+            ...category,
+            categoryId: category.id,
+            id: index
+          }))}
+        />
       </div>
       {/*<Grid container spacing={2}>
         {data?.map((category: any) => (

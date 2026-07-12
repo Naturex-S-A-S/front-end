@@ -15,6 +15,7 @@ import { alertMessageErrors } from "@/utils/messages";
 import { postCategoryFeedstock } from "@/api/general-parameters/categories-feedstock";
 import { postCategoryPackaging } from "@/api/general-parameters/categories-packaging";
 import { CategoryType } from "@/utils/enum";
+import { postCategoryProduct } from "@/api/general-parameters/categories-product";
 
 const Create = () => {
   const queryClient = useQueryClient();
@@ -31,8 +32,13 @@ const Create = () => {
   const { handleSubmit, reset } = methods;
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (variables: any) =>
-      variables.idType === CategoryType.FEEDSTOCK ? postCategoryFeedstock(variables) : postCategoryPackaging(variables),
+    mutationFn: (variables: any) => {
+      return variables.idType === CategoryType.FEEDSTOCK
+        ? postCategoryFeedstock(variables)
+        : variables.idType === CategoryType.PACKAGING
+          ? postCategoryPackaging(variables)
+          : postCategoryProduct(variables);
+    },
     onSuccess: () => {
       toast.success("Categoria creada con éxito");
       queryClient.invalidateQueries({ queryKey: ["getCategories"] });

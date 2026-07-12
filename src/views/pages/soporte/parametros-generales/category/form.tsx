@@ -9,9 +9,10 @@ import { mockCategoryTypes } from "@/utils/mocks";
 
 interface Props {
   isPending: boolean;
+  isEdit?: boolean;
 }
 
-const Form = ({ isPending }: Props) => {
+const Form = ({ isPending, isEdit = false }: Props) => {
   const {
     control,
     formState: { errors },
@@ -20,7 +21,7 @@ const Form = ({ isPending }: Props) => {
 
   return (
     <Grid container spacing={4}>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={isEdit ? 12 : 6}>
         <CustomTextField
           {...register("name")}
           autoFocus
@@ -31,30 +32,32 @@ const Form = ({ isPending }: Props) => {
           helperText={errors.name?.message as string}
         />
       </Grid>
-      <Grid item xs={12} md={6}>
-        <Controller
-          name='type'
-          control={control}
-          render={({ field: { value, onChange } }: any) => (
-            <CustomAutocomplete
-              value={value}
-              options={mockCategoryTypes}
-              onChange={(e, value: any) => {
-                onChange(value);
-              }}
-              renderInput={params => (
-                <CustomTextField
-                  {...params}
-                  label='Tipo'
-                  placeholder='Seleccione un tipo'
-                  error={!!errors.type}
-                  helperText={errors.type?.id?.message as string}
-                />
-              )}
-            />
-          )}
-        />
-      </Grid>
+      {!isEdit && (
+        <Grid item xs={12} md={6}>
+          <Controller
+            name='type'
+            control={control}
+            render={({ field: { value, onChange } }: any) => (
+              <CustomAutocomplete
+                value={value}
+                options={mockCategoryTypes}
+                onChange={(e, value: any) => {
+                  onChange(value);
+                }}
+                renderInput={params => (
+                  <CustomTextField
+                    {...params}
+                    label='Tipo'
+                    placeholder='Seleccione un tipo'
+                    error={!!errors.type}
+                    helperText={errors.type?.id?.message as string}
+                  />
+                )}
+              />
+            )}
+          />
+        </Grid>
+      )}
       <Grid item xs={12} className='flex justify-center'>
         <CustomButton text='Guardar' type='submit' isLoading={isPending} />
       </Grid>
