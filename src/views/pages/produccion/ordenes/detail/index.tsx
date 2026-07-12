@@ -156,20 +156,29 @@ const Detail: React.FC<Props> = ({ order }) => {
             <Card>
               <CardContent>
                 <Grid container spacing={6}>
-                  <Grid item xs={12} sm={6} md={3} className={cardBorderClass}>
+                  <Grid item xs={12} sm={6} md={2} className={cardBorderClass}>
                     <div className='flex h-full'>
                       <div className='flex flex-col justify-between'>
                         <Typography variant='caption'>Cantidad esperada (Kg)</Typography>
-                        <Typography variant='h5'>{order.quantityExpected}</Typography>
+                        <Typography variant='h5'>{order.quantityExpectedKg}</Typography>
                       </div>
                     </div>
                   </Grid>
 
-                  <Grid item xs={12} sm={6} md={3} className={cardBorderClass}>
+                  <Grid item xs={12} sm={6} md={2} className={cardBorderClass}>
                     <div className='flex h-full'>
                       <div className='flex flex-col justify-between'>
                         <Typography variant='caption'>Cantidad producida (Kg)</Typography>
-                        <Typography variant='h5'>{order.quantityProduced}</Typography>
+                        <Typography variant='h5'>{order.quantityProducedKg}</Typography>
+                      </div>
+                    </div>
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} md={2} className={cardBorderClass}>
+                    <div className='flex h-full'>
+                      <div className='flex flex-col justify-between'>
+                        <Typography variant='caption'>Perdida (%)</Typography>
+                        <Typography variant='h5'>{order.lossPercentage}</Typography>
                       </div>
                     </div>
                   </Grid>

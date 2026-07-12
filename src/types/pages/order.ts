@@ -42,8 +42,11 @@ export interface IOrder {
   batch: string;
   status: string;
   statusName: string;
+  quantityExpectedKg: number;
   quantityExpected: number;
+  quantityProducedKg: number;
   quantityProduced: number;
+  lossPercentage: number;
   charge: number;
   dateCreated: string;
   dateClosed: string | null;
