@@ -34,15 +34,17 @@ export const authOptions = {
         }
 
         return {
-          id: res.userId,
+          id: "",
           access_token: res.token,
-          refresh_token: res.refreshToken,
+          refresh_token: res.refreshToken
+
+          /*id: res.userId,
           userId: res.userId,
           userName: res.userName,
           userLastName: res.userLastName,
           email: res.email,
           role: res.role,
-          modules: res.modules
+          modules: res.modules*/
         };
       }
     })
@@ -57,12 +59,12 @@ export const authOptions = {
         token.access_token = user.access_token;
         token.refresh_token = user.refresh_token;
         token.user = {
-          id: user.userId,
-          name: `${user.userName} ${user.userLastName}`.trim(),
-          email: user.email
+          id: payload.userId,
+          name: `${payload.userName} ${payload.userLastName}`.trim(),
+          email: payload.email
         };
-        token.permissions = user.modules;
-        token.role = user.role;
+        token.permissions = payload.modules;
+        token.role = payload.role;
         token.tokenExpires = payload.exp;
       }
 
