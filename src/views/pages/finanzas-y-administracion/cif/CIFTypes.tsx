@@ -69,7 +69,7 @@ const TiposCIFPanel = ({ data }: TiposCIFPanelProps) => {
                     {!item.active && <Chip label='Inactivo' size='small' variant='outlined' />}
                   </Stack>
                   <Typography variant='subtitle2' component='div' sx={{ color: "text.secondary" }}>
-                    {item.costBasis}
+                    {item.costBasisName}
                   </Typography>
                 </div>
                 <CustomIconButton onClick={() => handleEdit(item)}>

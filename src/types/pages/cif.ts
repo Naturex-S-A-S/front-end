@@ -2,6 +2,7 @@ export interface ICifType {
   id: number;
   name: string;
   costBasis: string;
+  costBasisName: string;
   active: boolean;
   dateCreated: string;
 }
