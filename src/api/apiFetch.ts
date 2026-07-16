@@ -8,7 +8,7 @@ export async function apiFetch<T>(
 ): Promise<T> {
   const session = await getServerSession(authOptions);
 
-  if (!session?.access_token) {
+  if (!session?.access_token || session?.error) {
     throw new Error("Sesión expirada o inválida");
   }
 

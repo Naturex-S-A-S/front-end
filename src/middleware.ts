@@ -12,6 +12,9 @@ export default withAuth(
       authorized: ({ token }) => {
         try {
           if (!token) return false;
+          if (token.error) return false;
+
+          if (token.tokenExpires && Math.floor(Date.now() / 1000) > token.tokenExpires) return false;
 
           return true;
         } catch {

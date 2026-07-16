@@ -1,11 +1,15 @@
 import { decodeJwt } from "jose";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+import type { Account, NextAuthOptions, Profile } from "next-auth";
+
+import type { JWT } from "next-auth/jwt";
+
 import { authentication } from "@/api/user";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+// const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -51,9 +55,19 @@ export const authOptions = {
   ],
 
   callbacks: {
-    async jwt({ token, user }: any) {
+    async jwt({
+      token,
+      user
+    }: {
+      token: JWT;
+      user: any;
+      account: Account | null;
+      profile?: Profile | undefined;
+      trigger?: "signIn" | "signUp" | "update";
+      isNewUser?: boolean;
+      session?: any;
+    }): Promise<JWT> {
       if (user) {
-        // Login: user info viene del body, exp y modules del JWT
         const payload: any = decodeJwt(user.access_token as string);
 
         token.access_token = user.access_token;
@@ -68,55 +82,83 @@ export const authOptions = {
         token.tokenExpires = payload.exp;
       }
 
-      // Refresh si el token está expirado
-      if (token.tokenExpires && Date.now() / 1000 > token.tokenExpires) {
+      // Comentado por si se llega a implementar el refresh token
+      /* const now = Math.floor(Date.now() / 1000);
+      if (token.tokenExpires && now >= token.tokenExpires) {
         try {
-          const res = await fetch(`${API_BASE_URL}auth/refresh`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ refreshToken: token.refresh_token })
-          });
+          if (!refreshPromise) {
+            const refreshPromise = fetch(`${API_BASE_URL}auth/refresh`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ refreshToken: token.refresh_token })
+            }).then(async res => {
+              if (!res.ok) {
+                throw new Error(`Refresh failed: ${res.status} ${res.statusText}`);
+              }
 
-          if (!res.ok) {
-            console.error("Token refresh failed:", res.status, await res.text().catch(() => ""));
+              const data = await res.json();
 
-            return null;
+              if (!data.token) {
+                throw new Error("No token in refresh response");
+              }
+
+              const payload: any = decodeJwt(data.token);
+
+              return {
+                access_token: data.token,
+                exp: payload.exp,
+                refresh_token: data.refreshToken || token.refresh_token
+              };
+            });
           }
 
-          const data = await res.json();
+          const result = await refreshPromise;
 
-          console.log("Token refreshed successfully:", data);
-
-          if (data.token) {
-            const payload: any = decodeJwt(data.token);
-
-            token.access_token = data.token;
-            token.tokenExpires = payload.exp;
-
-            // Solo actualizar refreshToken si la API devuelve uno nuevo
-            if (data.refreshToken) {
-              token.refresh_token = data.refreshToken;
-            }
-          }
+          token.access_token = result.access_token;
+          token.tokenExpires = result.exp;
+          token.refresh_token = result.refresh_token;
         } catch (e) {
-          console.error("Token refresh error:", e);
-
-          return null;
+          token.error = "RefreshTokenError";
+        } finally {
+          refreshPromise = null;
         }
-      }
+      } */
 
       return token;
     },
 
     async session({ session, token }: any) {
-      session.access_token = token.access_token;
-      session.refresh_token = token.refresh_token;
-      session.user = token.user;
-      session.permissions = token.permissions;
-      session.role = token.role;
-      session.tokenExpires = token.tokenExpires;
+      session.error = token?.error;
+      session.access_token = token?.access_token;
+      session.refresh_token = token?.refresh_token;
+      session.user = token?.user;
+      session.permissions = token?.permissions;
+      session.role = token?.role;
+      session.tokenExpires = token?.tokenExpires;
 
       return session;
+    }
+  },
+
+  debug: false,
+
+  logger: {
+    error(code, metadata) {
+      console.error(code, metadata);
+    },
+    warn(code) {
+      console.warn(code);
+    },
+    debug(code, metadata) {
+      console.debug(code, metadata);
+    }
+  },
+
+  events: {
+    signIn: message => console.log("User signed in:", message),
+    signOut: message => console.log("User signed out:", message),
+    session(message) {
+      console.log("Session event:", message);
     }
   },
 

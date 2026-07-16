@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getSession, signOut } from "next-auth/react";
+import { getSession } from "next-auth/react";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -9,14 +9,14 @@ const api = axios.create({
   }
 });
 
-let accessTokenCache: string | null = null;
+/*let accessTokenCache: string | null = null;
 let isRefreshing = false;
 let failedQueue: Array<{
   resolve: (token: string) => void;
   reject: (err: unknown) => void;
-}> = [];
+}> = [];*/
 
-const processQueue = (error: unknown, token: string | null = null) => {
+/*const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.forEach(({ resolve, reject }) => {
     if (error) {
       reject(error);
@@ -25,10 +25,10 @@ const processQueue = (error: unknown, token: string | null = null) => {
     }
   });
   failedQueue = [];
-};
+};*/
 
 api.interceptors.request.use(async config => {
-  const token = accessTokenCache || (await getSession())?.access_token;
+  const token = /*accessTokenCache ||*/ (await getSession())?.access_token;
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -37,7 +37,7 @@ api.interceptors.request.use(async config => {
   return config;
 });
 
-api.interceptors.response.use(
+/*api.interceptors.response.use(
   response => response,
   async error => {
     const originalRequest = error.config;
@@ -64,6 +64,11 @@ api.interceptors.response.use(
       // que internamente refresca el token si expiró
       const session = await getSession();
 
+      if (session?.error) {
+        // El refresh falló y se marcó error en el token
+        throw new Error(session.error);
+      }
+
       if (session?.access_token) {
         // JWT callback refrescó exitosamente (o token aún vigente)
         accessTokenCache = session.access_token;
@@ -85,6 +90,6 @@ api.interceptors.response.use(
       isRefreshing = false;
     }
   }
-);
+);*/
 
 export const API = () => api;
