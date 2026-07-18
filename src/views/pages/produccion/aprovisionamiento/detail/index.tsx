@@ -27,6 +27,7 @@ import classNames from "classnames";
 
 import { formatDate } from "@/utils/format";
 import type { IOrderSupply } from "@/types/pages/order";
+import { STATUS, STATUS_COLOR, STATUS_LABEL } from "@/utils/constant";
 import ChangeProviderDialog from "./change-provider-dialog";
 
 interface Props {
@@ -81,16 +82,23 @@ const Detail: React.FC<Props> = ({ orderSupply }) => {
           <Card>
             <CardContent>
               <Box display='flex' flexDirection='column' gap={4}>
-                <Box display='flex' flexDirection='column' gap={2}>
-                  <Box display='flex' justifyContent='space-between'>
-                    <Typography variant='body2' color='textSecondary'>
+                <Box display='flex' justifyContent='space-between' alignItems='center'>
+                  <Box>
+                    <Typography variant='caption' color='textSecondary'>
                       Lote
                     </Typography>
-                    <Typography variant='body2' fontWeight={600}>
-                      {orderSupply.batch}
-                    </Typography>
+                    <Typography variant='h6'>{orderSupply.batch}</Typography>
                   </Box>
+                  <Chip
+                    label={orderSupply.statusName ?? STATUS_LABEL[orderSupply.status]}
+                    color={STATUS_COLOR[orderSupply.status] ?? "default"}
+                    size='small'
+                  />
+                </Box>
 
+                <Divider />
+
+                <Box display='flex' flexDirection='column' gap={2}>
                   <Box display='flex' alignItems='center' justifyContent='space-between' gap={2}>
                     <Typography variant='body2' color='textSecondary' sx={{ flex: 1, minWidth: 0 }}>
                       Usuario
@@ -217,7 +225,9 @@ const Detail: React.FC<Props> = ({ orderSupply }) => {
                                     <Table size='medium'>
                                       <TableHead>
                                         <TableRow>
-                                          <TableCell align='right'>Acciones</TableCell>
+                                          {orderSupply.status === STATUS.en_proceso && (
+                                            <TableCell align='right'>Acciones</TableCell>
+                                          )}
                                           <TableCell>Nombre</TableCell>
                                           <TableCell align='right'>Cant. Disponible</TableCell>
                                           <TableCell align='right'>Cant. Faltante</TableCell>
@@ -238,18 +248,24 @@ const Detail: React.FC<Props> = ({ orderSupply }) => {
                                               key={material.id}
                                               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                                             >
-                                              <TableCell align='center'>
-                                                <Tooltip title='Cambiar proveedor'>
-                                                  <IconButton
-                                                    size='small'
-                                                    onClick={() =>
-                                                      handleChangeProvider(material.id, material.name, item.providerId)
-                                                    }
-                                                  >
-                                                    <Icon icon='ic:sharp-change-circle' />
-                                                  </IconButton>
-                                                </Tooltip>
-                                              </TableCell>
+                                              {orderSupply.status === STATUS.en_proceso && (
+                                                <TableCell align='center'>
+                                                  <Tooltip title='Cambiar proveedor'>
+                                                    <IconButton
+                                                      size='small'
+                                                      onClick={() =>
+                                                        handleChangeProvider(
+                                                          material.id,
+                                                          material.name,
+                                                          item.providerId
+                                                        )
+                                                      }
+                                                    >
+                                                      <Icon icon='ic:sharp-change-circle' />
+                                                    </IconButton>
+                                                  </Tooltip>
+                                                </TableCell>
+                                              )}
                                               <TableCell>{material.name}</TableCell>
                                               <TableCell align='right'>{material.quantityAvailable}</TableCell>
                                               <TableCell align='right'>{material.quantityMissing}</TableCell>
@@ -276,7 +292,7 @@ const Detail: React.FC<Props> = ({ orderSupply }) => {
         </Grid>
       </Grid>
 
-      {providerDialog && (
+      {orderSupply.status === STATUS.en_proceso && providerDialog && (
         <ChangeProviderDialog
           open={!!providerDialog}
           toogleDialog={() => setProviderDialog(null)}

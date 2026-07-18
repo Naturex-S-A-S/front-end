@@ -1,6 +1,8 @@
+import { Box, Chip } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
 
 import { ActionsCell, ProductNamesCell, QuantityCell, DateCell } from "./orderSupplyCells";
+import { STATUS_COLOR, STATUS_LABEL } from "../constant";
 
 export const columns = (): GridColDef[] => [
   {
@@ -19,6 +21,20 @@ export const columns = (): GridColDef[] => [
     field: "batch",
     headerName: "Lote",
     width: 160
+  },
+  {
+    field: "status",
+    headerName: "Estado",
+    width: 130,
+    renderCell: params => (
+      <Box className='flex items-center' style={{ height: "100%" }}>
+        <Chip
+          label={params.row.statusName ?? STATUS_LABEL[params.row.status]}
+          color={STATUS_COLOR[params.row.status] ?? "default"}
+          size='small'
+        />
+      </Box>
+    )
   },
   {
     field: "quantityExpected",

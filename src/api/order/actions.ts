@@ -19,6 +19,22 @@ export async function updateOrderStatus(orderId: number, status: string) {
   }
 }
 
+export async function updateOrderSupplyStatus(orderSupplyId: number, status: string) {
+  try {
+    await apiFetch(`orders/supply/${orderSupplyId}/status`, {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+      tags: [`order-supply-${orderSupplyId}`, "orders-supply"]
+    });
+    revalidateTag(`order-supply-${orderSupplyId}`);
+    revalidateTag("orders-supply");
+
+    return { success: true };
+  } catch (e: any) {
+    return { success: false, error: e.message };
+  }
+}
+
 export async function createOrderSupply(data: any) {
   try {
     const result = await apiFetch<any>("orders/supply", {

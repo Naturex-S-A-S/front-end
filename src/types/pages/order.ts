@@ -77,6 +77,8 @@ export interface IOrderSupplyList {
   id: number;
   orderId: number;
   batch: string;
+  status: string;
+  statusName: string;
   dateCreated: string;
   quantityExpected: number;
   productNames: string[];
@@ -108,6 +110,8 @@ export interface IOrderSupplyProduct {
 export interface IOrderSupply {
   id: number;
   batch: string;
+  status: string;
+  statusName: string;
   totalQuantityInKg: number;
   totalQuantityInUnits: number;
   totalChargeOrder: number;

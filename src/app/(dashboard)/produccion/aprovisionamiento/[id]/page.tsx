@@ -1,10 +1,7 @@
 import { notFound } from "next/navigation";
 
-import { Box } from "@mui/material";
-
-import Header from "@/components/layout/detail/inventory/Header";
-import Detail from "@/views/pages/produccion/aprovisionamiento/detail";
 import { getOrderSupplyByIdServer } from "@/api/order/server";
+import OrderSupplyDetailClient from "./OrderSupplyDetailClient";
 
 export const metadata = {
   title: "Aprovisionamiento - Naturex",
@@ -22,12 +19,7 @@ const Page = async ({ params }: Props) => {
     notFound();
   }
 
-  return (
-    <Box display='flex' flexDirection='column' gap={2}>
-      <Header id={params.id} name={orderSupply.batch} createdAt={orderSupply.dateCreated} />
-      <Detail orderSupply={orderSupply} />
-    </Box>
-  );
+  return <OrderSupplyDetailClient orderSupply={orderSupply} />;
 };
 
 export default Page;
