@@ -15,6 +15,8 @@ export interface IFeedstock {
   chargeT: number;
   active: boolean;
   dateCreated: string;
+  defaultProviderId: number;
+  defaultProviderName: string;
   allergen: boolean;
   idType: number;
   typeName: string;

@@ -300,7 +300,7 @@ const Form: React.FC<Props> = ({
                           </TableCell>
                         </TableRow>
                       ) : (
-                        calculatedData?.materials.map((item: any, index: number) => (
+                        calculatedData?.materials?.map((item: any, index: number) => (
                           <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                             <TableCell>{item.id}</TableCell>
                             <TableCell>{item.name}</TableCell>

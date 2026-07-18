@@ -19,13 +19,9 @@ export const useColumns = (): GridColDef[] => {
       renderCell: params => {
         return (
           <>
-            {ability.can(
-              ABILITY_ACTIONS.READ as any,
-              ABILITY_SUBJECT.FINANCE_AND_ADMINISTRATION,
-              ABILITY_FIELDS.SUPPLIERS
-            ) && (
+            {ability.can(ABILITY_ACTIONS.READ as any, ABILITY_SUBJECT.INVENTORY, ABILITY_FIELDS.SUPPLIERS) && (
               <Link
-                href={`/finanzas-y-administracion/proveedores/${params.id}`}
+                href={`/inventario/proveedores/${params.id}`}
                 onMouseDown={e => e.stopPropagation()}
                 onClick={e => e.stopPropagation()}
               >

@@ -1,3 +1,5 @@
+import { useRouter } from "next/navigation";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
@@ -7,13 +9,14 @@ import { alertMessageErrors } from "@/utils/messages";
 import Swal from "@/lib/swal";
 
 const usePatchPackaging = () => {
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: ({ id, data }: any) => patchPackaging(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["getPackaging"] });
-      queryClient.invalidateQueries({ queryKey: ["getPackagingById"] });
+      router.refresh();
       toast.success("Material de empaque actualizado con éxito");
     },
     onError: (error: any) => {

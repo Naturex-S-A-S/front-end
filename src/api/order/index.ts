@@ -68,3 +68,11 @@ export const patchStatusOrder = async (id: string, status: string) => {
 
   return response.data;
 };
+
+export const patchMaterialProvider = async (orderSupplyId: number, materialId: string, providerId: number) => {
+  const response = await API().patch(`/orders/supply/${orderSupplyId}/materials/${materialId}/provider`, {
+    providerId
+  });
+
+  return response.data;
+};

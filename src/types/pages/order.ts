@@ -91,6 +91,14 @@ export interface IOrderSupplyMaterial {
   totalCost: number;
 }
 
+export interface IOrderSupplyMaterialsByProvider {
+  providerId: string;
+  providerName: string;
+  providerAddress: string | null;
+  providerPhone: string | null;
+  materials: IOrderSupplyMaterial[];
+}
+
 export interface IOrderSupplyProduct {
   id: string;
   fullName: string;
@@ -105,7 +113,7 @@ export interface IOrderSupply {
   totalChargeOrder: number;
   dateCreated: string;
   userName: string;
-  materials: IOrderSupplyMaterial[];
+  materialsByProvider: IOrderSupplyMaterialsByProvider[];
   products: IOrderSupplyProduct[];
 }
 

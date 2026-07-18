@@ -54,3 +54,9 @@ export const getMovements = async (params: any) => {
 
   return response.data;
 };
+
+export const patchPackagingDefaultProvider = async (id: number, data: { providerId: number }) => {
+  const response = await API().patch(`/packaging/${id}/default-provider`, data);
+
+  return response.data;
+};

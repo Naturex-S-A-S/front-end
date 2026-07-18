@@ -142,7 +142,12 @@ const Detail: React.FC<Props> = ({ packaging }) => {
           </Grid>
 
           <Grid item xs={12} md={6} lg={12}>
-            <Providers data={packaging.providers} />
+            <Providers
+              data={packaging.providers}
+              itemId={packaging.id}
+              type='packaging'
+              currentProviderId={packaging.defaultProviderId}
+            />
           </Grid>
         </Grid>
       </Grid>

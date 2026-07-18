@@ -1,3 +1,4 @@
+"use client";
 import { useEffect } from "react";
 
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
@@ -213,7 +214,12 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
           </Grid>
 
           <Grid item xs={12}>
-            <Providers data={feedstock.providers} />
+            <Providers
+              data={feedstock.providers}
+              itemId={feedstock.id}
+              type='feedstock'
+              currentProviderId={feedstock.defaultProviderId}
+            />
           </Grid>
         </Grid>
       </Grid>

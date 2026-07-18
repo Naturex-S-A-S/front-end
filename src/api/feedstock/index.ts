@@ -72,3 +72,9 @@ export const getMovements = async (params: any) => {
 
   return response.data;
 };
+
+export const patchFeedstockDefaultProvider = async (id: number, data: { providerId: number }) => {
+  const response = await API().patch(`/feedstock/${id}/default-provider`, data);
+
+  return response.data;
+};

@@ -10,6 +10,8 @@ export interface IPackaging {
   quantityTotal: number;
   chargeU: number;
   active: boolean;
+  defaultProviderId: number;
+  defaultProviderName: string;
   dateCreated: string;
   color: string;
   idType: number;
