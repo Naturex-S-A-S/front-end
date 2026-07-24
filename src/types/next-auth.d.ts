@@ -21,6 +21,7 @@ declare module "next-auth" {
     error?: string;
     access_token?: string;
     refresh_token?: string;
+    notificationToken?: string;
     tokenExpires?: number;
     permissions?: IPermissions[];
     user?: {

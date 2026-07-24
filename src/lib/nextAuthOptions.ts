@@ -40,7 +40,8 @@ export const authOptions: NextAuthOptions = {
         return {
           id: "",
           access_token: res.token,
-          refresh_token: res.refreshToken
+          refresh_token: res.refreshToken,
+          notificationToken: res.notificationToken
 
           /*id: res.userId,
           userId: res.userId,
@@ -72,6 +73,7 @@ export const authOptions: NextAuthOptions = {
 
         token.access_token = user.access_token;
         token.refresh_token = user.refresh_token;
+        token.notificationToken = user.notificationToken;
         token.user = {
           id: payload.userId,
           name: `${payload.userName} ${payload.userLastName}`.trim(),
@@ -131,6 +133,7 @@ export const authOptions: NextAuthOptions = {
       session.error = token?.error;
       session.access_token = token?.access_token;
       session.refresh_token = token?.refresh_token;
+      session.notificationToken = token?.notificationToken;
       session.user = token?.user;
       session.permissions = token?.permissions;
       session.role = token?.role;
