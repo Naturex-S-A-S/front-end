@@ -1,17 +1,20 @@
 "use client";
 
-// Third-party Imports
 import classnames from "classnames";
 
-// Component Imports
+import type { IAlert } from "@/types/alert";
 import NavToggle from "./NavToggle";
 import ModeDropdown from "@components/layout/shared/ModeDropdown";
 import UserDropdown from "@components/layout/shared/UserDropdown";
+import NotificationDropdown from "@components/layout/shared/NotificationDropdown";
 
-// Util Imports
 import { verticalLayoutClasses } from "@layouts/utils/layoutClasses";
 
-const NavbarContent = () => {
+interface Props {
+  alerts: IAlert[];
+}
+
+const NavbarContent = ({ alerts }: Props) => {
   return (
     <div className={classnames(verticalLayoutClasses.navbarContent, "flex items-center justify-between gap-4 is-full")}>
       <div className='flex items-center gap-4'>
@@ -19,6 +22,7 @@ const NavbarContent = () => {
         <ModeDropdown />
       </div>
       <div className='flex items-center'>
+        <NotificationDropdown initialData={alerts} />
         <UserDropdown />
       </div>
     </div>

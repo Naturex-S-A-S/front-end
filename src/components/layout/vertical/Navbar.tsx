@@ -1,11 +1,15 @@
-// Component Imports
+import type { IAlert } from "@/types/alert";
 import LayoutNavbar from "@layouts/components/vertical/Navbar";
 import NavbarContent from "./NavbarContent";
 
-const Navbar = () => {
+interface Props {
+  alerts: IAlert[];
+}
+
+const Navbar = ({ alerts }: Props) => {
   return (
     <LayoutNavbar>
-      <NavbarContent />
+      <NavbarContent alerts={alerts} />
     </LayoutNavbar>
   );
 };

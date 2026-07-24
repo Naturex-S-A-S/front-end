@@ -1,23 +1,26 @@
 "use client";
 
-// Component Imports
+import type { IAlert } from "@/types/alert";
+
 import Navigation from "./Navigation";
 import NavbarContent from "./NavbarContent";
 import Navbar from "@layouts/components/horizontal/Navbar";
 import LayoutHeader from "@layouts/components/horizontal/Header";
 
-// Hook Imports
 import useHorizontalNav from "@menu/hooks/useHorizontalNav";
 
-const Header = () => {
-  // Hooks
+interface Props {
+  alerts: IAlert[];
+}
+
+const Header = ({ alerts }: Props) => {
   const { isBreakpointReached } = useHorizontalNav();
 
   return (
     <>
       <LayoutHeader>
         <Navbar>
-          <NavbarContent />
+          <NavbarContent alerts={alerts} />
         </Navbar>
         {!isBreakpointReached && <Navigation />}
       </LayoutHeader>

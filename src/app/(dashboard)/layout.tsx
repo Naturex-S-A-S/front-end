@@ -1,15 +1,11 @@
-// MUI Imports
 import Button from "@mui/material/Button";
 
-// Type Imports
 import type { ChildrenType } from "@core/types";
 
-// Layout Imports
 import LayoutWrapper from "@layouts/LayoutWrapper";
 import VerticalLayout from "@layouts/VerticalLayout";
 import HorizontalLayout from "@layouts/HorizontalLayout";
 
-// Component Imports
 import Providers from "@components/Providers";
 import Navigation from "@components/layout/vertical/Navigation";
 import Header from "@components/layout/horizontal/Header";
@@ -19,14 +15,14 @@ import HorizontalFooter from "@components/layout/horizontal/Footer";
 import ScrollToTop from "@core/components/scroll-to-top";
 import SwalRouteHandler from "@/components/SwalRouteHandler";
 
-// Util Imports
 import { getMode, getSystemMode } from "@core/utils/serverHelpers";
+import { getAlertsUserServer } from "@/api/alert/server";
 
 const Layout = async ({ children }: ChildrenType) => {
-  // Vars
   const direction = "ltr";
   const mode = getMode();
   const systemMode = getSystemMode();
+  const alerts = await getAlertsUserServer();
 
   return (
     <Providers direction={direction}>
@@ -35,14 +31,14 @@ const Layout = async ({ children }: ChildrenType) => {
         verticalLayout={
           <VerticalLayout
             navigation={<Navigation mode={mode} systemMode={systemMode} />}
-            navbar={<Navbar />}
+            navbar={<Navbar alerts={alerts} />}
             footer={<VerticalFooter />}
           >
             {children}
           </VerticalLayout>
         }
         horizontalLayout={
-          <HorizontalLayout header={<Header />} footer={<HorizontalFooter />}>
+          <HorizontalLayout header={<Header alerts={alerts} />} footer={<HorizontalFooter />}>
             {children}
           </HorizontalLayout>
         }
