@@ -12,9 +12,10 @@ interface Props {
   data: any[] | undefined;
   getRowClassName?: any;
   isLoading?: boolean;
+  showExportButton?: boolean;
 }
 
-const CustomDataGrid: React.FC<Props> = ({ columns, data, getRowClassName, isLoading }) => {
+const CustomDataGrid: React.FC<Props> = ({ columns, data, getRowClassName, isLoading, showExportButton = false }) => {
   const loading = isLoading && !data;
   const [searchValue, setSearchValue] = useState("");
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -95,7 +96,8 @@ const CustomDataGrid: React.FC<Props> = ({ columns, data, getRowClassName, isLoa
             value: searchValue,
             onChange: (e: ChangeEvent<HTMLInputElement>) => handleSearch(e.target.value),
             clearSearch: () => handleSearch(""),
-            data
+            data,
+            showExportButton
           } as any
         }}
       />

@@ -6,8 +6,8 @@ import React from "react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 
-// ** Custom Component Import
-// import ExcelExport from '../export-data/Excel'
+// ** DataGrid Imports
+import { GridToolbarExport } from "@mui/x-data-grid";
 
 import { Icon } from "@iconify/react";
 import { TextField } from "@mui/material";
@@ -17,6 +17,7 @@ interface Props {
   clearSearch: () => void;
   onChange: (e: ChangeEvent) => void;
   data: any[];
+  showExportButton: boolean;
 }
 
 const ServerSideToolbar: any = (props: Props) => {
@@ -31,7 +32,6 @@ const ServerSideToolbar: any = (props: Props) => {
         p: theme => theme.spacing(2, 5, 4, 5)
       }}
     >
-      <Box>{/*<ExcelExport data={props.data} />*/}</Box>
       <Box sx={{ gap: 2 }}>
         <TextField
           color='warning'
@@ -62,6 +62,11 @@ const ServerSideToolbar: any = (props: Props) => {
           }}
         />
       </Box>
+      {props.showExportButton && (
+        <Box>
+          <GridToolbarExport printOptions={{ disableToolbarButton: true }} />
+        </Box>
+      )}
     </Box>
   );
 };
