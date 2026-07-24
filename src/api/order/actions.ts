@@ -3,6 +3,23 @@
 import { revalidateTag } from "next/cache";
 
 import { apiFetch } from "@/api/apiFetch";
+import type { IOrderCreate } from "@/types/pages/order";
+
+export async function createOrder(data: IOrderCreate) {
+  try {
+    const result = await apiFetch<any>("orders", {
+      method: "POST",
+      body: JSON.stringify(data),
+      tags: ["orders"]
+    });
+
+    revalidateTag("orders");
+
+    return { success: true, orderId: result.orderId };
+  } catch (e: any) {
+    return { success: false, error: e.message };
+  }
+}
 
 export async function updateOrderStatus(orderId: number, status: string) {
   try {

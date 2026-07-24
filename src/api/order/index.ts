@@ -1,4 +1,3 @@
-import type { IOrderCreate } from "@/types/pages/order";
 import { API } from "../instances";
 
 export const getOrderCalculate = async (data: any) => {
@@ -9,12 +8,6 @@ export const getOrderCalculate = async (data: any) => {
       quantities: data.quantities
     }
   });
-
-  return response.data;
-};
-
-export const postOrder = async (data: IOrderCreate) => {
-  const response = await API().post("/orders", data);
 
   return response.data;
 };

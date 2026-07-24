@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useState, useTransition } from "react";
 
 import { useRouter } from "next/navigation";
 
@@ -22,7 +22,8 @@ import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from "@/utils/consta
 import { alertMessageErrors } from "@/utils/messages";
 import { orderSchema } from "@/utils/schemas/order";
 import { orderDefaultValues } from "@/utils/defaultValues/order";
-import { getOrderCalculate, postOrder } from "@/api/order";
+import { getOrderCalculate } from "@/api/order";
+import { createOrder } from "@/api/order/actions";
 import Swal from "@/lib/swal";
 
 const Create = () => {
@@ -44,15 +45,7 @@ const Create = () => {
 
   const { handleSubmit, setValue, getValues }: any = methods;
 
-  const { isPending, mutateAsync: createOrder } = useMutation({
-    mutationFn: postOrder,
-    onSuccess: response => {
-      router.replace(`/produccion/ordenes/${response.orderId}`);
-    },
-    onError: (error: any) => {
-      alertMessageErrors(error, "Error al crear la orden");
-    }
-  });
+  const [isPending, startTransition] = useTransition();
 
   const { mutateAsync: mutateOrderCalculate, isPending: isPendingOrderCalculate } = useMutation({
     mutationFn: getOrderCalculate,
@@ -118,7 +111,16 @@ const Create = () => {
         }))
       };
 
-      createOrder(req);
+      startTransition(async () => {
+        const result = await createOrder(req);
+
+        if (result.success) {
+          toast.success("Orden creada con éxito");
+          router.replace(`/produccion/ordenes/${result.orderId}`);
+        } else {
+          toast.error(result.error || "Error al crear la orden");
+        }
+      });
     }
   };
 
