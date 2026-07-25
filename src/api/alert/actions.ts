@@ -4,6 +4,10 @@ import { revalidateTag } from "next/cache";
 
 import { apiFetch } from "@/api/apiFetch";
 
+export async function revalidateAlerts() {
+  revalidateTag("alerts");
+}
+
 export async function markAlertAsRead(alertId: number) {
   try {
     await apiFetch(`alerts/${alertId}/status`, {

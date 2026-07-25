@@ -9,6 +9,7 @@ import ThemeProvider from "@components/theme";
 import SessionProvider from "@/components/provider/SessionProvider";
 import { AbilityProvider } from "@/components/provider/AbilityProvider";
 import ReactQueryProvider from "@/components/provider/ReactQuery";
+import { StompProvider } from "@/components/provider/StompProvider";
 
 // Util Imports
 import { getMode, getSettingsFromCookie, getSystemMode } from "@core/utils/serverHelpers";
@@ -30,13 +31,15 @@ const Providers = (props: Props) => {
     <SessionProvider>
       <AbilityProvider>
         <ReactQueryProvider>
-          <VerticalNavProvider>
-            <SettingsProvider settingsCookie={settingsCookie} mode={mode}>
-              <ThemeProvider direction={direction} systemMode={systemMode}>
-                {children}
-              </ThemeProvider>
-            </SettingsProvider>
-          </VerticalNavProvider>
+          <StompProvider>
+            <VerticalNavProvider>
+              <SettingsProvider settingsCookie={settingsCookie} mode={mode}>
+                <ThemeProvider direction={direction} systemMode={systemMode}>
+                  {children}
+                </ThemeProvider>
+              </SettingsProvider>
+            </VerticalNavProvider>
+          </StompProvider>
         </ReactQueryProvider>
       </AbilityProvider>
     </SessionProvider>

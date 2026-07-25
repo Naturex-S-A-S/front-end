@@ -1,7 +1,7 @@
 "use client";
 
 import type { SyntheticEvent, ReactNode } from "react";
-import { useState, Fragment, useTransition } from "react";
+import { useState, Fragment, useTransition, useEffect } from "react";
 
 import { useRouter } from "next/navigation";
 
@@ -163,6 +163,10 @@ const NotificationDropdown = ({ initialData }: Props) => {
   const [alerts, setAlerts] = useState<IAlert[]>(initialData);
   const [isPending, startTransition] = useTransition();
 
+  useEffect(() => {
+    setAlerts(initialData);
+  }, [initialData]);
+
   const hidden = useMediaQuery((theme: Theme) => theme.breakpoints.down("lg"));
 
   const router = useRouter();
@@ -179,7 +183,7 @@ const NotificationDropdown = ({ initialData }: Props) => {
 
   const handleAlertClick = (alert: IAlert) => {
     if (alert.readed) {
-      router.push(alert.url);
+      if (alert?.url) router.push(alert.url);
       handleDropdownClose();
 
       return;
@@ -195,7 +199,7 @@ const NotificationDropdown = ({ initialData }: Props) => {
         alertMessageErrors(result.error, "Error al marcar la alerta como leída");
       }
 
-      router.push(alert.url);
+      if (alert?.url) router.push(alert.url);
       handleDropdownClose();
     });
   };

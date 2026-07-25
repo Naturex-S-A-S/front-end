@@ -214,9 +214,9 @@ const Detail: React.FC<Props> = ({ orderSupply }) => {
                                   <Icon icon={openRows.has(item.providerId) ? "mdi:chevron-up" : "mdi:chevron-down"} />
                                 </IconButton>
                               </TableCell>
-                              <TableCell>{item.providerName || "-"}</TableCell>
-                              <TableCell>{item.providerAddress || "-"}</TableCell>
-                              <TableCell>{item.providerPhone || "-"}</TableCell>
+                              <TableCell className='font-bold'>{item.providerName || "-"}</TableCell>
+                              <TableCell className='font-bold'>{item.providerAddress || "-"}</TableCell>
+                              <TableCell className='font-bold'>{item.providerPhone || "-"}</TableCell>
                             </TableRow>
                             <TableRow>
                               <TableCell colSpan={6} sx={{ py: 0 }}>
