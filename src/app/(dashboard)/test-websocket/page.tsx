@@ -136,7 +136,7 @@ export default function WebSocketTestPage() {
         </CardContent>
       </Card>
 
-      {false && (
+      {true && (
         <Card>
           <CardContent>
             <Typography variant='h6' mb={2}>

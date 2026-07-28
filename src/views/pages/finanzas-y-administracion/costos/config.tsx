@@ -176,7 +176,7 @@ const ConfigForm = ({ initialData, periodsCount }: Props) => {
                 <Stack direction='row' spacing={1} alignItems='center' justifyContent='center'>
                   <Icon icon='mdi:percent' fontSize={20} className='text-gray-500' />
                   <Typography variant='body2' color='text.secondary'>
-                    % Margen por Defecto
+                    Margen de ganancia
                   </Typography>
                 </Stack>
                 <Typography variant='h3' fontWeight={700} color='primary.main'>
@@ -247,7 +247,7 @@ const ConfigForm = ({ initialData, periodsCount }: Props) => {
                     {...field}
                     fullWidth
                     type='number'
-                    label='% Margen por Defecto'
+                    label='% Margen de ganancia'
                     placeholder='Ej: 20.00'
                     onChange={e => field.onChange(Number(e.target.value))}
                     error={!!methods.formState.errors.defaultMarginPct}

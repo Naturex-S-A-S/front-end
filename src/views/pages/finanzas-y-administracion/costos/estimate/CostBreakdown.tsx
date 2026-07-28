@@ -17,7 +17,7 @@ const CostBreakdown = ({ estimate, formatCurrency }: Props) => {
       {feedstockMaterials.length > 0 && (
         <Grid item xs={12}>
           <CustomCard title='Materia Prima'>
-            <MaterialTable materials={feedstockMaterials} formatCurrency={formatCurrency} />
+            <MaterialTable materials={feedstockMaterials} formatCurrency={formatCurrency} type='feedstock' />
           </CustomCard>
         </Grid>
       )}
@@ -25,7 +25,7 @@ const CostBreakdown = ({ estimate, formatCurrency }: Props) => {
       {packagingMaterials.length > 0 && (
         <Grid item xs={12}>
           <CustomCard title='Material de Empaque'>
-            <MaterialTable materials={packagingMaterials} formatCurrency={formatCurrency} />
+            <MaterialTable materials={packagingMaterials} formatCurrency={formatCurrency} type='packaging' />
           </CustomCard>
         </Grid>
       )}
@@ -75,10 +75,12 @@ const CostBreakdown = ({ estimate, formatCurrency }: Props) => {
 
 const MaterialTable = ({
   materials,
-  formatCurrency
+  formatCurrency,
+  type
 }: {
   materials: ICostEstimateMaterial[];
   formatCurrency: (v: number | null | undefined) => string;
+  type?: "feedstock" | "packaging";
 }) => {
   const totalRealQuantity = materials.reduce((acc, m) => acc + (m.realQuantity ?? 0), 0);
   const totalStdTotalCost = materials.reduce((acc, m) => acc + m.stdTotalCost, 0);
@@ -88,9 +90,9 @@ const MaterialTable = ({
       <TableHead>
         <TableRow>
           <TableCell>Material</TableCell>
-          <TableCell align='right'>Cantidad base (Kg)</TableCell>
-          <TableCell align='right'>Costo base (Kg)</TableCell>
-          <TableCell align='right'>Cantidad total (Kg)</TableCell>
+          <TableCell align='right'>{type === "feedstock" ? "Cantidad (Kg)" : "Unidades base"}</TableCell>
+          <TableCell align='right'>{type === "feedstock" ? "Costo base (Kg)" : "Costo base"}</TableCell>
+          <TableCell align='right'>{type === "feedstock" ? "Cantidad (Kg)" : "Total unidades"}</TableCell>
           <TableCell align='right'>Costo Total</TableCell>
         </TableRow>
       </TableHead>
