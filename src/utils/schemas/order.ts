@@ -46,7 +46,7 @@ export const adjustmentMaterialSchema = yup.object({
   batch: yup.string().nullable().required("Ingrese el batch"),
   observation: yup.string().nullable().required("Ingrese una observación"),
   expiration_date_1: yup.string().nullable().notRequired(),
-  rack: yup.object().shape({ id: yup.string() }).optional()
+  rack: yup.object().nullable().required("Seleccione una estantería")
 });
 
 export const adjustmentProductSchema = yup.object({

@@ -63,7 +63,7 @@ const Form: React.FC<Props> = ({ isPending, productName }) => {
               <CustomAutocomplete
                 value={value}
                 options={productList}
-                getOptionLabel={(option: any) => option?.completeName || option?.name || ""}
+                getOptionLabel={(option: any) => option?.fullName || option?.name || ""}
                 onChange={(e: any, value: any) => {
                   onChange(value);
                 }}

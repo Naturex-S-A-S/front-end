@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 
-import type { Theme } from "@mui/material";
 import {
   Box,
   Card,
@@ -11,20 +10,20 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TableRow,
   Typography,
-  useMediaQuery,
   Alert
 } from "@mui/material";
 
 import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
-import classNames from "classnames";
-
 import moment from "moment";
 
 import { useMutation } from "@tanstack/react-query";
+
+import MetricCardGroup from "@/@core/components/mui/MetricCardGroup";
+
+import MaterialTable from "./MaterialTable";
 
 import CustomTextField from "@/@core/components/mui/TextField";
 import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
@@ -32,6 +31,7 @@ import CustomButton from "@/@core/components/mui/Button";
 import useGetProductList from "@/hooks/product/useGetProductList";
 import CustomDatePicker from "@/@core/components/react-datepicker";
 import { getProductsRelated } from "@/api/product";
+import { MaterialTypeKey } from "@/utils/enum";
 
 type Props = {
   isPending: boolean;
@@ -75,9 +75,6 @@ const Form: React.FC<Props> = ({
   const [step, setStep] = useState<number>(0);
 
   const { productList } = useGetProductList();
-
-  const isBelowMdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
-  const isBelowSmScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 
   const {
     register,
@@ -129,13 +126,6 @@ const Form: React.FC<Props> = ({
       replace([]);
     }
   }, [mutateProductsRelated, replace, productWatch?.id, reset]);
-
-  const getCardClass = useCallback(() => {
-    return classNames({
-      "[&:nth-of-type(odd)>div]:pie-6 [&:nth-of-type(odd)>div]:border-ie": isBelowMdScreen && !isBelowSmScreen,
-      "[&:not(:last-child)>div]:pie-6 [&:not(:last-child)>div]:border-ie": !isBelowMdScreen
-    });
-  }, [isBelowMdScreen, isBelowSmScreen]);
 
   return (
     <Grid container spacing={4}>
@@ -241,88 +231,69 @@ const Form: React.FC<Props> = ({
 
             {step === 2 && (
               <Grid item xs={12}>
-                <Card>
-                  <CardContent>
-                    <Grid container spacing={6}>
-                      <Grid item xs={12} sm={6} md={3} className={getCardClass()}>
-                        <div className='flex h-full'>
-                          <div className='flex flex-col justify-between'>
-                            <Typography variant='caption'>Cantidad a producir (Kg)</Typography>
-                            <Typography variant='h5'>{calculatedData?.totalQuantityInKg}</Typography>
-                          </div>
-                        </div>
-                      </Grid>
-
-                      <Grid item xs={12} sm={6} md={3} className={getCardClass()}>
-                        <div className='flex h-full'>
-                          <div className='flex flex-col justify-between'>
-                            <Typography variant='caption'>Cantidad disponible (Kg)</Typography>
-                            <Typography variant='h5'>{calculatedData?.totalQuantityPossible}</Typography>
-                          </div>
-                        </div>
-                      </Grid>
-
-                      <Grid item xs={12} sm={6} md={3} className={getCardClass()}>
-                        <div className='flex h-full'>
-                          <div className='flex flex-col justify-between'>
-                            <Typography variant='caption'>Cantidad necesaria (x100 g)</Typography>
-                            <Typography variant='h5'>
-                              {calculatedData?.materials?.reduce((a: number, b: any) => a + b.quantityFormulation, 0)}
-                            </Typography>
-                          </div>
-                        </div>
-                      </Grid>
-
-                      <Grid item xs={12} sm={6} md={3} className={getCardClass()}>
-                        <div className='flex h-full'>
-                          <div className='flex flex-col justify-between'>
-                            <Typography variant='caption'>Cantidad total necesaria (g)</Typography>
-                            <Typography variant='h5'>
-                              {calculatedData?.materials?.reduce((a: number, b: any) => a + b.quantityTotalOrder, 0)}
-                            </Typography>
-                          </div>
-                        </div>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
+                <MetricCardGroup
+                  items={[
+                    {
+                      icon: "mdi:weight-kilogram",
+                      label: "Cantidad a producir (Kg)",
+                      value: calculatedData?.totalQuantityInKg ?? "-"
+                    },
+                    {
+                      icon: "mdi:check-circle-outline",
+                      label: "Cantidad disponible (Kg)",
+                      value: calculatedData?.totalQuantityPossible ?? "-"
+                    },
+                    {
+                      icon: "mdi:package-variant-closed",
+                      label: "Total unidades m. de empaque",
+                      value: calculatedData?.totalQuantityMaterialPackaging ?? "-"
+                    },
+                    {
+                      icon: "mdi:flask-outline",
+                      label: "Total materia prima (g)",
+                      value: calculatedData?.totalQuantityMaterialByOrder ?? "-"
+                    }
+                  ]}
+                />
               </Grid>
             )}
 
-            <Grid item xs={12}>
-              <Card>
-                <CardContent>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Codigo</TableCell>
-                        <TableCell>Descripcion</TableCell>
-                        <TableCell>Cantidad (G)</TableCell>
-                        <TableCell>Total</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {step !== 2 ? (
+            {step !== 2 ? (
+              <Grid item xs={12}>
+                <Card>
+                  <CardContent>
+                    <Table>
+                      <TableBody>
                         <TableRow>
                           <TableCell colSpan={4} sx={{ textAlign: "center" }}>
                             Ingrese las cantidades de las presentaciones
                           </TableCell>
                         </TableRow>
-                      ) : (
-                        calculatedData?.materials?.map((item: any, index: number) => (
-                          <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                            <TableCell>{item.id}</TableCell>
-                            <TableCell>{item.name}</TableCell>
-                            <TableCell>{item.quantityFormulation}</TableCell>
-                            <TableCell>{item.quantityTotalOrder}</TableCell>
-                          </TableRow>
-                        ))
-                      )}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
-            </Grid>
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ) : (
+              <>
+                <Grid item md={12} lg={6}>
+                  <MaterialTable
+                    title='Material de empaque'
+                    type={MaterialTypeKey.PACKAGING}
+                    items={calculatedData?.materials}
+                    quantityLabel='Cantidad'
+                  />
+                </Grid>
+                <Grid item md={12} lg={6}>
+                  <MaterialTable
+                    title='Materia prima'
+                    type={MaterialTypeKey.FEEDSTOCK}
+                    items={calculatedData?.materials}
+                    quantityLabel='Cantidad (g)'
+                  />
+                </Grid>
+              </>
+            )}
 
             {/*step === 2 && (
               <Grid item xs={12}>

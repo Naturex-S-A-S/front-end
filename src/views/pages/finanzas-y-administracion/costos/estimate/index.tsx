@@ -196,6 +196,51 @@ const EstimateView = () => {
     });
   };
 
+  const handleMaterialChange = (index: number, field: "stdQuantity" | "stdUnitCost", value: number) => {
+    if (!estimate) return;
+
+    setEstimate(prev => {
+      if (!prev) return prev;
+
+      const updated = structuredClone(prev);
+      const material = updated.materials[index];
+
+      if (field === "stdQuantity") {
+        material.stdQuantity = value;
+      } else {
+        material.stdUnitCost = value;
+      }
+
+      material.stdTotalCost = material.stdQuantity * material.stdUnitCost;
+
+      let totalFeedstockCost = 0;
+      let totalPackagingCost = 0;
+
+      for (const m of updated.materials) {
+        if (m.materialType === "feedstock") {
+          totalFeedstockCost += m.stdTotalCost;
+        } else {
+          totalPackagingCost += m.stdTotalCost;
+        }
+      }
+
+      const totalMaterialCost = totalFeedstockCost + totalPackagingCost;
+      const qty = updated.quantityKg;
+
+      updated.stdCostFeedstockKg = totalFeedstockCost / qty;
+      updated.stdCostPackagingKg = totalPackagingCost / qty;
+      updated.stdCostMaterialKg = totalMaterialCost / qty;
+      updated.stdCostMaterialTon = updated.stdCostMaterialKg * 1000;
+      updated.stdCostMaterialUnit = updated.stdCostMaterialKg;
+
+      updated.costTotalKg = updated.stdCostMaterialKg + updated.costCifKg;
+      updated.costTotalTon = updated.costTotalKg * 1000;
+      updated.costTotalUnit = updated.stdCostMaterialUnit + updated.costCifUnit;
+
+      return updated;
+    });
+  };
+
   const waterfall = useMemo(() => {
     if (!estimate) return null;
 
@@ -355,7 +400,7 @@ const EstimateView = () => {
               )}
 
               <Grid item xs={12} md={8}>
-                <CostBreakdown estimate={estimate} formatCurrency={formatCurrency} />
+                <CostBreakdown estimate={estimate} formatCurrency={formatCurrency} onMaterialChange={handleMaterialChange} />
               </Grid>
               <Grid item xs={12} md={4}>
                 {lastSavedSnapshotId === null && (

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import type { Theme } from "@mui/material";
 import {
   Box,
   Card,
@@ -11,24 +10,23 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TableRow,
   Typography,
-  useMediaQuery,
   Alert
 } from "@mui/material";
 
 import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
-import classNames from "classnames";
-
 import moment from "moment";
+
+import MetricCardGroup from "@/@core/components/mui/MetricCardGroup";
 
 import CustomTextField from "@/@core/components/mui/TextField";
 import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
 import CustomButton from "@/@core/components/mui/Button";
 import useGetProductList from "@/hooks/product/useGetProductList";
 import CustomDatePicker from "@/@core/components/react-datepicker";
+import MaterialsByProviderTable from "./MaterialsByProviderTable";
 
 type Props = {
   isPending: boolean;
@@ -72,9 +70,6 @@ const Form: React.FC<Props> = ({
   const [step, setStep] = useState<number>(0);
 
   const { productList } = useGetProductList();
-
-  const isBelowMdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
-  const isBelowSmScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 
   const {
     register,
@@ -127,13 +122,6 @@ const Form: React.FC<Props> = ({
 
     if (newValue !== oldValue) setIsChanged(true);
   };
-
-  const getCardClass = useCallback(() => {
-    return classNames({
-      "[&:nth-of-type(odd)>div]:pie-6 [&:nth-of-type(odd)>div]:border-ie": isBelowMdScreen && !isBelowSmScreen,
-      "[&:not(:last-child)>div]:pie-6 [&:not(:last-child)>div]:border-ie": !isBelowMdScreen
-    });
-  }, [isBelowMdScreen, isBelowSmScreen]);
 
   return (
     <Grid container spacing={4}>
@@ -242,78 +230,52 @@ const Form: React.FC<Props> = ({
 
             {step === 2 && (
               <Grid item xs={12}>
-                <Card>
-                  <CardContent>
-                    <Grid container spacing={6}>
-                      <Grid item xs={12} sm={6} md={4} className={getCardClass()}>
-                        <div className='flex h-full'>
-                          <div className='flex flex-col justify-between'>
-                            <Typography variant='caption'>Cantidad a producir (Kg)</Typography>
-                            <Typography variant='h5'>{calculatedData?.totalQuantityInKg}</Typography>
-                          </div>
-                        </div>
-                      </Grid>
-
-                      <Grid item xs={12} sm={6} md={4} className={getCardClass()}>
-                        <div className='flex h-full'>
-                          <div className='flex flex-col justify-between'>
-                            <Typography variant='caption'>Total general</Typography>
-                            <Typography variant='h5'>
-                              {calculatedData?.materials?.reduce((a: number, b: any) => a + b.quantityTotalOrder, 0)}
-                            </Typography>
-                          </div>
-                        </div>
-                      </Grid>
-
-                      <Grid item xs={12} sm={6} md={4} className={getCardClass()}>
-                        <div className='flex h-full'>
-                          <div className='flex flex-col justify-between'>
-                            <Typography variant='caption'>Total costo</Typography>
-                            <Typography variant='h5'>~ {calculatedData?.totalChargeMaterialByOrder}</Typography>
-                          </div>
-                        </div>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
+                <MetricCardGroup
+                  gridItemProps={{ xs: 12, sm: 6, md: 4 }}
+                  items={[
+                    {
+                      icon: "mdi:weight-kilogram",
+                      label: "Cantidad a producir (Kg)",
+                      value: calculatedData?.totalQuantityInKg ?? "-"
+                    },
+                    {
+                      icon: "mdi:calculator",
+                      label: "Total general",
+                      value:
+                        calculatedData?.materialsByProvider?.reduce(
+                          (acc: number, p: any) =>
+                            acc + p.materials?.reduce((sum: number, m: any) => sum + m.quantityTotalOrder, 0),
+                          0
+                        ) ?? "-"
+                    },
+                    {
+                      icon: "mdi:cash-multiple",
+                      label: "Total costo",
+                      value: `~ ${calculatedData?.totalChargeMaterialByOrder ?? "-"}`
+                    }
+                  ]}
+                />
               </Grid>
             )}
 
             <Grid item xs={12}>
-              <Card>
-                <CardContent>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Codigo</TableCell>
-                        <TableCell>Descripcion</TableCell>
-                        <TableCell>Cantidad disponible</TableCell>
-                        <TableCell>Cantidad faltante</TableCell>
-                        <TableCell>Cantidad Total</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {step !== 2 ? (
+              {step !== 2 ? (
+                <Card>
+                  <CardContent>
+                    <Table size='small'>
+                      <TableBody>
                         <TableRow>
                           <TableCell colSpan={4} sx={{ textAlign: "center" }}>
                             Ingrese las cantidades de las presentaciones
                           </TableCell>
                         </TableRow>
-                      ) : (
-                        calculatedData?.materials?.map((item: any, index: number) => (
-                          <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                            <TableCell>{item.id}</TableCell>
-                            <TableCell>{item.name}</TableCell>
-                            <TableCell>{item.quantityAvailable}</TableCell>
-                            <TableCell>{item.quantityMissing}</TableCell>
-                            <TableCell>{item.quantityTotalOrder}</TableCell>
-                          </TableRow>
-                        ))
-                      )}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+              ) : (
+                <MaterialsByProviderTable items={calculatedData?.materialsByProvider ?? []} />
+              )}
             </Grid>
 
             {/*step === 2 && (

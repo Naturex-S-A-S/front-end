@@ -15,6 +15,11 @@ export enum CategoryTypeName {
   FINISHED_PRODUCT = "Producto terminado"
 }
 
+export enum MaterialTypeKey {
+  FEEDSTOCK = "materia_prima",
+  PACKAGING = "packaging"
+}
+
 export enum DniTTypesFormat {
   "cedula" = "Cédula de Ciudadanía",
   "cedula de extranjeria" = "Cédula de Extranjería",

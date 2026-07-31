@@ -1,33 +1,27 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  Chip,
-  Divider,
-  Grid,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Typography
-} from "@mui/material";
+import { Box, Card, CardContent, Chip, Divider, Grid, Typography } from "@mui/material";
 
+import MetricCardGroup from "@/@core/components/mui/MetricCardGroup";
 import { formatDate } from "@/utils/format";
 import type { IOrder } from "@/types/pages/order";
 import Adjustment from "./adjustment";
 import { STATUS, STATUS_COLOR, STATUS_LABEL } from "@/utils/constant";
+import MaterialTable from "../MaterialTable";
+import { MaterialTypeKey } from "@/utils/enum";
 
 interface Props {
   order: IOrder;
 }
 
-const cardBorderClass =
-  "sm:[&:nth-of-type(odd)>div]:pie-6 sm:[&:nth-of-type(odd)>div]:border-ie md:[&:not(:last-child)>div]:pie-6 md:[&:not(:last-child)>div]:border-ie";
-
 const Detail: React.FC<Props> = ({ order }) => {
   const totalQuantityG = order.details?.reduce((a, b) => a + b.quantity, 0) ?? 0;
   const totalQuantityTotal = order.details?.reduce((a, b) => a + b.quantityTotal, 0) ?? 0;
+
+  const materials = order.details.map(item => ({
+    type: item.typeMaterial,
+    name: item.nameMaterial,
+    quantityFormulation: item.quantity,
+    quantityTotalOrder: item.quantityTotal
+  }));
 
   return (
     <Grid container spacing={4}>
@@ -153,96 +147,58 @@ const Detail: React.FC<Props> = ({ order }) => {
         <Grid container spacing={4}>
           {/* Stats */}
           <Grid item xs={12}>
-            <Card>
-              <CardContent>
-                <Grid container spacing={6}>
-                  <Grid item xs={12} sm={6} md={2} className={cardBorderClass}>
-                    <div className='flex h-full'>
-                      <div className='flex flex-col justify-between'>
-                        <Typography variant='caption'>Cantidad esperada (Kg)</Typography>
-                        <Typography variant='h5'>{order.quantityExpectedKg}</Typography>
-                      </div>
-                    </div>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={2} className={cardBorderClass}>
-                    <div className='flex h-full'>
-                      <div className='flex flex-col justify-between'>
-                        <Typography variant='caption'>Cantidad producida (Kg)</Typography>
-                        <Typography variant='h5'>{order.quantityProducedKg}</Typography>
-                      </div>
-                    </div>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={2} className={cardBorderClass}>
-                    <div className='flex h-full'>
-                      <div className='flex flex-col justify-between'>
-                        <Typography variant='caption'>Perdida (%)</Typography>
-                        <Typography variant='h5'>{order.lossPercentage}</Typography>
-                      </div>
-                    </div>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={3} className={cardBorderClass}>
-                    <div className='flex h-full'>
-                      <div className='flex flex-col justify-between'>
-                        <Typography variant='caption'>Total base (g)</Typography>
-                        <Typography variant='h5'>{totalQuantityG}</Typography>
-                      </div>
-                    </div>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={3} className={cardBorderClass}>
-                    <div className='flex h-full'>
-                      <div className='flex flex-col justify-between'>
-                        <Typography variant='caption'>Total general (g)</Typography>
-                        <Typography variant='h5'>{totalQuantityTotal.toFixed(2)}</Typography>
-                      </div>
-                    </div>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
+            <MetricCardGroup
+              items={[
+                {
+                  icon: "mdi:weight-kilogram",
+                  label: "Cantidad esperada (Kg)",
+                  value: order.quantityExpectedKg ?? "-",
+                  gridItemProps: { xs: 12, sm: 6, md: 3 }
+                },
+                {
+                  icon: "mdi:package-variant",
+                  label: "Cantidad producida (Kg)",
+                  value: order.quantityProducedKg ?? "-",
+                  gridItemProps: { xs: 12, sm: 6, md: 3 }
+                },
+                {
+                  icon: "mdi:alert-circle-outline",
+                  label: "Pérdida (%)",
+                  value: order.lossPercentage ?? "-",
+                  gridItemProps: { xs: 12, sm: 6, md: 3 }
+                },
+                {
+                  icon: "mdi:flask-outline",
+                  label: "Total base (g)",
+                  value: totalQuantityG,
+                  gridItemProps: { xs: 12, sm: 6, md: 3 }
+                },
+                {
+                  icon: "mdi:calculator",
+                  label: "Total general (g)",
+                  value: totalQuantityTotal.toFixed(2),
+                  gridItemProps: { xs: 12, sm: 6, md: 3 }
+                }
+              ]}
+            />
           </Grid>
 
           {/* Materials table */}
-          <Grid item xs={12}>
-            <Card>
-              <CardContent>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Código</TableCell>
-                      <TableCell>Material</TableCell>
-                      <TableCell>Tipo</TableCell>
-                      <TableCell>Cantidad base (g)</TableCell>
-                      <TableCell>Total (g)</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {!order.details?.length ? (
-                      <TableRow>
-                        <TableCell colSpan={5} sx={{ textAlign: "center" }}>
-                          Sin materiales registrados
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      order.details.map(item => (
-                        <TableRow key={item.id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                          <TableCell>{item.idMaterial}</TableCell>
-                          <TableCell>{item.nameMaterial}</TableCell>
-                          <TableCell>
-                            <Chip label={item.typeMaterial.replace("_", " ")} size='small' variant='outlined' />
-                          </TableCell>
-                          <TableCell>{item.quantity}</TableCell>
-                          <TableCell>{item.quantityTotal}</TableCell>
-                        </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
+          <Grid item xs={12} sm={6}>
+            <MaterialTable
+              title='Material de empaque'
+              type={MaterialTypeKey.PACKAGING}
+              items={materials}
+              quantityLabel='Cantidad'
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <MaterialTable
+              title='Materia prima'
+              type={MaterialTypeKey.FEEDSTOCK}
+              items={materials}
+              quantityLabel='Cantidad (g)'
+            />
           </Grid>
         </Grid>
       </Grid>

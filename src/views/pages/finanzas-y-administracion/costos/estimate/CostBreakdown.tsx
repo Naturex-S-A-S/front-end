@@ -1,23 +1,35 @@
+import type { ChangeEvent } from "react";
+
 import { Grid, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 
 import CustomCard from "@/@core/components/mui/Card";
+import CustomTextField from "@/@core/components/mui/TextField";
 import type { ICostEstimate, ICostEstimateMaterial } from "@/types/pages/costs";
 
 interface Props {
   estimate: ICostEstimate;
   formatCurrency: (v: number | null | undefined) => string;
+  onMaterialChange?: (index: number, field: "stdQuantity" | "stdUnitCost", value: number) => void;
 }
 
-const CostBreakdown = ({ estimate, formatCurrency }: Props) => {
-  const feedstockMaterials = estimate.materials?.filter(m => m.materialType === "feedstock") ?? [];
-  const packagingMaterials = estimate.materials?.filter(m => m.materialType === "packaging") ?? [];
+type MaterialEntry = { material: ICostEstimateMaterial; index: number };
 
-  const content = (
-    <>
+const CostBreakdown = ({ estimate, formatCurrency, onMaterialChange }: Props) => {
+  const materialWithIndex = estimate.materials?.map((m, i) => ({ material: m, index: i })) ?? [];
+  const feedstockMaterials = materialWithIndex.filter(m => m.material.materialType === "feedstock");
+  const packagingMaterials = materialWithIndex.filter(m => m.material.materialType === "packaging");
+
+  return (
+    <Grid container spacing={4}>
       {feedstockMaterials.length > 0 && (
         <Grid item xs={12}>
           <CustomCard title='Materia Prima'>
-            <MaterialTable materials={feedstockMaterials} formatCurrency={formatCurrency} type='feedstock' />
+            <MaterialTable
+              materials={feedstockMaterials}
+              formatCurrency={formatCurrency}
+              type='feedstock'
+              onMaterialChange={onMaterialChange}
+            />
           </CustomCard>
         </Grid>
       )}
@@ -25,7 +37,12 @@ const CostBreakdown = ({ estimate, formatCurrency }: Props) => {
       {packagingMaterials.length > 0 && (
         <Grid item xs={12}>
           <CustomCard title='Material de Empaque'>
-            <MaterialTable materials={packagingMaterials} formatCurrency={formatCurrency} type='packaging' />
+            <MaterialTable
+              materials={packagingMaterials}
+              formatCurrency={formatCurrency}
+              type='packaging'
+              onMaterialChange={onMaterialChange}
+            />
           </CustomCard>
         </Grid>
       )}
@@ -63,12 +80,6 @@ const CostBreakdown = ({ estimate, formatCurrency }: Props) => {
           </CustomCard>
         </Grid>
       )}
-    </>
-  );
-
-  return (
-    <Grid container spacing={4}>
-      {content}
     </Grid>
   );
 };
@@ -76,32 +87,60 @@ const CostBreakdown = ({ estimate, formatCurrency }: Props) => {
 const MaterialTable = ({
   materials,
   formatCurrency,
-  type
+  type,
+  onMaterialChange
 }: {
-  materials: ICostEstimateMaterial[];
+  materials: MaterialEntry[];
   formatCurrency: (v: number | null | undefined) => string;
   type?: "feedstock" | "packaging";
+  onMaterialChange?: (index: number, field: "stdQuantity" | "stdUnitCost", value: number) => void;
 }) => {
-  const totalRealQuantity = materials.reduce((acc, m) => acc + (m.realQuantity ?? 0), 0);
-  const totalStdTotalCost = materials.reduce((acc, m) => acc + m.stdTotalCost, 0);
+  const totalRealQuantity = materials.reduce((acc, { material: m }) => acc + (m.realQuantity ?? 0), 0);
+  const totalStdTotalCost = materials.reduce((acc, { material: m }) => acc + m.stdTotalCost, 0);
 
   return (
     <Table>
       <TableHead>
         <TableRow>
           <TableCell>Material</TableCell>
-          <TableCell align='right'>{type === "feedstock" ? "Cantidad (Kg)" : "Unidades base"}</TableCell>
-          <TableCell align='right'>{type === "feedstock" ? "Costo base (Kg)" : "Costo base"}</TableCell>
+          <TableCell width={150} align='right'>
+            {type === "feedstock" ? "Cantidad (Kg)" : "Unidades base"}
+          </TableCell>
+          <TableCell width={150} align='right'>
+            {type === "feedstock" ? "Costo base (Kg)" : "Costo base"}
+          </TableCell>
           <TableCell align='right'>{type === "feedstock" ? "Cantidad (Kg)" : "Total unidades"}</TableCell>
           <TableCell align='right'>Costo Total</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        {materials.map((mat, idx) => (
-          <TableRow key={idx}>
+        {materials.map(({ material: mat, index }) => (
+          <TableRow key={index}>
             <TableCell>{mat.materialName}</TableCell>
-            <TableCell align='right'>{mat.stdQuantity}</TableCell>
-            <TableCell align='right'>{formatCurrency(mat.stdUnitCost)}</TableCell>
+            <TableCell align='right'>
+              <CustomTextField
+                type='number'
+                value={mat.stdQuantity}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  onMaterialChange?.(index, "stdQuantity", Number(e.target.value))
+                }
+                InputProps={{ inputProps: { min: 0, step: "any" } }}
+                sx={{ width: 50 }}
+                size='small'
+              />
+            </TableCell>
+            <TableCell align='right'>
+              <CustomTextField
+                type='number'
+                value={mat.stdUnitCost}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  onMaterialChange?.(index, "stdUnitCost", Number(e.target.value))
+                }
+                InputProps={{ inputProps: { min: 0, step: "any" } }}
+                sx={{ width: 50 }}
+                size='small'
+              />
+            </TableCell>
             <TableCell align='right'>{mat.realQuantity?.toFixed(2)}</TableCell>
             <TableCell align='right'>{formatCurrency(mat.stdTotalCost)}</TableCell>
           </TableRow>

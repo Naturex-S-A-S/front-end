@@ -12,6 +12,7 @@ import { Box, Grid, Stack, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 
 import CustomCard from "@/@core/components/mui/Card";
+import MetricCardGroup from "@/@core/components/mui/MetricCardGroup";
 import CustomTextField from "@/@core/components/mui/TextField";
 import CustomButton from "@/@core/components/mui/Button";
 import { updateCostConfig } from "@/api/costs/actions";
@@ -139,53 +140,14 @@ const ConfigForm = ({ initialData, periodsCount }: Props) => {
           </CustomButton>
         }
       >
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={4}>
-            <Box className='rounded-lg border border-gray-200 p-4'>
-              <Stack spacing={1.5} textAlign={"center"}>
-                <Stack direction='row' spacing={1} alignItems='center' justifyContent='center'>
-                  <Icon icon='mdi:calendar-clock' fontSize={20} className='text-gray-500' />
-                  <Typography variant='body2' color='text.secondary'>
-                    Meses de Promedio CIF
-                  </Typography>
-                </Stack>
-                <Typography variant='h3' fontWeight={700} color='primary.main'>
-                  {config.cifAveragingMonths}
-                </Typography>
-              </Stack>
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Box className='rounded-lg border border-gray-200 p-4'>
-              <Stack spacing={1.5} textAlign={"center"}>
-                <Stack direction='row' spacing={1} alignItems='center' justifyContent='center'>
-                  <Icon icon='mdi:package-variant-closed' fontSize={20} className='text-gray-500' />
-                  <Typography variant='body2' color='text.secondary'>
-                    % Merma por Defecto
-                  </Typography>
-                </Stack>
-                <Typography variant='h3' fontWeight={700} color='primary.main'>
-                  {config.defaultWastePct}%
-                </Typography>
-              </Stack>
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Box className='rounded-lg border border-gray-200 p-4'>
-              <Stack spacing={1.5} textAlign={"center"}>
-                <Stack direction='row' spacing={1} alignItems='center' justifyContent='center'>
-                  <Icon icon='mdi:percent' fontSize={20} className='text-gray-500' />
-                  <Typography variant='body2' color='text.secondary'>
-                    Margen de ganancia
-                  </Typography>
-                </Stack>
-                <Typography variant='h3' fontWeight={700} color='primary.main'>
-                  {config.defaultMarginPct}%
-                </Typography>
-              </Stack>
-            </Box>
-          </Grid>
-        </Grid>
+        <MetricCardGroup
+          gridItemProps={{ xs: 12, md: 4 }}
+          items={[
+            { icon: "mdi:calendar-clock", label: "Meses de Promedio CIF", value: config.cifAveragingMonths },
+            { icon: "mdi:package-variant-closed", label: "% Merma por Defecto", value: `${config.defaultWastePct}%` },
+            { icon: "mdi:percent", label: "Margen de ganancia", value: `${config.defaultMarginPct}%` },
+          ]}
+        />
       </CustomCard>
     );
   }

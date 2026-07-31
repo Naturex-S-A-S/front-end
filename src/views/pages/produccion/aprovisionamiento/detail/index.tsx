@@ -1,63 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import type { Theme } from "@mui/material";
 import {
   Box,
   Card,
   CardContent,
   Chip,
-  Collapse,
   Divider,
   Grid,
-  IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Tooltip,
-  Typography,
-  useMediaQuery
+  Typography
 } from "@mui/material";
-import { Icon } from "@iconify/react";
 
-import classNames from "classnames";
+import MetricCardGroup from "@/@core/components/mui/MetricCardGroup";
 
 import { formatDate } from "@/utils/format";
 import type { IOrderSupply } from "@/types/pages/order";
 import { STATUS, STATUS_COLOR, STATUS_LABEL } from "@/utils/constant";
 import ChangeProviderDialog from "./change-provider-dialog";
+import MaterialsByProviderTable from "../MaterialsByProviderTable";
 
 interface Props {
   orderSupply: IOrderSupply;
 }
 
 const Detail: React.FC<Props> = ({ orderSupply }) => {
-  const isBelowMdScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
-  const isBelowSmScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
-
-  const [openRows, setOpenRows] = useState<Set<string>>(() => new Set([]));
-
-  useEffect(() => {
-    setOpenRows(new Set(orderSupply.materialsByProvider?.map(p => p.providerId) ?? []));
-  }, [orderSupply.materialsByProvider]);
-
-  const toggleRow = (providerId: string) => {
-    setOpenRows(prev => {
-      const next = new Set(prev);
-
-      if (next.has(providerId)) {
-        next.delete(providerId);
-      } else {
-        next.add(providerId);
-      }
-
-      return next;
-    });
-  };
-
   const [providerDialog, setProviderDialog] = useState<{
     materialId: string;
     materialName: string;
@@ -67,12 +34,6 @@ const Detail: React.FC<Props> = ({ orderSupply }) => {
   const handleChangeProvider = (materialId: string, materialName: string, currentProviderId: string) => {
     setProviderDialog({ materialId, materialName, currentProviderId });
   };
-
-  const getCardClass = () =>
-    classNames({
-      "[&:nth-of-type(odd)>div]:pie-6 [&:nth-of-type(odd)>div]:border-ie": isBelowMdScreen && !isBelowSmScreen,
-      "[&:not(:last-child)>div]:pie-6 [&:not(:last-child)>div]:border-ie": !isBelowMdScreen
-    });
 
   return (
     <>
@@ -151,142 +112,24 @@ const Detail: React.FC<Props> = ({ orderSupply }) => {
           <Grid container spacing={4}>
             {/* Stats */}
             <Grid item xs={12}>
-              <Card>
-                <CardContent>
-                  <Grid container spacing={6}>
-                    <Grid item xs={12} sm={6} md={4} className={getCardClass()}>
-                      <div className='flex h-full'>
-                        <div className='flex flex-col justify-between'>
-                          <Typography variant='caption'>Total en kg</Typography>
-                          <Typography variant='h5'>{orderSupply.totalQuantityInKg}</Typography>
-                        </div>
-                      </div>
-                    </Grid>
-
-                    <Grid item xs={12} sm={6} md={4} className={getCardClass()}>
-                      <div className='flex h-full'>
-                        <div className='flex flex-col justify-between'>
-                          <Typography variant='caption'>Total en unidades</Typography>
-                          <Typography variant='h5'>{orderSupply.totalQuantityInUnits}</Typography>
-                        </div>
-                      </div>
-                    </Grid>
-
-                    <Grid item xs={12} sm={6} md={4} className={getCardClass()}>
-                      <div className='flex h-full'>
-                        <div className='flex flex-col justify-between'>
-                          <Typography variant='caption'>Costo total</Typography>
-                          <Typography variant='h5'>{orderSupply.totalChargeOrder}</Typography>
-                        </div>
-                      </div>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
+              <MetricCardGroup
+                gridItemProps={{ xs: 12, sm: 6, md: 4 }}
+                items={[
+                  { icon: "mdi:weight-kilogram", label: "Total en kg", value: orderSupply.totalQuantityInKg ?? "-" },
+                  { icon: "mdi:package-variant", label: "Total en unidades", value: orderSupply.totalQuantityInUnits ?? "-" },
+                  { icon: "mdi:cash-multiple", label: "Costo total", value: orderSupply.totalChargeOrder ?? "-" },
+                ]}
+              />
             </Grid>
 
             {/* Materials table */}
             <Grid item xs={12}>
-              <Card>
-                <CardContent>
-                  <Table size='small'>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell sx={{ width: 48 }} />
-                        <TableCell>Nombre</TableCell>
-                        <TableCell>Dirección</TableCell>
-                        <TableCell>Teléfono</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {!orderSupply.materialsByProvider?.length ? (
-                        <TableRow>
-                          <TableCell colSpan={6} sx={{ textAlign: "center" }}>
-                            Sin materiales registrados
-                          </TableCell>
-                        </TableRow>
-                      ) : (
-                        orderSupply.materialsByProvider.map(item => (
-                          <>
-                            <TableRow key={item.providerId} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                              <TableCell>
-                                <IconButton size='small' onClick={() => toggleRow(item.providerId)}>
-                                  <Icon icon={openRows.has(item.providerId) ? "mdi:chevron-up" : "mdi:chevron-down"} />
-                                </IconButton>
-                              </TableCell>
-                              <TableCell className='font-bold'>{item.providerName || "-"}</TableCell>
-                              <TableCell className='font-bold'>{item.providerAddress || "-"}</TableCell>
-                              <TableCell className='font-bold'>{item.providerPhone || "-"}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell colSpan={6} sx={{ py: 0 }}>
-                                <Collapse in={openRows.has(item.providerId)}>
-                                  <Box sx={{ p: 2 }}>
-                                    <Table size='medium'>
-                                      <TableHead>
-                                        <TableRow>
-                                          {orderSupply.status === STATUS.en_proceso && (
-                                            <TableCell align='right'>Acciones</TableCell>
-                                          )}
-                                          <TableCell>Nombre</TableCell>
-                                          <TableCell align='right'>Cant. Disponible</TableCell>
-                                          <TableCell align='right'>Cant. Faltante</TableCell>
-                                          <TableCell align='right'>Cant. Total Pedido</TableCell>
-                                          <TableCell align='right'>Costo Total</TableCell>
-                                        </TableRow>
-                                      </TableHead>
-                                      <TableBody>
-                                        {!item.materials?.length ? (
-                                          <TableRow>
-                                            <TableCell colSpan={5} sx={{ textAlign: "center" }}>
-                                              Sin materiales
-                                            </TableCell>
-                                          </TableRow>
-                                        ) : (
-                                          item.materials.map(material => (
-                                            <TableRow
-                                              key={material.id}
-                                              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                                            >
-                                              {orderSupply.status === STATUS.en_proceso && (
-                                                <TableCell align='center'>
-                                                  <Tooltip title='Cambiar proveedor'>
-                                                    <IconButton
-                                                      size='small'
-                                                      onClick={() =>
-                                                        handleChangeProvider(
-                                                          material.id,
-                                                          material.name,
-                                                          item.providerId
-                                                        )
-                                                      }
-                                                    >
-                                                      <Icon icon='ic:sharp-change-circle' />
-                                                    </IconButton>
-                                                  </Tooltip>
-                                                </TableCell>
-                                              )}
-                                              <TableCell>{material.name}</TableCell>
-                                              <TableCell align='right'>{material.quantityAvailable}</TableCell>
-                                              <TableCell align='right'>{material.quantityMissing}</TableCell>
-                                              <TableCell align='right'>{material.quantityTotalOrder}</TableCell>
-                                              <TableCell align='right'>{material.totalCost}</TableCell>
-                                            </TableRow>
-                                          ))
-                                        )}
-                                      </TableBody>
-                                    </Table>
-                                  </Box>
-                                </Collapse>
-                              </TableCell>
-                            </TableRow>
-                          </>
-                        ))
-                      )}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
+              <MaterialsByProviderTable
+                items={orderSupply.materialsByProvider ?? []}
+                showActions={orderSupply.status === STATUS.en_proceso}
+                showCost
+                onChangeProvider={handleChangeProvider}
+              />
             </Grid>
           </Grid>
         </Grid>

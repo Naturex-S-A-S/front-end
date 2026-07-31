@@ -30,6 +30,7 @@ import { postKardexInputAdjustment as postKardexInputAdjustmentProduct } from "@
 import { alertMessageErrors } from "@/utils/messages";
 import GroupedAutocomplete from "@/@core/components/mui/GroupedAutocomplete";
 import useGetWarehouseList from "@/hooks/warehouse/useGetWarehouse";
+import CustomDatePicker from "@/@core/components/react-datepicker";
 
 type Option = { id: number; label: string };
 
@@ -65,7 +66,14 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
   const { warehouseList } = useGetWarehouseList();
   const queryClient = useQueryClient();
 
-  const { control, handleSubmit, watch, reset, setValue } = useForm<AdjustmentFormValues>({
+  const {
+    control,
+    handleSubmit,
+    watch,
+    reset,
+    setValue,
+    formState: { errors }
+  } = useForm<AdjustmentFormValues>({
     defaultValues: {
       category: undefined,
       material: null,
@@ -337,18 +345,11 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
                   </Grid>
 
                   <Grid item xs={6}>
-                    <Controller
+                    <CustomDatePicker
                       name='expiration_date_1'
                       control={control}
-                      render={({ field: { value, onChange } }: any) => (
-                        <CustomTextField
-                          type='date'
-                          label='Fecha expiración 1'
-                          InputLabelProps={{ shrink: true }}
-                          value={value ?? ""}
-                          onChange={e => onChange(e.target.value)}
-                        />
-                      )}
+                      label='Fecha expiración 1'
+                      errors={errors.expiration_date_1}
                     />
                   </Grid>
 
@@ -356,7 +357,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
                     <Controller
                       name='rack'
                       control={control}
-                      render={({ field: { value, onChange } }: any) => (
+                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
                         <GroupedAutocomplete
                           value={value}
                           groups={warehouseList || []}
@@ -366,7 +367,13 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
                             onChange(value);
                           }}
                           renderInput={(params: any) => (
-                            <CustomTextField {...params} label='Estante' placeholder='Seleccione un estante' />
+                            <CustomTextField
+                              {...params}
+                              label='Estante'
+                              placeholder='Seleccione un estante'
+                              error={!!error}
+                              helperText={error?.message}
+                            />
                           )}
                         />
                       )}
@@ -476,20 +483,11 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
                   </Grid>
 
                   <Grid item xs={6}>
-                    <Controller
+                    <CustomDatePicker
                       name='expiration_date_1'
                       control={control}
-                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
-                        <CustomTextField
-                          type='date'
-                          label='Fecha expiración 1'
-                          InputLabelProps={{ shrink: true }}
-                          value={value ?? ""}
-                          onChange={e => onChange(e.target.value)}
-                          error={!!error}
-                          helperText={error?.message}
-                        />
-                      )}
+                      label='Fecha expiración 1'
+                      errors={errors.expiration_date_1}
                     />
                   </Grid>
 
