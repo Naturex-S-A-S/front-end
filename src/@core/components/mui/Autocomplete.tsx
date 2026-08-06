@@ -12,7 +12,7 @@ const CustomAutocomplete = forwardRef((props: any, ref: any) => {
 
   return (
     <Autocomplete
-      getOptionLabel={(option: any) => option?.name || option?.label || ""}
+      getOptionLabel={(option: any) => option?.fullName || option?.name || option?.label || ""}
       {...props}
       value={value}
       getOptionKey={(option: any) => option?.id || option?.value || ""}
