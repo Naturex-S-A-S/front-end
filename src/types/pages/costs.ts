@@ -10,45 +10,59 @@ export interface ICostEstimateMaterial {
   idMaterial: number;
   materialName: string;
   materialType: "feedstock" | "packaging";
-  baseQuantity: string;
-  cost: number | null;
+  cost: number;
+  baseQuantity: number | string;
   baseCost: number;
   stdQuantity: number;
-  stdUnitCost: number | null;
   stdTotalCost: number;
-  unitGramsFinalProduct: number | null;
-  realUnitCost: number | null;
-  realQuantity: number | null;
-  realTotalCost: number | null;
+  realUnitCost: number;
+  realQuantity: number;
+  realTotalCost: number;
 }
 
-export interface ICostEstimateCifItem {
-  idCifType: number | null;
-  cifTypeName: string | null;
-  costBasis: string | null;
-  avgAmount: number | null;
-  ratePerKg: number | null;
-  totalAllocated: number | null;
-  totalAmount: number | null;
+export interface ICostEstimatePeriodCifItem {
+  idCifType: number;
+  name: string;
+  costBasis: "fixed" | "per_kg";
+  charge: number;
+}
+
+export interface ICostEstimatePeriod {
+  idPeriod: number;
+  name: string;
+  totalCifAmount: number;
+  totalKgProduced: number;
+  cifRatePerKg: number;
+  cifItems: ICostEstimatePeriodCifItem[];
+}
+
+export interface ICostEstimateCifDetail {
+  id: number;
+  name: string;
+  amount: number;
 }
 
 export interface ICostEstimate {
   id: number;
   idFinalProduct: string;
-  idOrder: string | null;
+  idOrder: number | null;
   idVersion: number;
-  snapshotType: string;
-  status: string;
+  snapshotType: "estimation" | "order_close";
+  status: "draft" | "completed" | "transient";
   quantityKg: number;
-  stdCostFeedstockKg: number;
-  stdCostPackagingKg: number;
+  unitGramsFinalProduct: number | null;
+  baseTotalCostFeedstock: number;
+  baseTotalCostPackaging: number;
+  stdTotalCostFeedstock: number;
+  stdTotalCostPackaging: number;
   stdCostMaterialKg: number;
   stdCostMaterialTon: number;
   stdCostMaterialUnit: number;
-  realCostFeedstockKg: number | null;
-  realCostPackagingKg: number | null;
-  realCostMaterialKg: number | null;
-  realCostMaterialUnit: number | null;
+  realTotalCostFeedstock: number;
+  realTotalCostPackaging: number;
+  realCostMaterialKg: number;
+  realCostMaterialTon: number;
+  realCostMaterialUnit: number;
   costVariationKg: number | null;
   costCifKg: number;
   costCifTon: number;
@@ -64,9 +78,10 @@ export interface ICostEstimate {
   dateSnapshot: string;
   nameUser: string;
   notes: string | null;
-  unitGramsFinalProduct: number;
   materials: ICostEstimateMaterial[];
-  cifItems: ICostEstimateCifItem[];
+  periods: ICostEstimatePeriod[];
+  cifDetails: ICostEstimateCifDetail[];
+  price: IProductPrice | null;
 }
 
 export interface IProductPrice {

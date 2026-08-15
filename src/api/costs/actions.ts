@@ -51,23 +51,6 @@ export async function getCostEstimateAction(
   }
 }
 
-export async function saveCostEstimate(
-  productId: string,
-  quantityKg: number,
-  notes: string
-): Promise<{ success: true; data: { id: number } } | { success: false; error: string }> {
-  try {
-    const data = await apiFetch<{ id: number }>(
-      `costs/products/${productId}/estimate?quantityKg=${quantityKg}&notes=${encodeURIComponent(notes)}`,
-      { method: "POST" }
-    );
-
-    return { success: true, data };
-  } catch (e: any) {
-    return { success: false, error: e.message };
-  }
-}
-
 export async function getProductSnapshotsAction(
   productId: string
 ): Promise<{ success: true; data: ICostSnapshotSummary[] } | { success: false; error: string }> {

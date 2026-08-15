@@ -47,32 +47,27 @@ const CostBreakdown = ({ estimate, formatCurrency, onMaterialChange }: Props) =>
         </Grid>
       )}
 
-      {estimate.cifItems.length > 0 && (
+      {estimate.cifDetails.length > 0 && (
         <Grid item xs={12}>
           <CustomCard title='Costos Indirectos de Fabricación (CIF)'>
             <Table>
               <TableHead>
                 <TableRow>
                   <TableCell>Tipo CIF</TableCell>
-                  <TableCell align='right'>Base</TableCell>
                   <TableCell align='right'>Total</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {estimate.cifItems.map((item, idx) => (
+                {estimate.cifDetails.map((item, idx) => (
                   <TableRow key={idx}>
-                    <TableCell>{item.cifTypeName}</TableCell>
-                    <TableCell align='right'>{item.costBasis}</TableCell>
-                    <TableCell align='right'>{formatCurrency(item.totalAmount)}</TableCell>
+                    <TableCell>{item.name}</TableCell>
+                    <TableCell align='right'>{formatCurrency(item.amount)}</TableCell>
                   </TableRow>
                 ))}
                 <TableRow>
                   <TableCell sx={{ fontWeight: 700 }}>Totales</TableCell>
                   <TableCell align='right' sx={{ fontWeight: 700 }}>
-                    —
-                  </TableCell>
-                  <TableCell align='right' sx={{ fontWeight: 700 }}>
-                    {formatCurrency(estimate.cifItems.reduce((acc, item) => acc + (item.totalAmount ?? 0), 0))}
+                    {formatCurrency(estimate.cifDetails.reduce((acc, item) => acc + item.amount, 0))}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -95,10 +90,14 @@ const MaterialTable = ({
   type?: "feedstock" | "packaging";
   onMaterialChange?: (index: number, value: string) => void;
 }) => {
-  const totalBaseQuantity = materials.reduce((acc, { material: m }) => acc + (parseFloat(m.baseQuantity) || 0), 0);
   const totalCost = materials.reduce((acc, { material: m }) => acc + (m.cost ?? 0), 0);
   const totalBaseCost = materials.reduce((acc, { material: m }) => acc + (m.baseCost ?? 0), 0);
   const totalRealUnitCost = materials.reduce((acc, { material: m }) => acc + (m.realUnitCost ?? 0), 0);
+
+  const totalBaseQuantity = materials.reduce(
+    (acc, { material: m }) => acc + (parseFloat(m.baseQuantity as string) || 0),
+    0
+  );
 
   return (
     <Table>

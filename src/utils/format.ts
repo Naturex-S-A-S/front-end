@@ -7,5 +7,5 @@ export const formatDate = (date: string) => {
 export const formatCurrency = (value: number | null | undefined) => {
   if (value == null) return "-";
 
-  return `$${Number(value).toLocaleString("es-CO", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  return `$${parseFloat(value.toString()).toLocaleString("es-CO", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 };
