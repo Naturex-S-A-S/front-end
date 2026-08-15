@@ -1,6 +1,6 @@
 import type { ChangeEvent } from "react";
 
-import { Grid, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { Grid, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 
 import CustomCard from "@/@core/components/mui/Card";
 import CustomTextField from "@/@core/components/mui/TextField";
@@ -9,7 +9,7 @@ import type { ICostEstimate, ICostEstimateMaterial } from "@/types/pages/costs";
 interface Props {
   estimate: ICostEstimate;
   formatCurrency: (v: number | null | undefined) => string;
-  onMaterialChange?: (index: number, field: "stdQuantity" | "stdUnitCost", value: number) => void;
+  onMaterialChange?: (index: number, value: string) => void;
 }
 
 type MaterialEntry = { material: ICostEstimateMaterial; index: number };
@@ -72,7 +72,7 @@ const CostBreakdown = ({ estimate, formatCurrency, onMaterialChange }: Props) =>
                     —
                   </TableCell>
                   <TableCell align='right' sx={{ fontWeight: 700 }}>
-                    {formatCurrency(estimate.cifItems.reduce((acc, item) => acc + item.totalAmount, 0))}
+                    {formatCurrency(estimate.cifItems.reduce((acc, item) => acc + (item.totalAmount ?? 0), 0))}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -93,10 +93,12 @@ const MaterialTable = ({
   materials: MaterialEntry[];
   formatCurrency: (v: number | null | undefined) => string;
   type?: "feedstock" | "packaging";
-  onMaterialChange?: (index: number, field: "stdQuantity" | "stdUnitCost", value: number) => void;
+  onMaterialChange?: (index: number, value: string) => void;
 }) => {
-  const totalRealQuantity = materials.reduce((acc, { material: m }) => acc + (m.realQuantity ?? 0), 0);
-  const totalStdTotalCost = materials.reduce((acc, { material: m }) => acc + m.stdTotalCost, 0);
+  const totalBaseQuantity = materials.reduce((acc, { material: m }) => acc + (parseFloat(m.baseQuantity) || 0), 0);
+  const totalCost = materials.reduce((acc, { material: m }) => acc + (m.cost ?? 0), 0);
+  const totalBaseCost = materials.reduce((acc, { material: m }) => acc + (m.baseCost ?? 0), 0);
+  const totalRealUnitCost = materials.reduce((acc, { material: m }) => acc + (m.realUnitCost ?? 0), 0);
 
   return (
     <Table>
@@ -104,13 +106,14 @@ const MaterialTable = ({
         <TableRow>
           <TableCell>Material</TableCell>
           <TableCell width={150} align='right'>
-            {type === "feedstock" ? "Cantidad (Kg)" : "Unidades base"}
+            {type === "feedstock" ? "Cantidad base (g)" : "Unidades base"}
           </TableCell>
+
           <TableCell width={150} align='right'>
-            {type === "feedstock" ? "Costo base (Kg)" : "Costo base"}
+            {type === "feedstock" ? "Costo x (g)" : "Costo x (unidad)"}
           </TableCell>
-          <TableCell align='right'>{type === "feedstock" ? "Cantidad (Kg)" : "Total unidades"}</TableCell>
-          <TableCell align='right'>Costo Total</TableCell>
+          {type === "feedstock" && <TableCell align='right'>Costo Base</TableCell>}
+          <TableCell align='right'>Costo Unitario</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -118,42 +121,37 @@ const MaterialTable = ({
           <TableRow key={index}>
             <TableCell>{mat.materialName}</TableCell>
             <TableCell align='right'>
-              <CustomTextField
-                type='number'
-                value={mat.stdQuantity}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  onMaterialChange?.(index, "stdQuantity", Number(e.target.value))
-                }
-                InputProps={{ inputProps: { min: 0, step: "any" } }}
-                sx={{ width: 50 }}
-                size='small'
-              />
+              {onMaterialChange ? (
+                <CustomTextField
+                  type='text'
+                  value={mat.baseQuantity ?? ""}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    onMaterialChange(index, e.target.value);
+                  }}
+                  InputProps={{ inputProps: { min: 0, step: "any" } }}
+                  sx={{ width: 50 }}
+                  size='small'
+                />
+              ) : (
+                <Typography variant='body2'>{mat.baseQuantity ?? ""}</Typography>
+              )}
             </TableCell>
-            <TableCell align='right'>
-              <CustomTextField
-                type='number'
-                value={mat.stdUnitCost}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  onMaterialChange?.(index, "stdUnitCost", Number(e.target.value))
-                }
-                InputProps={{ inputProps: { min: 0, step: "any" } }}
-                sx={{ width: 50 }}
-                size='small'
-              />
-            </TableCell>
-            <TableCell align='right'>{mat.realQuantity?.toFixed(2)}</TableCell>
-            <TableCell align='right'>{formatCurrency(mat.stdTotalCost)}</TableCell>
+            <TableCell align='right'>{formatCurrency(mat.cost)}</TableCell>
+            {type === "feedstock" && <TableCell align='right'>{formatCurrency(mat.baseCost)}</TableCell>}
+            <TableCell align='right'>{formatCurrency(mat.realUnitCost)}</TableCell>
           </TableRow>
         ))}
         <TableRow>
           <TableCell sx={{ fontWeight: 700 }}>Totales</TableCell>
-          <TableCell />
-          <TableCell />
+          <TableCell align='left'>{totalBaseQuantity.toFixed(2)}</TableCell>
+          <TableCell align='right'>{formatCurrency(totalCost)}</TableCell>
+          {type === "feedstock" && (
+            <TableCell align='right' sx={{ fontWeight: 700 }}>
+              {formatCurrency(totalBaseCost)}
+            </TableCell>
+          )}
           <TableCell align='right' sx={{ fontWeight: 700 }}>
-            {totalRealQuantity.toFixed(2)}
-          </TableCell>
-          <TableCell align='right' sx={{ fontWeight: 700 }}>
-            {formatCurrency(totalStdTotalCost)}
+            {formatCurrency(totalRealUnitCost)}
           </TableCell>
         </TableRow>
       </TableBody>

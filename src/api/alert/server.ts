@@ -1,10 +1,18 @@
-import type { IAlert } from "@/types/alert"
-import { apiFetch } from "../apiFetch"
+import type { IAlert } from "@/types/alert";
+import { apiFetch } from "../apiFetch";
 
-export async function getAlertsUserServer(): Promise<IAlert[]> {
+export async function getAlertsServer(): Promise<IAlert[]> {
   try {
-    return await apiFetch<IAlert[]>("alerts/user", { tags: ["alerts"] })
+    return await apiFetch<IAlert[]>("alerts", { tags: ["alerts"] });
   } catch {
-    return []
+    return [];
   }
 }
+
+/* export async function getAllAlertsServer(page: number): Promise<IAlert[]> {
+  try {
+    return await apiFetch<IAlert[]>("alerts/all", { tags: ["alerts-all"], params: { page } });
+  } catch {
+    return [];
+  }
+} */

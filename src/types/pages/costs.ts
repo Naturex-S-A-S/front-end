@@ -10,25 +10,30 @@ export interface ICostEstimateMaterial {
   idMaterial: number;
   materialName: string;
   materialType: "feedstock" | "packaging";
+  baseQuantity: string;
+  cost: number | null;
+  baseCost: number;
   stdQuantity: number;
-  stdUnitCost: number;
+  stdUnitCost: number | null;
   stdTotalCost: number;
+  unitGramsFinalProduct: number | null;
+  realUnitCost: number | null;
   realQuantity: number | null;
   realTotalCost: number | null;
 }
 
 export interface ICostEstimateCifItem {
-  idCifType: number;
-  cifTypeName: string;
-  costBasis: string;
+  idCifType: number | null;
+  cifTypeName: string | null;
+  costBasis: string | null;
   avgAmount: number | null;
   ratePerKg: number | null;
   totalAllocated: number | null;
-  totalAmount: number;
+  totalAmount: number | null;
 }
 
 export interface ICostEstimate {
-  id: number | null;
+  id: number;
   idFinalProduct: string;
   idOrder: string | null;
   idVersion: number;
@@ -59,6 +64,7 @@ export interface ICostEstimate {
   dateSnapshot: string;
   nameUser: string;
   notes: string | null;
+  unitGramsFinalProduct: number;
   materials: ICostEstimateMaterial[];
   cifItems: ICostEstimateCifItem[];
 }

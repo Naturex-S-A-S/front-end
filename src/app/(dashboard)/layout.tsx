@@ -16,13 +16,13 @@ import ScrollToTop from "@core/components/scroll-to-top";
 import SwalRouteHandler from "@/components/SwalRouteHandler";
 
 import { getMode, getSystemMode } from "@core/utils/serverHelpers";
-import { getAlertsUserServer } from "@/api/alert/server";
+import { getAlertsServer } from "@/api/alert/server";
 
 const Layout = async ({ children }: ChildrenType) => {
   const direction = "ltr";
   const mode = getMode();
   const systemMode = getSystemMode();
-  const alerts = await getAlertsUserServer();
+  const alerts = await getAlertsServer();
 
   return (
     <Providers direction={direction}>

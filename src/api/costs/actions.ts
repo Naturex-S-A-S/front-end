@@ -7,6 +7,23 @@ import type { ICostEstimate, ICostSnapshotSummary, IProductPrice, IPutCostConfig
 
 type ActionResult = { success: boolean; error?: string };
 
+export type RegisterPricePayload = {
+  idFinalProduct: string;
+  units: number;
+  wastePct: number;
+  taxPct: number;
+  commissionPct: number;
+  finalPrice: number;
+  isDefinitive: boolean;
+  notes: string;
+  materials: {
+    idMaterial: number;
+    materialType: string;
+    quantity: number | string;
+    unitCost: number | null;
+  }[];
+};
+
 export async function updateCostConfig(data: IPutCostConfig): Promise<ActionResult> {
   try {
     await apiFetch("costs/config", {
@@ -75,19 +92,22 @@ export async function getSnapshotDetailAction(
   }
 }
 
-export async function registerProductPrice(
-  productId: string,
-  data: {
-    idSnapshot: number;
-    costBase: number;
-    wastePct: number;
-    taxPct: number;
-    finalPrice: number;
-    notes: string;
-  }
-): Promise<ActionResult> {
+export async function updateSnapshotAction(snapshotId: number, data: RegisterPricePayload): Promise<ActionResult> {
   try {
-    await apiFetch(`costs/products/${productId}/price`, {
+    await apiFetch(`costs/snapshots/${snapshotId}`, {
+      method: "PUT",
+      body: JSON.stringify(data)
+    });
+
+    return { success: true };
+  } catch (e: any) {
+    return { success: false, error: e.message };
+  }
+}
+
+export async function registerProductPrice(productId: string, data: RegisterPricePayload): Promise<ActionResult> {
+  try {
+    await apiFetch(`costs/products/${productId}/save`, {
       method: "POST",
       body: JSON.stringify(data)
     });

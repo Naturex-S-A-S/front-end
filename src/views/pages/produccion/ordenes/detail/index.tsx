@@ -13,7 +13,6 @@ interface Props {
 }
 
 const Detail: React.FC<Props> = ({ order }) => {
-  const totalQuantityG = order.details?.reduce((a, b) => a + b.quantity, 0) ?? 0;
   const totalQuantityTotal = order.details?.reduce((a, b) => a + b.quantityTotal, 0) ?? 0;
 
   const materials = order.details.map(item => ({
@@ -165,12 +164,6 @@ const Detail: React.FC<Props> = ({ order }) => {
                   icon: "mdi:alert-circle-outline",
                   label: "Pérdida (%)",
                   value: order.lossPercentage ?? "-",
-                  gridItemProps: { xs: 12, sm: 6, md: 3 }
-                },
-                {
-                  icon: "mdi:flask-outline",
-                  label: "Total base (g)",
-                  value: totalQuantityG,
                   gridItemProps: { xs: 12, sm: 6, md: 3 }
                 },
                 {
