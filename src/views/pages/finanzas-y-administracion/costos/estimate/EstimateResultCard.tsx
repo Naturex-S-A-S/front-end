@@ -10,7 +10,6 @@ import CostBreakdown from "./CostBreakdown";
 import CostSummaryCards from "./CostSummaryCards";
 import RegisterPriceCard from "./RegisterPriceCard";
 import type { ICostEstimate } from "@/types/pages/costs";
-import { formatCurrency } from "@/utils/format";
 
 interface Props {
   estimate: ICostEstimate;
@@ -82,11 +81,7 @@ const EstimateResultCard = ({
           )}
 
           <Grid item xs={12} md={!readOnly && waterfall ? 8 : 12}>
-            <CostBreakdown
-              estimate={estimate}
-              formatCurrency={formatCurrency}
-              onMaterialChange={readOnly ? undefined : onMaterialChange}
-            />
+            <CostBreakdown estimate={estimate} onMaterialChange={readOnly ? undefined : onMaterialChange} />
           </Grid>
           {!readOnly && waterfall && (
             <Grid item xs={12} md={4}>

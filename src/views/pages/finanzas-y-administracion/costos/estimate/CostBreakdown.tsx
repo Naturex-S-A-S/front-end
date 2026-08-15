@@ -5,16 +5,16 @@ import { Grid, Table, TableBody, TableCell, TableHead, TableRow, Typography } fr
 import CustomCard from "@/@core/components/mui/Card";
 import CustomTextField from "@/@core/components/mui/TextField";
 import type { ICostEstimate, ICostEstimateMaterial } from "@/types/pages/costs";
+import { formatCurrency } from "@/utils/format";
 
 interface Props {
   estimate: ICostEstimate;
-  formatCurrency: (v: number | null | undefined) => string;
   onMaterialChange?: (index: number, value: string) => void;
 }
 
 type MaterialEntry = { material: ICostEstimateMaterial; index: number };
 
-const CostBreakdown = ({ estimate, formatCurrency, onMaterialChange }: Props) => {
+const CostBreakdown = ({ estimate, onMaterialChange }: Props) => {
   const materialWithIndex = estimate.materials?.map((m, i) => ({ material: m, index: i })) ?? [];
   const feedstockMaterials = materialWithIndex.filter(m => m.material.materialType === "feedstock");
   const packagingMaterials = materialWithIndex.filter(m => m.material.materialType === "packaging");
@@ -24,12 +24,7 @@ const CostBreakdown = ({ estimate, formatCurrency, onMaterialChange }: Props) =>
       {feedstockMaterials.length > 0 && (
         <Grid item xs={12}>
           <CustomCard title='Materia Prima'>
-            <MaterialTable
-              materials={feedstockMaterials}
-              formatCurrency={formatCurrency}
-              type='feedstock'
-              onMaterialChange={onMaterialChange}
-            />
+            <MaterialTable materials={feedstockMaterials} type='feedstock' onMaterialChange={onMaterialChange} />
           </CustomCard>
         </Grid>
       )}
@@ -37,12 +32,7 @@ const CostBreakdown = ({ estimate, formatCurrency, onMaterialChange }: Props) =>
       {packagingMaterials.length > 0 && (
         <Grid item xs={12}>
           <CustomCard title='Material de Empaque'>
-            <MaterialTable
-              materials={packagingMaterials}
-              formatCurrency={formatCurrency}
-              type='packaging'
-              onMaterialChange={onMaterialChange}
-            />
+            <MaterialTable materials={packagingMaterials} type='packaging' onMaterialChange={onMaterialChange} />
           </CustomCard>
         </Grid>
       )}
@@ -81,12 +71,10 @@ const CostBreakdown = ({ estimate, formatCurrency, onMaterialChange }: Props) =>
 
 const MaterialTable = ({
   materials,
-  formatCurrency,
   type,
   onMaterialChange
 }: {
   materials: MaterialEntry[];
-  formatCurrency: (v: number | null | undefined) => string;
   type?: "feedstock" | "packaging";
   onMaterialChange?: (index: number, value: string) => void;
 }) => {
