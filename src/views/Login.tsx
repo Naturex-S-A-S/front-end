@@ -3,8 +3,6 @@
 // MUI Imports
 import { useState } from "react";
 
-import { useRouter } from "next/navigation";
-
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -65,7 +63,6 @@ const MaskImg = styled("img")({
 });
 
 const LoginV2 = ({ mode }: { mode: SystemMode }) => {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   // Vars
@@ -124,7 +121,11 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
       const redirectTo = res?.url;
 
       if (redirectTo) {
-        router.replace(redirectTo);
+        // Navegación dura: garantiza que la cookie de sesión recién emitida
+        // por signIn() viaje en la request que el middleware valida.
+        // router.replace() (soft navigation) puede llegar antes de que la
+        // cookie esté disponible y hacer que el middleware rebote al login.
+        window.location.href = redirectTo;
       } else {
         toast.error("Credenciales incorrectas", {
           duration: 5000

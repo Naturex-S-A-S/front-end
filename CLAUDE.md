@@ -409,14 +409,34 @@ export const columns = ({ handleStatus, isPending }: Params): GridColDef[] => {
 ## Scripts
 
 ```bash
-pnpm dev          # Servidor de desarrollo
-pnpm fast         # Dev con Turbo mode
-pnpm build        # Build de producción
-pnpm start        # Servir build de producción
-pnpm lint         # ESLint
-pnpm lint:fix     # ESLint con autofix
-pnpm format       # Prettier
+pnpm dev              # Servidor de desarrollo
+pnpm fast             # Dev con Turbo mode
+pnpm build            # Build de producción
+pnpm start            # Servir build de producción
+pnpm lint             # ESLint
+pnpm lint:fix         # ESLint con autofix
+pnpm format           # Prettier (src/**/*.{js,jsx,ts,tsx})
+pnpm test             # Vitest en modo watch
+pnpm test:run         # Vitest, corrida única (CI)
+pnpm test:coverage    # Vitest con reporte de cobertura (v8)
+pnpm build:icons      # Regenera el bundle de iconos Iconify (corre en postinstall)
+pnpm doctor           # react-doctor (lint/a11y/bundle/arquitectura)
 ```
+
+### Tests unitarios (Vitest)
+
+- Config: `vitest.config.ts` — entorno `jsdom`, setup en `src/utils/tests/setup.ts`, alias resueltos vía `tsconfigPaths`.
+- Ubicación: co-ubicados en carpetas `__tests__/` junto al código (p. ej. `src/@core/components/mui/__tests__/Button.test.tsx`, `src/views/__tests__/Login.test.tsx`).
+- Correr un solo archivo: `pnpm vitest run src/views/__tests__/Login.test.tsx`
+- Correr por nombre de test: `pnpm vitest run -t "nombre del test"`
+- Watch de un archivo: `pnpm vitest src/views/__tests__/Login.test.tsx`
+
+### Tests E2E (Playwright)
+
+- Config: `playwright.config.ts` — `testDir: ./tests`, proyectos chromium/firefox/webkit.
+- Correr todo: `pnpm exec playwright test`
+- Correr un solo archivo: `pnpm exec playwright test tests/example.spec.ts`
+- Actualmente es un placeholder (`tests/example.spec.ts`); no hay cobertura E2E real del dominio todavía.
 
 ---
 
@@ -467,7 +487,7 @@ pnpm format       # Prettier
 
 6. **Tema persistido en cookie:** Los cambios de tema (modo, skin, layout) se persisten en la cookie `naturex-admin-settings`. El hook `useSettings()` gestiona esto.
 
-7. **No hay unit tests:** Solo tests E2E con Playwright (placeholder). No crear tests unitarios a menos que se solicite explícitamente.
+7. **Tests:** Unit tests con Vitest + Testing Library (ver sección Scripts arriba). E2E con Playwright existe solo como placeholder (`tests/example.spec.ts`), sin cobertura real del dominio todavía.
 
 8. **DataGridEdit:** Para grids editables usar `src/@core/components/mui/DataGridEdit.tsx` en lugar del DataGrid estándar.
 

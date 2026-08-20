@@ -1,5 +1,5 @@
 /* eslint-disable import/no-named-as-default */
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import userEvent from "@testing-library/user-event";
 
 import { render, screen, waitFor } from "@/utils/tests/test-utils";
@@ -52,6 +52,24 @@ async function fillLoginForm(user: ReturnType<typeof userEvent.setup>) {
 }
 
 describe("Login", () => {
+  const originalLocation = window.location;
+
+  beforeEach(() => {
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      writable: true,
+      value: { ...originalLocation, href: "" }
+    });
+  });
+
+  afterEach(() => {
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      writable: true,
+      value: originalLocation
+    });
+  });
+
   describe("Renderizado del formulario", () => {
     it("muestra todos los campos y el boton de envio", () => {
       render(<Login mode='light' />);
@@ -103,7 +121,9 @@ describe("Login", () => {
         });
       });
 
-      expect(mockRouter.replace).toHaveBeenCalledWith("/home");
+      await waitFor(() => {
+        expect(window.location.href).toBe("/home");
+      });
     });
 
     it("no redirige cuando las credenciales son incorrectas", async () => {
@@ -120,7 +140,7 @@ describe("Login", () => {
         expect(mockSignIn).toHaveBeenCalled();
       });
 
-      expect(mockRouter.replace).not.toHaveBeenCalled();
+      expect(window.location.href).toBe("");
     });
   });
 });
