@@ -6,20 +6,20 @@ import { useForm } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
+import { useQueryClient } from "@tanstack/react-query";
+
 import toast from "react-hot-toast";
 
 import useGetProductList from "@/hooks/product/useGetProductList";
 import {
   getCostEstimateAction,
-  getCurrentPriceAction,
-  getPriceHistoryAction,
-  getProductSnapshotsAction,
-  registerProductPrice
+  registerProductPrice,
+  updateSnapshotAction,
+  type RegisterPricePayload
 } from "@/api/costs/actions";
-import type { ICostEstimate, ICostSnapshotSummary, IProductPrice } from "@/types/pages/costs";
+import type { ICostEstimate } from "@/types/pages/costs";
 import { registerPriceSchema, type RegisterPriceFormValues } from "@/utils/schemas/costs";
 import { applyMaterialQuantityChange, mapMaterialsToPriceInput } from "@/utils/costs";
-import { TAX_PERCENTAGE } from "@/utils/constant";
 
 export type ProductOption = {
   id: string;
@@ -27,8 +27,14 @@ export type ProductOption = {
   name?: string;
 };
 
-const useEstimate = () => {
+export type UseEstimateOptions = {
+  snapshotId?: number | null;
+  onSaved?: () => void;
+};
+
+const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) => {
   const { productList } = useGetProductList();
+  const queryClient = useQueryClient();
 
   const [selectedProduct, setSelectedProduct] = useState<ProductOption | null>(null);
   const [quantityKg, setQuantityKg] = useState<number>(1);
@@ -36,15 +42,12 @@ const useEstimate = () => {
   const [error, setError] = useState<string | null>(null);
   const [isEstimating, startEstimateTransition] = useTransition();
 
-  const [snapshots, setSnapshots] = useState<ICostSnapshotSummary[]>([]);
   const [selectedSnapshotId, setSelectedSnapshotId] = useState<number | null>(null);
-  const [isLoadingSnapshots, startSnapshotsTransition] = useTransition();
 
   const methods = useForm<RegisterPriceFormValues>({
     defaultValues: {
       wastePct: 0,
-      taxPct: TAX_PERCENTAGE,
-      applyTax: true,
+      comissionPct: 0,
       finalPrice: undefined,
       priceNotes: "",
       isDefinitive: false,
@@ -54,36 +57,20 @@ const useEstimate = () => {
   });
 
   const wastePct = methods.watch("wastePct");
-  const taxPct = methods.watch("taxPct");
-  const applyTax = methods.watch("applyTax");
   const finalPrice = methods.watch("finalPrice");
+  const commissionPct = methods.watch("comissionPct");
 
-  const [currentPrice, setCurrentPrice] = useState<IProductPrice | null>(null);
-  const [priceHistory, setPriceHistory] = useState<IProductPrice[]>([]);
-  const [lastSavedSnapshotId, setLastSavedSnapshotId] = useState<number | null>(null);
   const [isRegisteringPrice, startPriceTransition] = useTransition();
 
-  const fetchSnapshots = (productId: string) => {
-    startSnapshotsTransition(async () => {
-      const result = await getProductSnapshotsAction(productId);
-
-      if (result.success) {
-        setSnapshots(result.data);
-      } else {
-        setSnapshots([]);
-      }
-    });
-  };
-
-  const fetchCurrentPrice = (productId: string) => {
-    getCurrentPriceAction(productId).then(result => {
-      setCurrentPrice(result.data);
-    });
-  };
-
-  const fetchPriceHistory = (productId: string) => {
-    getPriceHistoryAction(productId).then(result => {
-      setPriceHistory(result.data);
+  const loadEstimate = (data: ICostEstimate) => {
+    setEstimate(data);
+    methods.reset({
+      wastePct: data.wastePct,
+      comissionPct: 0,
+      finalPrice: data.price.finalPrice,
+      priceNotes: data.notes ?? "",
+      isDefinitive: false,
+      materials: mapMaterialsToPriceInput(data)
     });
   };
 
@@ -96,11 +83,14 @@ const useEstimate = () => {
     methods.setValue("materials", mapMaterialsToPriceInput(updated));
   };
 
+  const handleEstimateEdit = (updatedEstimate: Partial<ICostEstimate>) => {
+    estimate && setEstimate({ ...estimate, ...updatedEstimate });
+  };
+
   const handleQuantityChange = (quantity: number) => {
     setQuantityKg(quantity);
     setEstimate(null);
     setError(null);
-    setLastSavedSnapshotId(null);
   };
 
   const handleProductChange = (product: ProductOption | null) => {
@@ -108,21 +98,14 @@ const useEstimate = () => {
     setEstimate(null);
     methods.reset();
     setError(null);
-    setCurrentPrice(null);
-    setPriceHistory([]);
-    setLastSavedSnapshotId(null);
 
     if (product?.id) {
-      fetchSnapshots(product.id);
-      fetchCurrentPrice(product.id);
-      fetchPriceHistory(product.id);
-    } else {
-      setSnapshots([]);
+      handleEstimate(product.id);
     }
   };
 
-  const handleEstimate = () => {
-    if (!selectedProduct?.id) {
+  const handleEstimate = (productId: string) => {
+    if (!productId) {
       setError("Seleccione un producto");
 
       return;
@@ -136,14 +119,11 @@ const useEstimate = () => {
 
     setError(null);
     startEstimateTransition(async () => {
-      const result = await getCostEstimateAction(selectedProduct.id, quantityKg);
-
-      console.log({ result });
+      const result = await getCostEstimateAction(productId, quantityKg);
 
       if (result.success) {
         setEstimate(result.data);
         methods.setValue("wastePct", result.data.wastePct);
-        methods.setValue("taxPct", TAX_PERCENTAGE);
         methods.setValue("materials", mapMaterialsToPriceInput(result.data));
       } else {
         toast.error(result.error);
@@ -153,93 +133,87 @@ const useEstimate = () => {
   };
 
   const handleRegisterPrice = methods.handleSubmit(async (values: RegisterPriceFormValues) => {
-    if (!selectedProduct?.id || !estimate) {
+    if (!estimate || (snapshotId === null && !selectedProduct?.id)) {
       toast.error("Seleccione un producto y genere una estimación primero");
 
       return;
     }
 
+    const isSnapshotUpdate = snapshotId !== null;
+
+    const payload: RegisterPricePayload = {
+      idFinalProduct: isSnapshotUpdate ? estimate.idFinalProduct : selectedProduct!.id,
+      units: isSnapshotUpdate ? estimate.quantityKg : quantityKg,
+      wastePct: values.wastePct,
+      commissionPct: values.comissionPct,
+      finalPrice: values.finalPrice,
+      isDefinitive: values.isDefinitive,
+      notes: values.priceNotes,
+      materials: values.materials
+    };
+
     startPriceTransition(async () => {
-      console.log({
-        idFinalProduct: selectedProduct.id,
-        units: quantityKg,
-        wastePct: values.wastePct,
-        taxPct: values.applyTax ? values.taxPct : 0,
-        commissionPct: 0,
-        finalPrice: values.finalPrice,
-        isDefinitive: values.isDefinitive,
-        notes: values.priceNotes,
-        materials: values.materials
-      });
+      const result =
+        isSnapshotUpdate && selectedProduct?.id
+          ? await updateSnapshotAction(selectedProduct.id, snapshotId, payload)
+          : selectedProduct?.id
+            ? await registerProductPrice(selectedProduct?.id, payload)
+            : null;
 
-      const result = await registerProductPrice(selectedProduct.id!, {
-        idFinalProduct: selectedProduct.id,
-        units: quantityKg,
-        wastePct: values.wastePct,
-        taxPct: values.applyTax ? values.taxPct : 0,
-        commissionPct: 0,
-        finalPrice: values.finalPrice,
-        isDefinitive: values.isDefinitive,
-        notes: values.priceNotes,
-        materials: values.materials
-      });
-
-      console.log({ result });
-
-      if (result.success) {
-        toast.success("Precio final registrado con éxito");
-        methods.reset();
-        setLastSavedSnapshotId(null);
-        fetchCurrentPrice(selectedProduct!.id);
-        fetchPriceHistory(selectedProduct!.id);
-        setEstimate(null);
+      if (result?.success) {
+        if (isSnapshotUpdate) {
+          toast.success("Snapshot actualizado con éxito");
+          onSaved?.();
+        } else {
+          toast.success("Precio final registrado con éxito");
+          methods.reset();
+          queryClient.invalidateQueries({ queryKey: ["current-price"] });
+          queryClient.invalidateQueries({ queryKey: ["price-history"] });
+          setEstimate(null);
+        }
       } else {
-        console.log(result);
-        toast.error(result.error || "Error al registrar el precio");
+        toast.error(result?.error || "Error al registrar el precio");
       }
     });
   });
 
-  const waterfall = useMemo(() => {
+  const derivedEstimate = useMemo(() => {
     if (!estimate) return null;
 
-    const costBase = estimate.costTotalKg;
-    const effectiveTaxPct = applyTax ? taxPct : 0;
-    const costWithWaste = costBase / (1 - wastePct / 100);
-    const wasteAmount = costWithWaste - costBase;
-    const taxAmount = costWithWaste * (effectiveTaxPct / 100);
-    const costWithTax = costWithWaste * (1 + effectiveTaxPct / 100);
+    //Costo produccion
+    const totalCost = estimate.realTotalCostFeedstock + estimate.realTotalCostPackaging + estimate.totalCif;
+
+    // Utilidad
+    const price = Number(finalPrice);
+    const costDifference = price > 0 ? price - estimate.totalCostWaste : 0;
+    const utilityPct = price > 0 ? (costDifference / price) * 100 : 0;
+
+    // Insumos
+    const wasteValue = totalCost * (wastePct / 100);
+
+    // Comisión
+    const commissionValue = price * (commissionPct / 100);
+
+    // Margen
+    const defaultMarginValue = (estimate.totalCostWaste * 0.4) / 0.6;
 
     return {
-      costBase,
+      ...estimate,
+      totalCost,
+      wasteValue,
       wastePct,
-      wasteAmount,
-      costWithWaste,
-      taxPct: effectiveTaxPct,
-      taxAmount,
-      costWithTax
+      costDifference,
+      utilityPct,
+      defaultMarginValue,
+      price: { ...estimate.price, commissionPct, commissionValue }
     };
-  }, [estimate, wastePct, taxPct, applyTax]);
-
-  const profitMargin = useMemo(() => {
-    const price = Number(finalPrice);
-
-    if (!price || price <= 0 || !waterfall) return null;
-
-    const cost = waterfall.costWithTax;
-    const profit = price - cost;
-    const marginPct = (profit / price) * 100;
-
-    return { profit: Number(profit.toFixed(2)), marginPct: Number(marginPct.toFixed(2)) };
-  }, [finalPrice, waterfall]);
+  }, [estimate, wastePct, finalPrice, commissionPct]);
 
   const handleSnapshotDetail = (id: number) => setSelectedSnapshotId(id);
   const handleCloseSnapshotDetail = () => setSelectedSnapshotId(null);
 
   const handleRefreshSnapshots = () => {
-    if (selectedProduct?.id) {
-      fetchSnapshots(selectedProduct.id);
-    }
+    queryClient.invalidateQueries({ queryKey: ["product-snapshots"] });
   };
 
   return {
@@ -247,27 +221,21 @@ const useEstimate = () => {
     productList,
     selectedProduct,
     quantityKg,
-    setQuantityKg,
-    estimate,
+    estimate: derivedEstimate,
     error,
     isEstimating,
-    snapshots,
     selectedSnapshotId,
-    isLoadingSnapshots,
-    currentPrice,
-    priceHistory,
-    lastSavedSnapshotId,
     isRegisteringPrice,
-    waterfall,
-    profitMargin,
     handleProductChange,
     handleQuantityChange,
     handleEstimate,
     handleRegisterPrice,
     handleMaterialChange,
+    loadEstimate,
     handleSnapshotDetail,
     handleCloseSnapshotDetail,
-    handleRefreshSnapshots
+    handleRefreshSnapshots,
+    handleEstimateEdit
   };
 };
 

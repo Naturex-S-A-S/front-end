@@ -11,7 +11,6 @@ export type RegisterPricePayload = {
   idFinalProduct: string;
   units: number;
   wastePct: number;
-  taxPct: number;
   commissionPct: number;
   finalPrice: number;
   isDefinitive: boolean;
@@ -75,9 +74,13 @@ export async function getSnapshotDetailAction(
   }
 }
 
-export async function updateSnapshotAction(snapshotId: number, data: RegisterPricePayload): Promise<ActionResult> {
+export async function updateSnapshotAction(
+  productId: string,
+  snapshotId: number,
+  data: RegisterPricePayload
+): Promise<ActionResult> {
   try {
-    await apiFetch(`costs/snapshots/${snapshotId}`, {
+    await apiFetch(`costs/products/${productId}/snapshots/${snapshotId}`, {
       method: "PUT",
       body: JSON.stringify(data)
     });

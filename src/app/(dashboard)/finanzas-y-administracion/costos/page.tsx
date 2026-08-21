@@ -46,6 +46,7 @@ async function CostContent({ tab }: { tab: string }) {
             <EstimateView />
           </Suspense>
         )}
+        {tab === "Historial" && <Suspense fallback={<Loader type='component' />}>Poner SnapshotHistory</Suspense>}
       </Box>
     </>
   );

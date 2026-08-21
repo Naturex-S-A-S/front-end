@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-
 import { Alert, Box, Grid } from "@mui/material";
 import { Icon } from "@iconify/react";
 
@@ -15,43 +13,23 @@ interface Props {
   estimate: ICostEstimate;
   title?: string;
   readOnly?: boolean;
-  scrollOnChange?: boolean;
-  waterfall?: {
-    costBase: number;
-    wastePct: number;
-    wasteAmount: number;
-    costWithWaste: number;
-    taxPct: number;
-    taxAmount: number;
-    costWithTax: number;
-  } | null;
-  profitMargin?: { profit: number; marginPct: number } | null;
   isRegisteringPrice?: boolean;
   onMaterialChange?: (index: number, value: string) => void;
   onRegisterPrice?: () => void;
+  onEstimateEdit?: (updatedEstimate: Partial<ICostEstimate>) => void;
 }
 
 const EstimateResultCard = ({
   estimate,
   title = "Estimación de Costos",
   readOnly = false,
-  scrollOnChange = true,
-  waterfall,
-  profitMargin,
   isRegisteringPrice,
   onMaterialChange,
-  onRegisterPrice
+  onRegisterPrice,
+  onEstimateEdit
 }: Props) => {
-  const costBreakdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (estimate && scrollOnChange && costBreakdownRef.current) {
-      costBreakdownRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, [estimate, scrollOnChange]);
-
   return (
-    <Grid item xs={12} ref={costBreakdownRef}>
+    <Grid item xs={12}>
       <CustomCard
         title={
           <Box display='flex' alignItems='center' gap={2}>
@@ -80,14 +58,17 @@ const EstimateResultCard = ({
             </Grid>
           )}
 
-          <Grid item xs={12} md={!readOnly && waterfall ? 8 : 12}>
-            <CostBreakdown estimate={estimate} onMaterialChange={readOnly ? undefined : onMaterialChange} />
+          <Grid item xs={12} md={!readOnly && estimate ? 8 : 12}>
+            <CostBreakdown
+              estimate={estimate}
+              onMaterialChange={readOnly ? undefined : onMaterialChange}
+              onEstimateEdit={onEstimateEdit}
+            />
           </Grid>
-          {!readOnly && waterfall && (
+          {!readOnly && estimate && (
             <Grid item xs={12} md={4}>
               <RegisterPriceCard
-                waterfall={waterfall}
-                profitMargin={profitMargin ?? null}
+                estimate={estimate}
                 isRegisteringPrice={isRegisteringPrice ?? false}
                 onRegister={onRegisterPrice ?? (() => {})}
               />

@@ -1,17 +1,36 @@
+"use client";
+
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
+import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 
 import CustomCard from "@/@core/components/mui/Card";
-import type { IProductPrice } from "@/types/pages/costs";
+import Loader from "@/@core/components/react-spinners";
+import { getPriceHistoryAction } from "@/api/costs/actions";
+import { formatCurrency } from "@/utils/format";
 
 interface Props {
-  prices: IProductPrice[];
-  formatCurrency: (v: number | null | undefined) => string;
+  productId: string;
 }
 
-const PriceHistory = ({ prices, formatCurrency }: Props) => {
-  if (prices.length === 0) return null;
+const PriceHistory = ({ productId }: Props) => {
+  const { data: prices, isLoading } = useQuery({
+    queryKey: ["price-history", productId],
+    queryFn: () => getPriceHistoryAction(productId),
+    select: result => (result.success ? result.data : []),
+    enabled: !!productId
+  });
+
+  if (isLoading) {
+    return (
+      <Box py={4} display='flex' justifyContent='center'>
+        <Loader type='component' />
+      </Box>
+    );
+  }
+
+  if (!prices || prices.length === 0) return null;
 
   return (
     <CustomCard
@@ -39,9 +58,7 @@ const PriceHistory = ({ prices, formatCurrency }: Props) => {
             {prices.map(price => (
               <TableRow key={price.id}>
                 <TableCell>
-                  <Typography variant='body2'>
-                    {moment(price.dateCreated).format("DD/MM/YY HH:mm")}
-                  </Typography>
+                  <Typography variant='body2'>{moment(price.dateCreated).format("DD/MM/YY HH:mm")}</Typography>
                 </TableCell>
                 <TableCell align='right'>
                   <Typography variant='body2' fontWeight={600}>
@@ -49,17 +66,12 @@ const PriceHistory = ({ prices, formatCurrency }: Props) => {
                   </Typography>
                 </TableCell>
                 <TableCell align='right'>
-                  <Typography
-                    variant='body2'
-                    color={price.marginWarning ? "warning.main" : "text.primary"}
-                  >
+                  <Typography variant='body2' color={price.marginWarning ? "warning.main" : "text.primary"}>
                     {price.marginPct.toFixed(2)}%
                   </Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant='body2'>
-                    {moment(price.effectiveFrom).format("DD/MM/YYYY")}
-                  </Typography>
+                  <Typography variant='body2'>{moment(price.effectiveFrom).format("DD/MM/YYYY")}</Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant='body2'>

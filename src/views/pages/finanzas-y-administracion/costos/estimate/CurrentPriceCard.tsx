@@ -1,24 +1,42 @@
+"use client";
+
 import { Alert, Box, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
+import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 
-import type { IProductPrice } from "@/types/pages/costs";
+import Loader from "@/@core/components/react-spinners";
+import { getCurrentPriceAction } from "@/api/costs/actions";
+import { formatCurrency } from "@/utils/format";
 
 interface Props {
-  price: IProductPrice;
-  formatCurrency: (v: number | null | undefined) => string;
+  productId: string;
 }
 
-const CurrentPriceCard = ({ price, formatCurrency }: Props) => {
+const CurrentPriceCard = ({ productId }: Props) => {
+  const { data: price, isLoading } = useQuery({
+    queryKey: ["current-price", productId],
+    queryFn: () => getCurrentPriceAction(productId),
+    select: result => result.data,
+    enabled: !!productId
+  });
+
+  if (isLoading) {
+    return (
+      <Box py={2} display='flex' justifyContent='center'>
+        <Loader type='component' />
+      </Box>
+    );
+  }
+
+  console.log({ price });
+
+  if (!price) return null;
+
   return (
     <Alert
       severity={price.marginWarning ? "warning" : "info"}
-      icon={
-        <Icon
-          icon={price.marginWarning ? "mdi:alert-circle-outline" : "mdi:currency-usd"}
-          fontSize={22}
-        />
-      }
+      icon={<Icon icon={price.marginWarning ? "mdi:alert-circle-outline" : "mdi:currency-usd"} fontSize={22} />}
       sx={{ "& .MuiAlert-message": { width: "100%" } }}
     >
       <Box display='flex' flexWrap='wrap' gap={2} alignItems='center' justifyContent='space-between'>
@@ -35,21 +53,15 @@ const CurrentPriceCard = ({ price, formatCurrency }: Props) => {
             <Typography variant='caption' color='text.secondary'>
               Margen
             </Typography>
-            <Typography
-              variant='body2'
-              fontWeight={600}
-              color={price.marginWarning ? "warning.main" : "success.main"}
-            >
-              {price.marginPct.toFixed(2)}%
+            <Typography variant='body2' fontWeight={600} color={price.marginWarning ? "warning.main" : "success.main"}>
+              {price.utilityPct.toFixed(2)}%
             </Typography>
           </Box>
           <Box>
             <Typography variant='caption' color='text.secondary'>
               Desde
             </Typography>
-            <Typography variant='body2'>
-              {moment(price.effectiveFrom).format("DD/MM/YYYY")}
-            </Typography>
+            <Typography variant='body2'>{moment(price.effectiveFrom).format("DD/MM/YYYY")}</Typography>
           </Box>
           <Box>
             <Typography variant='caption' color='text.secondary'>

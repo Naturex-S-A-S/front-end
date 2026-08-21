@@ -6,30 +6,20 @@ import { Icon } from "@iconify/react";
 import CustomCard from "@/@core/components/mui/Card";
 import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
 import CustomTextField from "@/@core/components/mui/TextField";
-import CustomButton from "@/@core/components/mui/Button";
 import type { ProductOption } from "./useEstimate";
 
 interface Props {
   productList: ProductOption[];
   selectedProduct: ProductOption | null;
-  quantityKg: number;
+  quantityKg?: number;
   error: string | null;
-  isEstimating: boolean;
+  isEstimating?: boolean;
   onProductChange: (product: ProductOption | null) => void;
-  onQuantityChange: (quantity: number) => void;
-  onEstimate: () => void;
+  onQuantityChange?: (quantity: number) => void;
+  onEstimate?: () => void;
 }
 
-const EstimateForm = ({
-  productList,
-  selectedProduct,
-  quantityKg,
-  error,
-  isEstimating,
-  onProductChange,
-  onQuantityChange,
-  onEstimate
-}: Props) => {
+const EstimateForm = ({ productList, selectedProduct, error, onProductChange }: Props) => {
   return (
     <CustomCard
       title={
@@ -56,7 +46,7 @@ const EstimateForm = ({
             )}
           />
         </Grid>
-        <Grid item xs={6} sm={3} md={2}>
+        {/*<Grid item xs={6} sm={3} md={2}>
           <CustomTextField
             label='Unidades'
             type='number'
@@ -75,7 +65,7 @@ const EstimateForm = ({
           >
             Estimar
           </CustomButton>
-        </Grid>
+        </Grid>*/}
       </Grid>
     </CustomCard>
   );

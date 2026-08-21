@@ -40,8 +40,7 @@ export type RegisterPriceMaterialInput = {
 
 export type RegisterPriceFormValues = {
   wastePct: number;
-  taxPct: number;
-  applyTax: boolean;
+  comissionPct: number;
   finalPrice: number;
   priceNotes: string;
   isDefinitive: boolean;
@@ -51,8 +50,6 @@ export type RegisterPriceFormValues = {
 export const registerPriceSchema = yup
   .object({
     wastePct: yup.number().typeError("Requerido").min(0, "Mínimo 0%").max(100, "Máximo 100%").required("Requerido"),
-    taxPct: yup.number().typeError("Requerido").min(0, "Mínimo 0%").max(100, "Máximo 100%").required("Requerido"),
-    applyTax: yup.boolean().required(),
     finalPrice: yup.number().typeError("Requerido").positive("Debe ser mayor que 0").required("Requerido"),
     priceNotes: yup.string().optional(),
     isDefinitive: yup.boolean().required(),

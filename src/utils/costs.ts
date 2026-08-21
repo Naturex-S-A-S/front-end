@@ -14,9 +14,9 @@ export const applyMaterialQuantityChange = (estimate: ICostEstimate, index: numb
   const material = updated.materials[index];
 
   material.baseQuantity = value;
-  console.log({ baseQuantity: parseFloat(material.baseQuantity), cost: material.cost });
   material.baseCost = parseFloat(material.baseQuantity) * material.cost;
   material.realUnitCost = (material.baseCost / 100) * (updated.unitGramsFinalProduct || 0);
+  material.realTotalCost = material.realUnitCost * estimate.units;
 
   let totalFeedstockCost = 0;
   let totalPackagingCost = 0;

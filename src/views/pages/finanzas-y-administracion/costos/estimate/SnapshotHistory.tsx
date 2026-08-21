@@ -1,18 +1,21 @@
+"use client";
+
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
+import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 
 import CustomCard from "@/@core/components/mui/Card";
 import CustomButton from "@/@core/components/mui/Button";
+import Loader from "@/@core/components/react-spinners";
 import { usePagination, PaginationBar } from "@/@core/components/pagination";
-import type { ICostSnapshotSummary } from "@/types/pages/costs";
+import { getProductSnapshotsAction } from "@/api/costs/actions";
 
 const ITEMS_PER_PAGE = 5;
 
 interface Props {
-  snapshots: ICostSnapshotSummary[];
+  productId: string;
   onViewDetail: (id: number) => void;
-  formatCurrency: (v: number | null | undefined) => string;
 }
 
 const typeConfig: Record<string, { label: string; icon: string; color: string }> = {
@@ -20,10 +23,25 @@ const typeConfig: Record<string, { label: string; icon: string; color: string }>
   order_close: { label: "Cierre de orden", icon: "mdi:package-variant-closed", color: "success.main" }
 };
 
-const SnapshotHistory = ({ snapshots, onViewDetail, formatCurrency }: Props) => {
-  if (snapshots.length === 0) return null;
+const SnapshotHistory = ({ productId, onViewDetail }: Props) => {
+  const { data: snapshots, isLoading } = useQuery({
+    queryKey: ["product-snapshots", productId],
+    queryFn: () => getProductSnapshotsAction(productId),
+    select: result => (result.success ? result.data : []),
+    enabled: !!productId
+  });
 
-  const { paginatedData, page, setPage, pageCount } = usePagination(snapshots, ITEMS_PER_PAGE);
+  const { paginatedData, page, setPage, pageCount } = usePagination(snapshots ?? [], ITEMS_PER_PAGE);
+
+  if (isLoading) {
+    return (
+      <Box py={4} display='flex' justifyContent='center'>
+        <Loader type='component' />
+      </Box>
+    );
+  }
+
+  if (!snapshots || snapshots.length === 0) return null;
 
   return (
     <CustomCard
@@ -41,7 +59,6 @@ const SnapshotHistory = ({ snapshots, onViewDetail, formatCurrency }: Props) => 
               <TableCell>Fecha</TableCell>
               <TableCell>Tipo</TableCell>
               <TableCell align='right'>Cantidad (kg)</TableCell>
-              <TableCell align='right'>Costo Total ($/kg)</TableCell>
               <TableCell>Notas</TableCell>
               <TableCell align='center' />
             </TableRow>
@@ -62,7 +79,6 @@ const SnapshotHistory = ({ snapshots, onViewDetail, formatCurrency }: Props) => 
                     </Box>
                   </TableCell>
                   <TableCell align='right'>{snapshot.quantityKg}</TableCell>
-                  <TableCell align='right'>{formatCurrency(snapshot.costTotalKg)}</TableCell>
                   <TableCell>
                     <Typography variant='body2' color='text.secondary' sx={{ maxWidth: 200 }} noWrap>
                       {snapshot.notes || "—"}

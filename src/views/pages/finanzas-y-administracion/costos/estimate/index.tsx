@@ -5,7 +5,6 @@ import { Icon } from "@iconify/react";
 
 import { FormProvider } from "react-hook-form";
 
-import Loader from "@/@core/components/react-spinners";
 import useEstimate from "./useEstimate";
 import EstimateForm from "./EstimateForm";
 import EstimateResultCard from "./EstimateResultCard";
@@ -13,7 +12,6 @@ import CurrentPriceCard from "./CurrentPriceCard";
 import PriceHistory from "./PriceHistory";
 import SnapshotHistory from "./SnapshotHistory";
 import SnapshotDetailDialog from "./SnapshotDetailDialog";
-import { formatCurrency } from "@/utils/format";
 
 const EstimateView = () => {
   const {
@@ -24,22 +22,16 @@ const EstimateView = () => {
     estimate,
     error,
     isEstimating,
-    snapshots,
     selectedSnapshotId,
-    isLoadingSnapshots,
-    currentPrice,
-    priceHistory,
     isRegisteringPrice,
-    waterfall,
-    profitMargin,
     handleProductChange,
     handleQuantityChange,
-    handleEstimate,
     handleRegisterPrice,
     handleMaterialChange,
     handleSnapshotDetail,
     handleCloseSnapshotDetail,
-    handleRefreshSnapshots
+    handleRefreshSnapshots,
+    handleEstimateEdit
   } = useEstimate();
 
   return (
@@ -54,24 +46,22 @@ const EstimateView = () => {
             isEstimating={isEstimating}
             onProductChange={handleProductChange}
             onQuantityChange={handleQuantityChange}
-            onEstimate={handleEstimate}
           />
         </Grid>
 
-        {selectedProduct && currentPrice && (
+        {selectedProduct && (
           <Grid item xs={12}>
-            <CurrentPriceCard price={currentPrice} formatCurrency={formatCurrency} />
+            <CurrentPriceCard productId={selectedProduct.id} />
           </Grid>
         )}
 
-        {estimate && waterfall && (
+        {estimate && (
           <EstimateResultCard
             estimate={estimate}
-            waterfall={waterfall}
-            profitMargin={profitMargin}
             isRegisteringPrice={isRegisteringPrice}
             onMaterialChange={handleMaterialChange}
             onRegisterPrice={handleRegisterPrice}
+            onEstimateEdit={handleEstimateEdit}
           />
         )}
 
@@ -84,25 +74,15 @@ const EstimateView = () => {
           </Grid>
         )}
 
-        {selectedProduct && priceHistory.length > 0 && (
+        {selectedProduct && (
           <Grid item xs={12}>
-            <PriceHistory prices={priceHistory} formatCurrency={formatCurrency} />
+            <PriceHistory productId={selectedProduct.id} />
           </Grid>
         )}
 
         {selectedProduct && (
           <Grid item xs={12}>
-            {isLoadingSnapshots ? (
-              <Box py={4}>
-                <Loader type='component' />
-              </Box>
-            ) : (
-              <SnapshotHistory
-                snapshots={snapshots}
-                onViewDetail={handleSnapshotDetail}
-                formatCurrency={formatCurrency}
-              />
-            )}
+            <SnapshotHistory productId={selectedProduct.id} onViewDetail={handleSnapshotDetail} />
           </Grid>
         )}
 

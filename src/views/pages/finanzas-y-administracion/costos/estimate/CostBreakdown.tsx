@@ -1,4 +1,5 @@
-import type { ChangeEvent } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, type ChangeEvent } from "react";
 
 import { Grid, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 
@@ -10,11 +11,12 @@ import { formatCurrency } from "@/utils/format";
 interface Props {
   estimate: ICostEstimate;
   onMaterialChange?: (index: number, value: string) => void;
+  onEstimateEdit?: (updatedEstimate: Partial<ICostEstimate>) => void;
 }
 
 type MaterialEntry = { material: ICostEstimateMaterial; index: number };
 
-const CostBreakdown = ({ estimate, onMaterialChange }: Props) => {
+const CostBreakdown = ({ estimate, onMaterialChange, onEstimateEdit }: Props) => {
   const materialWithIndex = estimate.materials?.map((m, i) => ({ material: m, index: i })) ?? [];
   const feedstockMaterials = materialWithIndex.filter(m => m.material.materialType === "feedstock");
   const packagingMaterials = materialWithIndex.filter(m => m.material.materialType === "packaging");
@@ -24,7 +26,13 @@ const CostBreakdown = ({ estimate, onMaterialChange }: Props) => {
       {feedstockMaterials.length > 0 && (
         <Grid item xs={12}>
           <CustomCard title='Materia Prima'>
-            <MaterialTable materials={feedstockMaterials} type='feedstock' onMaterialChange={onMaterialChange} />
+            <MaterialTable
+              materials={feedstockMaterials}
+              estimate={estimate}
+              type='feedstock'
+              onMaterialChange={onMaterialChange}
+              onEstimateEdit={onEstimateEdit}
+            />
           </CustomCard>
         </Grid>
       )}
@@ -32,7 +40,13 @@ const CostBreakdown = ({ estimate, onMaterialChange }: Props) => {
       {packagingMaterials.length > 0 && (
         <Grid item xs={12}>
           <CustomCard title='Material de Empaque'>
-            <MaterialTable materials={packagingMaterials} type='packaging' onMaterialChange={onMaterialChange} />
+            <MaterialTable
+              materials={packagingMaterials}
+              estimate={estimate}
+              type='packaging'
+              onMaterialChange={onMaterialChange}
+              onEstimateEdit={onEstimateEdit}
+            />
           </CustomCard>
         </Grid>
       )}
@@ -44,20 +58,30 @@ const CostBreakdown = ({ estimate, onMaterialChange }: Props) => {
               <TableHead>
                 <TableRow>
                   <TableCell>Tipo CIF</TableCell>
-                  <TableCell align='right'>Total</TableCell>
+                  <TableCell align='right'>Costo x (kg)</TableCell>
+                  <TableCell align='right'>Costo Promedio</TableCell>
+                  <TableCell align='right'>Costo Unitario</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {estimate.cifDetails.map((item, idx) => (
                   <TableRow key={idx}>
                     <TableCell>{item.name}</TableCell>
+                    <TableCell align='right'>{formatCurrency(item.amountPerKg)}</TableCell>
                     <TableCell align='right'>{formatCurrency(item.amount)}</TableCell>
+                    <TableCell align='right'>{formatCurrency(item.totalAmount)}</TableCell>
                   </TableRow>
                 ))}
                 <TableRow>
                   <TableCell sx={{ fontWeight: 700 }}>Totales</TableCell>
                   <TableCell align='right' sx={{ fontWeight: 700 }}>
+                    {formatCurrency(estimate.cifDetails.reduce((acc, item) => acc + item.amountPerKg, 0))}
+                  </TableCell>
+                  <TableCell align='right' sx={{ fontWeight: 700 }}>
                     {formatCurrency(estimate.cifDetails.reduce((acc, item) => acc + item.amount, 0))}
+                  </TableCell>
+                  <TableCell align='right' sx={{ fontWeight: 700 }}>
+                    {formatCurrency(estimate.cifDetails.reduce((acc, item) => acc + item.totalAmount, 0))}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -72,11 +96,15 @@ const CostBreakdown = ({ estimate, onMaterialChange }: Props) => {
 const MaterialTable = ({
   materials,
   type,
-  onMaterialChange
+  onMaterialChange,
+  onEstimateEdit,
+  estimate
 }: {
   materials: MaterialEntry[];
   type?: "feedstock" | "packaging";
   onMaterialChange?: (index: number, value: string) => void;
+  onEstimateEdit?: (updatedEstimate: Partial<ICostEstimate>) => void;
+  estimate: ICostEstimate;
 }) => {
   const totalCost = materials.reduce((acc, { material: m }) => acc + (m.cost ?? 0), 0);
   const totalBaseCost = materials.reduce((acc, { material: m }) => acc + (m.baseCost ?? 0), 0);
@@ -86,6 +114,19 @@ const MaterialTable = ({
     (acc, { material: m }) => acc + (parseFloat(m.baseQuantity as string) || 0),
     0
   );
+
+  useEffect(() => {
+    if (onEstimateEdit && estimate) {
+      const realTotalCostFeedstock = type === "feedstock" ? totalRealUnitCost : estimate.realTotalCostFeedstock;
+      const realTotalCostPackaging = type === "packaging" ? totalRealUnitCost : estimate.realTotalCostPackaging;
+
+      onEstimateEdit({
+        realTotalCostFeedstock,
+        realTotalCostPackaging,
+        realCostMaterialUnit: realTotalCostFeedstock + realTotalCostPackaging
+      });
+    }
+  }, [totalRealUnitCost, type]);
 
   return (
     <Table>
@@ -125,7 +166,7 @@ const MaterialTable = ({
             </TableCell>
             <TableCell align='right'>{formatCurrency(mat.cost)}</TableCell>
             {type === "feedstock" && <TableCell align='right'>{formatCurrency(mat.baseCost)}</TableCell>}
-            <TableCell align='right'>{formatCurrency(mat.realUnitCost)}</TableCell>
+            <TableCell align='right'>{formatCurrency(mat.realTotalCost)}</TableCell>
           </TableRow>
         ))}
         <TableRow>

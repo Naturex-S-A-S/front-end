@@ -17,7 +17,7 @@ export interface ICostEstimateMaterial {
   stdTotalCost: number;
   realUnitCost: number;
   realQuantity: number;
-  realTotalCost: number;
+  realTotalCost: number; // = realUnitCost * units
 }
 
 export interface ICostEstimatePeriodCifItem {
@@ -40,6 +40,8 @@ export interface ICostEstimateCifDetail {
   id: number;
   name: string;
   amount: number;
+  amountPerKg: number;
+  totalAmount: number;
 }
 
 export interface ICostEstimate {
@@ -49,6 +51,7 @@ export interface ICostEstimate {
   idVersion: number;
   snapshotType: "estimation" | "order_close";
   status: "draft" | "completed" | "transient";
+  units: number;
   quantityKg: number;
   unitGramsFinalProduct: number | null;
   baseTotalCostFeedstock: number;
@@ -62,7 +65,7 @@ export interface ICostEstimate {
   realTotalCostPackaging: number;
   realCostMaterialKg: number;
   realCostMaterialTon: number;
-  realCostMaterialUnit: number;
+  realCostMaterialUnit: number; // = realTotalCostFeedstock + realTotalCostPackaging
   costVariationKg: number | null;
   costCifKg: number;
   costCifTon: number;
@@ -81,13 +84,28 @@ export interface ICostEstimate {
   materials: ICostEstimateMaterial[];
   periods: ICostEstimatePeriod[];
   cifDetails: ICostEstimateCifDetail[];
-  price: IProductPrice | null;
+  totalCif: number;
+  price: IProductPrice;
+  totalCost: number;
+  totalCostTax: number;
+  totalCostWaste: number;
+  wasteValue: number;
+  taxValue: number;
+  taxPct: number;
+  defaultMarginValue: number;
+  defaultMarginPct: number;
+  costDifference: number;
+  utilityPct: number;
 }
 
 export interface IProductPrice {
   id: number;
   idFinalProduct: string;
   idSnapshot: number;
+  commissionPct: number;
+  commissionValue: number;
+  suggestedPrice: number;
+  utilityPct: number;
   costBase: number;
   wastePct: number;
   taxPct: number;

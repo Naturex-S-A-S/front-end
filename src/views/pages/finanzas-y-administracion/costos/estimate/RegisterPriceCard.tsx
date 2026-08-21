@@ -1,77 +1,76 @@
 "use client";
 
-import { Alert, Box, Checkbox, Divider, FormControlLabel, Grid, Switch, Typography } from "@mui/material";
+import { Box, Checkbox, Divider, FormControlLabel, Grid, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 
-import { Controller, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
 import CustomCard from "@/@core/components/mui/Card";
 import CustomTextField from "@/@core/components/mui/TextField";
 import CustomButton from "@/@core/components/mui/Button";
 import { formatCurrency } from "@/utils/format";
 import type { RegisterPriceFormValues } from "@/utils/schemas/costs";
+import type { ICostEstimate } from "@/types/pages/costs";
 
 interface Props {
-  waterfall: {
-    costBase: number;
-    wastePct: number;
-    wasteAmount: number;
-    costWithWaste: number;
-    taxPct: number;
-    taxAmount: number;
-    costWithTax: number;
-  };
-  profitMargin: { profit: number; marginPct: number } | null;
+  estimate: ICostEstimate;
   isRegisteringPrice: boolean;
   onRegister: () => void;
 }
 
-const WaterfallRow = ({ label, value, bold }: { label: string; value: string; bold?: boolean }) => (
+const WaterfallRow = ({
+  label,
+  variant = "body2",
+  value,
+  bold,
+  color
+}: {
+  label: string;
+  variant?: "body2" | "body1";
+  value: string;
+  bold?: boolean;
+  color?: string;
+}) => (
   <Box display='flex' justifyContent='space-between' alignItems='center' py={0.5}>
-    <Typography variant='body2' color='text.secondary'>
+    <Typography variant={variant} color={color ?? "text.secondary"}>
       {label}
     </Typography>
-    <Typography variant='body2' fontWeight={bold ? 600 : 500}>
+    <Typography variant={variant} fontWeight={bold ? 600 : 500} color={color}>
       {value}
     </Typography>
   </Box>
 );
 
-const RegisterPriceCard = ({ waterfall, profitMargin, isRegisteringPrice, onRegister }: Props) => {
+const RegisterPriceCard = ({ estimate, isRegisteringPrice, onRegister }: Props) => {
   const {
     register,
-    watch,
-    control,
     handleSubmit,
     formState: { errors }
   } = useFormContext<RegisterPriceFormValues>();
 
-  const applyTax = watch("applyTax");
-
   return (
-    <CustomCard>
+    <CustomCard className='sticky'>
       <form onSubmit={handleSubmit(onRegister)}>
         <Typography variant='h6' fontWeight={600} sx={{ mb: 2 }}>
           Registrar Precio Final
         </Typography>
 
-        <WaterfallRow label='Costo Base (kg)' value={formatCurrency(waterfall.costBase)} />
+        <WaterfallRow label='Costo produccion' value={formatCurrency(estimate.totalCost)} />
+        <Divider sx={{ my: 0.5, borderStyle: "dashed" }} />
         <WaterfallRow
-          label={`+ Insumos (${waterfall.wastePct.toFixed(2)}%)`}
-          value={formatCurrency(waterfall.wasteAmount)}
+          label={`+ Insumos (${estimate.wastePct.toFixed(2)}%)`}
+          value={formatCurrency(estimate.wasteValue)}
+        />
+        <WaterfallRow
+          label={`+ Margen (${estimate.defaultMarginPct}%)`}
+          value={formatCurrency(estimate.defaultMarginValue)}
         />
         <Divider sx={{ my: 0.5, borderStyle: "dashed" }} />
-        <WaterfallRow label='Costo con Insumos' value={formatCurrency(waterfall.costWithWaste)} />
-        <WaterfallRow
-          label={`+ Impuesto (${waterfall.taxPct.toFixed(2)}%)`}
-          value={formatCurrency(waterfall.taxAmount)}
-        />
-        <Divider sx={{ my: 0.5, borderStyle: "dashed" }} />
-        <WaterfallRow label='Costo Sugerido' value={formatCurrency(waterfall.costWithTax)} bold />
+        <WaterfallRow label='Precio Sugerido' value={formatCurrency(estimate.price.suggestedPrice)} />
         <Divider sx={{ my: 1.5 }} />
 
         <Grid container spacing={2} sx={{ mb: 2 }}>
-          <Grid item xs={12}>
+          {/*<Grid item xs={12}>
             <Controller
               name='applyTax'
               control={control}
@@ -82,7 +81,7 @@ const RegisterPriceCard = ({ waterfall, profitMargin, isRegisteringPrice, onRegi
                 />
               )}
             />
-          </Grid>
+          </Grid>*/}
           <Grid item xs={6}>
             <CustomTextField
               label='Insumos (%)'
@@ -94,6 +93,17 @@ const RegisterPriceCard = ({ waterfall, profitMargin, isRegisteringPrice, onRegi
             />
           </Grid>
           <Grid item xs={6}>
+            <CustomTextField
+              label='Comisión (%)'
+              type='number'
+              {...register("comissionPct", { valueAsNumber: true })}
+              InputProps={{ inputProps: { min: 0, step: 1 } }}
+              error={!!errors.comissionPct}
+              helperText={errors.comissionPct?.message as string}
+              sx={{ mt: 1 }}
+            />
+          </Grid>
+          {/*<Grid item xs={6}>
             {applyTax && (
               <CustomTextField
                 label='Impuesto (%)'
@@ -105,7 +115,7 @@ const RegisterPriceCard = ({ waterfall, profitMargin, isRegisteringPrice, onRegi
                 sx={{ mt: 1 }}
               />
             )}
-          </Grid>
+          </Grid>*/}
         </Grid>
 
         <CustomTextField
@@ -120,15 +130,17 @@ const RegisterPriceCard = ({ waterfall, profitMargin, isRegisteringPrice, onRegi
             "& input": { fontWeight: 700, fontSize: "1.1rem" }
           }}
         />
-        {profitMargin && (
-          <Alert
-            severity={profitMargin.marginPct < 0 ? "warning" : "info"}
-            icon={<Icon icon={profitMargin.marginPct < 0 ? "mdi:alert-outline" : "mdi:information-outline"} />}
-            sx={{ mb: 2 }}
-          >
-            Margen de ganancia: {formatCurrency(profitMargin.profit)} ({profitMargin.marginPct.toFixed(2)}%)
-          </Alert>
+        {!isNaN(estimate.price.commissionValue) && (
+          <WaterfallRow label={`Comisión`} value={formatCurrency(estimate.price.commissionValue)} />
         )}
+        <WaterfallRow label={`Margen de ganancia`} value={formatCurrency(estimate.costDifference)} />
+        <WaterfallRow
+          label={`Utilidad`}
+          variant='body1'
+          value={estimate?.utilityPct?.toFixed(2) + "%"}
+          color={estimate?.utilityPct?.toFixed(2) >= estimate?.defaultMarginPct?.toFixed(2) ? "success.main" : "error"}
+        />
+        <Divider sx={{ my: 1.5 }} />
         <CustomTextField
           label='Notas'
           placeholder='Ej: Precio revisado con CIF de Q2 2026'

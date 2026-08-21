@@ -1,20 +1,16 @@
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 
 import { Box, Chip, Divider, Grid, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 import moment from "moment";
-import { FormProvider, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import toast from "react-hot-toast";
+import { FormProvider } from "react-hook-form";
 
 import CustomDialog from "@/@core/components/mui/Dialog";
 import Loader from "@/@core/components/react-spinners";
-import { getSnapshotDetailAction, updateSnapshotAction } from "@/api/costs/actions";
+import { getSnapshotDetailAction } from "@/api/costs/actions";
 import EstimateResultCard from "./EstimateResultCard";
+import useEstimate from "./useEstimate";
 import type { ICostEstimate } from "@/types/pages/costs";
-import { applyMaterialQuantityChange, mapMaterialsToPriceInput } from "@/utils/costs";
-import { registerPriceSchema, type RegisterPriceFormValues } from "@/utils/schemas/costs";
-import { TAX_PERCENTAGE } from "@/utils/constant";
 
 interface Props {
   snapshotId: number | null;
@@ -38,25 +34,15 @@ const SnapshotDetailDialog = ({ snapshotId, open, onClose, onSaved }: Props) => 
   const [data, setData] = useState<ICostEstimate | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const [isSaving, startSaveTransition] = useTransition();
 
-  const methods = useForm<RegisterPriceFormValues>({
-    defaultValues: {
-      wastePct: 0,
-      taxPct: TAX_PERCENTAGE,
-      applyTax: true,
-      finalPrice: undefined,
-      priceNotes: "",
-      isDefinitive: false,
-      materials: []
-    },
-    resolver: yupResolver(registerPriceSchema) as any
-  });
-
-  const wastePct = methods.watch("wastePct");
-  const taxPct = methods.watch("taxPct");
-  const applyTax = methods.watch("applyTax");
-  const finalPrice = methods.watch("finalPrice");
+  const { methods, estimate, isRegisteringPrice, handleMaterialChange, handleRegisterPrice, loadEstimate } =
+    useEstimate({
+      snapshotId,
+      onSaved: () => {
+        onSaved?.();
+        if (snapshotId !== null) loadDetail(snapshotId);
+      }
+    });
 
   const loadDetail = (id: number) => {
     setData(null);
@@ -66,6 +52,7 @@ const SnapshotDetailDialog = ({ snapshotId, open, onClose, onSaved }: Props) => 
 
       if (result.success) {
         setData(result.data);
+        loadEstimate(result.data);
       } else {
         setError(result.error);
       }
@@ -78,93 +65,9 @@ const SnapshotDetailDialog = ({ snapshotId, open, onClose, onSaved }: Props) => 
     loadDetail(snapshotId);
   }, [snapshotId, open]);
 
-  useEffect(() => {
-    if (data?.status === "draft") {
-      methods.reset({
-        wastePct: data.wastePct,
-        taxPct: TAX_PERCENTAGE,
-        applyTax: true,
-        finalPrice: undefined,
-        priceNotes: data.notes ?? "",
-        isDefinitive: false,
-        materials: mapMaterialsToPriceInput(data)
-      });
-    }
-  }, [data, methods]);
-
   const readOnly = data?.status !== "draft";
   const type = data ? typeConfig[data.snapshotType] ?? typeConfig.estimation : null;
   const status = data ? statusConfig[data.status] ?? statusConfig.transient : null;
-
-  const waterfall = useMemo(() => {
-    if (!data) return null;
-
-    const costBase = data.costTotalKg;
-    const effectiveTaxPct = applyTax ? taxPct : 0;
-    const costWithWaste = costBase / (1 - wastePct / 100);
-    const wasteAmount = costWithWaste - costBase;
-    const taxAmount = costWithWaste * (effectiveTaxPct / 100);
-    const costWithTax = costWithWaste * (1 + effectiveTaxPct / 100);
-
-    return {
-      costBase,
-      wastePct,
-      wasteAmount,
-      costWithWaste,
-      taxPct: effectiveTaxPct,
-      taxAmount,
-      costWithTax
-    };
-  }, [data, wastePct, taxPct, applyTax]);
-
-  const profitMargin = useMemo(() => {
-    const price = Number(finalPrice);
-
-    if (!price || price <= 0 || !waterfall) return null;
-
-    const cost = waterfall.costWithTax;
-    const profit = price - cost;
-    const marginPct = (profit / price) * 100;
-
-    return { profit: Number(profit.toFixed(2)), marginPct: Number(marginPct.toFixed(2)) };
-  }, [finalPrice, waterfall]);
-
-  const handleMaterialChange = (index: number, value: string) => {
-    if (!data) return;
-
-    const updated = applyMaterialQuantityChange(data, index, value);
-
-    setData(updated);
-    methods.setValue("materials", mapMaterialsToPriceInput(updated));
-  };
-
-  const handleRegisterPrice = methods.handleSubmit(async (values: RegisterPriceFormValues) => {
-    if (!data || snapshotId === null) return;
-
-    startSaveTransition(async () => {
-      const result = await updateSnapshotAction(snapshotId, {
-        idFinalProduct: data.idFinalProduct,
-        units: data.quantityKg,
-        wastePct: values.wastePct,
-        taxPct: values.applyTax ? values.taxPct : 0,
-        commissionPct: 0,
-        finalPrice: values.finalPrice,
-        isDefinitive: values.isDefinitive,
-        notes: values.priceNotes,
-        materials: values.materials
-      });
-
-      if (result.success) {
-        toast.success("Snapshot actualizado con éxito");
-        onSaved?.();
-        loadDetail(snapshotId);
-      } else {
-        toast.error(result.error || "Error al actualizar el snapshot");
-      }
-    });
-  });
-
-  console.log({ data });
 
   return (
     <CustomDialog
@@ -186,7 +89,7 @@ const SnapshotDetailDialog = ({ snapshotId, open, onClose, onSaved }: Props) => 
         </Box>
       )}
 
-      {data && (
+      {data && estimate && (
         <FormProvider {...methods}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
@@ -259,13 +162,10 @@ const SnapshotDetailDialog = ({ snapshotId, open, onClose, onSaved }: Props) => 
             </Grid>
 
             <EstimateResultCard
-              estimate={data}
+              estimate={estimate}
               title='Detalle del Costo'
               readOnly={readOnly}
-              scrollOnChange={false}
-              waterfall={waterfall}
-              profitMargin={profitMargin}
-              isRegisteringPrice={isSaving}
+              isRegisteringPrice={isRegisteringPrice}
               onMaterialChange={handleMaterialChange}
               onRegisterPrice={handleRegisterPrice}
             />

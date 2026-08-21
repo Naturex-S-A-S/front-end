@@ -11,6 +11,8 @@ interface Props {
 }
 
 const CostSummaryCards = ({ estimate }: Props) => {
+  console.log({ estimate });
+
   return (
     <>
       <Grid item xs={12} sm={6} md={4}>
@@ -20,7 +22,7 @@ const CostSummaryCards = ({ estimate }: Props) => {
               Costo por Kg
             </Typography>
             <Typography variant='h5' fontWeight={600} color='primary.main'>
-              {formatCurrency(estimate.costTotalKg)}
+              {formatCurrency(estimate.totalCost)}
             </Typography>
             <Typography variant='caption' color='text.secondary'>
               Material: {formatCurrency(estimate.stdCostMaterialKg)} | CIF: {formatCurrency(estimate.costCifKg)}

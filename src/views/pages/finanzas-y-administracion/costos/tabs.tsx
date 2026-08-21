@@ -21,6 +21,7 @@ const Tabs = () => {
       <CustomTabList onChange={handleChange} variant='standard'>
         <Tab label='Configuración' value='Configuracion' />
         <Tab label='Estimación de costos' value='Estimacion' />
+        <Tab label='Historial de costos' value='Historial' />
       </CustomTabList>
     </TabContext>
   );
