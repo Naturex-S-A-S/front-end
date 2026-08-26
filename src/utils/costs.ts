@@ -23,24 +23,16 @@ export const applyMaterialQuantityChange = (estimate: ICostEstimate, index: numb
 
   for (const m of updated.materials) {
     if (m.materialType === "feedstock") {
-      totalFeedstockCost += m.stdTotalCost;
+      totalFeedstockCost += m.realTotalCost;
     } else {
-      totalPackagingCost += m.stdTotalCost;
+      totalPackagingCost += m.realTotalCost;
     }
   }
 
-  const totalMaterialCost = totalFeedstockCost + totalPackagingCost;
-  const qty = updated.quantityKg;
-
-  updated.stdTotalCostFeedstock = totalFeedstockCost;
-  updated.stdTotalCostPackaging = totalPackagingCost;
-  updated.stdCostMaterialKg = totalMaterialCost / qty;
-  updated.stdCostMaterialTon = updated.stdCostMaterialKg * 1000;
-  updated.stdCostMaterialUnit = updated.stdCostMaterialKg;
-
-  updated.costTotalKg = updated.stdCostMaterialKg + updated.costCifKg;
-  updated.costTotalTon = updated.costTotalKg * 1000;
-  updated.costTotalUnit = updated.stdCostMaterialUnit + updated.costCifUnit;
+  updated.realTotalCostFeedstock = totalFeedstockCost;
+  updated.realTotalCostPackaging = totalPackagingCost;
+  updated.realCostMaterialUnit = totalFeedstockCost + totalPackagingCost;
+  updated.totalCost = updated.realCostMaterialUnit + updated.totalCif;
 
   return updated;
 };

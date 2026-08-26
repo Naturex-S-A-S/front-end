@@ -9,6 +9,7 @@ import Tabs from "@/views/pages/finanzas-y-administracion/costos/tabs";
 import EstimateView from "@/views/pages/finanzas-y-administracion/costos/estimate";
 import { getCostConfigServer } from "@/api/costs/server";
 import { getPeriodsServer } from "@/api/cif/server";
+import Snapshot from "@/views/pages/finanzas-y-administracion/costos/snapshot";
 
 export const metadata = {
   title: "Costos - Naturex",
@@ -46,7 +47,11 @@ async function CostContent({ tab }: { tab: string }) {
             <EstimateView />
           </Suspense>
         )}
-        {tab === "Historial" && <Suspense fallback={<Loader type='component' />}>Poner SnapshotHistory</Suspense>}
+        {tab === "Historial" && (
+          <Suspense fallback={<Loader type='component' />}>
+            <Snapshot />
+          </Suspense>
+        )}
       </Box>
     </>
   );

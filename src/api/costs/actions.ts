@@ -3,7 +3,7 @@
 import { revalidateTag } from "next/cache";
 
 import { apiFetch } from "@/api/apiFetch";
-import type { ICostEstimate, ICostSnapshotSummary, IProductPrice, IPutCostConfig } from "@/types/pages/costs";
+import type { ICostEstimate, IProductInventorySummary, IProductPrice, IPutCostConfig } from "@/types/pages/costs";
 
 type ActionResult = { success: boolean; error?: string };
 
@@ -52,9 +52,9 @@ export async function getCostEstimateAction(
 
 export async function getProductSnapshotsAction(
   productId: string
-): Promise<{ success: true; data: ICostSnapshotSummary[] } | { success: false; error: string }> {
+): Promise<{ success: true; data: IProductInventorySummary[] } | { success: false; error: string }> {
   try {
-    const data = await apiFetch<ICostSnapshotSummary[]>(`costs/products/${productId}/snapshots`);
+    const data = await apiFetch<IProductInventorySummary[]>(`costs/products/${productId}/snapshots`);
 
     return { success: true, data };
   } catch (e: any) {

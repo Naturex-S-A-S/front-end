@@ -79,7 +79,7 @@ const PriceHistory = ({ productId }: Props) => {
                   </Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant='body2'>{price.nameUser.split(" ")[0]}</Typography>
+                  <Typography variant='body2'>{price.nameUser?.split(" ")[0] ?? "—"}</Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant='body2' color='text.secondary' sx={{ maxWidth: 200 }} noWrap>

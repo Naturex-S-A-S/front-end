@@ -29,8 +29,6 @@ const CurrentPriceCard = ({ productId }: Props) => {
     );
   }
 
-  console.log({ price });
-
   if (!price) return null;
 
   return (
@@ -67,7 +65,7 @@ const CurrentPriceCard = ({ productId }: Props) => {
             <Typography variant='caption' color='text.secondary'>
               Registrado por
             </Typography>
-            <Typography variant='body2'>{price.nameUser.split(" ")[0]}</Typography>
+            <Typography variant='body2'>{price.nameUser?.split(" ")[0] ?? "—"}</Typography>
           </Box>
         </Box>
         {price.marginWarning && (

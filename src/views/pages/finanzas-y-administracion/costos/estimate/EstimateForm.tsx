@@ -6,7 +6,7 @@ import { Icon } from "@iconify/react";
 import CustomCard from "@/@core/components/mui/Card";
 import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
 import CustomTextField from "@/@core/components/mui/TextField";
-import type { ProductOption } from "./useEstimate";
+import type { ProductOption } from "../../../../../hooks/costs/useEstimate";
 
 interface Props {
   productList: ProductOption[];

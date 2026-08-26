@@ -1,37 +1,165 @@
 "use client";
 
-import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { useMemo } from "react";
+
+import { Box } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { useQuery } from "@tanstack/react-query";
-import moment from "moment";
+import type { GridColDef } from "@mui/x-data-grid";
 
 import CustomCard from "@/@core/components/mui/Card";
-import CustomButton from "@/@core/components/mui/Button";
+import CustomDataGrid from "@/@core/components/mui/DataGrid";
 import Loader from "@/@core/components/react-spinners";
-import { usePagination, PaginationBar } from "@/@core/components/pagination";
+import { formatCurrency } from "@/utils/format";
 import { getProductSnapshotsAction } from "@/api/costs/actions";
-
-const ITEMS_PER_PAGE = 5;
+import { ActionButton } from "@/utils/columns/components/ActionButton";
 
 interface Props {
   productId: string;
   onViewDetail: (id: number) => void;
 }
 
-const typeConfig: Record<string, { label: string; icon: string; color: string }> = {
-  estimation: { label: "Estimación", icon: "mdi:calculator-variant-outline", color: "info.main" },
-  order_close: { label: "Cierre de orden", icon: "mdi:package-variant-closed", color: "success.main" }
-};
-
 const SnapshotHistory = ({ productId, onViewDetail }: Props) => {
   const { data: snapshots, isLoading } = useQuery({
     queryKey: ["product-snapshots", productId],
     queryFn: () => getProductSnapshotsAction(productId),
-    select: result => (result.success ? result.data : []),
+    select: result => (result.success ? result.data.map((item, i) => ({ ...item, id: item?.id ?? i })) : []),
     enabled: !!productId
   });
 
-  const { paginatedData, page, setPage, pageCount } = usePagination(snapshots ?? [], ITEMS_PER_PAGE);
+  const cifDetailNames = useMemo(() => {
+    if (!snapshots) return [];
+
+    const seen = new Set<string>();
+
+    for (const item of snapshots) {
+      for (const detail of item?.cifDetails) {
+        seen.add(detail?.name ?? "");
+      }
+    }
+
+    return Array.from(seen);
+  }, [snapshots]);
+
+  const columns: GridColDef[] = useMemo(() => {
+    const baseColumns: GridColDef[] = [
+      /*{
+        field: "productId",
+        headerName: "Codigo",
+        flex: 1,
+        minWidth: 120
+      },
+      {
+        field: "productFullName",
+        headerName: "Producto",
+        flex: 1,
+        minWidth: 200
+      }, */
+
+      {
+        field: "inventoryUnits",
+        headerName: "Unidades",
+        flex: 1,
+        minWidth: 100
+      },
+      {
+        field: "totalCostWithTax",
+        headerName: "Costo + IVA",
+        flex: 1,
+        minWidth: 120,
+        renderCell: params => <>{formatCurrency(params.value)}</>
+      },
+      {
+        field: "wasteValue",
+        headerName: "Desperdicio %",
+        width: 150,
+        type: "number",
+        renderCell: params => (
+          <>
+            {formatCurrency(params.value)} {params.row.wastePct != null && <span>({params.row.wastePct}%)</span>}
+          </>
+        )
+      },
+      {
+        field: "finalPrice",
+        headerName: "Precio Venta",
+        width: 140,
+        type: "number",
+        renderCell: params => <>{formatCurrency(params.value)}</>
+      },
+      {
+        field: "marginAmount",
+        headerName: "Diferencia",
+        width: 120,
+        type: "number",
+        renderCell: params => <>{formatCurrency(params.value)}</>
+      },
+      {
+        field: "totalInventoryCost",
+        headerName: "Total a Costo",
+        width: 140,
+        type: "number",
+        renderCell: params => <>{formatCurrency(params.value)}</>
+      },
+      {
+        field: "totalInventoryFinalPrice",
+        headerName: "Total a PV",
+        width: 140,
+        type: "number",
+        renderCell: params => <>{formatCurrency(params.value)}</>
+      },
+      {
+        field: "totalInventoryCostWithTax",
+        headerName: "Total %",
+        width: 150,
+        type: "number",
+        renderCell: params => (
+          <>
+            {formatCurrency(params.value)} {params.row.wastePct != null && <span>({params.row.wastePct}%)</span>}
+          </>
+        )
+      },
+      {
+        field: "totalInventoryMarginAmount",
+        headerName: "Total Diferencia",
+        width: 140,
+        type: "number",
+        renderCell: params => <>{formatCurrency(params.value)}</>
+      },
+      {
+        field: "totalInventoryKgProduced",
+        headerName: "Total Kg Producidos",
+        width: 140,
+        type: "number",
+        renderCell: params => <>{formatCurrency(params.value)}</>
+      }
+    ];
+
+    const cifColumns: GridColDef[] = cifDetailNames.map(name => ({
+      field: `cif_${name}`,
+      headerName: name,
+      width: 130,
+      type: "number",
+      renderCell: params => {
+        const detail = params.row.cifDetails?.find((d: { name: string }) => d.name === name);
+
+        return <>{formatCurrency(detail?.totalInventoryAmount)}</>;
+      }
+    }));
+
+    const actionColumn: GridColDef = {
+      field: "actions",
+      headerName: "Acciones",
+      width: 80,
+      sortable: false,
+      filterable: false,
+      renderCell: params => (
+        <ActionButton icon='mdi:eye-outline' size='small' onClick={() => onViewDetail(params.row.id)} />
+      )
+    };
+
+    return [actionColumn, ...baseColumns, ...cifColumns];
+  }, [cifDetailNames, onViewDetail]);
 
   if (isLoading) {
     return (
@@ -52,50 +180,7 @@ const SnapshotHistory = ({ productId, onViewDetail }: Props) => {
         </Box>
       }
     >
-      <Box sx={{ overflowX: "auto" }}>
-        <Table sx={{ minWidth: 650 }}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Fecha</TableCell>
-              <TableCell>Tipo</TableCell>
-              <TableCell align='right'>Cantidad (kg)</TableCell>
-              <TableCell>Notas</TableCell>
-              <TableCell align='center' />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {paginatedData.map(snapshot => {
-              const type = typeConfig[snapshot.snapshotType] ?? typeConfig.estimation;
-
-              return (
-                <TableRow key={snapshot.id}>
-                  <TableCell>
-                    <Typography variant='body2'>{moment(snapshot.dateSnapshot).format("DD/MM/YY HH:mm")}</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Box display='flex' alignItems='center' gap={1}>
-                      <Icon icon={type.icon} fontSize={18} color={type.color} />
-                      <Typography variant='body2'>{type.label}</Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell align='right'>{snapshot.quantityKg}</TableCell>
-                  <TableCell>
-                    <Typography variant='body2' color='text.secondary' sx={{ maxWidth: 200 }} noWrap>
-                      {snapshot.notes || "—"}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align='center'>
-                    <CustomButton size='small' onClick={() => onViewDetail(snapshot.id)}>
-                      Ver detalle
-                    </CustomButton>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </Box>
-      <PaginationBar page={page} count={pageCount} onChange={setPage} />
+      <CustomDataGrid columns={columns} data={snapshots} />
     </CustomCard>
   );
 };

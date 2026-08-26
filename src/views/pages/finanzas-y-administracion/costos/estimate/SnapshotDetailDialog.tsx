@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState, useTransition } from "react";
 
-import { Box, Chip, Divider, Grid, Typography } from "@mui/material";
+import { Alert, Box, Chip, Divider, Grid, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 import moment from "moment";
 import { FormProvider } from "react-hook-form";
@@ -9,7 +10,7 @@ import CustomDialog from "@/@core/components/mui/Dialog";
 import Loader from "@/@core/components/react-spinners";
 import { getSnapshotDetailAction } from "@/api/costs/actions";
 import EstimateResultCard from "./EstimateResultCard";
-import useEstimate from "./useEstimate";
+import useEstimate from "../../../../../hooks/costs/useEstimate";
 import type { ICostEstimate } from "@/types/pages/costs";
 
 interface Props {
@@ -82,12 +83,7 @@ const SnapshotDetailDialog = ({ snapshotId, open, onClose, onSaved }: Props) => 
         </Box>
       )}
 
-      {error && (
-        <Box display='flex' alignItems='center' gap={2} p={2} bgcolor='error.light' borderRadius={1}>
-          <Icon icon='mdi:alert-circle-outline' fontSize={20} color='error' />
-          <Typography color='error'>{error}</Typography>
-        </Box>
-      )}
+      {error && <Alert severity='error'>{error}</Alert>}
 
       {data && estimate && (
         <FormProvider {...methods}>
@@ -142,11 +138,6 @@ const SnapshotDetailDialog = ({ snapshotId, open, onClose, onSaved }: Props) => 
                 <Grid item>
                   <Typography variant='caption' color='text.secondary'>
                     % Merma: <strong>{data.wastePct}%</strong>
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant='caption' color='text.secondary'>
-                    Promedio CIF: <strong>{data.cifAveragingMonths} meses</strong>
                   </Typography>
                 </Grid>
                 <Grid item>

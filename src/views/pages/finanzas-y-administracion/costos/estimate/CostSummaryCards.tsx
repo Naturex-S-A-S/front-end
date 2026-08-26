@@ -10,8 +10,10 @@ interface Props {
   estimate: ICostEstimate;
 }
 
+const divide = (value: number, divisor: number) => (divisor > 0 ? value / divisor : 0);
+
 const CostSummaryCards = ({ estimate }: Props) => {
-  console.log({ estimate });
+  const materialCost = estimate.realTotalCostFeedstock + estimate.realTotalCostPackaging;
 
   return (
     <>
@@ -22,10 +24,11 @@ const CostSummaryCards = ({ estimate }: Props) => {
               Costo por Kg
             </Typography>
             <Typography variant='h5' fontWeight={600} color='primary.main'>
-              {formatCurrency(estimate.totalCost)}
+              {formatCurrency(divide(estimate.totalCost, estimate.quantityKg))}
             </Typography>
             <Typography variant='caption' color='text.secondary'>
-              Material: {formatCurrency(estimate.stdCostMaterialKg)} | CIF: {formatCurrency(estimate.costCifKg)}
+              Material: {formatCurrency(divide(materialCost, estimate.quantityKg))} | CIF:{" "}
+              {formatCurrency(divide(estimate.totalCif, estimate.quantityKg))}
             </Typography>
           </Box>
         </CustomCard>
@@ -37,10 +40,11 @@ const CostSummaryCards = ({ estimate }: Props) => {
               Costo por Unidad
             </Typography>
             <Typography variant='h5' fontWeight={600} color='primary.main'>
-              {formatCurrency(estimate.costTotalUnit)}
+              {formatCurrency(divide(estimate.totalCost, estimate.units))}
             </Typography>
             <Typography variant='caption' color='text.secondary'>
-              Material: {formatCurrency(estimate.stdCostMaterialUnit)} | CIF: {formatCurrency(estimate.costCifUnit)}
+              Material: {formatCurrency(divide(materialCost, estimate.units))} | CIF:{" "}
+              {formatCurrency(divide(estimate.totalCif, estimate.units))}
             </Typography>
           </Box>
         </CustomCard>
@@ -49,14 +53,13 @@ const CostSummaryCards = ({ estimate }: Props) => {
         <CustomCard>
           <Box textAlign='center' py={2}>
             <Typography variant='caption' color='text.secondary'>
-              Costo Total por Kg
+              Costo Total del Lote
             </Typography>
             <Typography variant='h5' fontWeight={600} color='primary.main'>
-              {formatCurrency(estimate.costTotalKg * estimate.quantityKg)}
+              {formatCurrency(estimate.totalCost)}
             </Typography>
             <Typography variant='caption' color='text.secondary'>
-              Material: {formatCurrency(estimate.stdCostMaterialKg * estimate.quantityKg)} | CIF:{" "}
-              {formatCurrency(estimate.costCifKg * estimate.quantityKg)}
+              Material: {formatCurrency(materialCost)} | CIF: {formatCurrency(estimate.totalCif)}
             </Typography>
           </Box>
         </CustomCard>

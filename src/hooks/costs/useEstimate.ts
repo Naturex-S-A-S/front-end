@@ -67,7 +67,7 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
     methods.reset({
       wastePct: data.wastePct,
       comissionPct: 0,
-      finalPrice: data.price.finalPrice,
+      finalPrice: data?.price?.finalPrice ?? 0,
       priceNotes: data.notes ?? "",
       isDefinitive: false,
       materials: mapMaterialsToPriceInput(data)
@@ -169,9 +169,11 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
           methods.reset();
           queryClient.invalidateQueries({ queryKey: ["current-price"] });
           queryClient.invalidateQueries({ queryKey: ["price-history"] });
+          queryClient.invalidateQueries({ queryKey: ["product-snapshots"] });
           setEstimate(null);
         }
       } else {
+        console.log(result)
         toast.error(result?.error || "Error al registrar el precio");
       }
     });

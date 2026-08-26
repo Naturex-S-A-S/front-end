@@ -130,7 +130,7 @@ const RegisterPriceCard = ({ estimate, isRegisteringPrice, onRegister }: Props) 
             "& input": { fontWeight: 700, fontSize: "1.1rem" }
           }}
         />
-        {!isNaN(estimate.price.commissionValue) && (
+        {estimate.price.commissionValue !== null && (
           <WaterfallRow label={`Comisión`} value={formatCurrency(estimate.price.commissionValue)} />
         )}
         <WaterfallRow label={`Margen de ganancia`} value={formatCurrency(estimate.costDifference)} />

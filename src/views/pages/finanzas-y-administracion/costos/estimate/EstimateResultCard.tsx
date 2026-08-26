@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, Box, Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { Icon } from "@iconify/react";
 
 import CustomCard from "@/@core/components/mui/Card";
@@ -40,23 +40,6 @@ const EstimateResultCard = ({
       >
         <Grid container spacing={4}>
           <CostSummaryCards estimate={estimate} />
-
-          {(estimate.materialIncomplete || estimate.cifIncomplete) && (
-            <Grid item xs={12}>
-              <Box display='flex' flexDirection='column' gap={1}>
-                {estimate.materialIncomplete && (
-                  <Alert severity='warning' icon={<Icon icon='mdi:alert-outline' />}>
-                    Algunos materiales no tienen costo registrado. La estimación puede estar incompleta.
-                  </Alert>
-                )}
-                {estimate.cifIncomplete && (
-                  <Alert severity='warning' icon={<Icon icon='mdi:alert-outline' />}>
-                    El costo CIF no está incluido en la estimación.
-                  </Alert>
-                )}
-              </Box>
-            </Grid>
-          )}
 
           <Grid item xs={12} md={!readOnly && estimate ? 8 : 12}>
             <CostBreakdown
