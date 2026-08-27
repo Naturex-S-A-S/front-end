@@ -5,6 +5,7 @@ import { useTransition } from "react";
 import { Box, Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
+import { Icon } from "@iconify/react";
 import toast from "react-hot-toast";
 
 import Header from "@/components/layout/detail/inventory/Header";
@@ -14,6 +15,7 @@ import { updateOrderSupplyStatus } from "@/api/order/actions";
 import type { IOrderSupply } from "@/types/pages/order";
 import Swal from "@/lib/swal";
 import { STATUS } from "@/utils/constant";
+import { exportOrderSupplyToExcel } from "@/utils/excel/orderSupply";
 
 type Props = {
   orderSupply: IOrderSupply | null;
@@ -47,6 +49,10 @@ const OrderSupplyDetailClient = ({ orderSupply }: Props) => {
     });
   };
 
+  const handleExportExcel = () => {
+    exportOrderSupplyToExcel(orderSupply);
+  };
+
   const handleCancel = () => {
     Swal.fire({
       title: "¿Estás seguro de que deseas cancelar la orden de aprovisionamiento?",
@@ -75,6 +81,14 @@ const OrderSupplyDetailClient = ({ orderSupply }: Props) => {
         createdAt={orderSupply.dateCreated}
         actions={
           <>
+            <Button
+              variant='outlined'
+              color='success'
+              startIcon={<Icon icon='mdi:file-excel-outline' />}
+              onClick={handleExportExcel}
+            >
+              Descargar Excel
+            </Button>
             {orderSupply.status === STATUS.en_proceso && (
               <Button variant='contained' color='primary' onClick={handleFinalize}>
                 Finalizar
