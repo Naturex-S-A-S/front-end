@@ -1,34 +1,111 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# admin-naturex
 
-## Getting Started
+Panel de administración web para la gestión de producción e inventarios de Naturex.
 
-First, run the development server:
+Aplicación full-stack construida con **Next.js 14 (App Router)** que centraliza inventario, órdenes de producción, formulaciones, ventas, proveedores, costos y usuarios en una sola plataforma, con autenticación por roles y permisos granulares por módulo.
+
+---
+
+## Características
+
+- **Inventario:** materia prima, producto terminado y material de empaque, con listados, detalles y kardex (entradas, salidas, ajustes).
+- **Producción:** órdenes de producción, órdenes de aprovisionamiento, formulaciones y gestión de empaque.
+- **Finanzas y administración:** órdenes de venta, proveedores, configuración de costos y gestión CIF.
+- **Soporte:** usuarios, roles y permisos, parámetros generales del sistema (bodegas, racks) y reportes.
+- **Core:** dashboard, autenticación, perfil, notificaciones en tiempo real (WebSockets).
+
+## Tech Stack
+
+| Capa | Tecnología |
+|------|-----------|
+| Framework | Next.js 14 (App Router) |
+| Lenguaje | TypeScript |
+| UI | MUI v5 + Tailwind CSS 3 |
+| Autenticación | next-auth v4 + JWT (jose) |
+| Data fetching | React Query v5 + axios / fetch nativo |
+| Formularios | react-hook-form + yup |
+| Permisos | CASL v6 |
+| Grids | @mui/x-data-grid v7 |
+| Testing | vitest + Testing Library + Playwright |
+| Package manager | pnpm |
+
+## Requisitos previos
+
+- Node.js 18+
+- pnpm (v10.30.0 recomendado)
+
+## Instalación
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+> `postinstall` compila automáticamente los iconos de Iconify (`pnpm build:icons`).
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Variables de entorno
 
-## Learn More
+Crea un archivo `.env` en la raíz:
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Descripción |
+|----------|-------------|
+| `NEXTAUTH_SECRET` | Secreto para firmar tokens de next-auth |
+| `NEXTAUTH_URL` | URL base de la app (`http://localhost:3000/`) |
+| `NEXT_PUBLIC_API_BASE_URL` | URL del backend (expuesta al navegador) |
+| `API_BASE_URL` | URL del backend solo server-side |
+| `BASEPATH` | BasePath de Next.js (vacío en dev) |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+| Comando | Descripción |
+|---------|-------------|
+| `pnpm dev` | Servidor de desarrollo |
+| `pnpm fast` | Servidor de desarrollo con turbo mode |
+| `pnpm build` | Build de producción |
+| `pnpm start` | Servir build de producción |
+| `pnpm lint` | ESLint |
+| `pnpm lint:fix` | ESLint con autofix |
+| `pnpm format` | Prettier |
+| `pnpm test` | Vitest (modo watch) |
+| `pnpm test:run` | Vitest (modo CI) |
+| `pnpm test:coverage` | Vitest con cobertura |
+| `pnpm build:icons` | Compilar iconos Iconify |
 
-## Deploy on Vercel
+## Estructura del proyecto
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+src/
+├── app/                    # Next.js 14 App Router
+│   ├── (dashboard)/        # Rutas autenticadas con layout completo
+│   └── (blank-layout-pages)/ # Páginas sin chrome (login, test)
+├── api/                    # Capa de acceso a API REST
+│   ├── instances.ts        # Axios con interceptor Bearer (cliente)
+│   ├── apiFetch.ts         # fetch nativo con ISR + timeout (servidor)
+│   └── <dominio>/          # feedstock, product, order, cif, costs, ...
+├── hooks/                  # Custom hooks con React Query
+├── views/pages/            # Lógica de negocio por sección
+├── components/             # UI compartida (layout, providers, theme)
+├── @core/                  # Core reutilizable (MUI wrappers, theme, hooks)
+├── @layouts/ @menu/        # Sistema de layouts y navegación
+├── types/                  # Tipos TypeScript
+├── utils/                  # ability, columns, schemas, format
+├── configs/                # themeConfig
+├── data/navigation/        # Datos del menú de navegación
+├── middleware.ts           # Chequeo de expiración del token JWT
+└── lib/nextAuthOptions.ts  # Configuración de next-auth
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Capturas
+
+> _Pendiente — añade aquí capturas de pantalla del panel._
+
+## Testing
+
+- **Unit tests:** `pnpm test:run` (vitest + jsdom + Testing Library).
+- **E2E:** `npx playwright test`.
+
+## Estado del proyecto
+
+Proyecto privado de uso interno. No está publicado ni open-source.
