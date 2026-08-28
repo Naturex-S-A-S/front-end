@@ -53,6 +53,7 @@
     "server-only": "0.0.1",
     "styled-components": "^6.3.9",
     "sweetalert2": "^11.26.3",
+    "xlsx-js-style": "^1.2.0",
     "yup": "^1.7.1"
   },
   "devDependencies": {
