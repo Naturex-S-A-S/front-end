@@ -13,6 +13,7 @@ import type { RegisterPriceFormValues } from "@/utils/schemas/costs";
 import type { ICostEstimate } from "@/types/pages/costs";
 
 interface Props {
+  readonly: boolean;
   estimate: ICostEstimate;
   isRegisteringPrice: boolean;
   onRegister: () => void;
@@ -41,7 +42,7 @@ const WaterfallRow = ({
   </Box>
 );
 
-const RegisterPriceCard = ({ estimate, isRegisteringPrice, onRegister }: Props) => {
+const RegisterPriceCard = ({ readonly, estimate, isRegisteringPrice, onRegister }: Props) => {
   const {
     register,
     handleSubmit,
@@ -86,6 +87,7 @@ const RegisterPriceCard = ({ estimate, isRegisteringPrice, onRegister }: Props) 
             <CustomTextField
               label='Insumos (%)'
               type='number'
+              disabled={readonly}
               {...register("wastePct", { valueAsNumber: true })}
               InputProps={{ inputProps: { min: 0, step: 1 } }}
               error={!!errors.wastePct}
@@ -96,11 +98,11 @@ const RegisterPriceCard = ({ estimate, isRegisteringPrice, onRegister }: Props) 
             <CustomTextField
               label='Comisión (%)'
               type='number'
+              disabled={readonly}
               {...register("comissionPct", { valueAsNumber: true })}
               InputProps={{ inputProps: { min: 0, step: 1 } }}
               error={!!errors.comissionPct}
               helperText={errors.comissionPct?.message as string}
-              sx={{ mt: 1 }}
             />
           </Grid>
           {/*<Grid item xs={6}>
@@ -121,6 +123,7 @@ const RegisterPriceCard = ({ estimate, isRegisteringPrice, onRegister }: Props) 
         <CustomTextField
           label='Precio Final'
           type='number'
+          disabled={readonly}
           placeholder='Ej: 12500.00'
           {...register("finalPrice", { valueAsNumber: true })}
           error={!!errors.finalPrice}
@@ -130,7 +133,7 @@ const RegisterPriceCard = ({ estimate, isRegisteringPrice, onRegister }: Props) 
             "& input": { fontWeight: 700, fontSize: "1.1rem" }
           }}
         />
-        {estimate.price.commissionValue !== null && (
+        {Number.isFinite(estimate.price.commissionValue) && (
           <WaterfallRow label={`Comisión`} value={formatCurrency(estimate.price.commissionValue)} />
         )}
         <WaterfallRow label={`Margen de ganancia`} value={formatCurrency(estimate.costDifference)} />
@@ -143,6 +146,7 @@ const RegisterPriceCard = ({ estimate, isRegisteringPrice, onRegister }: Props) 
         <Divider sx={{ my: 1.5 }} />
         <CustomTextField
           label='Notas'
+          disabled={readonly}
           placeholder='Ej: Precio revisado con CIF de Q2 2026'
           multiline
           rows={2}
@@ -150,7 +154,7 @@ const RegisterPriceCard = ({ estimate, isRegisteringPrice, onRegister }: Props) 
           sx={{ mb: 2 }}
         />
         <FormControlLabel
-          control={<Checkbox {...register("isDefinitive")} />}
+          control={<Checkbox disabled={readonly} {...register("isDefinitive")} />}
           label={
             <Box>
               <Typography variant='caption' color='text.secondary'>
@@ -159,14 +163,16 @@ const RegisterPriceCard = ({ estimate, isRegisteringPrice, onRegister }: Props) 
             </Box>
           }
         />
-        <CustomButton
-          type='submit'
-          isLoading={isRegisteringPrice}
-          startIcon={<Icon icon='mdi:content-save-outline' />}
-          className='w-full'
-        >
-          Guardar Precio
-        </CustomButton>
+        {!readonly && (
+          <CustomButton
+            type='submit'
+            isLoading={isRegisteringPrice}
+            startIcon={<Icon icon='mdi:content-save-outline' />}
+            className='w-full'
+          >
+            Guardar Precio
+          </CustomButton>
+        )}
       </form>
     </CustomCard>
   );

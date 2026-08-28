@@ -144,8 +144,12 @@ const ConfigForm = ({ initialData, periodsCount }: Props) => {
           gridItemProps={{ xs: 12, md: 4 }}
           items={[
             { icon: "mdi:calendar-clock", label: "Meses de Promedio CIF", value: config.cifAveragingMonths },
-            { icon: "mdi:package-variant-closed", label: "% Merma por Defecto", value: `${config.defaultWastePct}%` },
-            { icon: "mdi:percent", label: "Margen de ganancia", value: `${config.defaultMarginPct}%` },
+            {
+              icon: "mdi:package-variant-closed",
+              label: "% Desperdicio por Defecto",
+              value: `${config.defaultWastePct}%`
+            },
+            { icon: "mdi:percent", label: "Margen de ganancia", value: `${config.defaultMarginPct}%` }
           ]}
         />
       </CustomCard>
@@ -191,7 +195,7 @@ const ConfigForm = ({ initialData, periodsCount }: Props) => {
                     {...field}
                     fullWidth
                     type='number'
-                    label='% Merma por Defecto'
+                    label='% Desperdicio por Defecto'
                     placeholder='Ej: 5.00'
                     onChange={e => field.onChange(Number(e.target.value))}
                     error={!!methods.formState.errors.defaultWastePct}

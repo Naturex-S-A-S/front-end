@@ -98,6 +98,11 @@ export const useColumns = ({ handleActive, filters, isPending }: params): GridCo
       )
     },
     {
+      field: "defaultProviderName",
+      headerName: "Proveedor",
+      width: 100
+    },
+    {
       field: "categories",
       headerName: "Categorias",
       width: 150,

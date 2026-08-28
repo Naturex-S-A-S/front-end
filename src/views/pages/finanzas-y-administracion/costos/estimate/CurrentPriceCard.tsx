@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, Box, Typography } from "@mui/material";
+import { Box, Card, CardContent, Chip, Grid, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
@@ -23,7 +23,7 @@ const CurrentPriceCard = ({ productId }: Props) => {
 
   if (isLoading) {
     return (
-      <Box py={2} display='flex' justifyContent='center'>
+      <Box py={4} display='flex' justifyContent='center'>
         <Loader type='component' />
       </Box>
     );
@@ -31,50 +31,96 @@ const CurrentPriceCard = ({ productId }: Props) => {
 
   if (!price) return null;
 
+  const hasWarning = price.marginWarning;
+
   return (
-    <Alert
-      severity={price.marginWarning ? "warning" : "info"}
-      icon={<Icon icon={price.marginWarning ? "mdi:alert-circle-outline" : "mdi:currency-usd"} fontSize={22} />}
-      sx={{ "& .MuiAlert-message": { width: "100%" } }}
+    <Card
+      elevation={0}
+      sx={{
+        borderLeft: 4,
+        borderColor: hasWarning ? "warning.main" : "success.main",
+        transition: "all 0.2s ease-in-out",
+        "&:hover": {
+          boxShadow: "0 4px 12px rgba(0,0,0,0.08)"
+        }
+      }}
     >
-      <Box display='flex' flexWrap='wrap' gap={2} alignItems='center' justifyContent='space-between'>
-        <Box display='flex' gap={4} flexWrap='wrap'>
-          <Box>
-            <Typography variant='caption' color='text.secondary'>
-              Precio Vigente
-            </Typography>
-            <Typography variant='h6' fontWeight={700}>
-              {formatCurrency(price.finalPrice)}
-            </Typography>
-          </Box>
-          <Box>
-            <Typography variant='caption' color='text.secondary'>
-              Margen
-            </Typography>
-            <Typography variant='body2' fontWeight={600} color={price.marginWarning ? "warning.main" : "success.main"}>
-              {price.utilityPct.toFixed(2)}%
-            </Typography>
-          </Box>
-          <Box>
-            <Typography variant='caption' color='text.secondary'>
-              Desde
-            </Typography>
-            <Typography variant='body2'>{moment(price.effectiveFrom).format("DD/MM/YYYY")}</Typography>
-          </Box>
-          <Box>
-            <Typography variant='caption' color='text.secondary'>
-              Registrado por
-            </Typography>
-            <Typography variant='body2'>{price.nameUser?.split(" ")[0] ?? "—"}</Typography>
-          </Box>
-        </Box>
-        {price.marginWarning && (
-          <Typography variant='caption' color='warning.dark' fontWeight={600}>
-            Margen por debajo del esperado
+      <CardContent sx={{ py: 3, px: 4 }}>
+        <Box display='flex' alignItems='center' gap={1.5} mb={3}>
+          <Icon
+            icon={hasWarning ? "mdi:alert-circle" : "mdi:cash-check"}
+            fontSize={22}
+            color={hasWarning ? "#ed6c02" : "#2e7d32"}
+          />
+          <Typography variant='h5' fontWeight={500}>
+            Precio Vigente
           </Typography>
+          {hasWarning && (
+            <Chip
+              label='Margen bajo'
+              size='small'
+              color='warning'
+              sx={{ height: 20, fontSize: "0.7rem", fontWeight: 600 }}
+            />
+          )}
+        </Box>
+
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6} md={3}>
+            <Box>
+              <Typography variant='h5' color='text.secondary' display='block' mb={0.5}>
+                Precio
+              </Typography>
+              <Typography variant='h5' fontWeight={700} color='text.primary'>
+                {formatCurrency(price.finalPrice)}
+              </Typography>
+            </Box>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <Box>
+              <Typography variant='h5' color='text.secondary' display='block' mb={0.5}>
+                Utilidad
+              </Typography>
+              <Typography variant='h6' fontWeight={600} color={hasWarning ? "warning.main" : "success.main"}>
+                {price.utilityPct.toFixed(2)}%
+              </Typography>
+            </Box>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <Box>
+              <Typography variant='h5' color='text.secondary' display='block' mb={0.5}>
+                Vigente desde
+              </Typography>
+              <Typography variant='body1' fontWeight={500}>
+                {moment(price.effectiveFrom).format("DD/MM/YYYY")}
+              </Typography>
+            </Box>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <Box>
+              <Typography variant='h5' color='text.secondary' display='block' mb={0.5}>
+                Registrado por
+              </Typography>
+              <Typography variant='body1' fontWeight={500}>
+                {price.nameUser?.split(" ")[0] ?? "—"}
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid>
+
+        {hasWarning && (
+          <Box mt={3} p={1.5} borderRadius={1} display='flex' alignItems='center' gap={1}>
+            <Icon icon='mdi:information-outline' fontSize={18} color='warning.dark' />
+            <Typography variant='h6' color='warning.dark' fontWeight={500}>
+              El margen se encuentra por debajo del esperado
+            </Typography>
+          </Box>
         )}
-      </Box>
-    </Alert>
+      </CardContent>
+    </Card>
   );
 };
 

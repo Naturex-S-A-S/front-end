@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { useQuery } from "@tanstack/react-query";
 import type { GridColDef } from "@mui/x-data-grid";
@@ -34,7 +34,25 @@ const SnapshotHistory = ({ productId, onViewDetail }: Props) => {
 
     for (const item of snapshots) {
       for (const detail of item?.cifDetails) {
-        seen.add(detail?.name ?? "");
+        if (detail?.name) {
+          seen.add(detail.name);
+        }
+      }
+    }
+
+    return Array.from(seen);
+  }, [snapshots]);
+
+  const cifDetailNamesTotal = useMemo(() => {
+    if (!snapshots) return [];
+
+    const seen = new Set<string>();
+
+    for (const item of snapshots) {
+      for (const detail of item?.cifDetails) {
+        if (detail?.name) {
+          seen.add(`Total ${detail.name}`);
+        }
       }
     }
 
@@ -63,22 +81,25 @@ const SnapshotHistory = ({ productId, onViewDetail }: Props) => {
         minWidth: 100
       },
       {
-        field: "totalCostWithTax",
-        headerName: "Costo + IVA",
+        field: "totalCostWithWaste",
+        headerName: "Costo",
         flex: 1,
         minWidth: 120,
         renderCell: params => <>{formatCurrency(params.value)}</>
       },
       {
-        field: "wasteValue",
+        field: "wastePct",
         headerName: "Desperdicio %",
+        width: 110,
+        type: "number",
+        renderCell: params => <>{params.value ? `${params.value} %` : "-"}</>
+      },
+      {
+        field: "wasteValue",
+        headerName: "Desperdicio",
         width: 150,
         type: "number",
-        renderCell: params => (
-          <>
-            {formatCurrency(params.value)} {params.row.wastePct != null && <span>({params.row.wastePct}%)</span>}
-          </>
-        )
+        renderCell: params => <>{formatCurrency(params.value)}</>
       },
       {
         field: "finalPrice",
@@ -88,11 +109,22 @@ const SnapshotHistory = ({ productId, onViewDetail }: Props) => {
         renderCell: params => <>{formatCurrency(params.value)}</>
       },
       {
-        field: "marginAmount",
+        field: "costDifference",
         headerName: "Diferencia",
         width: 120,
         type: "number",
         renderCell: params => <>{formatCurrency(params.value)}</>
+      },
+      {
+        field: "utilityPct",
+        headerName: "Utilidad",
+        width: 120,
+        type: "string",
+        renderCell: params => (
+          <Typography variant='caption' color={params.row.marginWarning ? "warning.main" : "success.main"}>
+            {params.value ? `${params.value.toFixed(2)} %` : "-"}
+          </Typography>
+        )
       },
       {
         field: "totalInventoryCost",
@@ -109,15 +141,11 @@ const SnapshotHistory = ({ productId, onViewDetail }: Props) => {
         renderCell: params => <>{formatCurrency(params.value)}</>
       },
       {
-        field: "totalInventoryCostWithTax",
-        headerName: "Total %",
+        field: "totalInventoryCostWaste",
+        headerName: "Total Desperdicio",
         width: 150,
         type: "number",
-        renderCell: params => (
-          <>
-            {formatCurrency(params.value)} {params.row.wastePct != null && <span>({params.row.wastePct}%)</span>}
-          </>
-        )
+        renderCell: params => <>{formatCurrency(params.value)}</>
       },
       {
         field: "totalInventoryMarginAmount",
@@ -138,10 +166,22 @@ const SnapshotHistory = ({ productId, onViewDetail }: Props) => {
     const cifColumns: GridColDef[] = cifDetailNames.map(name => ({
       field: `cif_${name}`,
       headerName: name,
-      width: 130,
+      width: 150,
       type: "number",
       renderCell: params => {
         const detail = params.row.cifDetails?.find((d: { name: string }) => d.name === name);
+
+        return <>{formatCurrency(detail?.totalAmount)}</>;
+      }
+    }));
+
+    const cifTotalColumns: GridColDef[] = cifDetailNamesTotal.map(name => ({
+      field: `cif_${name}`,
+      headerName: name,
+      width: 150,
+      type: "number",
+      renderCell: params => {
+        const detail = params.row.cifDetails?.find((d: { name: string }) => `Total ${d.name}` === name);
 
         return <>{formatCurrency(detail?.totalInventoryAmount)}</>;
       }
@@ -158,8 +198,8 @@ const SnapshotHistory = ({ productId, onViewDetail }: Props) => {
       )
     };
 
-    return [actionColumn, ...baseColumns, ...cifColumns];
-  }, [cifDetailNames, onViewDetail]);
+    return [actionColumn, ...baseColumns, ...cifColumns, ...cifTotalColumns];
+  }, [cifDetailNames, onViewDetail, cifDetailNamesTotal]);
 
   if (isLoading) {
     return (

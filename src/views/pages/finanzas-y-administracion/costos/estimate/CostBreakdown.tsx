@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, type ChangeEvent } from "react";
 
-import { Grid, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Grid, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 
 import CustomCard from "@/@core/components/mui/Card";
 import CustomTextField from "@/@core/components/mui/TextField";
@@ -149,20 +149,17 @@ const MaterialTable = ({
           <TableRow key={index}>
             <TableCell>{mat.materialName}</TableCell>
             <TableCell align='right'>
-              {onMaterialChange ? (
-                <CustomTextField
-                  type='text'
-                  value={mat.baseQuantity ?? ""}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    onMaterialChange(index, e.target.value);
-                  }}
-                  InputProps={{ inputProps: { min: 0, step: "any" } }}
-                  sx={{ width: 50 }}
-                  size='small'
-                />
-              ) : (
-                <Typography variant='body2'>{mat.baseQuantity ?? ""}</Typography>
-              )}
+              <CustomTextField
+                type='text'
+                disabled={!onMaterialChange}
+                value={mat.baseQuantity ?? ""}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  onMaterialChange && onMaterialChange(index, e.target.value);
+                }}
+                InputProps={{ inputProps: { min: 0, step: "any" } }}
+                sx={{ width: 50 }}
+                size='small'
+              />
             </TableCell>
             <TableCell align='right'>{formatCurrency(mat.cost)}</TableCell>
             {type === "feedstock" && <TableCell align='right'>{formatCurrency(mat.baseCost)}</TableCell>}

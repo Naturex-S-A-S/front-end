@@ -41,16 +41,17 @@ const EstimateResultCard = ({
         <Grid container spacing={4}>
           <CostSummaryCards estimate={estimate} />
 
-          <Grid item xs={12} md={!readOnly && estimate ? 8 : 12}>
+          <Grid item xs={12} md={8}>
             <CostBreakdown
               estimate={estimate}
               onMaterialChange={readOnly ? undefined : onMaterialChange}
               onEstimateEdit={onEstimateEdit}
             />
           </Grid>
-          {!readOnly && estimate && (
+          {estimate && (
             <Grid item xs={12} md={4}>
               <RegisterPriceCard
+                readonly={readOnly}
                 estimate={estimate}
                 isRegisteringPrice={isRegisteringPrice ?? false}
                 onRegister={onRegisterPrice ?? (() => {})}

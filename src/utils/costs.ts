@@ -6,7 +6,7 @@ export const mapMaterialsToPriceInput = (estimate: ICostEstimate): RegisterPrice
     idMaterial: m.idMaterial,
     materialType: m.materialType,
     quantity: m.baseQuantity,
-    unitCost: m.realUnitCost
+    unitCost: m.cost
   }));
 
 export const applyMaterialQuantityChange = (estimate: ICostEstimate, index: number, value: string): ICostEstimate => {

@@ -27,7 +27,7 @@ const typeConfig: Record<string, { label: string; icon: string; color: string }>
 
 const statusConfig: Record<string, { label: string; color: "warning" | "success" | "default" }> = {
   draft: { label: "Borrador", color: "warning" },
-  completed: { label: "Completado", color: "success" },
+  final: { label: "Completado", color: "success" },
   transient: { label: "Transitorio", color: "default" }
 };
 
@@ -66,7 +66,7 @@ const SnapshotDetailDialog = ({ snapshotId, open, onClose, onSaved }: Props) => 
     loadDetail(snapshotId);
   }, [snapshotId, open]);
 
-  const readOnly = data?.status !== "draft";
+  const readOnly = data?.status !== "draft" || data?.snapshotType !== "estimation";
   const type = data ? typeConfig[data.snapshotType] ?? typeConfig.estimation : null;
   const status = data ? statusConfig[data.status] ?? statusConfig.transient : null;
 
@@ -137,7 +137,7 @@ const SnapshotDetailDialog = ({ snapshotId, open, onClose, onSaved }: Props) => 
                 </Grid>
                 <Grid item>
                   <Typography variant='caption' color='text.secondary'>
-                    % Merma: <strong>{data.wastePct}%</strong>
+                    % Desperdicio: <strong>{data.wastePct}%</strong>
                   </Typography>
                 </Grid>
                 <Grid item>

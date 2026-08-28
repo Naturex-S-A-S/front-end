@@ -86,7 +86,7 @@ export interface ICostEstimate {
 }
 
 export interface IProductPrice {
-  id: number | null;
+  id: number;
   idFinalProduct: string;
   idSnapshot: number | null;
   commissionPct: number;
@@ -174,13 +174,14 @@ export interface IProductInventorySummary {
   unit: string;
   productFullName: string;
   inventoryUnits: number;
-  totalCostWithTax: number | null;
+  totalCostWithWaste: number | null;
   wastePct: number | null;
   wasteValue: number | null;
   finalPrice: number | null;
   marginPct: number | null;
   marginAmount: number | null;
   totalInventoryCost: number | null;
+  totalInventoryCostWaste: number | null;
   totalInventoryFinalPrice: number | null;
   totalInventoryCostWithTax: number | null;
   totalInventoryMarginAmount: number | null;

@@ -53,13 +53,13 @@ const CostSummaryCards = ({ estimate }: Props) => {
         <CustomCard>
           <Box textAlign='center' py={2}>
             <Typography variant='caption' color='text.secondary'>
-              Costo Total del Lote
+              Precio Sugerido
             </Typography>
             <Typography variant='h5' fontWeight={600} color='primary.main'>
-              {formatCurrency(estimate.totalCost)}
+              {formatCurrency(estimate.price.suggestedPrice)}
             </Typography>
             <Typography variant='caption' color='text.secondary'>
-              Material: {formatCurrency(materialCost)} | CIF: {formatCurrency(estimate.totalCif)}
+              Margen: {estimate.defaultMarginPct} % | Ganancia: {formatCurrency(estimate.defaultMarginValue)}
             </Typography>
           </Box>
         </CustomCard>

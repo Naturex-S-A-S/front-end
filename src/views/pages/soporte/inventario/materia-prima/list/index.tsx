@@ -17,6 +17,7 @@ const List = () => {
   const [filters, setFilters] = useState(defaultFilters);
   const { feedstock, isLoading } = useFeedstock(filters);
   const { handleActive, isPending } = usePatchFeedstock();
+
   const colDefs = useColumns({ handleActive, filters, isPending });
 
   const onApplyFilters = (filters: any) => {

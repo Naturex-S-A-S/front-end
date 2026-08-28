@@ -80,7 +80,7 @@ export async function updateSnapshotAction(
   data: RegisterPricePayload
 ): Promise<ActionResult> {
   try {
-    await apiFetch(`costs/products/${productId}/snapshots/${snapshotId}`, {
+    await apiFetch(`costs/products/${productId}/snapshot/${snapshotId}`, {
       method: "PUT",
       body: JSON.stringify(data)
     });

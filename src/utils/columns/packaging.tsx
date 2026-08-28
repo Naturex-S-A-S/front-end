@@ -63,6 +63,11 @@ export const useColumns = ({ handleActive, isPending }: params): GridColDef[] =>
       width: 80
     },
     {
+      field: "defaultProviderName",
+      headerName: "Proveedor",
+      width: 100
+    },
+    {
       field: "categories",
       headerName: "Categorias",
       width: 150,

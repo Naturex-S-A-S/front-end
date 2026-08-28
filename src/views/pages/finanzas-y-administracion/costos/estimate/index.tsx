@@ -9,9 +9,9 @@ import useEstimate from "../../../../../hooks/costs/useEstimate";
 import EstimateForm from "./EstimateForm";
 import EstimateResultCard from "./EstimateResultCard";
 import CurrentPriceCard from "./CurrentPriceCard";
-import PriceHistory from "./PriceHistory";
 import SnapshotHistory from "./SnapshotHistory";
 import SnapshotDetailDialog from "./SnapshotDetailDialog";
+import PriceHistory from "./PriceHistory";
 
 const EstimateView = () => {
   const {

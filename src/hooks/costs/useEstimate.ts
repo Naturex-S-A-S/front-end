@@ -66,7 +66,7 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
     setEstimate(data);
     methods.reset({
       wastePct: data.wastePct,
-      comissionPct: 0,
+      comissionPct: data?.price?.commissionPct ?? 0,
       finalPrice: data?.price?.finalPrice ?? 0,
       priceNotes: data.notes ?? "",
       isDefinitive: false,
@@ -80,7 +80,7 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
     const updated = applyMaterialQuantityChange(estimate, index, value);
 
     setEstimate(updated);
-    methods.setValue("materials", mapMaterialsToPriceInput(updated));
+    methods.setValue("materials", mapMaterialsToPriceInput(updated), { shouldValidate: true });
   };
 
   const handleEstimateEdit = (updatedEstimate: Partial<ICostEstimate>) => {
@@ -143,7 +143,7 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
 
     const payload: RegisterPricePayload = {
       idFinalProduct: isSnapshotUpdate ? estimate.idFinalProduct : selectedProduct!.id,
-      units: isSnapshotUpdate ? estimate.quantityKg : quantityKg,
+      units: isSnapshotUpdate ? estimate.units : quantityKg,
       wastePct: values.wastePct,
       commissionPct: values.comissionPct,
       finalPrice: values.finalPrice,
@@ -154,10 +154,10 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
 
     startPriceTransition(async () => {
       const result =
-        isSnapshotUpdate && selectedProduct?.id
-          ? await updateSnapshotAction(selectedProduct.id, snapshotId, payload)
+        isSnapshotUpdate && snapshotId !== null
+          ? await updateSnapshotAction(estimate.idFinalProduct, snapshotId, payload)
           : selectedProduct?.id
-            ? await registerProductPrice(selectedProduct?.id, payload)
+            ? await registerProductPrice(selectedProduct.id, payload)
             : null;
 
       if (result?.success) {
@@ -173,7 +173,6 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
           setEstimate(null);
         }
       } else {
-        console.log(result)
         toast.error(result?.error || "Error al registrar el precio");
       }
     });
