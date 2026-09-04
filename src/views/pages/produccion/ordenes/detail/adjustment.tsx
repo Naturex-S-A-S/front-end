@@ -1,17 +1,11 @@
 import type { FC } from "react";
 import { useCallback, useEffect, useState } from "react";
 
-import { useRouter } from "next/navigation";
-
-import { Box, Card, CardContent, CardHeader, Grid, MenuItem } from "@mui/material";
+import { Box, Card, CardContent, CardHeader, Grid } from "@mui/material";
 
 import { Controller, useForm } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-import toast from "react-hot-toast";
 
 import type { IOrderDetail, IOrderItem, IOrderKardex } from "@/types/pages/order";
 import CreateButton from "@/components/layout/shared/CreateButton";
@@ -21,20 +15,14 @@ import CustomTextField from "@/@core/components/mui/TextField";
 import CustomButton from "@/@core/components/mui/Button";
 import { adjustmentMaterialSchema, adjustmentProductSchema, categoryOnlySchema } from "@/utils/schemas/order";
 import AdjustmentList from "./adjustmentList";
-import {
-  postKardexInputAdjustment as postKardexInputAdjustmentFeedStock,
-  postKardexOutputAdjustment
-} from "@/api/feedstock";
-
-import { postKardexInputAdjustment as postKardexInputAdjustmentProduct } from "@/api/product";
-import { alertMessageErrors } from "@/utils/messages";
-import GroupedAutocomplete from "@/@core/components/mui/GroupedAutocomplete";
+import MaterialFormFields from "./MaterialFormFields";
+import ProductFormFields from "./ProductFormFields";
+import { useAdjustmentMutations } from "./useAdjustmentMutations";
 import useGetWarehouseList from "@/hooks/warehouse/useGetWarehouse";
-import CustomDatePicker from "@/@core/components/react-datepicker";
 
 type Option = { id: number; label: string };
 
-interface AdjustmentFormValues {
+export interface AdjustmentFormValues {
   category?: Option | null;
   material?: Option | null;
   product?: Option | null;
@@ -61,17 +49,13 @@ interface IProps {
 const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, canCreate }) => {
   const [open, setOpen] = useState(false);
 
-  const router = useRouter();
-
   const { warehouseList } = useGetWarehouseList();
-  const queryClient = useQueryClient();
 
   const {
     control,
     handleSubmit,
     watch,
     reset,
-    setValue,
     formState: { errors }
   } = useForm<AdjustmentFormValues>({
     defaultValues: {
@@ -117,103 +101,39 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
     label: `${product.finalProduct.name} ${product.finalProduct.measurement}${product.finalProduct.unit}`
   }));
 
-  const { mutate: mutateInputProduct, isPending: isPendingInputProduct } = useMutation({
-    mutationFn: postKardexInputAdjustmentProduct,
-    onSuccess: () => {
-      handleOnReset();
-      toogleDialog();
-      queryClient.invalidateQueries({ queryKey: ["getOrderById", Number(orderId)] });
-      toast.success("Ajuste registrado correctamente");
-      router.refresh();
+  const handleOnReset = useCallback(
+    (value?: any) => {
+      reset({
+        category: value,
+        material: null,
+        product: null,
+        type: null,
+        charge: "",
+        quantity: null,
+        observation: "",
+        classification: "",
+        batch,
+        rack: null,
+        expiration_date_1: "",
+        expiration_date_2: ""
+      });
     },
-    onError: (error: any) => {
-      alertMessageErrors(error, "Error al registrar el ajuste");
-    }
+    [reset, batch]
+  );
+
+  const { submitAdjustment, isPending } = useAdjustmentMutations({
+    orderId,
+    isCategoryMaterial,
+    isCategoryProduct,
+    onReset: handleOnReset,
+    onClose: toogleDialog
   });
-
-  const { mutate: mutateInputFeedStock, isPending: isPendingInputFeedStock } = useMutation({
-    mutationFn: postKardexInputAdjustmentFeedStock,
-    onSuccess: () => {
-      handleOnReset();
-      toogleDialog();
-      queryClient.invalidateQueries({ queryKey: ["getOrderById", Number(orderId)] });
-      toast.success("Ajuste registrado correctamente");
-      router.refresh();
-    },
-    onError: (error: any) => {
-      alertMessageErrors(error, "Error al registrar el ajuste");
-    }
-  });
-
-  const { mutate: mutateOutput, isPending: isPendingOutput } = useMutation({
-    mutationFn: postKardexOutputAdjustment,
-    onSuccess: () => {
-      handleOnReset();
-      toogleDialog();
-      queryClient.invalidateQueries({ queryKey: ["getOrderById", Number(orderId)] });
-      toast.success("Ajuste registrado correctamente");
-      router.refresh();
-    },
-    onError: (error: any) => {
-      alertMessageErrors(error, "Error al registrar el ajuste");
-    }
-  });
-
-  const handleOnSubmit = (values: any) => {
-    if (isCategoryMaterial) {
-      const payload = {
-        idMaterial: values.material?.id,
-        idOrder: orderId,
-        quantity: values.quantity,
-        batch: values.batch,
-        expirationDate1: values.expiration_date_1,
-        observation: values.observation,
-        idRack: values.rack?.id
-      };
-
-      if (values.type === "IN") {
-        mutateInputFeedStock(payload);
-      } else if (values.type === "OUT") {
-        mutateOutput(payload);
-      }
-    } else if (isCategoryProduct) {
-      const payload = {
-        idOrder: orderId,
-        idFinalProduct: values.product?.id,
-        batch: values.batch,
-        quantity: values.quantity,
-        observation: values.observation,
-        expirationDate1: values.expiration_date_1,
-        idRack: values.rack?.id
-      };
-
-      mutateInputProduct(payload);
-    }
-  };
-
-  const handleOnReset = useCallback((value?: any) => {
-    reset({
-      category: value,
-      material: null,
-      product: null,
-      type: null,
-      charge: "",
-      quantity: null,
-      observation: "",
-      classification: "",
-      batch,
-      rack: null,
-      expiration_date_1: "",
-      expiration_date_2: ""
-    });
-  }, []);
 
   useEffect(() => {
     handleOnReset();
   }, [batch, handleOnReset]);
 
   const handleOnChangeCategory = (_: any, value: any) => {
-    setValue("category", value);
     handleOnReset(value);
   };
 
@@ -227,7 +147,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
           </Box>
         )}
         <CustomDialog open={open} toogleDialog={toogleDialog} title='Realizar Ajuste'>
-          <form onSubmit={handleSubmit(handleOnSubmit)}>
+          <form onSubmit={handleSubmit(submitAdjustment)}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Controller
@@ -238,14 +158,8 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
                     <CustomAutocomplete
                       value={value}
                       options={[
-                        {
-                          id: 1,
-                          label: "Material de empaque / Materia prima"
-                        },
-                        {
-                          id: 2,
-                          label: "Producto"
-                        }
+                        { id: 1, label: "Material de empaque / Materia prima" },
+                        { id: 2, label: "Producto" }
                       ]}
                       onChange={handleOnChangeCategory}
                       renderInput={params => (
@@ -263,260 +177,25 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
               </Grid>
 
               {isCategoryMaterial && (
-                <>
-                  <Grid item xs={6}>
-                    <Controller
-                      name='material'
-                      control={control}
-                      rules={{ required: "Seleccione un material" }}
-                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
-                        <CustomAutocomplete
-                          value={value}
-                          options={materialOptions}
-                          onChange={(e, v: any) => onChange(v)}
-                          renderInput={params => (
-                            <CustomTextField
-                              {...params}
-                              label='Material'
-                              placeholder='Seleccione material'
-                              error={!!error}
-                              helperText={error?.message}
-                            />
-                          )}
-                        />
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={6}>
-                    <Controller
-                      name='type' // entrada o salida
-                      control={control}
-                      rules={{ required: "Seleccione entrada o salida" }}
-                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
-                        <CustomTextField
-                          select
-                          label='Tipo'
-                          value={value ?? ""}
-                          onChange={e => onChange(e.target.value)}
-                          error={!!error}
-                          helperText={error?.message}
-                        >
-                          <MenuItem value='IN'>Entrada</MenuItem>
-                          <MenuItem value='OUT'>Salida</MenuItem>
-                        </CustomTextField>
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={6}>
-                    <Controller
-                      name='batch'
-                      control={control}
-                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
-                        <CustomTextField
-                          disabled
-                          label='Lote'
-                          value={value ?? ""}
-                          onChange={e => onChange(e.target.value)}
-                          error={!!error}
-                          helperText={error?.message}
-                        />
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={6}>
-                    <Controller
-                      name='quantity'
-                      control={control}
-                      rules={{ required: "Ingrese la cantidad", min: { value: 1, message: "Cantidad mínima 1" } }}
-                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
-                        <CustomTextField
-                          type='number'
-                          label='Cantidad'
-                          value={value ?? ""}
-                          onChange={e => onChange(Number(e.target.value))}
-                          error={!!error}
-                          helperText={error?.message}
-                        />
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={6}>
-                    <CustomDatePicker
-                      name='expiration_date_1'
-                      control={control}
-                      label='Fecha expiración 1'
-                      errors={errors.expiration_date_1}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12} md={6} lg={4}>
-                    <Controller
-                      name='rack'
-                      control={control}
-                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
-                        <GroupedAutocomplete
-                          value={value}
-                          groups={warehouseList || []}
-                          getOptionLabel={(option: any) => option?.name || ""}
-                          groupOptionsKey='racks'
-                          onChange={(e: any, value: any) => {
-                            onChange(value);
-                          }}
-                          renderInput={(params: any) => (
-                            <CustomTextField
-                              {...params}
-                              label='Estante'
-                              placeholder='Seleccione un estante'
-                              error={!!error}
-                              helperText={error?.message}
-                            />
-                          )}
-                        />
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <Controller
-                      name='observation'
-                      control={control}
-                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
-                        <CustomTextField
-                          label='Observación'
-                          value={value ?? ""}
-                          onChange={e => onChange(e.target.value)}
-                          multiline
-                          rows={3}
-                          error={!!error}
-                          helperText={error?.message}
-                        />
-                      )}
-                    />
-                  </Grid>
-                </>
+                <MaterialFormFields
+                  control={control}
+                  errors={errors}
+                  materialOptions={materialOptions}
+                  warehouseList={warehouseList}
+                />
               )}
 
               {isCategoryProduct && (
-                <>
-                  <Grid item xs={12}>
-                    <Controller
-                      name='product'
-                      control={control}
-                      rules={{ required: "Seleccione un producto" }}
-                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
-                        <CustomAutocomplete
-                          value={value}
-                          options={productOptions}
-                          onChange={(e, v: any) => onChange(v)}
-                          renderInput={params => (
-                            <CustomTextField
-                              {...params}
-                              label='Producto'
-                              placeholder='Seleccione producto'
-                              error={!!error}
-                              helperText={error?.message}
-                            />
-                          )}
-                        />
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={6}>
-                    <Controller
-                      name='batch'
-                      control={control}
-                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
-                        <CustomTextField
-                          disabled
-                          label='Lote'
-                          value={value ?? ""}
-                          onChange={e => onChange(e.target.value)}
-                          error={!!error}
-                          helperText={error?.message}
-                        />
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12} md={6} lg={4}>
-                    <Controller
-                      name='rack'
-                      control={control}
-                      render={({ field: { value, onChange } }: any) => (
-                        <GroupedAutocomplete
-                          value={value}
-                          groups={warehouseList || []}
-                          getOptionLabel={(option: any) => option?.name || ""}
-                          groupOptionsKey='racks'
-                          onChange={(e: any, value: any) => {
-                            onChange(value);
-                          }}
-                          renderInput={(params: any) => (
-                            <CustomTextField {...params} label='Estante' placeholder='Seleccione un estante' />
-                          )}
-                        />
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={6}>
-                    <Controller
-                      name='quantity'
-                      control={control}
-                      rules={{ required: "Debe ingresar la cantidad", min: { value: 1, message: "Cantidad mínima 1" } }}
-                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
-                        <CustomTextField
-                          type='number'
-                          label='Cantidad'
-                          value={value ?? ""}
-                          onChange={e => onChange(Number(e.target.value))}
-                          error={!!error}
-                          helperText={error?.message}
-                        />
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={6}>
-                    <CustomDatePicker
-                      name='expiration_date_1'
-                      control={control}
-                      label='Fecha expiración 1'
-                      errors={errors.expiration_date_1}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <Controller
-                      name='observation'
-                      control={control}
-                      render={({ field: { value, onChange }, fieldState: { error } }: any) => (
-                        <CustomTextField
-                          label='Observación'
-                          value={value ?? ""}
-                          onChange={e => onChange(e.target.value)}
-                          multiline
-                          rows={3}
-                          error={!!error}
-                          helperText={error?.message}
-                        />
-                      )}
-                    />
-                  </Grid>
-                </>
+                <ProductFormFields
+                  control={control}
+                  errors={errors}
+                  productOptions={productOptions}
+                  warehouseList={warehouseList}
+                />
               )}
 
               <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
-                <CustomButton
-                  type='submit'
-                  disabled={isPendingInputProduct || isPendingInputFeedStock || isPendingOutput}
-                  isLoading={isPendingInputProduct || isPendingInputFeedStock || isPendingOutput}
-                >
+                <CustomButton type='submit' disabled={isPending} isLoading={isPending}>
                   Guardar
                 </CustomButton>
               </Grid>

@@ -22,6 +22,71 @@ const iconStyles = (size?: string) => ({
   }
 });
 
+const BUTTON_COLORS = ["primary", "secondary", "error", "warning", "info", "success"] as const;
+
+const HOVER_SELECTORS =
+  "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))";
+
+const getTextVariants = () =>
+  BUTTON_COLORS.map(color => ({
+    props: { variant: "text" as const, color },
+    style: {
+      [HOVER_SELECTORS]: {
+        backgroundColor: `var(--mui-palette-${color}-lighterOpacity)`
+      },
+      "&.Mui-disabled": {
+        color: `var(--mui-palette-${color}-main)`
+      }
+    }
+  }));
+
+const getOutlinedVariants = () =>
+  BUTTON_COLORS.map(color => ({
+    props: { variant: "outlined" as const, color },
+    style: {
+      borderColor: `var(--mui-palette-${color}-main)`,
+      [HOVER_SELECTORS]: {
+        backgroundColor: `var(--mui-palette-${color}-lighterOpacity)`
+      },
+      "&.Mui-disabled": {
+        color: `var(--mui-palette-${color}-main)`,
+        borderColor: `var(--mui-palette-${color}-main)`
+      }
+    }
+  }));
+
+const getContainedVariants = () =>
+  BUTTON_COLORS.map(color => ({
+    props: { variant: "contained" as const, color },
+    style: {
+      "&:not(.Mui-disabled)": {
+        boxShadow: `var(--mui-customShadows-${color}-sm)`
+      },
+      "&:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))": {
+        backgroundColor: `var(--mui-palette-${color}-dark)`
+      },
+      "&.Mui-disabled": {
+        color: `var(--mui-palette-${color}-contrastText)`,
+        backgroundColor: `var(--mui-palette-${color}-main)`
+      }
+    }
+  }));
+
+const getTonalVariants = () =>
+  BUTTON_COLORS.map(color => ({
+    props: { variant: "tonal" as const, color },
+    style: {
+      backgroundColor: `var(--mui-palette-${color}-lightOpacity)`,
+      color: `var(--mui-palette-${color}-main)`,
+      [HOVER_SELECTORS]: {
+        backgroundColor: `var(--mui-palette-${color}-mainOpacity)`
+      },
+      "&.Mui-disabled": {
+        color: `var(--mui-palette-${color}-main)`
+      }
+    }
+  }));
+
 const button: Theme["components"] = {
   MuiButtonBase: {
     defaultProps: {
@@ -121,338 +186,7 @@ const button: Theme["components"] = {
         ...iconStyles(ownerState.size)
       })
     },
-    variants: [
-      {
-        props: { variant: "text", color: "primary" },
-        style: {
-          "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))":
-            {
-              backgroundColor: "var(--mui-palette-primary-lighterOpacity)"
-            },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-primary-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "text", color: "secondary" },
-        style: {
-          "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))":
-            {
-              backgroundColor: "var(--mui-palette-secondary-lighterOpacity)"
-            },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-secondary-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "text", color: "error" },
-        style: {
-          "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))":
-            {
-              backgroundColor: "var(--mui-palette-error-lighterOpacity)"
-            },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-error-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "text", color: "warning" },
-        style: {
-          "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))":
-            {
-              backgroundColor: "var(--mui-palette-warning-lighterOpacity)"
-            },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-warning-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "text", color: "info" },
-        style: {
-          "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))":
-            {
-              backgroundColor: "var(--mui-palette-info-lighterOpacity)"
-            },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-info-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "text", color: "success" },
-        style: {
-          "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))":
-            {
-              backgroundColor: "var(--mui-palette-success-lighterOpacity)"
-            },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-success-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "outlined", color: "primary" },
-        style: {
-          borderColor: "var(--mui-palette-primary-main)",
-          "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))":
-            {
-              backgroundColor: "var(--mui-palette-primary-lighterOpacity)"
-            },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-primary-main)",
-            borderColor: "var(--mui-palette-primary-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "outlined", color: "secondary" },
-        style: {
-          borderColor: "var(--mui-palette-secondary-main)",
-          "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))":
-            {
-              backgroundColor: "var(--mui-palette-secondary-lighterOpacity)"
-            },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-secondary-main)",
-            borderColor: "var(--mui-palette-secondary-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "outlined", color: "error" },
-        style: {
-          borderColor: "var(--mui-palette-error-main)",
-          "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))":
-            {
-              backgroundColor: "var(--mui-palette-error-lighterOpacity)"
-            },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-error-main)",
-            borderColor: "var(--mui-palette-error-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "outlined", color: "warning" },
-        style: {
-          borderColor: "var(--mui-palette-warning-main)",
-          "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))":
-            {
-              backgroundColor: "var(--mui-palette-warning-lighterOpacity)"
-            },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-warning-main)",
-            borderColor: "var(--mui-palette-warning-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "outlined", color: "info" },
-        style: {
-          borderColor: "var(--mui-palette-info-main)",
-          "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))":
-            {
-              backgroundColor: "var(--mui-palette-info-lighterOpacity)"
-            },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-info-main)",
-            borderColor: "var(--mui-palette-info-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "outlined", color: "success" },
-        style: {
-          borderColor: "var(--mui-palette-success-main)",
-          "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))":
-            {
-              backgroundColor: "var(--mui-palette-success-lighterOpacity)"
-            },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-success-main)",
-            borderColor: "var(--mui-palette-success-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "contained", color: "primary" },
-        style: {
-          "&:not(.Mui-disabled)": {
-            boxShadow: "var(--mui-customShadows-primary-sm)"
-          },
-          "&:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))": {
-            backgroundColor: "var(--mui-palette-primary-dark)"
-          },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-primary-contrastText)",
-            backgroundColor: "var(--mui-palette-primary-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "contained", color: "secondary" },
-        style: {
-          "&:not(.Mui-disabled)": {
-            boxShadow: "var(--mui-customShadows-secondary-sm)"
-          },
-          "&:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))": {
-            backgroundColor: "var(--mui-palette-secondary-dark)"
-          },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-secondary-contrastText)",
-            backgroundColor: "var(--mui-palette-secondary-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "contained", color: "error" },
-        style: {
-          "&:not(.Mui-disabled)": {
-            boxShadow: "var(--mui-customShadows-error-sm)"
-          },
-          "&:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))": {
-            backgroundColor: "var(--mui-palette-error-dark)"
-          },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-error-contrastText)",
-            backgroundColor: "var(--mui-palette-error-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "contained", color: "warning" },
-        style: {
-          "&:not(.Mui-disabled)": {
-            boxShadow: "var(--mui-customShadows-warning-sm)"
-          },
-          "&:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))": {
-            backgroundColor: "var(--mui-palette-warning-dark)"
-          },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-warning-contrastText)",
-            backgroundColor: "var(--mui-palette-warning-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "contained", color: "info" },
-        style: {
-          "&:not(.Mui-disabled)": {
-            boxShadow: "var(--mui-customShadows-info-sm)"
-          },
-          "&:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))": {
-            backgroundColor: "var(--mui-palette-info-dark)"
-          },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-info-contrastText)",
-            backgroundColor: "var(--mui-palette-info-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "contained", color: "success" },
-        style: {
-          "&:not(.Mui-disabled)": {
-            boxShadow: "var(--mui-customShadows-success-sm)"
-          },
-          "&:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))": {
-            backgroundColor: "var(--mui-palette-success-dark)"
-          },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-success-contrastText)",
-            backgroundColor: "var(--mui-palette-success-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "tonal", color: "primary" },
-        style: {
-          backgroundColor: "var(--mui-palette-primary-lightOpacity)",
-          color: "var(--mui-palette-primary-main)",
-          "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))":
-            {
-              backgroundColor: "var(--mui-palette-primary-mainOpacity)"
-            },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-primary-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "tonal", color: "secondary" },
-        style: {
-          backgroundColor: "var(--mui-palette-secondary-lightOpacity)",
-          color: "var(--mui-palette-secondary-main)",
-          "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))":
-            {
-              backgroundColor: "var(--mui-palette-secondary-mainOpacity)"
-            },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-secondary-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "tonal", color: "error" },
-        style: {
-          backgroundColor: "var(--mui-palette-error-lightOpacity)",
-          color: "var(--mui-palette-error-main)",
-          "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))":
-            {
-              backgroundColor: "var(--mui-palette-error-mainOpacity)"
-            },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-error-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "tonal", color: "warning" },
-        style: {
-          backgroundColor: "var(--mui-palette-warning-lightOpacity)",
-          color: "var(--mui-palette-warning-main)",
-          "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))":
-            {
-              backgroundColor: "var(--mui-palette-warning-mainOpacity)"
-            },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-warning-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "tonal", color: "info" },
-        style: {
-          backgroundColor: "var(--mui-palette-info-lightOpacity)",
-          color: "var(--mui-palette-info-main)",
-          "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))":
-            {
-              backgroundColor: "var(--mui-palette-info-mainOpacity)"
-            },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-info-main)"
-          }
-        }
-      },
-      {
-        props: { variant: "tonal", color: "success" },
-        style: {
-          backgroundColor: "var(--mui-palette-success-lightOpacity)",
-          color: "var(--mui-palette-success-main)",
-          "&:not(.Mui-disabled):hover, &:not(.Mui-disabled):active, &.Mui-focusVisible:not(:has(span.MuiTouchRipple-root))":
-            {
-              backgroundColor: "var(--mui-palette-success-mainOpacity)"
-            },
-          "&.Mui-disabled": {
-            color: "var(--mui-palette-success-main)"
-          }
-        }
-      }
-    ]
+    variants: [...getTextVariants(), ...getOutlinedVariants(), ...getContainedVariants(), ...getTonalVariants()]
   }
 };
 
