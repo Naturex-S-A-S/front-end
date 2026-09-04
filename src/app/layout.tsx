@@ -24,7 +24,7 @@ const RootLayout = ({ children }: ChildrenType) => {
   const direction = "ltr";
 
   return (
-    <html id='__next' lang='en' dir={direction}>
+    <html id='__next' lang='es' dir={direction}>
       <body className='flex is-full min-bs-full flex-auto flex-col'>
         {children}
         <Toaster position='top-right' />

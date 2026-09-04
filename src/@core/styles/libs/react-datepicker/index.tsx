@@ -4,21 +4,24 @@ import type { BoxProps } from "@mui/material/Box";
 import Box from "@mui/material/Box";
 
 // ** Hooks
-
-// ** Util Import
-
-// ** Styles
-import "react-datepicker/dist/react-datepicker.css";
 import { useSettings } from "@/@core/hooks/useSettings";
 import type { UseBgColorType } from "@/@core/hooks/useBgColor";
 import UseBgColor from "@/@core/hooks/useBgColor";
+
+// ** Util Import
 import { hexToRGBA } from "@/utils/hex-to-rgba";
 
-const DatePickerWrapper = styled(Box)<BoxProps>(({ theme }) => {
-  // ** Hook
-  const { settings } = useSettings();
-  const bgColors: UseBgColorType = UseBgColor();
+// ** Styles
+import "react-datepicker/dist/react-datepicker.css";
 
+interface DatePickerWrapperProps extends BoxProps {
+  skin?: string;
+  bgColors?: UseBgColorType;
+}
+
+const DatePickerWrapper = styled(Box, {
+  shouldForwardProp: prop => !["skin", "bgColors"].includes(prop as string)
+})<DatePickerWrapperProps>(({ theme, skin = "bordered", bgColors }) => {
   return {
     "& .react-datepicker-popper": {
       zIndex: 20
@@ -31,8 +34,8 @@ const DatePickerWrapper = styled(Box)<BoxProps>(({ theme }) => {
       borderRadius: theme.shape.borderRadius,
       fontFamily: theme.typography.fontFamily,
       backgroundColor: theme.palette.background.paper,
-      boxShadow: theme.shadows[settings.skin === "bordered" ? 0 : 4],
-      border: settings.skin === "bordered" ? `1px solid ${theme.palette.divider}` : "none",
+      boxShadow: theme.shadows[skin === "bordered" ? 0 : 4],
+      border: skin === "bordered" ? `1px solid ${theme.palette.divider}` : "none",
       "& .react-datepicker__header": {
         padding: 0,
         border: "none",
@@ -143,7 +146,7 @@ const DatePickerWrapper = styled(Box)<BoxProps>(({ theme }) => {
           },
         "&.react-datepicker__day--highlighted, &.react-datepicker__day--highlighted:hover": {
           color: theme.palette.success.main,
-          backgroundColor: `${bgColors.successLight.backgroundColor} !important`,
+          backgroundColor: `${bgColors?.successLight.backgroundColor} !important`,
           "&.react-datepicker__day--selected": {
             backgroundColor: `${theme.palette.primary.main} !important`
           }
@@ -209,9 +212,9 @@ const DatePickerWrapper = styled(Box)<BoxProps>(({ theme }) => {
           }
         },
         "&.react-datepicker__day--in-range:not(.react-datepicker__day--range-end)": {
-          backgroundColor: `${bgColors.primaryLight.backgroundColor} !important`,
+          backgroundColor: `${bgColors?.primaryLight.backgroundColor} !important`,
           "&:hover": {
-            backgroundColor: `${bgColors.primaryLight.backgroundColor} !important`
+            backgroundColor: `${bgColors?.primaryLight.backgroundColor} !important`
           }
         }
       },
@@ -495,4 +498,11 @@ const DatePickerWrapper = styled(Box)<BoxProps>(({ theme }) => {
   };
 });
 
-export default DatePickerWrapper;
+const DatePickerWrapperWithHooks = (props: BoxProps) => {
+  const { settings } = useSettings();
+  const bgColors: UseBgColorType = UseBgColor();
+
+  return <DatePickerWrapper skin={settings.skin} bgColors={bgColors} {...props} />;
+};
+
+export default DatePickerWrapperWithHooks;

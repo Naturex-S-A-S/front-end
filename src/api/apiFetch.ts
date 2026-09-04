@@ -39,19 +39,33 @@ export async function apiFetch<T>(
 
     if (!res.ok) {
       const text = await res.text().catch(() => "");
-      let message = `apiFetch ${res.status} ${res.statusText}`;
+      let internalMessage = `apiFetch ${res.status} ${res.statusText}`;
 
       if (text) {
         try {
           const json = JSON.parse(text);
 
-          message = json.message || text;
+          internalMessage = json.message || text;
         } catch {
-          message += `: ${text}`;
+          internalMessage += `: ${text}`;
         }
       }
 
-      throw new Error(message);
+      if (process.env.NODE_ENV === "development") {
+        throw new Error(internalMessage);
+      }
+
+      const userMessages: Record<number, string> = {
+        400: "Solicitud inválida",
+        401: "Sesión expirada",
+        403: "No tiene permisos para realizar esta acción",
+        404: "Recurso no encontrado",
+        409: "Conflicto con un registro existente",
+        422: "Datos inválidos",
+        500: "Error interno del servidor"
+      };
+
+      throw new Error(userMessages[res.status] || "Error al comunicarse con el servidor");
     }
 
     if (res.headers.get("content-length") === "0" || res.status === 204) {

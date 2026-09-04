@@ -158,10 +158,20 @@ export const authOptions: NextAuthOptions = {
   },
 
   events: {
-    signIn: message => console.log("User signed in:", message),
-    signOut: message => console.log("User signed out:", message),
-    session(message) {
-      console.log("Session event:", message);
+    signIn({ user }) {
+      if (process.env.NODE_ENV === "development") {
+        console.log("User signed in:", user?.id);
+      }
+    },
+    signOut({ token }) {
+      if (process.env.NODE_ENV === "development") {
+        console.log("User signed out:", token?.user?.id);
+      }
+    },
+    session({ session }) {
+      if (process.env.NODE_ENV === "development") {
+        console.log("Session event:", session?.user?.id);
+      }
     }
   },
 
