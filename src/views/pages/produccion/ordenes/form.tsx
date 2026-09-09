@@ -281,7 +281,6 @@ const Form: React.FC<Props> = ({
                     title='Material de empaque'
                     type={MaterialTypeKey.PACKAGING}
                     items={calculatedData?.materials}
-                    quantityLabel='Cantidad'
                   />
                 </Grid>
                 <Grid item md={12} lg={6}>

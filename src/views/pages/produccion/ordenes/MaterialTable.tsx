@@ -9,7 +9,7 @@ type Props = {
   quantityLabel?: string;
 };
 
-const MaterialTable = ({ title, type, items = [], quantityLabel = "Cantidad" }: Props) => {
+const MaterialTable = ({ title, type, items = [], quantityLabel }: Props) => {
   const filtered = items.filter((m: any) => m.type === type);
   const sumQuantity = filtered.reduce((acc: number, item: any) => acc + (Number(item.quantityFormulation) || 0), 0);
   const sumTotal = filtered.reduce((acc: number, item: any) => acc + (Number(item.quantityTotalOrder) || 0), 0);
@@ -24,7 +24,7 @@ const MaterialTable = ({ title, type, items = [], quantityLabel = "Cantidad" }: 
           <TableHead>
             <TableRow>
               <TableCell>Descripcion</TableCell>
-              <TableCell>{quantityLabel}</TableCell>
+              {quantityLabel && <TableCell>{quantityLabel}</TableCell>}
               <TableCell>Total</TableCell>
             </TableRow>
           </TableHead>
@@ -32,13 +32,13 @@ const MaterialTable = ({ title, type, items = [], quantityLabel = "Cantidad" }: 
             {filtered.map((item: any, index: number) => (
               <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                 <TableCell>{item.name}</TableCell>
-                <TableCell>{item.quantityFormulation}</TableCell>
+                {quantityLabel && <TableCell>{item.quantityFormulation}</TableCell>}
                 <TableCell>{item.quantityTotalOrder}</TableCell>
               </TableRow>
             ))}
             <TableRow sx={{ "& td": { fontWeight: 700, borderTop: "2px solid" } }}>
               <TableCell>Total</TableCell>
-              <TableCell>{sumQuantity}</TableCell>
+              {quantityLabel && <TableCell>{sumQuantity}</TableCell>}
               <TableCell>{sumTotal}</TableCell>
             </TableRow>
           </TableBody>
