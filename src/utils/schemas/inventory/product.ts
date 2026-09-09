@@ -25,4 +25,4 @@ export const productSchema = yup
   })
   .required();
 
-export const updateProductSchema = productSchema.omit(["id"]);
+export const updateProductSchema = productSchema.omit(["id", "category"]);
