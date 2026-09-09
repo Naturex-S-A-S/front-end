@@ -31,7 +31,8 @@ const OrderDetailClient = ({ order }: Props) => {
     Swal.fire({
       title: "¿Estás seguro de que deseas finalizar la orden?",
       icon: "question",
-      confirmButtonText: "Sí, finalizar"
+      confirmButtonText: "Sí, finalizar",
+      cancelButtonText: "No"
     }).then(result => {
       if (result.isConfirmed) {
         startTransition(async () => {
@@ -51,7 +52,9 @@ const OrderDetailClient = ({ order }: Props) => {
     Swal.fire({
       title: "¿Estás seguro de que deseas cancelar la orden?",
       icon: "warning",
-      confirmButtonText: "Sí, cancelar"
+      confirmButtonText: "Sí, cancelar",
+      cancelButtonText: "No",
+      text: "Esta acción no se puede deshacer"
     }).then(result => {
       if (result.isConfirmed) {
         startTransition(async () => {

@@ -13,7 +13,7 @@ interface Props {
 }
 
 const Detail: React.FC<Props> = ({ order }) => {
-  const totalQuantityTotal = order.details?.reduce((a, b) => a + b.quantityTotal, 0) ?? 0;
+  const totalQuantityTotal = order.details?.reduce((a, b) => a + (b.typeMaterial === 'materia_prima' ? b.quantityTotal : 0), 0) ?? 0;
 
   const materials = order.details.map(item => ({
     type: item.typeMaterial,
@@ -168,7 +168,7 @@ const Detail: React.FC<Props> = ({ order }) => {
                 },
                 {
                   icon: "mdi:calculator",
-                  label: "Total general (g)",
+                  label: "Total materia prima (g)",
                   value: totalQuantityTotal.toFixed(2),
                   gridItemProps: { xs: 12, sm: 6, md: 3 }
                 }
