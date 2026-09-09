@@ -66,7 +66,7 @@ export const editPackagingSchema = yup.object({
         packaging: yup
           .object()
           .shape({
-            id: yup.number().required("El material es requerido")
+            id: yup.string().required("El material es requerido")
           })
           .required("El material de empaque es requerido"),
         quantity: yup

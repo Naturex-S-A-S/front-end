@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 
-import { Grid, IconButton } from "@mui/material";
+import { Grid } from "@mui/material";
 
 import { Controller, FormProvider, useForm } from "react-hook-form";
-
-import { Icon } from "@iconify/react";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -139,7 +137,7 @@ const Detail: React.FC<IProps> = ({ product }) => {
                             placeholder='Seleccione una unidad'
                             error={!!errors.unit}
 
-                            // helperText={errors.unit?.value?.message}
+                          // helperText={errors.unit?.value?.message}
                           />
                         )}
                       />
@@ -177,9 +175,7 @@ const Detail: React.FC<IProps> = ({ product }) => {
           title='Materiales de empaque'
           action={
             product.packagings?.length > 0 && (
-              <IconButton onClick={() => setOpenEditPackagings(true)}>
-                <Icon icon='mdi:pencil' />
-              </IconButton>
+              <CustomButton text='Editar' type='button' onClick={() => setOpenEditPackagings(true)} />
             )
           }
         >

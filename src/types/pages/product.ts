@@ -20,7 +20,7 @@ export interface ICategory {
 }
 
 export interface IPackagingMaterial {
-  id: number;
+  id: string;
   name: string;
   minimumStandard: number | null;
   active: boolean | null;
