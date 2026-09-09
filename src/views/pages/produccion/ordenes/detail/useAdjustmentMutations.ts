@@ -6,6 +6,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
 
+import moment from "moment";
+
 import {
   postKardexInputAdjustment as postKardexInputAdjustmentFeedStock,
   postKardexOutputAdjustment
@@ -71,7 +73,7 @@ export const useAdjustmentMutations = ({
           idOrder: orderId,
           quantity: values.quantity,
           batch: values.batch,
-          expirationDate1: values.expiration_date_1,
+          expirationDate1: moment(values.expiration_date_1).format("YYYY-MM-DD"),
           observation: values.observation,
           idRack: values.rack?.id
         };
@@ -88,7 +90,7 @@ export const useAdjustmentMutations = ({
           batch: values.batch,
           quantity: values.quantity,
           observation: values.observation,
-          expirationDate1: values.expiration_date_1,
+          expirationDate1: moment(values.expiration_date_1).format("YYYY-MM-DD"),
           idRack: values.rack?.id
         };
 

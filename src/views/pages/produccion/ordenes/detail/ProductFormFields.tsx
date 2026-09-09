@@ -92,7 +92,7 @@ const ProductFormFields: FC<ProductFormFieldsProps> = ({ control, errors, produc
           render={({ field: { value, onChange }, fieldState: { error } }: any) => (
             <CustomTextField
               type='number'
-              label='Cantidad'
+              label='Cantidad (g)'
               value={value ?? ""}
               onChange={e => onChange(Number(e.target.value))}
               error={!!error}
