@@ -33,12 +33,12 @@ const CreateRack = ({ idWarehouse, onSuccess }: Props) => {
       const result = await createRack({ ...data, idWarehouse });
 
       if (result.success) {
-        toast.success("Rack creado con éxito");
+        toast.success("Estantería creado con éxito");
         reset();
         router.refresh();
         onSuccess();
       } else {
-        toast.error(result.error || "Error al crear el rack");
+        toast.error(result.error || "Error al crear el estantería");
       }
     });
   };

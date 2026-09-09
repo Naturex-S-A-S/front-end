@@ -40,12 +40,12 @@ const UpdateRack = ({ rack, onSuccess }: Props) => {
       const result = await updateRack(rack.id, { ...data });
 
       if (result.success) {
-        toast.success("Rack actualizado con éxito");
+        toast.success("Estantería actualizado con éxito");
         reset();
         router.refresh();
         onSuccess();
       } else {
-        toast.error(result.error || "Error al actualizar el rack");
+        toast.error(result.error || "Error al actualizar el estantería");
       }
     });
   };

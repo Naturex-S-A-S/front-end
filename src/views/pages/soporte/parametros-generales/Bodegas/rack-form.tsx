@@ -25,7 +25,7 @@ const RackForm = ({ isPending, onCancel, isCreate = false }: Props) => {
           autoFocus
           fullWidth
           label='Nombre'
-          placeholder='Ingrese el nombre del rack'
+          placeholder='Ingrese el nombre del estantería'
           error={!!errors.name}
           helperText={errors.name?.message as string}
         />

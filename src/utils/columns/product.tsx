@@ -47,7 +47,7 @@ export const useColumns = ({ handleStatus, isPending }: params): GridColDef[] =>
       width: 100,
       renderCell: params => (
         <span>
-          {Number(params.row.measurement).toFixed(2)} {params.row.unit}
+          {Number(params.row.measurement).toFixed(0)} {params.row.unit}
         </span>
       )
     },

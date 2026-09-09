@@ -31,6 +31,12 @@ export const useColumns = ({ handleEdit }: params): GridColDef[] => {
       )
     },
     { field: "name", headerName: "Nombre", width: 200 },
+    {
+      field: "racks",
+      headerName: "Estanterias",
+      width: 100,
+      renderCell: params => <span>{params.row.racks.length}</span>
+    },
     { field: "address", headerName: "Dirección", width: 250 },
     { field: "phone", headerName: "Teléfono", width: 150 },
     {
