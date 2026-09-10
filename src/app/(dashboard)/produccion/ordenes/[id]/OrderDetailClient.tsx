@@ -80,11 +80,11 @@ const OrderDetailClient = ({ order }: Props) => {
           <>
             {order.status === STATUS.en_proceso && (
               <Button variant='contained' color='primary' onClick={handleFinalize}>
-                Finalizar
+                Finalizar orden
               </Button>
             )}
             {order.status === STATUS.en_proceso && (
-              <Button variant='outlined' color='error' onClick={handleCancel}>
+              <Button variant='outlined' color='inherit' onClick={handleCancel}>
                 Cancelar
               </Button>
             )}

@@ -1,7 +1,7 @@
 import type { FC } from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { Box, Card, CardContent, CardHeader, Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 
 import { Controller, useForm } from "react-hook-form";
 
@@ -19,6 +19,7 @@ import MaterialFormFields from "./MaterialFormFields";
 import ProductFormFields from "./ProductFormFields";
 import { useAdjustmentMutations } from "./useAdjustmentMutations";
 import useGetWarehouseList from "@/hooks/warehouse/useGetWarehouse";
+import CustomCard from "@/@core/components/mui/Card";
 
 type Option = { id: number; label: string };
 
@@ -76,7 +77,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
       const catId = data.category?.id;
 
       const schema =
-        catId === 1 ? adjustmentMaterialSchema : catId === 2 ? adjustmentProductSchema : categoryOnlySchema;
+        (catId === 1 || catId === 2) ? adjustmentMaterialSchema : catId === 3 ? adjustmentProductSchema : categoryOnlySchema;
 
       return yupResolver(schema)(data as any, context, options as any);
     }
@@ -88,13 +89,17 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
 
   const categoryWatch: any = watch("category");
 
-  const isCategoryProduct = categoryWatch?.id === 2;
-  const isCategoryMaterial = categoryWatch?.id === 1;
+  const isCategoryProduct = categoryWatch?.id === 3;
+  const isCategoryMaterial = (categoryWatch?.id === 2);
+  const isCategoryPackaging = (categoryWatch?.id === 1);
 
-  const materialOptions = materials.map((material: any) => ({
-    id: material.idMaterial,
-    label: material.nameMaterial
-  }));
+  const materialOptions = useMemo(() => {
+    return materials.filter((material) => material.typeMaterial === (isCategoryPackaging ? "packaging" : "materia_prima")).map((material) => ({
+      id: material.idMaterial,
+      label: material.nameMaterial,
+      type: material.typeMaterial
+    }));
+  }, [materials, isCategoryPackaging]);
 
   const productOptions = products.map((product: any) => ({
     id: product.finalProduct.id,
@@ -124,6 +129,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
   const { submitAdjustment, isPending } = useAdjustmentMutations({
     orderId,
     isCategoryMaterial,
+    isCategoryPackaging,
     isCategoryProduct,
     onReset: handleOnReset,
     onClose: toogleDialog
@@ -138,73 +144,71 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
   };
 
   return (
-    <Card>
-      <CardHeader title='Ajustes' />
-      <CardContent>
-        {canCreate && (
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <CreateButton onClick={toogleDialog} />
-          </Box>
-        )}
-        <CustomDialog open={open} toogleDialog={toogleDialog} title='Realizar Ajuste'>
-          <form onSubmit={handleSubmit(submitAdjustment)}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Controller
-                  name='category'
-                  control={control}
-                  rules={{ required: "Seleccione una categoría" }}
-                  render={({ field: { value }, fieldState: { error } }: any) => (
-                    <CustomAutocomplete
-                      value={value}
-                      options={[
-                        { id: 1, label: "Material de empaque / Materia prima" },
-                        { id: 2, label: "Producto" }
-                      ]}
-                      onChange={handleOnChangeCategory}
-                      renderInput={params => (
-                        <CustomTextField
-                          {...params}
-                          label='Categoria'
-                          placeholder='Seleccione una categoria'
-                          error={!!error}
-                          helperText={error?.message}
-                        />
-                      )}
-                    />
-                  )}
-                />
-              </Grid>
-
-              {isCategoryMaterial && (
-                <MaterialFormFields
-                  control={control}
-                  errors={errors}
-                  materialOptions={materialOptions}
-                  warehouseList={warehouseList}
-                />
-              )}
-
-              {isCategoryProduct && (
-                <ProductFormFields
-                  control={control}
-                  errors={errors}
-                  productOptions={productOptions}
-                  warehouseList={warehouseList}
-                />
-              )}
-
-              <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
-                <CustomButton type='submit' disabled={isPending} isLoading={isPending}>
-                  Guardar
-                </CustomButton>
-              </Grid>
+    <CustomCard title={"Ajustes"}>
+      {canCreate && (
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <CreateButton onClick={toogleDialog} />
+        </Box>
+      )}
+      <CustomDialog open={open} toogleDialog={toogleDialog} title='Realizar Ajuste'>
+        <form onSubmit={handleSubmit(submitAdjustment)}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Controller
+                name='category'
+                control={control}
+                rules={{ required: "Seleccione una categoría" }}
+                render={({ field: { value }, fieldState: { error } }: any) => (
+                  <CustomAutocomplete
+                    value={value}
+                    options={[
+                      { id: 1, label: "Material de empaque" },
+                      { id: 2, label: "Materia prima" },
+                      { id: 3, label: "Producto" }
+                    ]}
+                    onChange={handleOnChangeCategory}
+                    renderInput={params => (
+                      <CustomTextField
+                        {...params}
+                        label='Categoria'
+                        placeholder='Seleccione una categoria'
+                        error={!!error}
+                        helperText={error?.message}
+                      />
+                    )}
+                  />
+                )}
+              />
             </Grid>
-          </form>
-        </CustomDialog>
-        <AdjustmentList data={kardex} isLoading={false} />
-      </CardContent>
-    </Card>
+
+            {(isCategoryMaterial || isCategoryPackaging) && (
+              <MaterialFormFields
+                control={control}
+                errors={errors}
+                materialOptions={materialOptions}
+                warehouseList={warehouseList}
+              />
+            )}
+
+            {isCategoryProduct && (
+              <ProductFormFields
+                control={control}
+                errors={errors}
+                productOptions={productOptions}
+                warehouseList={warehouseList}
+              />
+            )}
+
+            <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <CustomButton type='submit' disabled={isPending} isLoading={isPending}>
+                Guardar
+              </CustomButton>
+            </Grid>
+          </Grid>
+        </form>
+      </CustomDialog>
+      <AdjustmentList data={kardex} isLoading={false} />
+    </CustomCard>
   );
 };
 

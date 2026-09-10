@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Card, Chip, Grid, Stack, Typography } from "@mui/material";
+import { Box, Chip, Grid, Stack, Typography } from "@mui/material";
 
 import { Icon } from "@iconify/react";
 
@@ -84,7 +84,7 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
 
       <Grid container spacing={3} className='mt-2' justifyContent={"center"}>
         <Grid item xs={4}>
-          <Card variant='outlined' className='h-full'>
+          <CustomCard variant='outlined' className='h-full p-2'>
             <Box textAlign='center' py={2}>
               <Typography variant='caption' color='text.secondary'>
                 CIF Total del periodo
@@ -93,10 +93,10 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
                 {formatCurrency(cifTotal)}
               </Typography>
             </Box>
-          </Card>
+          </CustomCard>
         </Grid>
         <Grid item xs={4}>
-          <Card variant='outlined' className='h-full'>
+          <CustomCard variant='outlined' className='h-full p-2'>
             <Box textAlign='center' py={2}>
               <Typography variant='caption' color='text.secondary'>
                 Kg producidos
@@ -105,7 +105,7 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
                 {period.totalKgProduced}
               </Typography>
             </Box>
-          </Card>
+          </CustomCard>
         </Grid>
 
         <Grid item xs={12}>

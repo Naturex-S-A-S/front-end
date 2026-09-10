@@ -55,6 +55,7 @@ export interface IOrder {
   idFormulation: number;
   idVersion: number;
   sequentialVersionNumber: number;
+  totalNetQuantityMaterialFeedstockKg: number;
   formulationName: string;
   userFullName: string;
   items: IOrderItem[];

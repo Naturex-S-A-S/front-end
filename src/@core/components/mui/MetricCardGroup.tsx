@@ -1,7 +1,9 @@
 "use client";
 
-import { Box, Grid, Stack, Typography } from "@mui/material";
+import { Grid, Stack, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
+
+import CustomCard from "./Card";
 
 interface MetricItem {
   icon: string;
@@ -35,7 +37,7 @@ const MetricCardGroup: React.FC<MetricCardGroupProps> = ({ items, gridItemProps 
 
         return (
           <Grid item key={index} xs={iXs} sm={iSm} md={iMd} lg={iLg}>
-            <Box className='rounded-lg border border-gray-200 p-4 h-full flex justify-center items-center'>
+            <CustomCard className='h-full flex justify-center items-center'>
               <Stack spacing={1.5} textAlign='center'>
                 <Stack direction='row' spacing={1} alignItems='center' justifyContent='center'>
                   <Icon icon={item.icon} fontSize={20} className='text-gray-500' />
@@ -47,7 +49,7 @@ const MetricCardGroup: React.FC<MetricCardGroupProps> = ({ items, gridItemProps 
                   {item.value}
                 </Typography>
               </Stack>
-            </Box>
+            </CustomCard>
           </Grid>
         )
       })}

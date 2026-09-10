@@ -10,7 +10,7 @@ import GroupedAutocomplete from "@/@core/components/mui/GroupedAutocomplete";
 import CustomDatePicker from "@/@core/components/react-datepicker";
 import type { AdjustmentFormValues } from "./adjustment";
 
-type Option = { id: number; label: string };
+type Option = { id: string; label: string; type: string };
 
 interface MaterialFormFieldsProps {
   control: Control<AdjustmentFormValues>;

@@ -9,7 +9,7 @@ interface Props extends CardProps {
 
 const CustomCard: React.FC<Props> = ({ title, children, action, className, ...props }) => {
   return (
-    <Card className={`w-full `} {...props}>
+    <Card className={`w-full rounded-3xl`} {...props}>
       {title && <CardHeader title={title} action={action} className={`${className}`} />}
       <CardContent className={`${className}`}>{children}</CardContent>
     </Card>

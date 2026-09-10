@@ -1,6 +1,7 @@
-import { Card, CardContent, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 
 import type { MaterialTypeKey } from "@/utils/enum";
+import CustomCard from "@/@core/components/mui/Card";
 
 type Props = {
   title: string;
@@ -15,36 +16,34 @@ const MaterialTable = ({ title, type, items = [], quantityLabel }: Props) => {
   const sumTotal = filtered.reduce((acc: number, item: any) => acc + (Number(item.quantityTotalOrder) || 0), 0);
 
   return (
-    <Card sx={{ width: "100%" }}>
-      <CardContent>
-        <Typography variant='h6' sx={{ mb: 2 }}>
-          {title}
-        </Typography>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Descripcion</TableCell>
-              {quantityLabel && <TableCell>{quantityLabel}</TableCell>}
-              <TableCell>Total</TableCell>
+    <CustomCard sx={{ width: "100%" }}>
+      <Typography variant='h6' sx={{ mb: 2 }}>
+        {title}
+      </Typography>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Descripcion</TableCell>
+            {quantityLabel && <TableCell>{quantityLabel}</TableCell>}
+            <TableCell>Total</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {filtered.map((item: any, index: number) => (
+            <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+              <TableCell>{item.name}</TableCell>
+              {quantityLabel && <TableCell>{item.quantityFormulation}</TableCell>}
+              <TableCell>{item.quantityTotalOrder}</TableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {filtered.map((item: any, index: number) => (
-              <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                <TableCell>{item.name}</TableCell>
-                {quantityLabel && <TableCell>{item.quantityFormulation}</TableCell>}
-                <TableCell>{item.quantityTotalOrder}</TableCell>
-              </TableRow>
-            ))}
-            <TableRow sx={{ "& td": { fontWeight: 700, borderTop: "2px solid" } }}>
-              <TableCell>Total</TableCell>
-              {quantityLabel && <TableCell>{sumQuantity}</TableCell>}
-              <TableCell>{sumTotal}</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+          ))}
+          <TableRow sx={{ "& td": { fontWeight: 700, borderTop: "2px solid" } }}>
+            <TableCell>Total</TableCell>
+            {quantityLabel && <TableCell>{sumQuantity}</TableCell>}
+            <TableCell>{sumTotal}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </CustomCard>
   );
 };
 

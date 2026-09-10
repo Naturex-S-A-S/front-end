@@ -18,6 +18,18 @@ export const postKardexOutput = async (data: any) => {
   return response.data;
 };
 
+export const postKardexInputAdjustment = async (data: any) => {
+  const response = await API().post("/packaging-kardex/input/adjustment", data);
+
+  return response.data;
+};
+
+export const postKardexOutputAdjustment = async (data: any) => {
+  const response = await API().post("/packaging-kardex/output/adjustment", data);
+
+  return response.data;
+};
+
 export const getPackaging = async (params: any) => {
   const response = await API().get("/packaging", { params });
 

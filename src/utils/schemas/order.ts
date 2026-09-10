@@ -34,7 +34,11 @@ export const categoryOnlySchema = yup.object({
 });
 
 export const adjustmentMaterialSchema = yup.object({
-  category: baseCategory.test("is-material", "La categoría debe ser material", (val: any) => val?.id === 1),
+  category: baseCategory.test(
+    "is-material",
+    "La categoría debe ser material",
+    (val: any) => val?.id === 1 || val?.id === 2
+  ),
   material: yup.object().nullable().required("Seleccione un material"),
   type: yup.string().nullable().oneOf(["IN", "OUT"]).required("Seleccione entrada o salida"),
   quantity: yup
@@ -50,7 +54,7 @@ export const adjustmentMaterialSchema = yup.object({
 });
 
 export const adjustmentProductSchema = yup.object({
-  category: baseCategory.test("is-product", "La categoría debe ser producto", (val: any) => val?.id === 2),
+  category: baseCategory.test("is-product", "La categoría debe ser producto", (val: any) => val?.id === 3),
   product: yup.object().nullable().required("Seleccione un producto"),
   quantity: yup
     .number()

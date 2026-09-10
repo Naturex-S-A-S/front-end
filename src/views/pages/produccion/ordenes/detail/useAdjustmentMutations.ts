@@ -10,14 +10,19 @@ import moment from "moment";
 
 import {
   postKardexInputAdjustment as postKardexInputAdjustmentFeedStock,
-  postKardexOutputAdjustment
+  postKardexOutputAdjustment as postKardexOutputAdjustmentFeedStock
 } from "@/api/feedstock";
+import {
+  postKardexInputAdjustment as postKardexInputAdjustmentPackaging,
+  postKardexOutputAdjustment as postKardexOutputAdjustmentPackaging
+} from "@/api/packaging";
 import { postKardexInputAdjustment as postKardexInputAdjustmentProduct } from "@/api/product";
 import { alertMessageErrors } from "@/utils/messages";
 
 interface UseAdjustmentMutationsProps {
   orderId: number;
   isCategoryMaterial: boolean;
+  isCategoryPackaging: boolean;
   isCategoryProduct: boolean;
   onReset: (value?: any) => void;
   onClose: () => void;
@@ -26,6 +31,7 @@ interface UseAdjustmentMutationsProps {
 export const useAdjustmentMutations = ({
   orderId,
   isCategoryMaterial,
+  isCategoryPackaging,
   isCategoryProduct,
   onReset,
   onClose
@@ -51,14 +57,20 @@ export const useAdjustmentMutations = ({
     onError
   });
 
-  const { mutate: mutateInputFeedStock, isPending: isPendingInputFeedStock } = useMutation({
-    mutationFn: postKardexInputAdjustmentFeedStock,
+  const { mutate: mutateInput, isPending: isPendingInputFeedStock } = useMutation({
+    mutationFn: (variables: any) =>
+      variables.type === "materia_prima"
+        ? postKardexInputAdjustmentFeedStock(variables)
+        : postKardexInputAdjustmentPackaging(variables),
     onSuccess,
     onError
   });
 
   const { mutate: mutateOutput, isPending: isPendingOutput } = useMutation({
-    mutationFn: postKardexOutputAdjustment,
+    mutationFn: (variables: any) =>
+      variables.type === "materia_prima"
+        ? postKardexOutputAdjustmentFeedStock(variables)
+        : postKardexOutputAdjustmentPackaging(variables),
     onSuccess,
     onError
   });
@@ -67,19 +79,21 @@ export const useAdjustmentMutations = ({
 
   const submitAdjustment = useCallback(
     (values: any) => {
-      if (isCategoryMaterial) {
+      if (isCategoryMaterial || isCategoryPackaging) {
         const payload = {
           idMaterial: values.material?.id,
+          idPackaging: values.material?.id,
           idOrder: orderId,
           quantity: values.quantity,
           batch: values.batch,
           expirationDate1: moment(values.expiration_date_1).format("YYYY-MM-DD"),
           observation: values.observation,
-          idRack: values.rack?.id
+          idRack: values.rack?.id,
+          type: values.material?.type
         };
 
         if (values.type === "IN") {
-          mutateInputFeedStock(payload);
+          mutateInput(payload);
         } else if (values.type === "OUT") {
           mutateOutput(payload);
         }
@@ -97,7 +111,7 @@ export const useAdjustmentMutations = ({
         mutateInputProduct(payload);
       }
     },
-    [isCategoryMaterial, isCategoryProduct, orderId, mutateInputFeedStock, mutateOutput, mutateInputProduct]
+    [isCategoryMaterial, isCategoryProduct, isCategoryPackaging, orderId, mutateInput, mutateOutput, mutateInputProduct]
   );
 
   return { submitAdjustment, isPending };

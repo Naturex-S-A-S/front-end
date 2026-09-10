@@ -2,7 +2,7 @@ import { memo, useState, type ChangeEvent } from "react";
 
 // MUI
 import { DataGrid } from "@mui/x-data-grid";
-import { Card } from "@mui/material";
+import { Box } from "@mui/material";
 
 // Toolbar
 import ServerSideToolbar from "./data-grid/ServerSideToolbar";
@@ -71,7 +71,7 @@ const CustomDataGrid: React.FC<Props> = ({ columns, data, getRowClassName, isLoa
   ) */
 
   return (
-    <Card sx={{ mt: 3, overflow: "visible" }}>
+    <Box sx={{ mt: 3, overflow: "visible" }}>
       <DataGrid
         rows={searchValue ? filteredData : data ?? []}
         columns={columns}
@@ -101,7 +101,7 @@ const CustomDataGrid: React.FC<Props> = ({ columns, data, getRowClassName, isLoa
           } as any
         }}
       />
-    </Card>
+    </Box>
   );
 };
 
