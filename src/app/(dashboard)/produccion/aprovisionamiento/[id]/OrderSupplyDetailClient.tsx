@@ -79,6 +79,11 @@ const OrderSupplyDetailClient = ({ orderSupply }: Props) => {
         id={String(orderSupply.id)}
         name={orderSupply.batch}
         createdAt={orderSupply.dateCreated}
+        breadcrumbs={[
+          { label: "Producción", href: "/produccion/aprovisionamiento" },
+          { label: "Aprovisionamiento", href: "/produccion/aprovisionamiento" },
+          { label: `#${orderSupply.id}` }
+        ]}
         actions={
           <>
             <Button

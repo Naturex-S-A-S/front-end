@@ -32,6 +32,11 @@ const Page = async ({ params }: Props) => {
         active={packaging.active}
         quantity={packaging.quantityTotal}
         actions={<HeaderToggle id={params.id} active={packaging.active} />}
+        breadcrumbs={[
+          { label: "Inventario", href: "/inventario/material-empaque/listado" },
+          { label: "Material de Empaque", href: "/inventario/material-empaque/listado" },
+          { label: `#${params.id}` }
+        ]}
       />
       <Detail packaging={packaging} />
     </Box>

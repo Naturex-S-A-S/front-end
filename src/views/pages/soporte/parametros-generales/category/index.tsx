@@ -17,6 +17,7 @@ import { CategoryTypeName } from "@/utils/enum";
 import { deleteCategoryFeedstock } from "@/api/general-parameters/categories-feedstock";
 import { deleteCategoryPackaging } from "@/api/general-parameters/categories-packaging";
 import { deleteCategoryProduct } from "@/api/general-parameters/categories-product";
+import CustomCard from "@/@core/components/mui/Card";
 
 const Category = () => {
   const queryClient = useQueryClient();
@@ -90,7 +91,7 @@ const Category = () => {
         <Update open={updateData.open} toogleDialog={toogleDialog} category={updateData.category} />
       )}
       <Create />
-      <div className='w-full'>
+      <CustomCard>
         <CustomDataGrid
           columns={colDefs}
           data={data?.map((category, index) => ({
@@ -99,7 +100,7 @@ const Category = () => {
             id: index
           }))}
         />
-      </div>
+      </CustomCard>
       {/*<Grid container spacing={2}>
         {data?.map((category: any) => (
           <Grid item xs={12} sm={6} md={4} key={category.id}>

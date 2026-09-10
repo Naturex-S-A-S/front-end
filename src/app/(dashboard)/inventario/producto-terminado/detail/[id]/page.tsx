@@ -53,6 +53,11 @@ const Page: React.FC<Props> = ({ params }) => {
         canUpdate={canUpdate}
         isPending={isPending}
         quantity={quantity}
+        breadcrumbs={[
+          { label: "Inventario", href: "/inventario/producto-terminado/listado" },
+          { label: "Producto Terminado", href: "/inventario/producto-terminado/listado" },
+          { label: `#${params.id}` }
+        ]}
       />
       <Detail product={product} />
     </Box>

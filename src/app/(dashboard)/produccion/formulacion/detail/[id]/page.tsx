@@ -34,6 +34,11 @@ const Page: React.FC<Props> = ({ params }) => {
         name={formulation.name}
         createdAt={formulation.dateCreated.toString()}
         version={version?.sequentialNumber}
+        breadcrumbs={[
+          { label: "Producción", href: "/produccion/formulacion" },
+          { label: "Formulación", href: "/produccion/formulacion" },
+          { label: `#${params.id}` }
+        ]}
       />
       <Detail formulation={formulation} />
     </Box>

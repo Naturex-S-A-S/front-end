@@ -29,6 +29,11 @@ const Page = async ({ params }: Props) => {
         name={provider.name}
         createdAt={provider.dateCreated.toString()}
         active={provider.active}
+        breadcrumbs={[
+          { label: "Inventario", href: "/inventario/proveedores" },
+          { label: "Proveedores", href: "/inventario/proveedores" },
+          { label: `#${params.id}` }
+        ]}
       />
       <Detail provider={provider} />
     </Box>

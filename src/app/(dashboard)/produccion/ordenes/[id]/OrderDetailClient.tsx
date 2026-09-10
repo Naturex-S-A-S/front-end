@@ -76,6 +76,11 @@ const OrderDetailClient = ({ order }: Props) => {
         id={String(order.id)}
         name={order.formulationName}
         createdAt={order.dateCreated}
+        breadcrumbs={[
+          { label: "Producción", href: "/produccion/ordenes" },
+          { label: "Órdenes", href: "/produccion/ordenes" },
+          { label: `#${order.id}` }
+        ]}
         actions={
           <>
             {order.status === STATUS.en_proceso && (

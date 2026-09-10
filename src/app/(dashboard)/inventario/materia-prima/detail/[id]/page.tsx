@@ -32,6 +32,11 @@ const Page = async ({ params }: Props) => {
         active={feedstock.active}
         quantity={feedstock.quantityG}
         actions={<HeaderToggle id={params.id} active={feedstock.active} />}
+        breadcrumbs={[
+          { label: "Inventario", href: "/inventario/materia-prima/listado" },
+          { label: "Materia Prima", href: "/inventario/materia-prima/listado" },
+          { label: `#${params.id}` }
+        ]}
       />
       <Detail feedstock={feedstock} />
     </Box>

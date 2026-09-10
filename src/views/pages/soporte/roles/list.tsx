@@ -8,10 +8,8 @@ import Link from "next/link";
 // ** MUI Imports
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import CardContent from "@mui/material/CardContent";
 
 import { Icon } from "@iconify/react";
 
@@ -31,6 +29,7 @@ import { deleteRole, getRoleById, updateRole } from "@/api/role";
 
 import { alertMessageErrors } from "@/utils/messages";
 import Swal from "@/lib/swal";
+import CustomCard from "@/@core/components/mui/Card";
 
 const List = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -118,11 +117,10 @@ const List = () => {
       />
       {roles?.map((item, index: number) => (
         <Grid item xs={12} sm={6} lg={4} key={index}>
-          <Card>
-            <CardContent>
-              <Box sx={{ mb: 1.5, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Typography sx={{ color: "text.secondary" }}>{`Total ${item.users_count || 0} usuarios`}</Typography>
-                {/*<AvatarGroup
+          <CustomCard>
+            <Box sx={{ mb: 1.5, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <Typography sx={{ color: "text.secondary" }}>{`Total ${item.users_count || 0} usuarios`}</Typography>
+              {/*<AvatarGroup
                 max={4}
                 className='pull-up'
                 sx={{
@@ -133,48 +131,47 @@ const List = () => {
                   <Avatar key={index} alt={item.title} src={`/images/avatars/${img}`} />
                 ))}
               </AvatarGroup>*/}
-              </Box>
-              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-                <Box sx={{ display: "flex", alignItems: "flex-start", flexDirection: "column" }}>
-                  <Typography variant='h4' sx={{ mb: 1 }}>
-                    {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
-                  </Typography>
-                  {canEdit && (
-                    <Typography
-                      href='/'
-                      component={Link}
-                      sx={{ color: "primary.main", textDecoration: "none" }}
-                      onClick={e => {
-                        e.preventDefault();
-                        setDataEdit(item);
-                        toogleDialog();
-                      }}
-                    >
-                      Editar Rol
-                    </Typography>
-                  )}
-                </Box>
-                {canDelete && (
-                  <Tooltip
-                    title={
-                      item.users_count !== 0 ? "No se puede eliminar un rol con usuarios asignados" : "Eliminar Rol"
-                    }
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+              <Box sx={{ display: "flex", alignItems: "flex-start", flexDirection: "column" }}>
+                <Typography variant='h4' sx={{ mb: 1 }}>
+                  {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+                </Typography>
+                {canEdit && (
+                  <Typography
+                    href='/'
+                    component={Link}
+                    sx={{ color: "primary.main", textDecoration: "none" }}
+                    onClick={e => {
+                      e.preventDefault();
+                      setDataEdit(item);
+                      toogleDialog();
+                    }}
                   >
-                    <span>
-                      <IconButton
-                        size='small'
-                        sx={{ color: "text.disabled" }}
-                        disabled={item.users_count !== 0}
-                        onClick={() => handleDelete(item.id.toString())}
-                      >
-                        <Icon icon='material-symbols:delete-outline' />
-                      </IconButton>
-                    </span>
-                  </Tooltip>
+                    Editar Rol
+                  </Typography>
                 )}
               </Box>
-            </CardContent>
-          </Card>
+              {canDelete && (
+                <Tooltip
+                  title={
+                    item.users_count !== 0 ? "No se puede eliminar un rol con usuarios asignados" : "Eliminar Rol"
+                  }
+                >
+                  <span>
+                    <IconButton
+                      size='small'
+                      sx={{ color: "text.disabled" }}
+                      disabled={item.users_count !== 0}
+                      onClick={() => handleDelete(item.id.toString())}
+                    >
+                      <Icon icon='material-symbols:delete-outline' />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              )}
+            </Box>
+          </CustomCard>
         </Grid>
       ))}
     </Grid>

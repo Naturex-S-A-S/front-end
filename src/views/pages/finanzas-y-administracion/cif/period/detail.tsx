@@ -5,6 +5,7 @@ import { Box, Chip, Grid, Stack, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 
 import CustomCard from "@/@core/components/mui/Card";
+import CustomBreadcrumbs from "@/@core/components/mui/Breadcrumbs";
 import type { ICifType, IPeriod } from "@/types/pages/cif";
 import CustomButton from "@/@core/components/mui/Button";
 import CustomDialog from "@/@core/components/mui/Dialog";
@@ -41,6 +42,14 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
   }
 
   return (
+    <Stack direction='column' spacing={2}>
+      <CustomBreadcrumbs
+        items={[
+          { label: "Finanzas y Administración", href: "/finanzas-y-administracion/cif" },
+          { label: "CIF", href: "/finanzas-y-administracion/cif" },
+          { label: `#${period.id} - ${period.name} (${period.month}/${period.year})` }
+        ]}
+      />
     <CustomCard
       title={
         <div className='flex items-center gap-2'>
@@ -139,6 +148,7 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
         </Stack>
       </CustomDialog>
     </CustomCard>
+    </Stack>
   );
 };
 

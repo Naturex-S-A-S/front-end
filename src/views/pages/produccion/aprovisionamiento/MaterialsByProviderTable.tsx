@@ -4,8 +4,6 @@ import { Fragment, useEffect, useState } from "react";
 
 import {
   Box,
-  Card,
-  CardContent,
   Collapse,
   IconButton,
   Table,
@@ -19,6 +17,7 @@ import {
 import { Icon } from "@iconify/react";
 
 import type { IOrderSupplyMaterialsByProvider } from "@/types/pages/order";
+import CustomCard from "@/@core/components/mui/Card";
 
 interface Props {
   items: IOrderSupplyMaterialsByProvider[];
@@ -57,11 +56,9 @@ const MaterialsByProviderTable: React.FC<Props> = ({
 
   if (!items?.length) {
     return (
-      <Card>
-        <CardContent>
-          <Typography textAlign='center'>{emptyMessage}</Typography>
-        </CardContent>
-      </Card>
+      <CustomCard>
+        <Typography textAlign='center'>{emptyMessage}</Typography>
+      </CustomCard>
     );
   }
 
@@ -70,92 +67,90 @@ const MaterialsByProviderTable: React.FC<Props> = ({
   const innerColspan = 3 + actionCols + costCols;
 
   return (
-    <Card>
-      <CardContent>
-        <Table size='small'>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ width: 48 }} />
-              <TableCell>Nombre</TableCell>
-              <TableCell>Dirección</TableCell>
-              <TableCell>Teléfono</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {items.map(item => (
-              <Fragment key={item.providerId}>
-                <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                  <TableCell>
-                    <IconButton size='small' onClick={() => toggleRow(item.providerId)}>
-                      <Icon icon={openRows.has(item.providerId) ? "mdi:chevron-up" : "mdi:chevron-down"} />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell className='font-bold'>{item.providerName || "-"}</TableCell>
-                  <TableCell className='font-bold'>{item.providerAddress || "-"}</TableCell>
-                  <TableCell className='font-bold'>{item.providerPhone || "-"}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell colSpan={6} sx={{ py: 0 }}>
-                    <Collapse in={openRows.has(item.providerId)}>
-                      <Box sx={{ p: 2 }}>
-                        <Table size='medium'>
-                          <TableHead>
+    <CustomCard>
+      <Table size='small'>
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{ width: 48 }} />
+            <TableCell>Nombre</TableCell>
+            <TableCell>Dirección</TableCell>
+            <TableCell>Teléfono</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {items.map(item => (
+            <Fragment key={item.providerId}>
+              <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                <TableCell>
+                  <IconButton size='small' onClick={() => toggleRow(item.providerId)}>
+                    <Icon icon={openRows.has(item.providerId) ? "mdi:chevron-up" : "mdi:chevron-down"} />
+                  </IconButton>
+                </TableCell>
+                <TableCell className='font-bold'>{item.providerName || "-"}</TableCell>
+                <TableCell className='font-bold'>{item.providerAddress || "-"}</TableCell>
+                <TableCell className='font-bold'>{item.providerPhone || "-"}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell colSpan={6} sx={{ py: 0 }}>
+                  <Collapse in={openRows.has(item.providerId)}>
+                    <Box sx={{ p: 2 }}>
+                      <Table size='medium'>
+                        <TableHead>
+                          <TableRow>
+                            {showActions && <TableCell align='right'>Acciones</TableCell>}
+                            <TableCell>Nombre</TableCell>
+                            <TableCell align='right'>Cant. Disponible</TableCell>
+                            <TableCell align='right'>Cant. Faltante</TableCell>
+                            <TableCell align='right'>Cant. Total Pedido</TableCell>
+                            {showCost && <TableCell align='right'>Costo Total</TableCell>}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {!item.materials?.length ? (
                             <TableRow>
-                              {showActions && <TableCell align='right'>Acciones</TableCell>}
-                              <TableCell>Nombre</TableCell>
-                              <TableCell align='right'>Cant. Disponible</TableCell>
-                              <TableCell align='right'>Cant. Faltante</TableCell>
-                              <TableCell align='right'>Cant. Total Pedido</TableCell>
-                              {showCost && <TableCell align='right'>Costo Total</TableCell>}
+                              <TableCell colSpan={innerColspan} sx={{ textAlign: "center" }}>
+                                Sin materiales
+                              </TableCell>
                             </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {!item.materials?.length ? (
-                              <TableRow>
-                                <TableCell colSpan={innerColspan} sx={{ textAlign: "center" }}>
-                                  Sin materiales
-                                </TableCell>
+                          ) : (
+                            item.materials.map(material => (
+                              <TableRow
+                                key={material.id}
+                                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                              >
+                                {showActions && (
+                                  <TableCell align='center'>
+                                    <Tooltip title='Cambiar proveedor'>
+                                      <IconButton
+                                        size='small'
+                                        onClick={() =>
+                                          onChangeProvider?.(material.id, material.name, item.providerId)
+                                        }
+                                      >
+                                        <Icon icon='ic:sharp-change-circle' />
+                                      </IconButton>
+                                    </Tooltip>
+                                  </TableCell>
+                                )}
+                                <TableCell>{material.name}</TableCell>
+                                <TableCell align='right'>{material.quantityAvailable}</TableCell>
+                                <TableCell align='right'>{material.quantityMissing}</TableCell>
+                                <TableCell align='right'>{material.quantityTotalOrder}</TableCell>
+                                {showCost && <TableCell align='right'>{material.totalCost}</TableCell>}
                               </TableRow>
-                            ) : (
-                              item.materials.map(material => (
-                                <TableRow
-                                  key={material.id}
-                                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                                >
-                                  {showActions && (
-                                    <TableCell align='center'>
-                                      <Tooltip title='Cambiar proveedor'>
-                                        <IconButton
-                                          size='small'
-                                          onClick={() =>
-                                            onChangeProvider?.(material.id, material.name, item.providerId)
-                                          }
-                                        >
-                                          <Icon icon='ic:sharp-change-circle' />
-                                        </IconButton>
-                                      </Tooltip>
-                                    </TableCell>
-                                  )}
-                                  <TableCell>{material.name}</TableCell>
-                                  <TableCell align='right'>{material.quantityAvailable}</TableCell>
-                                  <TableCell align='right'>{material.quantityMissing}</TableCell>
-                                  <TableCell align='right'>{material.quantityTotalOrder}</TableCell>
-                                  {showCost && <TableCell align='right'>{material.totalCost}</TableCell>}
-                                </TableRow>
-                              ))
-                            )}
-                          </TableBody>
-                        </Table>
-                      </Box>
-                    </Collapse>
-                  </TableCell>
-                </TableRow>
-              </Fragment>
-            ))}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+                            ))
+                          )}
+                        </TableBody>
+                      </Table>
+                    </Box>
+                  </Collapse>
+                </TableCell>
+              </TableRow>
+            </Fragment>
+          ))}
+        </TableBody>
+      </Table>
+    </CustomCard>
   );
 };
 
