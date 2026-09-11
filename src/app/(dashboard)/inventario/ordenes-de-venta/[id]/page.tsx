@@ -19,7 +19,6 @@ const Page = async ({ params }: { params: { id: string } }) => {
   return (
     <div className='flex flex-col gap-2'>
       <Header
-        id={params.id}
         name={saleOrder.fileName}
         breadcrumbs={[
           { label: "Inventario", href: "/inventario/ordenes-de-venta" },

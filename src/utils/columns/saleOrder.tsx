@@ -17,7 +17,7 @@ export const useColumns = (): GridColDef[] => {
       renderCell: params => (
         <ActionButton
           icon='mdi:eye-outline'
-          onClick={() => router.push(`/finanzas-y-administracion/ordenes-de-venta/${params.row.id}`)}
+          onClick={() => router.push(`/inventario/ordenes-de-venta/${params.row.id}`)}
         />
       )
     },

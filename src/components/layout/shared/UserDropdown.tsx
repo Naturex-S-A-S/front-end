@@ -38,6 +38,14 @@ const BadgeContentSpan = styled("span")({
   boxShadow: "0 0 0 2px var(--mui-palette-background-paper)"
 });
 
+const getInitials = (fullName?: string | null) => {
+  if (!fullName) return "US";
+
+  const parts = fullName.trim().split(/\s+/).slice(0, 2);
+
+  return parts.map(p => p.charAt(0)).join("").toUpperCase() || "US";
+};
+
 const UserDropdown = () => {
   // States
   const [open, setOpen] = useState(false);
@@ -80,7 +88,13 @@ const UserDropdown = () => {
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         className='mis-2'
       >
-        <Avatar className='bs-[36px] is-[36px] cursor-pointer' onClick={handleDropdownOpen} />
+        <Avatar
+          className='bs-[36px] is-[36px] cursor-pointer'
+          onClick={handleDropdownOpen}
+          sx={{ bgcolor: "primary.main", fontWeight: 600 }}
+        >
+          {getInitials(session?.user?.name)}
+        </Avatar>
       </Badge>
       <Popper
         open={open}
@@ -101,7 +115,13 @@ const UserDropdown = () => {
               <ClickAwayListener onClickAway={e => handleDropdownClose(e as MouseEvent | TouchEvent)}>
                 <MenuList>
                   <div className='flex items-center plb-2 pli-6 gap-2' tabIndex={-1}>
-                    <Avatar className='bs-[36px] is-[36px]' />
+                    <Avatar
+                      className='bs-[36px] is-[36px]'
+                      sx={{ bgcolor: "primary.main", fontWeight: 600 }}
+                      aria-label={session?.user?.name ?? "Usuario"}
+                    >
+                      {getInitials(session?.user?.name)}
+                    </Avatar>
                     <div className='flex items-start flex-col'>
                       <Typography className='font-medium' color='text.primary'>
                         {session?.user?.name}
