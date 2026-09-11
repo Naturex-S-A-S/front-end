@@ -13,13 +13,14 @@ import CustomDialog from "@/@core/components/mui/Dialog";
 import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
 import CustomTextField from "@/@core/components/mui/TextField";
 import CustomButton from "@/@core/components/mui/Button";
-import { adjustmentMaterialSchema, adjustmentProductSchema, categoryOnlySchema } from "@/utils/schemas/order";
+import { adjustmentFeedstockSchema, adjustmentPackagingSchema, adjustmentProductSchema, categoryOnlySchema } from "@/utils/schemas/order";
 import AdjustmentList from "./adjustmentList";
 import MaterialFormFields from "./MaterialFormFields";
 import ProductFormFields from "./ProductFormFields";
 import { useAdjustmentMutations } from "./useAdjustmentMutations";
 import useGetWarehouseList from "@/hooks/warehouse/useGetWarehouse";
 import CustomCard from "@/@core/components/mui/Card";
+import { MaterialTypeKey } from "@/utils/enum";
 
 type Option = { id: number; label: string };
 
@@ -52,6 +53,8 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
 
   const { warehouseList } = useGetWarehouseList();
 
+  console.log({ batch });
+
   const {
     control,
     handleSubmit,
@@ -77,7 +80,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
       const catId = data.category?.id;
 
       const schema =
-        (catId === 1 || catId === 2) ? adjustmentMaterialSchema : catId === 3 ? adjustmentProductSchema : categoryOnlySchema;
+        catId === 1 ? adjustmentPackagingSchema : catId === 2 ? adjustmentFeedstockSchema : catId === 3 ? adjustmentProductSchema : categoryOnlySchema;
 
       return yupResolver(schema)(data as any, context, options as any);
     }
@@ -94,7 +97,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
   const isCategoryPackaging = (categoryWatch?.id === 1);
 
   const materialOptions = useMemo(() => {
-    return materials.filter((material) => material.typeMaterial === (isCategoryPackaging ? "packaging" : "materia_prima")).map((material) => ({
+    return materials.filter((material) => material.typeMaterial === (isCategoryPackaging ? MaterialTypeKey.PACKAGING : MaterialTypeKey.FEEDSTOCK)).map((material) => ({
       id: material.idMaterial,
       label: material.nameMaterial,
       type: material.typeMaterial
@@ -187,6 +190,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
                 errors={errors}
                 materialOptions={materialOptions}
                 warehouseList={warehouseList}
+                isPackaging={isCategoryPackaging}
               />
             )}
 

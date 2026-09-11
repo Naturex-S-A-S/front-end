@@ -16,6 +16,7 @@ export interface IOrderItem {
   finalProduct: {
     id: string;
     name: string;
+    fullName: string;
     measurement: number;
     unit: string;
   };

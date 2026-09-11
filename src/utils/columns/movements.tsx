@@ -4,12 +4,13 @@ import { Chip, Tooltip } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
 
 import { formatDate } from "../format";
+import type { MaterialTypeKey } from "../enum";
 
 type params = {
   handleEdit?: (user: any) => void;
   handleDelete?: (userId: any) => void;
   filters: any;
-  type: "packaging" | "feedStock";
+  type: MaterialTypeKey.PACKAGING | "feedStock";
 };
 
 export const columns = ({ filters, type }: params): GridColDef[] => {

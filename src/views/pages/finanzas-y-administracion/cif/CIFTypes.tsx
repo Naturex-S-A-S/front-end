@@ -4,7 +4,7 @@ import { FormProvider, useForm, Controller, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import toast from "react-hot-toast";
 
-import { Badge, Box, Card, Chip, FormControlLabel, Grid, MenuItem, Stack, Switch, Typography } from "@mui/material";
+import { Alert, Badge, Box, Card, Chip, FormControlLabel, Grid, MenuItem, Stack, Switch, Tooltip, Typography } from "@mui/material";
 
 import { Icon } from "@iconify/react";
 
@@ -49,36 +49,75 @@ const TiposCIFPanel = ({ data }: TiposCIFPanelProps) => {
           </CustomButton>
         }
       >
-        <Box display='flex' flexDirection='column' gap={2}>
-          {paginatedData.map(item => (
-            <Card key={item.id} variant='outlined'>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "8px 16px"
-                }}
-              >
-                <div>
-                  <Stack direction='row' spacing={2}>
-                    <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
-                      {item.name}
-                    </Typography>
+        {data.length === 0 ? (
+          <Alert severity='info' icon={<Icon icon='mynaui:label' fontSize={18} />}>
+            No hay tipos de CIF registrados. Agrega el primero para usarlos en períodos.
+          </Alert>
+        ) : (
+          <Box display='flex' flexDirection='column' gap={2}>
+            {paginatedData.map(item => {
+              const isFixed = item.costBasis === "fixed";
 
-                    {!item.active && <Chip label='Inactivo' size='small' variant='outlined' />}
-                  </Stack>
-                  <Typography variant='subtitle2' component='div' sx={{ color: "text.secondary" }}>
-                    {item.costBasisName}
-                  </Typography>
-                </div>
-                <CustomIconButton onClick={() => handleEdit(item)}>
-                  <Icon icon='mdi:pencil' fontSize={15} />
-                </CustomIconButton>
-              </Box>
-            </Card>
-          ))}
-        </Box>
+              return (
+                <Card
+                  key={item.id}
+                  variant='outlined'
+                  sx={{
+                    transition: "border-color 150ms ease, background-color 150ms ease",
+                    "&:hover": { borderColor: "primary.main", backgroundColor: "action.hover" },
+                    ...(!item.active && { opacity: 0.85 })
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 16px",
+                      gap: 2
+                    }}
+                  >
+                    <Stack direction='row' spacing={3} alignItems='center' sx={{ minInlineSize: 0, flex: 1 }}>
+                      <Box sx={{ minInlineSize: 0, flex: 1 }}>
+                        <Stack direction='row' spacing={2} alignItems='center' sx={{ flexWrap: "wrap" }}>
+                          <Typography variant='subtitle1' fontWeight={600} noWrap>
+                            {item.name}
+                          </Typography>
+                          {!item.active && <Chip label='Inactivo' size='small' color='warning' variant='outlined' />}
+                        </Stack>
+                        <Stack direction='row' spacing={1} alignItems='center'>
+                          <Icon
+                            icon={isFixed ? "mdi:lock-clock" : "mdi:chart-line-variant"}
+                            fontSize={14}
+                            style={{ opacity: 0.6 }}
+                          />
+                          <Typography variant='body2' color='text.secondary' noWrap>
+                            {item.costBasisName}
+                          </Typography>
+                        </Stack>
+                      </Box>
+                    </Stack>
+                    {item.isDefault ? (
+                      <Tooltip title='CIF por defecto, no editable'>
+                        <span>
+                          <CustomIconButton disabled>
+                            <Icon icon='mdi:lock-outline' fontSize={15} />
+                          </CustomIconButton>
+                        </span>
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title='Editar'>
+                        <CustomIconButton onClick={() => handleEdit(item)} aria-label={`Editar ${item.name}`}>
+                          <Icon icon='mdi:pencil' fontSize={15} />
+                        </CustomIconButton>
+                      </Tooltip>
+                    )}
+                  </Box>
+                </Card>
+              );
+            })}
+          </Box>
+        )}
         <PaginationBar page={page} count={pageCount} onChange={setPage} />
       </CustomCard>
       {dialogItem && (

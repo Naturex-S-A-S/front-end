@@ -18,6 +18,7 @@ import {
 } from "@/api/packaging";
 import { postKardexInputAdjustment as postKardexInputAdjustmentProduct } from "@/api/product";
 import { alertMessageErrors } from "@/utils/messages";
+import { MaterialTypeKey } from "@/utils/enum";
 
 interface UseAdjustmentMutationsProps {
   orderId: number;
@@ -59,7 +60,7 @@ export const useAdjustmentMutations = ({
 
   const { mutate: mutateInput, isPending: isPendingInputFeedStock } = useMutation({
     mutationFn: (variables: any) =>
-      variables.type === "materia_prima"
+      variables.type === MaterialTypeKey.FEEDSTOCK
         ? postKardexInputAdjustmentFeedStock(variables)
         : postKardexInputAdjustmentPackaging(variables),
     onSuccess,
@@ -68,7 +69,7 @@ export const useAdjustmentMutations = ({
 
   const { mutate: mutateOutput, isPending: isPendingOutput } = useMutation({
     mutationFn: (variables: any) =>
-      variables.type === "materia_prima"
+      variables.type === MaterialTypeKey.FEEDSTOCK
         ? postKardexOutputAdjustmentFeedStock(variables)
         : postKardexOutputAdjustmentPackaging(variables),
     onSuccess,
@@ -86,7 +87,11 @@ export const useAdjustmentMutations = ({
           idOrder: orderId,
           quantity: values.quantity,
           batch: values.batch,
-          expirationDate1: moment(values.expiration_date_1).format("YYYY-MM-DD"),
+          expirationDate1: isCategoryPackaging
+            ? null
+            : values.expiration_date_1
+              ? moment(values.expiration_date_1).format("YYYY-MM-DD")
+              : null,
           observation: values.observation,
           idRack: values.rack?.id,
           type: values.material?.type

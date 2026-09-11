@@ -104,7 +104,7 @@ const SnapshotDetailDialog = ({ snapshotId, open, onClose, onSaved }: Props) => 
                 )}
                 {status && (
                   <Grid item>
-                    <Chip label={status.label} color={status.color} size='small' variant='outlined' />
+                    <Chip label={status.label} color={status.color} variant='outlined' />
                   </Grid>
                 )}
                 <Grid item>

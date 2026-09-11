@@ -61,10 +61,12 @@ const CIFPeriods = ({ data }: CIFPeriodsProps) => {
               key={item.id}
               variant='outlined'
               sx={{
-                borderColor: selectedId === String(item.id) ? "primary.main" : undefined,
-                bgcolor: selectedId === String(item.id) ? "action.selected" : undefined,
+                transition: "border-color 150ms ease, background-color 150ms ease",
+                "&:hover": { borderColor: "primary.main", backgroundColor: "action.hover" },
+                ...(selectedId === String(item.id) && { borderColor: "primary.main", bgcolor: "action.selected" }),
                 cursor: "pointer"
               }}
+
             >
               <Link href={`/finanzas-y-administracion/cif/${item.id}`}>
                 <Box

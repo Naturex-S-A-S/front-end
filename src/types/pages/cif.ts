@@ -4,6 +4,7 @@ export interface ICifType {
   costBasis: string;
   costBasisName: string;
   active: boolean;
+  isDefault: boolean;
   dateCreated: string;
 }
 

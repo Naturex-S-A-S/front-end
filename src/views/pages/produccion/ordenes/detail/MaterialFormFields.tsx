@@ -17,9 +17,16 @@ interface MaterialFormFieldsProps {
   errors: FieldErrors<AdjustmentFormValues>;
   materialOptions: Option[];
   warehouseList: any[];
+  isPackaging: boolean;
 }
 
-const MaterialFormFields: FC<MaterialFormFieldsProps> = ({ control, errors, materialOptions, warehouseList }) => {
+const MaterialFormFields: FC<MaterialFormFieldsProps> = ({
+  control,
+  errors,
+  materialOptions,
+  warehouseList,
+  isPackaging
+}) => {
   return (
     <>
       <Grid item xs={6}>
@@ -92,7 +99,7 @@ const MaterialFormFields: FC<MaterialFormFieldsProps> = ({ control, errors, mate
           render={({ field: { value, onChange }, fieldState: { error } }: any) => (
             <CustomTextField
               type='number'
-              label='Cantidad'
+              label='Cantidad (g)'
               value={value ?? ""}
               onChange={e => onChange(Number(e.target.value))}
               error={!!error}
@@ -102,9 +109,11 @@ const MaterialFormFields: FC<MaterialFormFieldsProps> = ({ control, errors, mate
         />
       </Grid>
 
-      <Grid item xs={6}>
-        <CustomDatePicker name='expiration_date_1' control={control} label='Fecha expiración 1' errors={errors.expiration_date_1} />
-      </Grid>
+      {!isPackaging && (
+        <Grid item xs={6}>
+          <CustomDatePicker name='expiration_date_1' control={control} label='Fecha expiración 1' errors={errors.expiration_date_1} />
+        </Grid>
+      )}
 
       <Grid item xs={12} md={6} lg={4}>
         <Controller
