@@ -65,7 +65,7 @@ const ThemingSection = ({ settings, isSystemDark, handleChange, handleMenuClose 
 
   return (
     <div className='flex flex-col gap-6'>
-      <Chip label='Theming' size='small' color='primary' variant='tonal' className='self-start rounded-sm' />
+      <Chip label='Theming' color='primary' variant='outlined' className='self-start rounded-sm' />
       <div className='flex flex-col gap-2'>
         <p className='font-medium'>Primary Color</p>
         <div className='flex items-center justify-between'>

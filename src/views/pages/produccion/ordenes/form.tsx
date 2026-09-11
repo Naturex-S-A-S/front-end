@@ -2,8 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 
 import {
   Box,
-  Card,
-  CardContent,
   Divider,
   Grid,
   Skeleton,
@@ -32,6 +30,7 @@ import useGetProductList from "@/hooks/product/useGetProductList";
 import CustomDatePicker from "@/@core/components/react-datepicker";
 import { getProductsRelated } from "@/api/product";
 import { MaterialTypeKey } from "@/utils/enum";
+import CustomCard from "@/@core/components/mui/Card";
 
 type Props = {
   isPending: boolean;
@@ -132,82 +131,80 @@ const Form: React.FC<Props> = ({
       <Grid item xs={12} md={4}>
         <Grid container spacing={4}>
           <Grid item xs={12}>
-            <Card>
-              <CardContent>
-                <Box display='flex' flexDirection='column' gap={4}>
-                  <Controller
-                    name='product'
-                    control={control}
-                    render={({ field: { value, onChange } }: any) => (
-                      <CustomAutocomplete
-                        value={value}
-                        options={productList}
-                        getOptionLabel={(option: Product) => option?.fullName || ""}
-                        onChange={(_, v: Product | null) => onChange(v)}
-                        renderInput={(params: any) => (
-                          <CustomTextField {...params} label='Elegir producto' placeholder='Seleccione un producto' />
-                        )}
-                      />
-                    )}
-                  />
-
-                  <Divider />
-
-                  {isPendingProductsRelated || isPendingOrderCalculate ? (
-                    <LoaderInfo />
-                  ) : (
-                    (step === 1 || step === 2) && (
-                      <>
-                        <Typography variant='h5'>Presentaciones</Typography>
-                        {fields.map((presentation: Presentation, index: number) => (
-                          <CustomTextField
-                            key={presentation.id}
-                            {...register(`presentations.${index}.quantityG`)}
-                            type='number'
-                            autoComplete='off'
-                            onBlur={e => {
-                              handleChangeQuantity(e.target.value, index);
-                            }}
-                            onChange={e => {
-                              const value = e.target.value;
-
-                              handleChangeQuantity(value, index);
-
-                              setValue(`presentations.${index}.quantityG`, value);
-                            }}
-                            fullWidth
-                            label={`${presentation.fullName}`}
-                            placeholder='Ingrese las unidades a producir'
-                            error={!!errors?.presentations?.[index]?.quantityG}
-                          />
-                        ))}
-
-                        {(step === 1 || isChanged) && <CustomButton text='Calcular' onClick={handleContinue} />}
-
-                        {step === 2 && (
-                          <>
-                            <Divider />
-                            <CustomDatePicker
-                              control={control}
-                              minDate={moment().add(1, "day").toDate()}
-                              name='expirationDate1'
-                              label='Fecha de vencimiento'
-                              errors={errors?.expirationDate1?.message}
-                            />
-                            <CustomButton
-                              text='Generar orden'
-                              type='submit'
-                              disabled={isChanged}
-                              isLoading={isPendingCreate}
-                            />
-                          </>
-                        )}
-                      </>
-                    )
+            <CustomCard>
+              <Box display='flex' flexDirection='column' gap={4}>
+                <Controller
+                  name='product'
+                  control={control}
+                  render={({ field: { value, onChange } }: any) => (
+                    <CustomAutocomplete
+                      value={value}
+                      options={productList}
+                      getOptionLabel={(option: Product) => option?.fullName || ""}
+                      onChange={(_, v: Product | null) => onChange(v)}
+                      renderInput={(params: any) => (
+                        <CustomTextField {...params} label='Elegir producto' placeholder='Seleccione un producto' />
+                      )}
+                    />
                   )}
-                </Box>
-              </CardContent>
-            </Card>
+                />
+
+                <Divider />
+
+                {isPendingProductsRelated || isPendingOrderCalculate ? (
+                  <LoaderInfo />
+                ) : (
+                  (step === 1 || step === 2) && (
+                    <>
+                      <Typography variant='h5'>Presentaciones</Typography>
+                      {fields.map((presentation: Presentation, index: number) => (
+                        <CustomTextField
+                          key={presentation.id}
+                          {...register(`presentations.${index}.quantityG`)}
+                          type='number'
+                          autoComplete='off'
+                          onBlur={e => {
+                            handleChangeQuantity(e.target.value, index);
+                          }}
+                          onChange={e => {
+                            const value = e.target.value;
+
+                            handleChangeQuantity(value, index);
+
+                            setValue(`presentations.${index}.quantityG`, value);
+                          }}
+                          fullWidth
+                          label={`${presentation.fullName}`}
+                          placeholder='Ingrese las unidades a producir'
+                          error={!!errors?.presentations?.[index]?.quantityG}
+                        />
+                      ))}
+
+                      {(step === 1 || isChanged) && <CustomButton text='Calcular' onClick={handleContinue} />}
+
+                      {step === 2 && (
+                        <>
+                          <Divider />
+                          <CustomDatePicker
+                            control={control}
+                            minDate={moment().add(1, "day").toDate()}
+                            name='expirationDate1'
+                            label='Fecha de vencimiento'
+                            errors={errors?.expirationDate1?.message}
+                          />
+                          <CustomButton
+                            text='Generar orden'
+                            type='submit'
+                            disabled={isChanged}
+                            isLoading={isPendingCreate}
+                          />
+                        </>
+                      )}
+                    </>
+                  )
+                )}
+              </Box>
+            </CustomCard>
           </Grid>
         </Grid>
       </Grid>
@@ -260,19 +257,17 @@ const Form: React.FC<Props> = ({
 
             {step !== 2 ? (
               <Grid item xs={12}>
-                <Card>
-                  <CardContent>
-                    <Table>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell colSpan={4} sx={{ textAlign: "center" }}>
-                            Ingrese las cantidades de las presentaciones
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </CardContent>
-                </Card>
+                <CustomCard>
+                  <Table>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell colSpan={4} sx={{ textAlign: "center" }}>
+                          Ingrese las cantidades de las presentaciones
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </CustomCard>
               </Grid>
             ) : (
               <>

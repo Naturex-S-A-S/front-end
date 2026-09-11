@@ -78,7 +78,7 @@ const ConnectionsTeams = (props: Props) => {
                       <Typography variant='body2'>{team.members} Members</Typography>
                     </div>
                   </div>
-                  <Chip color={team.ChipColor} label={team.chipText} size='small' variant='tonal' />
+                  <Chip color={team.ChipColor} label={team.chipText} variant='outlined' />
                 </div>
               ))}
           </CardContent>

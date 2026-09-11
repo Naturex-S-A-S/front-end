@@ -146,17 +146,12 @@ const Detail: React.FC<Props> = ({ order }) => {
                     variant='body2'
                     sx={{ whiteSpace: "normal", wordBreak: "break-word", overflowWrap: "anywhere" }}
                   >
-                    {item.finalProduct.name}
+                    {item.finalProduct.fullName}
                   </Typography>
                   <Typography variant='caption' color='textSecondary' sx={{ display: "block" }}></Typography>
                 </Box>
                 <Box display='flex' gap={1} sx={{ flexShrink: 0 }}>
-                  <Chip label={`${item.quantityU} u`} size='small' color='primary' variant='outlined' />
-                  <Chip
-                    label={`${item.finalProduct.measurement} ${item.finalProduct.unit}`}
-                    size='small'
-                    variant='outlined'
-                  />
+                  <Chip label={`${item.quantityU} u`} color='primary' variant='outlined' />
                 </Box>
               </Box>
             ))}

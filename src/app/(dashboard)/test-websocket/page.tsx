@@ -91,7 +91,7 @@ export default function WebSocketTestPage() {
             <Typography variant='h6' mb={2}>
               Mensajes recibidos
             </Typography>
-            <Chip label={statusInfo.label} color={statusInfo.color} icon={<Icon icon={statusInfo.icon} />} />
+            <Chip label={statusInfo.label} color={statusInfo.color} variant='outlined' icon={<Icon icon={statusInfo.icon} />} />
           </Stack>
 
           <Box

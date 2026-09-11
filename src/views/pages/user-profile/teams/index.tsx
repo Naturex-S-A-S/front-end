@@ -68,7 +68,7 @@ const Teams = ({ data }: { data?: TeamsTabType[] }) => {
                     <div className='flex items-center gap-2'>
                       {item.chips.map((chip, index) => (
                         <Link key={index}>
-                          <Chip variant='tonal' size='small' label={chip.title} color={chip.color} />
+                          <Chip variant='outlined' label={chip.title} color={chip.color} />
                         </Link>
                       ))}
                     </div>

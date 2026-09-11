@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import CustomDataGrid from "@/@core/components/mui/DataGrid";
 import { columns } from "@/utils/columns/movements";
 import { getMovements } from "@/api/packaging";
-import { MaterialType } from "@/utils/enum";
+import { MaterialType, MaterialTypeKey } from "@/utils/enum";
 import Filter from "../../movements/filter";
 
 const defaultFilters = {
@@ -47,7 +47,7 @@ const Movements = () => {
     <div className='flex flex-col gap-2'>
       <Filter onApplyFilters={onApplyFilters} defaultValues={defaultFilters} />
       <CustomDataGrid
-        columns={columns({ handleEdit, handleDelete, filters, type: "packaging" })}
+        columns={columns({ handleEdit, handleDelete, filters, type: MaterialTypeKey.PACKAGING })}
         getRowClassName={(params: any) => (params.row.type === "input" ? "input" : "output")}
         data={data}
         isLoading={isLoading}

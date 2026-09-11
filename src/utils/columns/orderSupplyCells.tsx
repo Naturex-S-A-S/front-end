@@ -32,7 +32,7 @@ const ProductNamesCell = memo(({ productNames }: { productNames: string[] }) => 
     <div className='flex gap-2 items-center' style={{ height: "100%" }}>
       {visible.map((name, i) => (
         <Tooltip key={i} title={name}>
-          <Chip label={name.length > 14 ? `${name.slice(0, 14)}…` : name} variant='outlined' size='small' />
+          <Chip label={name.length > 14 ? `${name.slice(0, 14)}…` : name} variant='outlined' />
         </Tooltip>
       ))}
       {remaining.length > 0 && (
@@ -45,7 +45,7 @@ const ProductNamesCell = memo(({ productNames }: { productNames: string[] }) => 
             </div>
           }
         >
-          <Chip label={`+${remaining.length}`} variant='outlined' size='small' />
+          <Chip label={`+${remaining.length}`} variant='outlined' />
         </Tooltip>
       )}
     </div>

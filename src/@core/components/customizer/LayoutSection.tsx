@@ -40,7 +40,7 @@ const LayoutSection = ({ settings, direction, disableDirection, updateSettings }
 
   return (
     <div className='flex flex-col gap-6'>
-      <Chip label='Layout' variant='tonal' size='small' color='primary' className='self-start rounded-sm' />
+      <Chip label='Layout' variant='outlined' color='primary' className='self-start rounded-sm' />
       <div className='flex flex-col gap-2'>
         <p className='font-medium'>Layouts</p>
         <div className='flex items-center justify-between'>

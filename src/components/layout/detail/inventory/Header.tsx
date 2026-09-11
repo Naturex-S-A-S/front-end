@@ -51,12 +51,12 @@ const Header: React.FC<Props> = ({
           {typeof quantity === "number" && Number.isFinite(quantity) && (
             <Chip
               label={quantity && quantity > 0 ? `${quantity} en stock` : "Sin stock"}
-              size='medium'
+              variant='outlined'
               color={quantity && quantity > 0 ? "success" : "error"}
             />
           )}
 
-          {version && <Chip label={`Versión ${version}`} size='medium' color='primary' />}
+          {version && <Chip label={`Versión ${version}`} variant='outlined' color='primary' />}
 
           {actions && <div className='flex items-center gap-2'>{actions}</div>}
 
@@ -66,7 +66,7 @@ const Header: React.FC<Props> = ({
               <Loader type='component' />
             ) : (
               <div className='flex items-center gap-2'>
-                <Chip color={active ? "success" : "error"} label={active ? "Activo" : "Inactivo"} size='medium' />
+                <Chip color={active ? "success" : "error"} label={active ? "Activo" : "Inactivo"} variant='outlined' />
                 <Tooltip title=''>
                   <Switch
                     checked={active}

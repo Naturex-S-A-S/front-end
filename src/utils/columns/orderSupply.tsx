@@ -31,7 +31,7 @@ export const columns = (): GridColDef[] => [
         <Chip
           label={params.row.statusName ?? STATUS_LABEL[params.row.status]}
           color={STATUS_COLOR[params.row.status] ?? "default"}
-          size='small'
+          variant='outlined'
         />
       </Box>
     )

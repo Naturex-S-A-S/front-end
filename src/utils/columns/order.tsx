@@ -40,7 +40,7 @@ export const useColumns = (): GridColDef[] => {
           <Chip
             label={params.row.statusName ?? STATUS_LABEL[params.row.status]}
             color={STATUS_COLOR[params.row.status] ?? "default"}
-            size='small'
+            variant="outlined"
           />
         </Box>
       )
@@ -48,12 +48,17 @@ export const useColumns = (): GridColDef[] => {
     {
       field: "quantityExpected",
       headerName: "Cantidad esperada (Kg)",
+      width: 180
+    },
+    {
+      field: "quantityProduced",
+      headerName: "Cantidad producida (Kg)",
+      width: 180,
+    },
+    {
+      field: "lossPercentage",
+      headerName: "Faltante %",
       width: 150,
-      renderCell: params => (
-        <Box className='flex items-center' style={{ height: "100%" }}>
-          {params.row.quantityExpected}
-        </Box>
-      )
     },
     {
       field: "productNames",
@@ -69,7 +74,7 @@ export const useColumns = (): GridColDef[] => {
           <div className='flex gap-2 items-center' style={{ height: "100%" }}>
             {visible.map((name, i) => (
               <Tooltip key={i} title={name}>
-                <Chip label={name.length > 14 ? `${name.slice(0, 14)}…` : name} variant='outlined' size='small' />
+                <Chip label={name.length > 14 ? `${name.slice(0, 14)}…` : name} variant='outlined' />
               </Tooltip>
             ))}
             {remaining.length > 0 && (
@@ -82,7 +87,7 @@ export const useColumns = (): GridColDef[] => {
                   </div>
                 }
               >
-                <Chip label={`+${remaining.length}`} variant='outlined' size='small' />
+                <Chip label={`+${remaining.length}`} variant='outlined' />
               </Tooltip>
             )}
           </div>

@@ -42,7 +42,7 @@ export const useColumns = (): GridColDef<IPacking>[] => {
       width: 200,
       renderCell: params => (
         <div className='flex gap-2 justify-center items-center' style={{ height: "100%" }}>
-          <Chip label={params.row.packagingTotal} />
+          <Chip label={params.row.packagingTotal} variant='outlined' />
         </div>
       )
     },

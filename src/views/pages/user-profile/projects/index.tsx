@@ -89,7 +89,7 @@ const Projects = ({ data }: { data?: ProjectsTabType[] }) => {
                       </Typography>
                       <Typography>{item.hours}</Typography>
                     </div>
-                    <Chip variant='tonal' size='small' color={item.chipColor} label={`${item.daysLeft} days left`} />
+                    <Chip variant='outlined' color={item.chipColor} label={`${item.daysLeft} days left`} />
                   </div>
                   <div>
                     <div className='flex items-center justify-between mbe-2'>

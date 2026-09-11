@@ -45,7 +45,7 @@ const Connections = ({ data }: { data?: ConnectionsTabType[] }) => {
                   <div className='flex items-center gap-4'>
                     {item.chips.map((chip, index) => (
                       <Link key={index}>
-                        <Chip variant='tonal' label={chip.title} color={chip.color} size='small' />
+                        <Chip variant='outlined' label={chip.title} color={chip.color} />
                       </Link>
                     ))}
                   </div>

@@ -56,7 +56,6 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
           {period.name} ({period.month}/{period.year})
           <Chip
             label={period.status === "open" ? "Abierto" : "Cerrado"}
-            size='small'
             color={period.status === "open" ? "success" : "default"}
             variant='outlined'
           />

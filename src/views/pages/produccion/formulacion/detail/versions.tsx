@@ -103,7 +103,7 @@ const Versions: React.FC<Props> = ({ data, formulationId, isDetail = true }) => 
               <Box display='flex' justifyContent='space-between'>
                 <Box gap={2} display='flex' alignItems='center'>
                   Versión {step.sequentialNumber}{" "}
-                  {step.active && <Chip label={"Actual"} color='primary' size='small' />}
+                  {step.active && <Chip label={"Actual"} color='primary' variant='outlined' />}
                 </Box>
                 {isDetail && (
                   <div>{step?.dateCreated && moment(step.dateCreated).format("DD MMM YYYY, h:mm:ss a")}</div>

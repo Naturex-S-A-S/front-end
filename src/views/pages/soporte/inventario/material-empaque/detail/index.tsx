@@ -101,7 +101,7 @@ const Detail: React.FC<Props> = ({ packaging }) => {
                     disabled
                     fullWidth
                     type='number'
-                    label='Cantidad'
+                    label='Cantidad disponible'
                     placeholder=''
                   />
                 </Grid>
@@ -121,7 +121,7 @@ const Detail: React.FC<Props> = ({ packaging }) => {
                     disabled
                     fullWidth
                     type='number'
-                    label='Total'
+                    label='Valor total'
                     placeholder=''
                   />
                 </Grid>

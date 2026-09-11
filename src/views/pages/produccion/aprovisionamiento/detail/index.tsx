@@ -4,8 +4,6 @@ import { useState } from "react";
 
 import {
   Box,
-  Card,
-  CardContent,
   Chip,
   Divider,
   Grid,
@@ -19,6 +17,7 @@ import type { IOrderSupply } from "@/types/pages/order";
 import { STATUS, STATUS_COLOR, STATUS_LABEL } from "@/utils/constant";
 import ChangeProviderDialog from "./change-provider-dialog";
 import MaterialsByProviderTable from "../MaterialsByProviderTable";
+import CustomCard from "@/@core/components/mui/Card";
 
 interface Props {
   orderSupply: IOrderSupply;
@@ -40,71 +39,69 @@ const Detail: React.FC<Props> = ({ orderSupply }) => {
       <Grid container spacing={4}>
         {/* Left panel */}
         <Grid item xs={12} md={4} height='100%'>
-          <Card>
-            <CardContent>
-              <Box display='flex' flexDirection='column' gap={4}>
-                <Box display='flex' justifyContent='space-between' alignItems='center'>
-                  <Box>
-                    <Typography variant='caption' color='textSecondary'>
-                      Lote
-                    </Typography>
-                    <Typography variant='h6'>{orderSupply.batch}</Typography>
-                  </Box>
-                  <Chip
-                    label={orderSupply.statusName ?? STATUS_LABEL[orderSupply.status]}
-                    color={STATUS_COLOR[orderSupply.status] ?? "default"}
-                    size='small'
-                  />
+          <CustomCard>
+            <Box display='flex' flexDirection='column' gap={4}>
+              <Box display='flex' justifyContent='space-between' alignItems='center'>
+                <Box>
+                  <Typography variant='caption' color='textSecondary'>
+                    Lote
+                  </Typography>
+                  <Typography variant='h6'>{orderSupply.batch}</Typography>
                 </Box>
-
-                <Divider />
-
-                <Box display='flex' flexDirection='column' gap={2}>
-                  <Box display='flex' alignItems='center' justifyContent='space-between' gap={2}>
-                    <Typography variant='body2' color='textSecondary' sx={{ flex: 1, minWidth: 0 }}>
-                      Usuario
-                    </Typography>
-                    <Box sx={{ flexShrink: 0 }}>
-                      <Typography
-                        variant='body2'
-                        fontWeight={600}
-                        sx={{ whiteSpace: "normal", wordBreak: "break-word", overflowWrap: "anywhere" }}
-                      >
-                        {orderSupply.userName}
-                      </Typography>
-                    </Box>
-                  </Box>
-
-                  <Box display='flex' justifyContent='space-between'>
-                    <Typography variant='body2' color='textSecondary'>
-                      Fecha de creación
-                    </Typography>
-                    <Typography variant='body2' fontWeight={600}>
-                      {orderSupply.dateCreated ? formatDate(orderSupply.dateCreated) : "-"}
-                    </Typography>
-                  </Box>
-                </Box>
-
-                <Divider />
-
-                <Typography variant='h6'>Productos</Typography>
-
-                {orderSupply.products?.map(product => (
-                  <Box key={product.id} display='flex' justifyContent='space-between' alignItems='center' gap={2}>
-                    <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <Typography
-                        variant='body2'
-                        sx={{ whiteSpace: "normal", wordBreak: "break-word", overflowWrap: "anywhere" }}
-                      >
-                        {product.fullName}
-                      </Typography>
-                    </Box>
-                    <Chip label={`${product.units} u`} size='small' color='primary' variant='outlined' />
-                  </Box>
-                ))}
+                <Chip
+                  label={orderSupply.statusName ?? STATUS_LABEL[orderSupply.status]}
+                  color={STATUS_COLOR[orderSupply.status] ?? "default"}
+                  size='small'
+                />
               </Box>
-            </CardContent>
-          </Card>
+
+              <Divider />
+
+              <Box display='flex' flexDirection='column' gap={2}>
+                <Box display='flex' alignItems='center' justifyContent='space-between' gap={2}>
+                  <Typography variant='body2' color='textSecondary' sx={{ flex: 1, minWidth: 0 }}>
+                    Usuario
+                  </Typography>
+                  <Box sx={{ flexShrink: 0 }}>
+                    <Typography
+                      variant='body2'
+                      fontWeight={600}
+                      sx={{ whiteSpace: "normal", wordBreak: "break-word", overflowWrap: "anywhere" }}
+                    >
+                      {orderSupply.userName}
+                    </Typography>
+                  </Box>
+                </Box>
+
+                <Box display='flex' justifyContent='space-between'>
+                  <Typography variant='body2' color='textSecondary'>
+                    Fecha de creación
+                  </Typography>
+                  <Typography variant='body2' fontWeight={600}>
+                    {orderSupply.dateCreated ? formatDate(orderSupply.dateCreated) : "-"}
+                  </Typography>
+                </Box>
+              </Box>
+
+              <Divider />
+
+              <Typography variant='h6'>Productos</Typography>
+
+              {orderSupply.products?.map(product => (
+                <Box key={product.id} display='flex' justifyContent='space-between' alignItems='center' gap={2}>
+                  <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <Typography
+                      variant='body2'
+                      sx={{ whiteSpace: "normal", wordBreak: "break-word", overflowWrap: "anywhere" }}
+                    >
+                      {product.fullName}
+                    </Typography>
+                  </Box>
+                  <Chip label={`${product.units} u`} color='primary' variant='outlined' />
+                </Box>
+              ))}
+            </Box>
+          </CustomCard>
         </Grid>
 
         {/* Right panel */}
