@@ -40,9 +40,6 @@ next-env.d.ts
 src/assets/iconify-icons/generated-icons.js
 src/assets/iconify-icons/generated-icons.css
 
-# agents
-/.agents
-
 # Playwright
 node_modules/
 /test-results/
