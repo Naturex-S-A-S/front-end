@@ -57,7 +57,7 @@ export const registerPriceSchema = yup
       .array()
       .of(
         yup.object({
-          idMaterial: yup.number().typeError("Requerido").required("Requerido"),
+          idMaterial: yup.string().typeError("Requerido").required("Requerido"),
           materialType: yup
             .string()
             .oneOf(["feedstock", "packaging"], "Tipo de material inválido")
