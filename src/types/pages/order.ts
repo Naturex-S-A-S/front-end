@@ -13,6 +13,7 @@ export interface IOrderItem {
   idFinalProduct: string;
   quantityU: number;
   quantityKg: number;
+  batchLot?: string;
   finalProduct: {
     id: string;
     name: string;
@@ -20,6 +21,11 @@ export interface IOrderItem {
     measurement: number;
     unit: string;
   };
+}
+
+export interface ILot {
+  idFinalProduct: string;
+  batchLot: string;
 }
 
 export interface IOrderKardex {
@@ -52,6 +58,8 @@ export interface IOrder {
   dateCreated: string;
   dateClosed: string | null;
   dateExpiration: string;
+  expirationLabel?: string;
+  lots?: ILot[];
   idUser: string;
   idFormulation: number;
   idVersion: number;
@@ -68,6 +76,7 @@ export interface IOrderList {
   id: number;
   orderId: number;
   batch: string;
+  lots: ILot[];
   dateCreated: string;
   quantityExpected: number;
   status: string;
@@ -125,7 +134,6 @@ export interface IOrderSupply {
 
 export interface IOrderCreate {
   quantityExpected: number;
-  date_expiration: string;
   products: {
     id: string;
     quantity: number;

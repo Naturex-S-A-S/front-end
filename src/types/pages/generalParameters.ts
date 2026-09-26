@@ -7,6 +7,11 @@ export interface ICategory extends IBaseCategory {
   categoryId: string;
   type?: string;
   dateCreated: string;
+  idIndicator?: string;
+  expirationMonths?: number;
+  codeIndicator?: string;
+  dependsOnProduct?: boolean;
+  lotFormat?: string;
 }
 
 export type IPutCategory = ICategory;

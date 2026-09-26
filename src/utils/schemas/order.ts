@@ -11,8 +11,7 @@ export const orderSchema = yup
           .min(0, "La cantidad debe ser al menos 0")
           .required("La cantidad es requerida")
       })
-    ),
-    expirationDate1: yup.date().required("La fecha de expiración es requerida")
+    )
   })
   .required();
 

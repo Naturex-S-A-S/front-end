@@ -28,7 +28,6 @@ const Create = () => {
 
   const methods = useForm({
     defaultValues: {
-      id: undefined,
       name: undefined,
       measurement: undefined,
       unit: undefined,
@@ -64,7 +63,8 @@ const Create = () => {
     mutate({
       ...values,
       unit: values.unit.id,
-      categories: values.category.map((item: any) => item.id)
+      categories: values.category ? [values.category.id] : [],
+      lotCategoryId: values.lotCategory.id
     });
   };
 

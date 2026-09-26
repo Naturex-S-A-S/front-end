@@ -7,6 +7,7 @@ import CustomTextField from "@/@core/components/mui/TextField";
 import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
 import useGetProductUnit from "@/hooks/product/useGetProductUnit";
 import useGetCategory from "@/hooks/product/useGetCategory";
+import useGetLotCategory from "@/hooks/product/useGetLotCategory";
 
 type Props = {
   isPending: boolean;
@@ -16,6 +17,7 @@ type Props = {
 const Form: React.FC<Props> = ({ isPending }) => {
   const { categories } = useGetCategory();
   const { units } = useGetProductUnit();
+  const { lotCategories } = useGetLotCategory();
 
   const {
     register,
@@ -25,17 +27,6 @@ const Form: React.FC<Props> = ({ isPending }) => {
 
   return (
     <Grid container spacing={4}>
-      <Grid item xs={12} md={6}>
-        <CustomTextField
-          {...register("id")}
-          autoFocus
-          fullWidth
-          label='ID'
-          placeholder='Ingrese el ID'
-          error={!!errors.id}
-          helperText={errors.id?.message}
-        />
-      </Grid>
       <Grid item xs={12} md={6}>
         <CustomTextField
           {...register("name")}
@@ -55,7 +46,6 @@ const Form: React.FC<Props> = ({ isPending }) => {
             <CustomAutocomplete
               value={value}
               options={categories}
-              multiple
               onChange={(e, value: any) => {
                 onChange(value);
               }}
@@ -64,8 +54,8 @@ const Form: React.FC<Props> = ({ isPending }) => {
                   {...params}
                   label='Categoria'
                   placeholder='Seleccione una categoria'
-                  error={!!errors.category?.message}
-                  helperText={errors.category?.message}
+                  error={!!errors.category?.id?.message}
+                  helperText={errors.category?.id?.message}
                 />
               )}
             />
@@ -73,14 +63,27 @@ const Form: React.FC<Props> = ({ isPending }) => {
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <CustomTextField
-          {...register("measurement")}
-          autoFocus
-          fullWidth
-          label='Medida'
-          placeholder='Ingrese la medida'
-          error={!!errors.measurement}
-          helperText={errors.measurement?.message}
+        <Controller
+          name='lotCategory'
+          control={control}
+          render={({ field: { value, onChange } }: any) => (
+            <CustomAutocomplete
+              value={value}
+              options={lotCategories}
+              onChange={(e, value: any) => {
+                onChange(value);
+              }}
+              renderInput={params => (
+                <CustomTextField
+                  {...params}
+                  label='Categoría de lote'
+                  placeholder='Seleccione la categoría de lote'
+                  error={!!errors.lotCategory?.id?.message}
+                  helperText={errors.lotCategory?.id?.message}
+                />
+              )}
+            />
+          )}
         />
       </Grid>
       <Grid item xs={12} md={6}>
@@ -105,6 +108,17 @@ const Form: React.FC<Props> = ({ isPending }) => {
               )}
             />
           )}
+        />
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <CustomTextField
+          {...register("measurement")}
+          autoFocus
+          fullWidth
+          label='Medida'
+          placeholder='Ingrese la medida'
+          error={!!errors.measurement}
+          helperText={errors.measurement?.message}
         />
       </Grid>
       <Grid item xs={12} md={6}>

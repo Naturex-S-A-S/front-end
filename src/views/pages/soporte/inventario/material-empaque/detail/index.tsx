@@ -8,7 +8,7 @@ import type { IPackaging } from "@/hooks/packaging/useGetPackagingById";
 import CustomTextField from "@/@core/components/mui/TextField";
 import CustomButton from "@/@core/components/mui/Button";
 import usePatchPackaging from "@/hooks/packaging/usePatchPackaging";
-import Categories from "../../../../../../@core/components/inventory/categories";
+import Category from "../../../../../../@core/components/inventory/category";
 import Providers from "../../../../../../@core/components/inventory/providers";
 import useGetCategory from "@/hooks/packaging/useGetCategory";
 
@@ -138,7 +138,7 @@ const Detail: React.FC<Props> = ({ packaging }) => {
       <Grid item xs={12} lg={4}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={6} lg={12}>
-            <Categories data={packaging.categories} list={categories} update={updateCategories} isPending={isPending} />
+            <Category data={packaging.categories} list={categories} update={updateCategories} isPending={isPending} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={12}>

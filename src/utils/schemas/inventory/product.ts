@@ -2,7 +2,6 @@ import * as yup from "yup";
 
 export const productSchema = yup
   .object({
-    id: yup.string().required("El id es requerido"),
     name: yup.string().required("El nombre es requerido"),
     minimumStandard: yup
       .number()
@@ -15,14 +14,16 @@ export const productSchema = yup
     }),
     measurement: yup.number().typeError("La medida debe ser un número").required("La unidad es requerida"),
     category: yup
-      .array()
-      .of(
-        yup.object({
-          id: yup.string().required("El categoría es requerida")
-        })
-      )
-      .required("Las categorías son requeridas")
+      .object({
+        id: yup.string().required("La categoría es requerida")
+      })
+      .required("La categoría es requerida"),
+    lotCategory: yup
+      .object({
+        id: yup.string().required("La categoría de lote es requerida")
+      })
+      .required("La categoría de lote es requerida")
   })
   .required();
 
-export const updateProductSchema = productSchema.omit(["id", "category"]);
+export const updateProductSchema = productSchema.omit(["category"]);

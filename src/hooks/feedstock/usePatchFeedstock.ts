@@ -1,3 +1,5 @@
+import { useRouter } from "next/navigation";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
@@ -7,12 +9,14 @@ import { alertMessageErrors } from "@/utils/messages";
 import Swal from "@/lib/swal";
 
 const usePatchFeedstock = () => {
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: ({ id, data }: any) => patchFeedstock(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["getFeedstock"] });
+      router.refresh();
       toast.success("Materia prima actualizado con éxito");
     },
     onError: (error: any) => {

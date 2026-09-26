@@ -72,7 +72,16 @@ export const mockCategoryTypes = [
   {
     label: "Producto terminado",
     id: CategoryType.FINISHED_PRODUCT
+  },
+  {
+    label: "Categoría de lote",
+    id: CategoryType.LOT
   }
+];
+
+export const mockLotFormats = [
+  { id: "ALIMENTOS", label: "Alimentos" },
+  { id: "COSMETICOS", label: "Cosméticos" }
 ];
 
 export const mockMaterialList = [

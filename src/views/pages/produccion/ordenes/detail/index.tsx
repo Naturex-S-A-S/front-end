@@ -21,6 +21,13 @@ const Detail: React.FC<Props> = ({ order }) => {
     quantityTotalOrder: item.quantityTotal
   }));
 
+  const lots =
+    order.lots && order.lots.length > 0
+      ? order.lots
+      : (order.items ?? [])
+        .filter(item => item.batchLot)
+        .map(item => ({ idFinalProduct: item.idFinalProduct, batchLot: item.batchLot! }));
+
   return (
     <Grid container spacing={4}>
       <Grid item xs={12}>
@@ -100,14 +107,16 @@ const Detail: React.FC<Props> = ({ order }) => {
                   v{order.sequentialVersionNumber}
                 </Typography>
               </Box>
-              <Box display='flex' justifyContent='space-between'>
-                <Typography variant='body2' color='textSecondary'>
-                  Fecha de vencimiento
-                </Typography>
-                <Typography variant='body2' fontWeight={600}>
-                  {order.dateExpiration ? formatDate(order.dateExpiration) : "-"}
-                </Typography>
-              </Box>
+              {order.expirationLabel && (
+                <Box display='flex' justifyContent='space-between'>
+                  <Typography variant='body2' color='textSecondary'>
+                    Etiqueta de vencimiento
+                  </Typography>
+                  <Typography variant='body2' fontWeight={600}>
+                    {order.expirationLabel}
+                  </Typography>
+                </Box>
+              )}
               <Box display='flex' justifyContent='space-between'>
                 <Typography variant='body2' color='textSecondary'>
                   Fecha de creación
@@ -133,13 +142,7 @@ const Detail: React.FC<Props> = ({ order }) => {
             <Typography variant='h6'>Presentaciones</Typography>
 
             {order.items?.map(item => (
-              <Box
-                key={item.idFinalProduct}
-                display='flex'
-                justifyContent='space-between'
-                alignItems='center'
-                gap={2}
-              >
+              <Box key={item.idFinalProduct} display='flex' justifyContent='space-between' alignItems='center' gap={2}>
                 {/* Left: allow the name to wrap, grow and not overflow */}
                 <Box sx={{ flex: 1, minWidth: 0 }}>
                   <Typography
@@ -155,6 +158,25 @@ const Detail: React.FC<Props> = ({ order }) => {
                 </Box>
               </Box>
             ))}
+
+            {lots.length > 0 && (
+              <>
+                <Divider />
+                <Typography variant='h6'>Lotes de la orden</Typography>
+                {lots.map(lot => (
+                  <Box
+                    key={`${lot.idFinalProduct}-${lot.batchLot}`}
+                    display='flex'
+                    justifyContent='space-between'
+                    alignItems='center'
+                    gap={2}
+                  >
+                    <Typography variant='body2'>{lot.idFinalProduct}</Typography>
+                    <Chip label={lot.batchLot} variant='outlined' />
+                  </Box>
+                ))}
+              </>
+            )}
           </Box>
         </CustomCard>
       </Grid>
@@ -175,7 +197,6 @@ const Detail: React.FC<Props> = ({ order }) => {
           quantityLabel='Cantidad (g)'
         />
       </Grid>
-
 
       <Grid item xs={12}>
         <Adjustment

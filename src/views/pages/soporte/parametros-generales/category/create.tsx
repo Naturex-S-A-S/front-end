@@ -14,8 +14,22 @@ import Form from "./form";
 import { alertMessageErrors } from "@/utils/messages";
 import { postCategoryFeedstock } from "@/api/general-parameters/categories-feedstock";
 import { postCategoryPackaging } from "@/api/general-parameters/categories-packaging";
-import { CategoryType } from "@/utils/enum";
 import { postCategoryProduct } from "@/api/general-parameters/categories-product";
+import { postCategoryLot } from "@/api/general-parameters/categories-lot";
+import { CategoryType } from "@/utils/enum";
+
+const postCategoryByType = (data: any) => {
+  switch (data.idType) {
+    case CategoryType.FEEDSTOCK:
+      return postCategoryFeedstock(data);
+    case CategoryType.PACKAGING:
+      return postCategoryPackaging(data);
+    case CategoryType.LOT:
+      return postCategoryLot(data);
+    default:
+      return postCategoryProduct(data);
+  }
+};
 
 const Create = () => {
   const queryClient = useQueryClient();
@@ -24,7 +38,8 @@ const Create = () => {
   const methods = useForm({
     defaultValues: {
       name: undefined,
-      type: undefined
+      type: undefined,
+      dependsOnProduct: false
     },
     resolver: yupResolver(categorySchema)
   });
@@ -32,16 +47,11 @@ const Create = () => {
   const { handleSubmit, reset } = methods;
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (variables: any) => {
-      return variables.idType === CategoryType.FEEDSTOCK
-        ? postCategoryFeedstock(variables)
-        : variables.idType === CategoryType.PACKAGING
-          ? postCategoryPackaging(variables)
-          : postCategoryProduct(variables);
-    },
+    mutationFn: (variables: any) => postCategoryByType(variables),
     onSuccess: () => {
       toast.success("Categoria creada con éxito");
       queryClient.invalidateQueries({ queryKey: ["getCategories"] });
+      queryClient.invalidateQueries({ queryKey: ["getCategoriesLot"] });
       reset();
     },
     onError: (error: any) => {
@@ -53,10 +63,22 @@ const Create = () => {
     return null;
 
   const onSubmit = (data: any) => {
-    mutate({
+    const payload: any = {
       name: data.name,
       idType: data.type.id
-    });
+    };
+
+    if (data.type.id === CategoryType.FINISHED_PRODUCT) {
+      payload.idIndicator = data.idIndicator;
+      payload.expirationMonths = Number(data.expirationMonths);
+    } else if (data.type.id === CategoryType.PACKAGING) {
+      payload.codeIndicator = data.codeIndicator;
+      payload.dependsOnProduct = !!data.dependsOnProduct;
+    } else if (data.type.id === CategoryType.LOT) {
+      payload.lotFormat = data.lotFormat.id;
+    }
+
+    mutate(payload);
   };
 
   return (

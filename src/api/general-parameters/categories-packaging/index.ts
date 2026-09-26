@@ -14,9 +14,7 @@ export const postCategoryPackaging = async (data: IPostCategory) => {
 };
 
 export const putCategoryPackaging = async (data: IPutCategory) => {
-  const response = await API().put(`/categories/packaging/${data.id}`, {
-    name: data.name
-  });
+  const response = await API().put(`/categories/packaging/${data.id}`, data);
 
   return response.data;
 };

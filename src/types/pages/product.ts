@@ -5,6 +5,7 @@ export interface IProduct {
   unit: string;
   minimumStandard: number;
   categories: ICategory[];
+  lotCategory: ICategory | null;
   active: boolean;
   dateCreated: string;
   formulations: any;
@@ -42,12 +43,12 @@ export interface IProductPackaging {
 }
 
 export interface ICreateProduct {
-  id: string;
   name: string;
   categories: string[];
   measurement: number;
   unit: string;
   minimumStandard: number;
+  lotCategoryId: string;
 }
 
 export interface IUpdateProduct {
@@ -56,6 +57,7 @@ export interface IUpdateProduct {
   categories: string[];
   unit: string;
   minimumStandard: number;
+  lotCategoryId: string;
 }
 
 export interface IProductHistory {

@@ -1,3 +1,5 @@
+import { useRouter } from "next/navigation";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
@@ -7,11 +9,13 @@ import { alertMessageErrors } from "@/utils/messages";
 import Swal from "@/lib/swal";
 
 const usePatchProduct = () => {
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   const updateCache = () => {
     queryClient.invalidateQueries({ queryKey: ["getProducts"] });
     queryClient.invalidateQueries({ queryKey: ["getProduct"] });
+    router.refresh();
     toast.success("Producto actualizado con éxito");
   };
 

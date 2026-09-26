@@ -59,8 +59,11 @@ const Create = () => {
 
   const onSubmit = (values: any) => {
     mutate({
-      ...values,
-      category: values.category.map((item: any) => item.id)
+      name: values.name,
+      minimumStandard: values.minimumStandard,
+      color: values.color,
+      category: [values.category.id],
+      ...(values.productCode ? { productCode: values.productCode } : {})
     });
   };
 

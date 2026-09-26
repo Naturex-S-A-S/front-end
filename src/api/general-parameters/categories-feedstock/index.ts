@@ -14,9 +14,7 @@ export const postCategoryFeedstock = async (data: IPostCategory) => {
 };
 
 export const putCategoryFeedstock = async (data: IPutCategory) => {
-  const response = await API().put(`/categories/feedstock/${data.id}`, {
-    name: data.name
-  });
+  const response = await API().put(`/categories/feedstock/${data.id}`, data);
 
   return response.data;
 };

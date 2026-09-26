@@ -1,0 +1,46 @@
+import { describe, it, expect } from "vitest";
+
+import { packagingMaterialSchema } from "@/utils/schemas/inventory/packagingMaterial";
+
+describe("packagingMaterialSchema", () => {
+  it("requiere categoria como objeto unico", async () => {
+    await expect(
+      packagingMaterialSchema.validate({
+        name: "A",
+        minimumStandard: 1,
+        category: { id: "c1", name: "Envase", dependsOnProduct: false }
+      })
+    ).resolves.toBeTruthy();
+  });
+
+  it("rechaza sin categoria", async () => {
+    await expect(
+      packagingMaterialSchema.validate({
+        name: "A",
+        minimumStandard: 1,
+        category: null
+      })
+    ).rejects.toThrow("La categoría es requerida");
+  });
+
+  it("requiere productCode cuando dependsOnProduct es true", async () => {
+    await expect(
+      packagingMaterialSchema.validate({
+        name: "A",
+        minimumStandard: 1,
+        category: { id: "c1", name: "Etiqueta", dependsOnProduct: true }
+      })
+    ).rejects.toThrow("El código de producto es requerido");
+  });
+
+  it("acepta productCode cuando dependsOnProduct es true", async () => {
+    await expect(
+      packagingMaterialSchema.validate({
+        name: "A",
+        minimumStandard: 1,
+        category: { id: "c1", name: "Etiqueta", dependsOnProduct: true },
+        productCode: "P-001"
+      })
+    ).resolves.toBeTruthy();
+  });
+});

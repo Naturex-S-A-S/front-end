@@ -12,7 +12,7 @@ import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
 import { mockUnitWeight } from "@/utils/mocks";
 import usePatchFeedstock from "@/hooks/feedstock/usePatchFeedstock";
 import type { IFeedstock } from "@/hooks/feedstock/useGetFeedstockById";
-import Categories from "../../../../../../@core/components/inventory/categories";
+import Category from "../../../../../../@core/components/inventory/category";
 import Providers from "../../../../../../@core/components/inventory/providers";
 import useGetCategory from "@/hooks/feedstock/useGetCategory";
 
@@ -210,7 +210,7 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
       <Grid item xs={12} md={4}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Categories data={feedstock.categories} list={categories} update={updateCategories} isPending={isPending} />
+            <Category data={feedstock.categories} list={categories} update={updateCategories} isPending={isPending} />
           </Grid>
 
           <Grid item xs={12}>

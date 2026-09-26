@@ -41,6 +41,7 @@ export const useColumns = ({ handleActive, filters, isPending }: params): GridCo
         );
       }
     },
+    { field: "id", headerName: "Código", width: 100 },
     { field: "name", headerName: "Nombre", width: 150 },
     {
       field: "quantityG",

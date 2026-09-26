@@ -38,6 +38,7 @@ export const useColumns = ({ handleActive, isPending }: params): GridColDef[] =>
         );
       }
     },
+    { field: "id", headerName: "Código", width: 100 },
     { field: "name", headerName: "Nombre", width: 150 },
     {
       field: "quantityTotal",

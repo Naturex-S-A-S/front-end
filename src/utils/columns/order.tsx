@@ -1,3 +1,5 @@
+import type { FC } from "react";
+
 import { useRouter } from "next/navigation";
 
 import type { GridColDef } from "@mui/x-data-grid";
@@ -7,6 +9,42 @@ import { Box, Chip, Tooltip } from "@mui/material";
 import { ActionButton } from "./components/ActionButton";
 import { formatDate } from "../format";
 import { STATUS_COLOR, STATUS_LABEL } from "../constant";
+
+const MAX_VISIBLE = 2;
+const MAX_LABEL_LENGTH = 14;
+
+const ChipsList: FC<{ values: string[] }> = ({ values }) => {
+  if (!Array.isArray(values)) return null;
+
+  const visible = values.slice(0, MAX_VISIBLE);
+  const remaining = values.slice(MAX_VISIBLE);
+
+  return (
+    <div className='flex gap-2 items-center' style={{ height: "100%" }}>
+      {visible.map((value, i) => (
+        value ? <Tooltip key={i} title={value}>
+          <Chip
+            label={value.length > MAX_LABEL_LENGTH ? `${value.slice(0, MAX_LABEL_LENGTH)}…` : value}
+            variant='outlined'
+          />
+        </Tooltip> : null
+      ))}
+      {remaining?.length > 0 && (
+        <Tooltip
+          title={
+            <div>
+              {remaining.map((value, i) => (
+                <div key={i}>{value}</div>
+              ))}
+            </div>
+          }
+        >
+          <Chip label={`+${remaining.length}`} variant='outlined' />
+        </Tooltip>
+      )}
+    </div>
+  );
+};
 
 export const useColumns = (): GridColDef[] => {
   const router = useRouter();
@@ -40,7 +78,7 @@ export const useColumns = (): GridColDef[] => {
           <Chip
             label={params.row.statusName ?? STATUS_LABEL[params.row.status]}
             color={STATUS_COLOR[params.row.status] ?? "default"}
-            variant="outlined"
+            variant='outlined'
           />
         </Box>
       )
@@ -53,46 +91,26 @@ export const useColumns = (): GridColDef[] => {
     {
       field: "quantityProduced",
       headerName: "Cantidad producida (Kg)",
-      width: 180,
+      width: 180
     },
     {
       field: "lossPercentage",
       headerName: "Faltante %",
-      width: 150,
+      width: 150
     },
     {
       field: "productNames",
       headerName: "Productos",
       flex: 1,
       minWidth: 200,
-      renderCell: params => {
-        const names: string[] = params.row.productNames ?? [];
-        const visible = names.slice(0, 2);
-        const remaining = names.slice(2);
-
-        return (
-          <div className='flex gap-2 items-center' style={{ height: "100%" }}>
-            {visible.map((name, i) => (
-              <Tooltip key={i} title={name}>
-                <Chip label={name.length > 14 ? `${name.slice(0, 14)}…` : name} variant='outlined' />
-              </Tooltip>
-            ))}
-            {remaining.length > 0 && (
-              <Tooltip
-                title={
-                  <div>
-                    {remaining.map((name, i) => (
-                      <div key={i}>{name}</div>
-                    ))}
-                  </div>
-                }
-              >
-                <Chip label={`+${remaining.length}`} variant='outlined' />
-              </Tooltip>
-            )}
-          </div>
-        );
-      }
+      renderCell: params => <ChipsList values={params.row.productNames ?? []} />
+    },
+    {
+      field: "lots",
+      headerName: "Lotes",
+      flex: 1,
+      minWidth: 200,
+      renderCell: params => <ChipsList values={(params.row.lots ?? [])} />
     },
     {
       field: "dateCreated",

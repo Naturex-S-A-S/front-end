@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 
 import CustomButton from "@/@core/components/mui/Button";
 import CustomTextField from "@/@core/components/mui/TextField";
@@ -20,6 +20,8 @@ const Form: React.FC<Props> = ({ isPending }) => {
     formState: { errors },
     control
   }: any = useFormContext();
+
+  const categoryWatch = useWatch({ control, name: "category" });
 
   return (
     <Grid container spacing={4}>
@@ -41,7 +43,6 @@ const Form: React.FC<Props> = ({ isPending }) => {
           render={({ field: { value, onChange } }: any) => (
             <CustomAutocomplete
               value={value}
-              multiple
               options={categories}
               onChange={(e, value: any) => {
                 onChange(value);
@@ -59,6 +60,18 @@ const Form: React.FC<Props> = ({ isPending }) => {
           )}
         />
       </Grid>
+      {categoryWatch?.dependsOnProduct === true && (
+        <Grid item xs={12} md={6}>
+          <CustomTextField
+            {...register("productCode")}
+            fullWidth
+            label='Código de producto'
+            placeholder='Ingrese el código de producto'
+            error={!!errors.productCode}
+            helperText={errors.productCode?.message}
+          />
+        </Grid>
+      )}
       <Grid item xs={12} md={6}>
         <CustomTextField
           {...register("minimumStandard")}

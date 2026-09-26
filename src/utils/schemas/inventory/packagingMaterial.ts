@@ -10,12 +10,16 @@ export const packagingMaterialSchema = yup
       .required("El minimo estandar es requerido"),
     color: yup.string().optional(),
     category: yup
-      .array()
-      .of(
-        yup.object({
-          id: yup.string().required("El categoría es requerida")
-        })
-      )
-      .required("Las categorías son requeridas")
+      .object({
+        id: yup.string().required("La categoría es requerida")
+      })
+      .required("La categoría es requerida"),
+    productCode: yup
+      .string()
+      .when("category", {
+        is: (category: any) => category?.dependsOnProduct === true,
+        then: schema => schema.required("El código de producto es requerido"),
+        otherwise: schema => schema.notRequired()
+      })
   })
   .required();

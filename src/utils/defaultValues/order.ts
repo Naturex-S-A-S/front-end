@@ -4,7 +4,5 @@ export const orderDefaultValues = {
       id: "",
       quantityG: undefined
     }
-  ],
-  batch: "",
-  expirationDate1: undefined
+  ]
 };

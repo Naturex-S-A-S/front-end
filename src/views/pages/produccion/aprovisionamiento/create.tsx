@@ -20,8 +20,8 @@ import { useAbility } from "@/hooks/casl/useAbility";
 import Form from "./form";
 import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from "@/utils/constant";
 import { alertMessageErrors } from "@/utils/messages";
-import { orderSchema } from "@/utils/schemas/order";
-import { orderDefaultValues } from "@/utils/defaultValues/order";
+import { orderSupplySchema } from "@/utils/schemas/orderSupply";
+import { orderSupplyDefaultValues } from "@/utils/defaultValues/orderSupply";
 import { getOrderSupplyCalculate } from "@/api/order";
 import { createOrderSupply } from "@/api/order/actions";
 
@@ -39,8 +39,8 @@ const Create = () => {
   );
 
   const methods = useForm({
-    defaultValues: orderDefaultValues,
-    resolver: yupResolver(orderSchema) as any
+    defaultValues: orderSupplyDefaultValues,
+    resolver: yupResolver(orderSupplySchema) as any
   });
 
   const { handleSubmit, setValue, getValues }: any = methods;

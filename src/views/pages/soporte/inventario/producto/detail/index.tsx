@@ -20,8 +20,9 @@ import EditPackagingsDialog from "./editPackagingsDialog";
 import { useAbility } from "@/hooks/casl/useAbility";
 import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from "@/utils/constant";
 import { updateProductSchema } from "@/utils/schemas/inventory/product";
-import Categories from "@/@core/components/inventory/categories";
+import Category from "@/@core/components/inventory/category";
 import useGetCategory from "@/hooks/product/useGetCategory";
+import useGetLotCategory from "@/hooks/product/useGetLotCategory";
 
 interface IProps {
   product: IProduct;
@@ -30,6 +31,7 @@ interface IProps {
 const Detail: React.FC<IProps> = ({ product }) => {
   const [openEditPackagings, setOpenEditPackagings] = useState(false);
   const { categories } = useGetCategory();
+  const { lotCategories } = useGetLotCategory();
   const { units } = useGetProductUnit();
   const { mutate, isPending } = usePatchProduct();
   const ability = useAbility();
@@ -45,7 +47,8 @@ const Detail: React.FC<IProps> = ({ product }) => {
       name: undefined,
       measurement: undefined,
       unit: undefined,
-      minimumStandard: undefined
+      minimumStandard: undefined,
+      lotCategory: undefined
     },
     mode: "onChange",
     resolver: yupResolver(updateProductSchema)
@@ -66,7 +69,8 @@ const Detail: React.FC<IProps> = ({ product }) => {
       name: product.name ?? "",
       measurement: product.measurement ?? 0,
       unit: units.find((u: any) => u.id === product.unit) ?? undefined,
-      minimumStandard: product.minimumStandard ?? undefined
+      minimumStandard: product.minimumStandard ?? undefined,
+      lotCategory: product.lotCategory ?? undefined
     });
   }, [product, units, reset]);
 
@@ -86,7 +90,8 @@ const Detail: React.FC<IProps> = ({ product }) => {
         name: values.name,
         measurement: Number(values.measurement),
         unit: values.unit.id,
-        minimumStandard: Number(values.minimumStandard)
+        minimumStandard: Number(values.minimumStandard),
+        lotCategoryId: values.lotCategory.id
       }
     });
   };
@@ -154,6 +159,31 @@ const Detail: React.FC<IProps> = ({ product }) => {
                   />
                 </Grid>
 
+                <Grid item xs={12} md={3} lg={3}>
+                  <Controller
+                    name='lotCategory'
+                    control={control}
+                    render={({ field: { value, onChange } }: any) => (
+                      <CustomAutocomplete
+                        value={value}
+                        options={lotCategories}
+                        onChange={(e, value: any) => {
+                          onChange(value);
+                        }}
+                        renderInput={params => (
+                          <CustomTextField
+                            {...params}
+                            label='Categoría de lote'
+                            placeholder='Seleccione la categoría de lote'
+                            error={!!errors.lotCategory?.id?.message}
+                            helperText={errors.lotCategory?.id?.message}
+                          />
+                        )}
+                      />
+                    )}
+                  />
+                </Grid>
+
                 <Grid item xs={12} className='flex justify-center'>
                   <CustomButton text='Actualizar' type='submit' isLoading={isPending} />
                 </Grid>
@@ -163,7 +193,7 @@ const Detail: React.FC<IProps> = ({ product }) => {
         </CustomCard>
       </Grid>
       <Grid item xs={12} lg={4}>
-        <Categories data={product.categories} list={categories} update={updateCategories} isPending={isPending} />
+        <Category data={product.categories} list={categories} update={updateCategories} isPending={isPending} />
       </Grid>
       <Grid item xs={12}>
         <CustomCard title='Historial'>

@@ -14,8 +14,6 @@ import { useMutation } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
 
-import moment from "moment";
-
 import { useAbility } from "@/hooks/casl/useAbility";
 import Form from "./form";
 import { ABILITY_ACTIONS, ABILITY_FIELDS, ABILITY_SUBJECT } from "@/utils/constant";
@@ -103,7 +101,6 @@ const Create = () => {
 
       const req = {
         quantityExpected,
-        date_expiration: moment(values.expirationDate1).format("YYYY-MM-DD"),
         products: values.presentations.map((product: any) => ({
           id: product.id,
           quantity: product.quantityG,

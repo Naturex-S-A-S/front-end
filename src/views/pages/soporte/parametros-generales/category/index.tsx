@@ -17,6 +17,7 @@ import { CategoryTypeName } from "@/utils/enum";
 import { deleteCategoryFeedstock } from "@/api/general-parameters/categories-feedstock";
 import { deleteCategoryPackaging } from "@/api/general-parameters/categories-packaging";
 import { deleteCategoryProduct } from "@/api/general-parameters/categories-product";
+import { deleteCategoryLot } from "@/api/general-parameters/categories-lot";
 import CustomCard from "@/@core/components/mui/Card";
 
 const Category = () => {
@@ -34,15 +35,21 @@ const Category = () => {
 
   const { mutate: deleteCategory } = useMutation({
     mutationFn: (variables: any) => {
-      return variables.idType === CategoryTypeName.FEEDSTOCK
-        ? deleteCategoryFeedstock(variables.id)
-        : variables.idType === CategoryTypeName.PACKAGING
-          ? deleteCategoryPackaging(variables.id)
-          : deleteCategoryProduct(variables.id);
+      switch (variables.idType) {
+        case CategoryTypeName.FEEDSTOCK:
+          return deleteCategoryFeedstock(variables.id);
+        case CategoryTypeName.PACKAGING:
+          return deleteCategoryPackaging(variables.id);
+        case CategoryTypeName.LOT:
+          return deleteCategoryLot(variables.id);
+        default:
+          return deleteCategoryProduct(variables.id);
+      }
     },
     onSuccess: () => {
       toast.success("Categoria eliminada con éxito");
       queryClient.invalidateQueries({ queryKey: ["getCategories"] });
+      queryClient.invalidateQueries({ queryKey: ["getCategoriesLot"] });
     },
     onError: (error: any) => {
       alertMessageErrors(error, "Error al eliminar la categoria");

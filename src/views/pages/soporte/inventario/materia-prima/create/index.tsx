@@ -60,7 +60,7 @@ const Create = () => {
   const onSubmit = (values: any) => {
     mutate({
       ...values,
-      category: values.category.map((item: any) => item.id)
+      category: values.category ? [values.category.id] : []
     });
   };
 

@@ -15,7 +15,11 @@ export async function getOrdersServer(params?: { productId?: string; status?: st
       tags: ["orders"]
     });
 
-    return data.map(r => ({ ...r, id: r.orderId }));
+    return data.map(r => ({
+      ...r,
+      id: r.orderId,
+      lots: Array.isArray(r.lots) ? r.lots.filter((lot: any) => lot.batchLot).map((lot: any) => lot.batchLot) : []
+    }));
   } catch {
     return [];
   }
