@@ -91,7 +91,7 @@ const UserDropdown = () => {
         <Avatar
           className='bs-[36px] is-[36px] cursor-pointer'
           onClick={handleDropdownOpen}
-          sx={{ bgcolor: "primary.main", fontWeight: 600 }}
+          sx={{ bgcolor: "primary.main", fontWeight: 600, color: 'white' }}
         >
           {getInitials(session?.user?.name)}
         </Avatar>
@@ -117,7 +117,7 @@ const UserDropdown = () => {
                   <div className='flex items-center plb-2 pli-6 gap-2' tabIndex={-1}>
                     <Avatar
                       className='bs-[36px] is-[36px]'
-                      sx={{ bgcolor: "primary.main", fontWeight: 600 }}
+                      sx={{ bgcolor: "primary.main", fontWeight: 600, color: 'white' }}
                       aria-label={session?.user?.name ?? "Usuario"}
                     >
                       {getInitials(session?.user?.name)}

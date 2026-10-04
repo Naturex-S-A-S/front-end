@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
+import Link from "next/link";
+
 import {
   Box,
   Divider,
@@ -94,6 +96,12 @@ const Form: React.FC<Props> = ({
   const productWatch = useWatch({ control, name: "product" });
   const calculatedData = useWatch({ control, name: "calculatedData" });
 
+  console.log({ calculatedData });
+
+  const totalPossibleProducts = calculatedData?.possibleProducts?.reduce((acc: number, product: any) => acc + product.units, 0);
+
+  console.log({ totalPossibleProducts });
+
   const handleContinue = useCallback(async () => {
     const result = await trigger("presentations");
 
@@ -154,32 +162,41 @@ const Form: React.FC<Props> = ({
                   (step === 1 || step === 2) && (
                     <>
                       <Typography variant='h5'>Presentaciones</Typography>
-                      {fields.map((presentation: Presentation, index: number) => (
-                        <CustomTextField
-                          key={presentation.id}
-                          {...register(`presentations.${index}.quantityG`)}
-                          type='number'
-                          autoComplete='off'
-                          onBlur={e => {
-                            handleChangeQuantity(e.target.value, index);
-                          }}
-                          onChange={e => {
-                            const value = e.target.value;
+                      {
+                        fields.length === 0 ? (
+                          <Typography variant='body2' color='text.secondary'>
+                            No hay presentaciones disponibles.
+                          </Typography>
+                        ) :
+                          <>{fields.map((presentation: Presentation, index: number) => (
+                            <CustomTextField
+                              key={presentation.id}
+                              {...register(`presentations.${index}.quantityG`)}
+                              type='number'
+                              autoComplete='off'
+                              onBlur={e => {
+                                handleChangeQuantity(e.target.value, index);
+                              }}
+                              onChange={e => {
+                                const value = e.target.value;
 
-                            handleChangeQuantity(value, index);
+                                handleChangeQuantity(value, index);
 
-                            setValue(`presentations.${index}.quantityG`, value);
-                          }}
-                          fullWidth
-                          label={`${presentation.fullName}`}
-                          placeholder='Ingrese las unidades a producir'
-                          error={!!errors?.presentations?.[index]?.quantityG}
-                        />
-                      ))}
+                                setValue(`presentations.${index}.quantityG`, value);
+                              }}
+                              fullWidth
+                              label={`${presentation.fullName}`}
+                              placeholder='Ingrese las unidades a producir'
+                              error={!!errors?.presentations?.[index]?.quantityG}
+                            />
+                          ))}
 
-                      {(step === 1 || isChanged) && <CustomButton text='Calcular' onClick={handleContinue} />}
+                            {(step === 1 || isChanged) && <CustomButton text='Calcular' onClick={handleContinue} />}
 
-                      {step === 2 && (
+                          </>
+                      }
+
+                      {step === 2 && totalPossibleProducts !== 0 && (
                         <>
                           <CustomButton
                             text='Generar orden'
@@ -210,7 +227,21 @@ const Form: React.FC<Props> = ({
             {calculatedData?.message && step === 2 && (
               <Grid item xs={12}>
                 <Alert severity={calculatedData?.totalQuantityMissing === 0 ? "success" : "warning"}>
-                  {calculatedData.message}
+                  <Typography variant='body2'>{calculatedData.message}</Typography>
+                  {totalPossibleProducts === 0 && (
+                    <Box mt={1}>
+                      <Typography
+                        component={Link}
+                        href='/produccion/aprovisionamiento'
+                        target="_blank"
+                        variant='body2'
+                        color='primary.main'
+                        sx={{ textDecoration: 'underline', cursor: 'pointer' }}
+                      >
+                        Ir a órdenes de aprovisionamiento
+                      </Typography>
+                    </Box>
+                  )}
                 </Alert>
               </Grid>
             )}

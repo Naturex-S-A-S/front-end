@@ -7,7 +7,7 @@ import { Controller, useFormContext, useWatch } from "react-hook-form";
 import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
 import CustomButton from "@/@core/components/mui/Button";
 import CustomTextField from "@/@core/components/mui/TextField";
-import { mockCategoryTypes, mockLotFormats } from "@/utils/mocks";
+import { mockCategoryTypes } from "@/utils/mocks";
 import { CategoryType } from "@/utils/enum";
 
 interface Props {
@@ -111,33 +111,6 @@ const Form = ({ isPending, isEdit = false }: Props) => {
             />
           </Grid>
         </>
-      )}
-
-      {typeWatch?.id === CategoryType.LOT && (
-        <Grid item xs={12} md={6}>
-          <Controller
-            name='lotFormat'
-            control={control}
-            render={({ field: { value, onChange } }: any) => (
-              <CustomAutocomplete
-                value={value}
-                options={mockLotFormats}
-                onChange={(e, value: any) => {
-                  onChange(value);
-                }}
-                renderInput={params => (
-                  <CustomTextField
-                    {...params}
-                    label='Formato de lote'
-                    placeholder='Seleccione el formato de lote'
-                    error={!!errors.lotFormat?.message}
-                    helperText={errors.lotFormat?.message as string}
-                  />
-                )}
-              />
-            )}
-          />
-        </Grid>
       )}
 
       <Grid item xs={12} className='flex justify-center'>

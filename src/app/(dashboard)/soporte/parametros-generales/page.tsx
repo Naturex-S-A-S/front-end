@@ -6,6 +6,7 @@ import CustomBox from "@/@core/components/mui/Box";
 import Tabs from "@/views/pages/soporte/parametros-generales/tabs";
 import Category from "@/views/pages/soporte/parametros-generales/category";
 import BodegaList from "@/views/pages/soporte/parametros-generales/Bodegas/list";
+import LotesList from "@/views/pages/soporte/parametros-generales/Lotes/list";
 import { getWarehousesServer } from "@/api/general-parameters/server";
 import Loader from "@/@core/components/react-spinners";
 
@@ -28,6 +29,7 @@ const Page = ({ searchParams }: { searchParams?: { tab?: string } }) => {
               <BodegaFetcher />
             </Suspense>
           )}
+          {(tab === "Lotes" || tab === "Categorias de lote" || tab === "Categoria de lote") && <LotesList />}
         </Grid>
       </Grid>
     </CustomBox>

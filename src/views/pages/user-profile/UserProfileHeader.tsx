@@ -47,7 +47,7 @@ const UserProfileHeader = ({ data }: { data?: ProfileData }) => {
               </Avatar>
             }
           >
-            <Avatar sx={{ width: 96, height: 96, fontSize: 32, fontWeight: 700, bgcolor: "primary.main" }}>
+            <Avatar sx={{ width: 96, height: 96, fontSize: 32, fontWeight: 700, bgcolor: "primary.main", color: "white" }} aria-label={data?.name ?? "Usuario"}>
               {getInitials(data?.name, data?.lastName)}
             </Avatar>
           </Badge>

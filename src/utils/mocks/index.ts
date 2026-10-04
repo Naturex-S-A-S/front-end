@@ -72,10 +72,6 @@ export const mockCategoryTypes = [
   {
     label: "Producto terminado",
     id: CategoryType.FINISHED_PRODUCT
-  },
-  {
-    label: "Categoría de lote",
-    id: CategoryType.LOT
   }
 ];
 
