@@ -27,7 +27,7 @@ const Form = ({ isPending, isEdit = false }: Props) => {
   const isFinishedProduct = useMemo(() => typeWatch?.id === CategoryType.FINISHED_PRODUCT, [typeWatch?.id]);
 
   return (
-    <Grid container spacing={4}>
+    <Grid container spacing={4} alignItems={"end"}>
       <Grid item xs={12} md={isEdit ? 12 : 6}>
         <CustomTextField
           {...register("name")}
@@ -105,9 +105,15 @@ const Form = ({ isPending, isEdit = false }: Props) => {
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <FormControlLabel
-              control={<Checkbox {...register("dependsOnProduct")} />}
-              label='Depende del producto'
+            <Controller
+              name='dependsOnProduct'
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={<Checkbox checked={field.value} onChange={e => field.onChange(e.target.checked)} />}
+                  label='Depende del producto'
+                />
+              )}
             />
           </Grid>
         </>
