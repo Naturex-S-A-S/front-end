@@ -63,7 +63,7 @@ const Create = () => {
       minimumStandard: values.minimumStandard,
       color: values.color,
       category: [values.category.id],
-      ...(values.productCode ? { productCode: values.productCode } : {})
+      ...(values.productCode?.id ? { productCode: values.productCode.id } : {})
     });
   };
 

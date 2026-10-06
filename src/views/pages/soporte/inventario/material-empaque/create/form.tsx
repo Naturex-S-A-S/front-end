@@ -5,6 +5,7 @@ import { Controller, useFormContext, useWatch } from "react-hook-form";
 import CustomButton from "@/@core/components/mui/Button";
 import CustomTextField from "@/@core/components/mui/TextField";
 import useGetCategory from "@/hooks/packaging/useGetCategory";
+import useGetProductList from "@/hooks/product/useGetProductList";
 import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
 
 type Props = {
@@ -14,6 +15,7 @@ type Props = {
 
 const Form: React.FC<Props> = ({ isPending }) => {
   const { categories } = useGetCategory();
+  const { productList } = useGetProductList();
 
   const {
     register,
@@ -62,13 +64,28 @@ const Form: React.FC<Props> = ({ isPending }) => {
       </Grid>
       {categoryWatch?.dependsOnProduct === true && (
         <Grid item xs={12} md={6}>
-          <CustomTextField
-            {...register("productCode")}
-            fullWidth
-            label='Código de producto'
-            placeholder='Ingrese el código de producto'
-            error={!!errors.productCode}
-            helperText={errors.productCode?.message}
+          <Controller
+            name='productCode'
+            control={control}
+            render={({ field: { value, onChange } }: any) => (
+              <CustomAutocomplete
+                value={value ?? null}
+                options={productList}
+                getOptionLabel={(option: any) => option?.fullName || option?.name || ""}
+                onChange={(e, value: any) => {
+                  onChange(value);
+                }}
+                renderInput={params => (
+                  <CustomTextField
+                    {...params}
+                    label='Producto'
+                    placeholder='Seleccione un producto'
+                    error={!!errors.productCode?.id}
+                    helperText={errors.productCode?.id?.message}
+                  />
+                )}
+              />
+            )}
           />
         </Grid>
       )}

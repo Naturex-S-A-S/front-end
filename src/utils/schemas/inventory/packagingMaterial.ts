@@ -15,10 +15,15 @@ export const packagingMaterialSchema = yup
       })
       .required("La categoría es requerida"),
     productCode: yup
-      .string()
+      .object({
+        id: yup.string()
+      })
       .when("category", {
         is: (category: any) => category?.dependsOnProduct === true,
-        then: schema => schema.required("El código de producto es requerido"),
+        then: schema =>
+          schema.required("El código de producto es requerido").shape({
+            id: yup.string().required("El código de producto es requerido")
+          }),
         otherwise: schema => schema.notRequired()
       })
   })
