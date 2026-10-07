@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Grid, Typography } from "@mui/material";
+import { Alert, Box, Grid, Typography } from "@mui/material";
 
 import CustomCard from "@/@core/components/mui/Card";
 import type { ICostEstimate } from "@/types/pages/costs";
@@ -14,6 +14,11 @@ const divide = (value: number, divisor: number) => (divisor > 0 ? value / diviso
 
 const CostSummaryCards = ({ estimate }: Props) => {
   const materialCost = estimate.realTotalCostFeedstock + estimate.realTotalCostPackaging;
+
+  const hasGramsFloor =
+    estimate.unitGramsFinalProductUsed !== null &&
+    estimate.unitGramsFinalProduct !== null &&
+    estimate.unitGramsFinalProductUsed > estimate.unitGramsFinalProduct;
 
   return (
     <>
@@ -56,7 +61,7 @@ const CostSummaryCards = ({ estimate }: Props) => {
               Precio Sugerido
             </Typography>
             <Typography variant='h5' fontWeight={600} color='primary.main'>
-              {formatCurrency(estimate.price.suggestedPrice)}
+              {formatCurrency(estimate.price?.suggestedPrice)}
             </Typography>
             <Typography variant='caption' color='text.secondary'>
               Margen: {estimate.defaultMarginPct} % | Ganancia: {formatCurrency(estimate.defaultMarginValue)}
@@ -64,6 +69,14 @@ const CostSummaryCards = ({ estimate }: Props) => {
           </Box>
         </CustomCard>
       </Grid>
+      {hasGramsFloor && (
+        <Grid item xs={12}>
+          <Alert severity='info'>
+            El cálculo usa {estimate.unitGramsFinalProductUsed} g como mínimo. El valor solicitado fue{" "}
+            {estimate.unitGramsFinalProduct} g y se conserva así en el snapshot.
+          </Alert>
+        </Grid>
+      )}
     </>
   );
 };

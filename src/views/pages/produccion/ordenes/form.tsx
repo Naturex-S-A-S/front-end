@@ -96,11 +96,7 @@ const Form: React.FC<Props> = ({
   const productWatch = useWatch({ control, name: "product" });
   const calculatedData = useWatch({ control, name: "calculatedData" });
 
-  console.log({ calculatedData });
-
   const totalPossibleProducts = calculatedData?.possibleProducts?.reduce((acc: number, product: any) => acc + product.units, 0);
-
-  console.log({ totalPossibleProducts });
 
   const handleContinue = useCallback(async () => {
     const result = await trigger("presentations");

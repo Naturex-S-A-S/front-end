@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition, useCallback, useEffect } from "react";
 
 import { useForm } from "react-hook-form";
 
@@ -10,21 +10,31 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
 
-import useGetProductList from "@/hooks/product/useGetProductList";
+import useCostConfig from "@/hooks/costs/useCostConfig";
+import useDebouncedEstimate from "@/hooks/costs/useDebouncedEstimate";
 import {
   getCostEstimateAction,
   registerProductPrice,
   updateSnapshotAction,
-  type RegisterPricePayload
+  saveDummyProductAction,
+  updateDummySnapshotAction
 } from "@/api/costs/actions";
-import type { ICostEstimate } from "@/types/pages/costs";
+import type { ICostEstimate, IDummySimulationRow, IMaterialPriceOption } from "@/types/pages/costs";
 import { registerPriceSchema, type RegisterPriceFormValues } from "@/utils/schemas/costs";
-import { applyMaterialQuantityChange, mapMaterialsToPriceInput } from "@/utils/costs";
+import {
+  applyMaterialQuantityChange,
+  mapMaterialsToPriceInput,
+  createEmptySimulation,
+  buildDummyMaterialsPayload,
+  applyCifOverride
+} from "@/utils/costs";
+import useGetProduct from "../product/useGetProduct";
 
 export type ProductOption = {
   id: string;
   fullName?: string;
   name?: string;
+  isTestProduct?: boolean;
 };
 
 export type UseEstimateOptions = {
@@ -33,7 +43,7 @@ export type UseEstimateOptions = {
 };
 
 const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) => {
-  const { productList } = useGetProductList();
+  const { product: productList } = useGetProduct({ includeTestProducts: true });
   const queryClient = useQueryClient();
 
   const [selectedProduct, setSelectedProduct] = useState<ProductOption | null>(null);
@@ -43,6 +53,24 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
   const [isEstimating, startEstimateTransition] = useTransition();
 
   const [selectedSnapshotId, setSelectedSnapshotId] = useState<number | null>(null);
+
+  const { costConfig } = useCostConfig();
+
+  const {
+    estimate: dummyEstimate,
+    isEstimating: isDummyEstimating,
+    error: dummyEstimateError,
+    runEstimate,
+    reset: resetDummyEstimate
+  } = useDebouncedEstimate();
+
+  const [dummyRows, setDummyRows] = useState<IDummySimulationRow[]>([]);
+  const [cifOverride, setCifOverride] = useState<number | null>(null);
+  const [units, setUnits] = useState<number | string>(1);
+  const [unitGramsFinalProduct, setUnitGramsFinalProduct] = useState<number | string>(100);
+
+  const isTestProduct = Boolean(selectedProduct?.isTestProduct);
+  const effectiveCif = cifOverride ?? estimate?.totalCif ?? 0;
 
   const methods = useForm<RegisterPriceFormValues>({
     defaultValues: {
@@ -98,8 +126,15 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
     setEstimate(null);
     methods.reset();
     setError(null);
+    setDummyRows([]);
+    setCifOverride(null);
+    resetDummyEstimate();
 
-    if (product?.id) {
+    if (!product?.id) return;
+
+    if (product.isTestProduct) {
+      setEstimate(costConfig ? createEmptySimulation(product, costConfig) : createEmptySimulation(product));
+    } else {
       handleEstimate(product.id);
     }
   };
@@ -132,6 +167,68 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
     });
   };
 
+  const rowPriceFor = (materialType: "feedstock" | "packaging", option: IMaterialPriceOption) =>
+    materialType === "feedstock" ? option.pricePerGram : option.pricePerUnit;
+
+  const pushDummyEstimate = useCallback(() => {
+    const grams = typeof unitGramsFinalProduct === "number" ? unitGramsFinalProduct : parseFloat(unitGramsFinalProduct);
+
+    const unitCount = typeof units === "number" ? units : parseFloat(units);
+
+    if (!Number.isFinite(grams) || grams <= 0 || !Number.isFinite(unitCount) || unitCount <= 0) return;
+    if (buildDummyMaterialsPayload(dummyRows).length === 0) return;
+
+    runEstimate({
+      unitGramsFinalProduct: grams,
+      units: Math.floor(unitCount),
+      wastePct: Number(methods.getValues("wastePct")) || 0,
+      commissionPct: Number(methods.getValues("comissionPct")) || 0,
+      finalPrice: Number(methods.getValues("finalPrice")) || 0,
+      isDefinitive: false,
+      notes: methods.getValues("priceNotes") || "",
+      materials: buildDummyMaterialsPayload(dummyRows)
+    });
+  }, [dummyRows, unitGramsFinalProduct, units, methods, runEstimate]);
+
+  const handleAddRow = (materialType: "feedstock" | "packaging", option: IMaterialPriceOption) => {
+    const price = rowPriceFor(materialType, option);
+
+    setDummyRows(prev => [
+      ...prev,
+      {
+        localId: `${materialType}-${option.id}-${Date.now()}`,
+        materialType,
+        idMaterial: option.id,
+        materialName: option.name,
+        unitCost: price && price > 0 ? price : "",
+        quantity: "",
+        isDraft: true
+      }
+    ]);
+  };
+
+  const handleRemoveRow = (localId: string) => {
+    setDummyRows(prev => prev.filter(r => r.localId !== localId));
+  };
+
+  const handleRowChange = (localId: string, field: "unitCost" | "quantity", value: number | string) => {
+    setDummyRows(prev => prev.map(r => (r.localId === localId ? { ...r, [field]: value } : r)));
+  };
+
+  useEffect(() => {
+    if (!isTestProduct) return;
+    pushDummyEstimate();
+  }, [dummyRows, isTestProduct, pushDummyEstimate]);
+
+  const handleUnitsChange = (value: number | string) => setUnits(value);
+  const handleGramsChange = (value: number | string) => setUnitGramsFinalProduct(value);
+
+  const handleCifOverrideChange = (value: number | null) => {
+    setCifOverride(value === null || !Number.isFinite(value) || value < 0 ? null : value);
+  };
+
+  const handleCifOverrideReset = () => setCifOverride(null);
+
   const handleRegisterPrice = methods.handleSubmit(async (values: RegisterPriceFormValues) => {
     if (!estimate || (snapshotId === null && !selectedProduct?.id)) {
       toast.error("Seleccione un producto y genere una estimación primero");
@@ -141,7 +238,7 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
 
     const isSnapshotUpdate = snapshotId !== null;
 
-    const payload: RegisterPricePayload = {
+    const payload: any = {
       idFinalProduct: isSnapshotUpdate ? estimate.idFinalProduct : selectedProduct!.id,
       units: isSnapshotUpdate ? estimate.units : quantityKg,
       wastePct: values.wastePct,
@@ -178,37 +275,89 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
     });
   });
 
+  const handleRegisterDummyPrice = () => {
+    void (async () => {
+      // En modo dummy los materiales viven en `dummyRows`, no en el `materials` del
+      // form, así que solo se validan los campos numéricos del registro de precio.
+      const valid = await methods.trigger(["wastePct", "finalPrice", "priceNotes", "isDefinitive"]);
+
+      if (!valid) return;
+
+      const values = methods.getValues();
+
+      const grams =
+        typeof unitGramsFinalProduct === "number" ? unitGramsFinalProduct : parseFloat(unitGramsFinalProduct);
+
+      const unitCount = typeof units === "number" ? units : parseFloat(units);
+
+      if (!Number.isFinite(grams) || grams <= 0 || !Number.isFinite(unitCount) || unitCount <= 0) {
+        toast.error("Ingrese unidades y gramos válidos");
+
+        return;
+      }
+
+      const materials = buildDummyMaterialsPayload(dummyRows);
+
+      if (materials.length === 0) {
+        toast.error("Agregue al menos un material con precio y cantidad");
+
+        return;
+      }
+
+      const payload = {
+        unitGramsFinalProduct: grams,
+        units: Math.floor(unitCount),
+        wastePct: values.wastePct,
+        commissionPct: values.comissionPct,
+        finalPrice: values.finalPrice,
+        isDefinitive: values.isDefinitive,
+        notes: values.priceNotes,
+        materials
+      };
+
+      startPriceTransition(async () => {
+        const result =
+          snapshotId !== null
+            ? await updateDummySnapshotAction(snapshotId, payload)
+            : await saveDummyProductAction(payload);
+
+        if (result.success) {
+          toast.success("Simulación guardada con éxito");
+          queryClient.invalidateQueries({ queryKey: ["product-snapshots"] });
+          onSaved?.();
+        } else {
+          toast.error(result.error || "Error al guardar la simulación");
+        }
+      });
+    })();
+  };
+
   const derivedEstimate = useMemo(() => {
-    if (!estimate) return null;
+    const raw = isTestProduct ? dummyEstimate ?? estimate : estimate;
+    const base = raw ? applyCifOverride(raw, cifOverride) : null;
 
-    //Costo produccion
-    const totalCost = estimate.realTotalCostFeedstock + estimate.realTotalCostPackaging + estimate.totalCif;
+    if (!base) return null;
 
-    // Utilidad
+    const totalCost = base.realTotalCostFeedstock + base.realTotalCostPackaging + base.totalCif;
     const price = Number(finalPrice);
-    const costDifference = price > 0 ? price - estimate.totalCostWaste : 0;
+    const commissionValue = price * ((commissionPct ?? base.price?.commissionPct) / 100);
+    const safeCommission = Number.isFinite(commissionValue) ? commissionValue : 0;
+    const costDifference = price > 0 ? price - (base.totalCostWaste ?? totalCost) - safeCommission : 0;
     const utilityPct = price > 0 ? (costDifference / price) * 100 : 0;
-
-    // Insumos
-    const wasteValue = totalCost * (wastePct / 100);
-
-    // Comisión
-    const commissionValue = price * (commissionPct / 100);
-
-    // Margen
-    const defaultMarginValue = (estimate.totalCostWaste * 0.4) / 0.6;
+    const wasteValue = totalCost * ((wastePct ?? base.wastePct) / 100);
+    const defaultMarginValue = (base.totalCostWaste * 0.4) / 0.6;
 
     return {
-      ...estimate,
+      ...base,
       totalCost,
       wasteValue,
-      wastePct,
+      wastePct: wastePct ?? base.wastePct,
       costDifference,
       utilityPct,
       defaultMarginValue,
-      price: { ...estimate.price, commissionPct, commissionValue }
+      price: { ...base.price, commissionPct: commissionPct ?? base.price?.commissionPct, commissionValue }
     };
-  }, [estimate, wastePct, finalPrice, commissionPct]);
+  }, [estimate, dummyEstimate, cifOverride, isTestProduct, wastePct, finalPrice, commissionPct]);
 
   const handleSnapshotDetail = (id: number) => setSelectedSnapshotId(id);
   const handleCloseSnapshotDetail = () => setSelectedSnapshotId(null);
@@ -236,6 +385,22 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
     handleSnapshotDetail,
     handleCloseSnapshotDetail,
     handleRefreshSnapshots,
+    isTestProduct,
+    units,
+    unitGramsFinalProduct,
+    dummyRows,
+    cifOverride,
+    effectiveCif,
+    isDummyEstimating,
+    dummyEstimateError,
+    handleAddRow,
+    handleRemoveRow,
+    handleRowChange,
+    handleUnitsChange,
+    handleGramsChange,
+    handleCifOverrideChange,
+    handleCifOverrideReset,
+    handleRegisterDummyPrice,
     handleEstimateEdit
   };
 };

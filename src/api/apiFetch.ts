@@ -2,6 +2,25 @@ import { getServerSession } from "next-auth";
 
 import { authOptions } from "@/lib/nextAuthOptions";
 
+// El backend a veces devuelve `message` como objeto (errores de validación
+// estructurados). Sin esta normalización, `new Error(obj)` lo convierte en
+// "[object Object]" y el mensaje real se pierde.
+const toErrorMessage = (message: unknown, fallback: string): string => {
+  if (typeof message === "string" && message.length > 0) return message;
+
+  if (message !== null && message !== undefined) {
+    try {
+      const serialized = JSON.stringify(message);
+
+      if (serialized && serialized !== "{}") return serialized;
+    } catch {
+      // usa el fallback
+    }
+  }
+
+  return fallback;
+};
+
 export async function apiFetch<T>(
   path: string,
   options?: { tags?: string[]; method?: string; body?: BodyInit }
@@ -45,7 +64,7 @@ export async function apiFetch<T>(
         try {
           const json = JSON.parse(text);
 
-          internalMessage = json.message || text;
+          internalMessage = toErrorMessage(json.message, text);
         } catch {
           internalMessage += `: ${text}`;
         }

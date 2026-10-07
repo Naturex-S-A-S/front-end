@@ -39,7 +39,7 @@ const Snapshot = () => {
             <Grid item xs={12} sm={6} md={4}>
               <CustomAutocomplete
                 value={selectedProduct}
-                options={productList}
+                options={productList ?? []}
                 getOptionLabel={(option: ProductOption) => option?.fullName || option?.name || ""}
                 onChange={(_: any, v: ProductOption | null) => handleProductChange(v)}
                 renderInput={(params: any) => (

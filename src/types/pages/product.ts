@@ -6,6 +6,7 @@ export interface IProduct {
   minimumStandard: number;
   categories: ICategory[];
   lotCategory: ICategory | null;
+  isTestProduct: boolean;
   active: boolean;
   dateCreated: string;
   formulations: any;

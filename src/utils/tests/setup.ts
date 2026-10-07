@@ -1,35 +1,40 @@
 import "@testing-library/jest-dom";
 
-Object.defineProperty(window, "matchMedia", {
-  writable: true,
-  value: (query: string) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: () => {},
-    removeListener: () => {},
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    dispatchEvent: () => false
-  })
-});
+// Los tests de @/lib/nextAuthOptions corren con // @vitest-environment node porque
+// jose (usado por el encode de next-auth) no funciona bajo el realm de jsdom.
+const isBrowser = typeof window !== "undefined";
 
-class MockIntersectionObserver {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
-}
+if (isBrowser) {
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    value: (query: string) => ({
+      matches: false,
+      media: query,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false
+    })
+  });
 
-Object.defineProperty(window, "IntersectionObserver", {
-  writable: true,
-  value: MockIntersectionObserver
-});
-
-Object.defineProperty(window, "ResizeObserver", {
-  writable: true,
-  value: class {
+  class MockIntersectionObserver {
     observe() {}
     unobserve() {}
     disconnect() {}
   }
-});
+
+  Object.defineProperty(window, "IntersectionObserver", {
+    writable: true,
+    value: MockIntersectionObserver
+  });
+
+  Object.defineProperty(window, "ResizeObserver", {
+    writable: true,
+    value: class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    }
+  });
+}

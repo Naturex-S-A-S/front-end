@@ -3,7 +3,13 @@
 import { revalidateTag } from "next/cache";
 
 import { apiFetch } from "@/api/apiFetch";
-import type { ICostEstimate, IProductInventorySummary, IProductPrice, IPutCostConfig } from "@/types/pages/costs";
+import type {
+  DummyEstimatePayload,
+  ICostEstimate,
+  IProductInventorySummary,
+  IProductPrice,
+  IPutCostConfig
+} from "@/types/pages/costs";
 
 type ActionResult = { success: boolean; error?: string };
 
@@ -121,5 +127,46 @@ export async function getPriceHistoryAction(productId: string): Promise<{ succes
     return { success: true, data };
   } catch {
     return { success: true, data: [] };
+  }
+}
+
+export async function estimateDummyProductAction(
+  payload: DummyEstimatePayload
+): Promise<{ success: true; data: ICostEstimate } | { success: false; error: string }> {
+  try {
+    const data = await apiFetch<ICostEstimate>("costs/dummy-product/estimate", {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+
+    return { success: true, data };
+  } catch (e: any) {
+    return { success: false, error: e.message };
+  }
+}
+
+export async function saveDummyProductAction(payload: DummyEstimatePayload): Promise<ActionResult> {
+  try {
+    await apiFetch("costs/dummy-product/save", {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+
+    return { success: true };
+  } catch (e: any) {
+    return { success: false, error: e.message };
+  }
+}
+
+export async function updateDummySnapshotAction(snapshotId: number, payload: DummyEstimatePayload): Promise<ActionResult> {
+  try {
+    await apiFetch(`costs/dummy-product/snapshot/${snapshotId}`, {
+      method: "PUT",
+      body: JSON.stringify(payload)
+    });
+
+    return { success: true };
+  } catch (e: any) {
+    return { success: false, error: e.message };
   }
 }

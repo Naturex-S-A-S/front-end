@@ -53,8 +53,6 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
 
   const { warehouseList } = useGetWarehouseList();
 
-  console.log({ batch });
-
   const {
     control,
     handleSubmit,

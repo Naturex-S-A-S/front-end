@@ -18,6 +18,7 @@ export interface ICostEstimateMaterial {
   realUnitCost: number;
   realQuantity: number;
   realTotalCost: number; // = realUnitCost * units
+  isDraft?: boolean;
 }
 
 export interface ICostEstimatePeriodCifItem {
@@ -60,6 +61,7 @@ export interface ICostEstimate {
   units: number;
   quantityKg: number;
   unitGramsFinalProduct: number | null;
+  unitGramsFinalProductUsed: number | null;
   realTotalCostFeedstock: number;
   realTotalCostPackaging: number;
   realCostMaterialUnit: number; // = realTotalCostFeedstock + realTotalCostPackaging
@@ -188,3 +190,39 @@ export interface IProductInventorySummary {
   totalInventoryKgProduced: number;
   cifDetails: IProductInventorySummaryCifDetail[];
 }
+
+export interface IMaterialPriceOption {
+  id: string;
+  name: string;
+  pricePerGram: number | null;
+  pricePerUnit: number | null;
+}
+
+export type IDummySimulationRow = {
+  localId: string;
+  materialType: "feedstock" | "packaging";
+  idMaterial: string;
+  materialName: string;
+  unitCost: number | string;
+  quantity: number | string;
+  isDraft: boolean;
+};
+
+export type DummyMaterialsPayload = {
+  idMaterial: string;
+  materialType: string;
+  materialName: string;
+  quantity: number;
+  unitCost: number;
+}[];
+
+export type DummyEstimatePayload = {
+  unitGramsFinalProduct: number;
+  units: number;
+  wastePct: number;
+  commissionPct: number;
+  finalPrice: number;
+  isDefinitive: boolean;
+  notes: string;
+  materials: DummyMaterialsPayload;
+};

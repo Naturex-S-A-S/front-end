@@ -1,11 +1,12 @@
 "use client";
 
-import { Box, Grid, Typography } from "@mui/material";
+import { Alert, Box, Grid, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 
 import { FormProvider } from "react-hook-form";
 
 import useEstimate from "../../../../../hooks/costs/useEstimate";
+import useMaterialPrices from "../../../../../hooks/costs/useMaterialPrices";
 import EstimateForm from "./EstimateForm";
 import EstimateResultCard from "./EstimateResultCard";
 import CurrentPriceCard from "./CurrentPriceCard";
@@ -31,8 +32,25 @@ const EstimateView = () => {
     handleSnapshotDetail,
     handleCloseSnapshotDetail,
     handleRefreshSnapshots,
-    handleEstimateEdit
+    handleEstimateEdit,
+    isTestProduct,
+    units,
+    unitGramsFinalProduct,
+    isDummyEstimating,
+    handleUnitsChange,
+    handleGramsChange,
+    dummyRows,
+    cifOverride,
+    dummyEstimateError,
+    handleAddRow,
+    handleRemoveRow,
+    handleRowChange,
+    handleCifOverrideChange,
+    handleCifOverrideReset,
+    handleRegisterDummyPrice,
   } = useEstimate();
+
+  const { feedstockPrices, packagingPrices } = useMaterialPrices();
 
   return (
     <FormProvider {...methods}>
@@ -44,12 +62,32 @@ const EstimateView = () => {
             quantityKg={quantityKg}
             error={error}
             isEstimating={isEstimating}
+            isTestProduct={isTestProduct}
+            units={units}
+            unitGramsFinalProduct={unitGramsFinalProduct}
+            isEstimatingDummy={isDummyEstimating}
             onProductChange={handleProductChange}
             onQuantityChange={handleQuantityChange}
+            onUnitsChange={handleUnitsChange}
+            onGramsChange={handleGramsChange}
           />
         </Grid>
 
-        {selectedProduct && (
+        {isTestProduct && (
+          <Grid item xs={12}>
+            <Alert severity='info'>
+              Está en modo simulación: elija libremente los materiales y la presentación.
+            </Alert>
+          </Grid>
+        )}
+
+        {dummyEstimateError && (
+          <Grid item xs={12}>
+            <Alert severity='error'>{dummyEstimateError}</Alert>
+          </Grid>
+        )}
+
+        {selectedProduct && !isTestProduct && (
           <Grid item xs={12}>
             <CurrentPriceCard productId={selectedProduct.id} />
           </Grid>
@@ -59,9 +97,20 @@ const EstimateView = () => {
           <EstimateResultCard
             estimate={estimate}
             isRegisteringPrice={isRegisteringPrice}
+            isTestProduct={isTestProduct}
+            dummyRows={dummyRows}
+            feedstockPrices={feedstockPrices}
+            packagingPrices={packagingPrices}
+            isDummyEstimating={isDummyEstimating}
+            cifOverride={cifOverride}
             onMaterialChange={handleMaterialChange}
-            onRegisterPrice={handleRegisterPrice}
+            onRowChange={handleRowChange}
+            onRemoveRow={handleRemoveRow}
+            onAddRow={handleAddRow}
+            onRegisterPrice={isTestProduct ? handleRegisterDummyPrice : handleRegisterPrice}
             onEstimateEdit={handleEstimateEdit}
+            onCifOverrideChange={handleCifOverrideChange}
+            onCifOverrideReset={handleCifOverrideReset}
           />
         )}
 

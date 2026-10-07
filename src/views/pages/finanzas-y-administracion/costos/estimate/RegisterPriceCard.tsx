@@ -1,11 +1,14 @@
 "use client";
 
-import { Box, Checkbox, Divider, FormControlLabel, Grid, Typography } from "@mui/material";
+import type { FormEvent } from "react";
+
+import { Box, Checkbox, Divider, FormControlLabel, Grid, Stack, Tooltip, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 
 import { useFormContext } from "react-hook-form";
 
 import CustomCard from "@/@core/components/mui/Card";
+import CustomIconButton from "@/@core/components/mui/IconButton";
 import CustomTextField from "@/@core/components/mui/TextField";
 import CustomButton from "@/@core/components/mui/Button";
 import { formatCurrency } from "@/utils/format";
@@ -17,6 +20,10 @@ interface Props {
   estimate: ICostEstimate;
   isRegisteringPrice: boolean;
   onRegister: () => void;
+  isTestProduct?: boolean;
+  cifOverride?: number | null;
+  onCifOverrideChange?: (value: number | null) => void;
+  onCifOverrideReset?: () => void;
 }
 
 const WaterfallRow = ({
@@ -42,19 +49,74 @@ const WaterfallRow = ({
   </Box>
 );
 
-const RegisterPriceCard = ({ readonly, estimate, isRegisteringPrice, onRegister }: Props) => {
+const RegisterPriceCard = ({
+  readonly,
+  estimate,
+  isRegisteringPrice,
+  onRegister,
+  isTestProduct = false,
+  cifOverride = null,
+  onCifOverrideChange,
+  onCifOverrideReset
+}: Props) => {
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useFormContext<RegisterPriceFormValues>();
 
+  // En modo dummy los materiales viven en `dummyRows`, no en el `materials` del form,
+  // así que el submit no puede pasar por la validación completa del schema.
+  const handleDummySubmit = (e: FormEvent) => {
+    e.preventDefault();
+    onRegister();
+  };
+
   return (
     <CustomCard className='sticky'>
-      <form onSubmit={handleSubmit(onRegister)}>
+      <form onSubmit={isTestProduct ? handleDummySubmit : handleSubmit(onRegister)}>
         <Typography variant='h6' fontWeight={600} sx={{ mb: 2 }}>
           Registrar Precio Final
         </Typography>
+
+        <Box sx={{ mb: 2 }}>
+          <Stack direction='row' spacing={1} alignItems='center' sx={{ mb: 1.5 }}>
+            <Icon icon='mdi:factory' fontSize={18} />
+            <Typography variant='subtitle2' fontWeight={600}>
+              Costo Indirecto de Fabricación (CIF)
+            </Typography>
+            {!readonly && (
+              <Tooltip title='Restaurar valor calculado'>
+                <span>
+                  <CustomIconButton
+                    size='small'
+                    variant='outlined'
+                    aria-label='Restaurar valor calculado'
+                    disabled={cifOverride === null}
+                    onClick={() => onCifOverrideReset?.()}
+                  >
+                    <Icon icon='mdi:restore' />
+                  </CustomIconButton>
+                </span>
+              </Tooltip>
+            )}
+          </Stack>
+          <Stack direction='row' spacing={1} alignItems='flex-start'>
+            <CustomTextField
+              type='number'
+              label='Total CIF'
+              disabled={readonly}
+              value={cifOverride ?? estimate.totalCif}
+              onChange={e => {
+                const v = e.target.value === "" ? null : Number(e.target.value);
+
+                onCifOverrideChange?.(v !== null && Number.isFinite(v) ? v : null);
+              }}
+              InputProps={{ inputProps: { min: 0, step: "any" } }}
+              sx={{ flex: 1 }}
+            />
+          </Stack>
+        </Box>
 
         <WaterfallRow label='Costo produccion' value={formatCurrency(estimate.totalCost)} />
         <Divider sx={{ my: 0.5, borderStyle: "dashed" }} />
@@ -134,7 +196,10 @@ const RegisterPriceCard = ({ readonly, estimate, isRegisteringPrice, onRegister 
           }}
         />
         {Number.isFinite(estimate.price.commissionValue) && (
-          <WaterfallRow label={`Comisión`} value={formatCurrency(estimate.price.commissionValue)} />
+          <WaterfallRow
+            label={`- Comisión (${estimate.price.commissionPct ?? 0}%)`}
+            value={formatCurrency(estimate.price.commissionValue)}
+          />
         )}
         <WaterfallRow label={`Margen de ganancia`} value={formatCurrency(estimate.costDifference)} />
         <WaterfallRow
