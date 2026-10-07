@@ -58,20 +58,24 @@ export async function apiFetch<T>(
 
     if (!res.ok) {
       const text = await res.text().catch(() => "");
-      let internalMessage = `apiFetch ${res.status} ${res.statusText}`;
+      let apiErrorMessage: string | null = null;
 
       if (text) {
         try {
           const json = JSON.parse(text);
 
-          internalMessage = toErrorMessage(json.message, text);
+          apiErrorMessage = toErrorMessage(json.message, "");
         } catch {
-          internalMessage += `: ${text}`;
+          apiErrorMessage = null;
         }
       }
 
+      if (apiErrorMessage) {
+        throw new Error(apiErrorMessage);
+      }
+
       if (process.env.NODE_ENV === "development") {
-        throw new Error(internalMessage);
+        throw new Error(text || `apiFetch ${res.status} ${res.statusText}`);
       }
 
       const userMessages: Record<number, string> = {

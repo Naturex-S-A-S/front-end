@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import Link from "next/link";
 
@@ -96,7 +96,16 @@ const Form: React.FC<Props> = ({
   const productWatch = useWatch({ control, name: "product" });
   const calculatedData = useWatch({ control, name: "calculatedData" });
 
-  const totalPossibleProducts = calculatedData?.possibleProducts?.reduce((acc: number, product: any) => acc + product.units, 0);
+  const { showSupplyOrdersLink, canGenerateOrder } = useMemo(() => {
+    const possibleProducts: { units: number | string }[] = calculatedData?.possibleProducts ?? [];
+    const total = possibleProducts.reduce((acc, product) => acc + (Number(product.units) || 0), 0);
+    const hasData = possibleProducts.length > 0;
+
+    return {
+      showSupplyOrdersLink: hasData && total === 0,
+      canGenerateOrder: hasData ? total !== 0 : true
+    };
+  }, [calculatedData?.possibleProducts]);
 
   const handleContinue = useCallback(async () => {
     const result = await trigger("presentations");
@@ -192,7 +201,7 @@ const Form: React.FC<Props> = ({
                           </>
                       }
 
-                      {step === 2 && totalPossibleProducts !== 0 && (
+                      {step === 2 && canGenerateOrder && (
                         <>
                           <CustomButton
                             text='Generar orden'
@@ -224,7 +233,7 @@ const Form: React.FC<Props> = ({
               <Grid item xs={12}>
                 <Alert severity={calculatedData?.totalQuantityMissing === 0 ? "success" : "warning"}>
                   <Typography variant='body2'>{calculatedData.message}</Typography>
-                  {totalPossibleProducts === 0 && (
+                  {showSupplyOrdersLink && (
                     <Box mt={1}>
                       <Typography
                         component={Link}
