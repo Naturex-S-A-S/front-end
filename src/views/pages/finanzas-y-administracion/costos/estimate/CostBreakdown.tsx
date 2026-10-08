@@ -327,11 +327,9 @@ const DummyMaterialTable = ({
           Seleccione un material
         </MenuItem>
         {availableOptions.map(option => {
-          const price = type === "feedstock" ? option.pricePerGram : option.pricePerUnit;
-
           return (
             <MenuItem key={option.id} value={String(option.id)}>
-              {option.name} — {price && price > 0 ? `${formatCurrency(price)}/${type === "feedstock" ? "g" : "u"}` : "sin precio"}
+              {option.id} - {option.name}
             </MenuItem>
           );
         })}

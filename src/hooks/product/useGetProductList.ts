@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { getProductList } from "@/api/product";
+import type { IParamsListProduct } from "@/types/pages/product";
 
-const useGetProductList = () => {
+const useGetProductList = (params: IParamsListProduct) => {
   const { data, error, isLoading, isFetching } = useQuery({
-    queryKey: ["productList"],
-    queryFn: getProductList
+    queryKey: ["productList", params],
+    queryFn: () => getProductList(params)
   });
 
   return {

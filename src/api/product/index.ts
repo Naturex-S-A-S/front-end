@@ -1,4 +1,4 @@
-import type { ICreateProduct, IUpdateProduct } from "@/types/pages/product";
+import type { ICreateProduct, IParamsListProduct, IUpdateProduct } from "@/types/pages/product";
 import { API } from "../instances";
 
 export const postProduct = async (data: ICreateProduct) => {
@@ -49,8 +49,8 @@ export const patchProduct = async (id: string, data: IUpdateProduct) => {
   return response.data;
 };
 
-export const getProductList = async () => {
-  const response = await API().get("/product/list");
+export const getProductList = async (params: IParamsListProduct) => {
+  const response = await API().get("/product/list", { params });
 
   return response.data;
 };

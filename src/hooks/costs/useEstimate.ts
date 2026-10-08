@@ -28,7 +28,7 @@ import {
   buildDummyMaterialsPayload,
   applyCifOverride
 } from "@/utils/costs";
-import useGetProduct from "../product/useGetProduct";
+import useGetProductList from "../product/useGetProductList";
 
 export type ProductOption = {
   id: string;
@@ -43,7 +43,7 @@ export type UseEstimateOptions = {
 };
 
 const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) => {
-  const { product: productList } = useGetProduct({ includeTestProducts: true });
+  const { productList } = useGetProductList({ includeTestProducts: true });
   const queryClient = useQueryClient();
 
   const [selectedProduct, setSelectedProduct] = useState<ProductOption | null>(null);

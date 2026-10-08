@@ -86,3 +86,7 @@ interface IRecentKardex {
   idOrder: number;
   idFinalProduct: string;
 }
+
+export interface IParamsListProduct {
+  includeTestProducts?: boolean;
+}
