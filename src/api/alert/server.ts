@@ -9,10 +9,16 @@ export async function getAlertsServer(): Promise<IAlert[]> {
   }
 }
 
-/* export async function getAllAlertsServer(page: number): Promise<IAlert[]> {
+interface AlertsPageParams {
+  onlyActive?: boolean;
+}
+
+export async function getAlertsPageServer(params?: AlertsPageParams): Promise<IAlert[]> {
   try {
-    return await apiFetch<IAlert[]>("alerts/all", { tags: ["alerts-all"], params: { page } });
+    const path = params?.onlyActive ? "alerts?onlyActive=true" : "alerts";
+
+    return await apiFetch<IAlert[]>(path, { tags: ["alerts"] });
   } catch {
     return [];
   }
-} */
+}

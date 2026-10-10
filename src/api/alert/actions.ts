@@ -22,3 +22,21 @@ export async function markAlertAsRead(alertId: number) {
     return { success: false, error: e.message };
   }
 }
+
+export async function markAllAlertsAsRead(alertIds: number[]) {
+  try {
+    for (const alertId of alertIds) {
+      await apiFetch(`alerts/${alertId}/status`, {
+        method: "PUT",
+        body: JSON.stringify({ readed: true }),
+        tags: ["alerts"]
+      });
+    }
+
+    revalidateTag("alerts");
+
+    return { success: true };
+  } catch (e: any) {
+    return { success: false, error: e.message };
+  }
+}
