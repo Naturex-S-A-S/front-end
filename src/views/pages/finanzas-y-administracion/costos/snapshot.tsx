@@ -1,27 +1,29 @@
 "use client";
 
-import { Grid } from "@mui/material";
+import { useState } from "react";
 
-import SnapshotHistory from "./estimate/SnapshotHistory";
+import { Grid } from "@mui/material";
+import { useQueryClient } from "@tanstack/react-query";
+
+import CurrentSnapshotsHistory from "./estimate/CurrentSnapshotsHistory";
 import SnapshotDetailDialog from "./estimate/SnapshotDetailDialog";
-import useEstimate from "../../../../hooks/costs/useEstimate";
 
 const Snapshot = () => {
-  const {
-    selectedProduct,
-    selectedSnapshotId,
-    handleSnapshotDetail,
-    handleCloseSnapshotDetail,
-    handleRefreshSnapshots
-  } = useEstimate();
+  const queryClient = useQueryClient();
+  const [selectedSnapshotId, setSelectedSnapshotId] = useState<number | null>(null);
+
+  const handleSnapshotDetail = (id: number) => setSelectedSnapshotId(id);
+  const handleCloseSnapshotDetail = () => setSelectedSnapshotId(null);
+
+  const handleRefreshSnapshots = () => {
+    queryClient.invalidateQueries({ queryKey: ["current-snapshots"] });
+  };
 
   return (
     <Grid container spacing={4}>
-      {selectedProduct && (
-        <Grid item xs={12}>
-          <SnapshotHistory productId={selectedProduct.id} onViewDetail={handleSnapshotDetail} />
-        </Grid>
-      )}
+      <Grid item xs={12}>
+        <CurrentSnapshotsHistory onViewDetail={handleSnapshotDetail} />
+      </Grid>
 
       <SnapshotDetailDialog
         snapshotId={selectedSnapshotId}

@@ -68,6 +68,18 @@ export async function getProductSnapshotsAction(
   }
 }
 
+export async function getCurrentSnapshotsAction(): Promise<
+  { success: true; data: IProductInventorySummary[] } | { success: false; error: string }
+> {
+  try {
+    const data = await apiFetch<IProductInventorySummary[]>("costs/products/current-snapshots");
+
+    return { success: true, data };
+  } catch (e: any) {
+    return { success: false, error: e.message };
+  }
+}
+
 export async function getSnapshotDetailAction(
   snapshotId: number
 ): Promise<{ success: true; data: ICostEstimate } | { success: false; error: string }> {
