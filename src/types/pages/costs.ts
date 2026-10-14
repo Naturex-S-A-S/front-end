@@ -75,6 +75,7 @@ export interface ICostEstimate {
   periods: ICostEstimatePeriod[];
   cifDetails: ICostEstimateCifDetail[];
   totalCif: number;
+  cifValue?: number | null;
   price: IProductPrice;
   totalCost: number;
   totalCostTax: number;
@@ -231,4 +232,5 @@ export type DummyEstimatePayload = {
   isDefinitive: boolean;
   notes: string;
   materials: DummyMaterialsPayload;
+  cifValue?: number | null;
 };

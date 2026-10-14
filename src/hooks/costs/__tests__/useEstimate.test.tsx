@@ -148,6 +148,44 @@ describe("useEstimate - handleRegisterDummyPrice", () => {
   });
 });
 
+describe("useEstimate - margen configurable", () => {
+  const estimateWithMargin = (marginPct: number, totalCostWaste: number): ICostEstimate => ({
+    ...serverEstimate,
+    totalCostWaste,
+    defaultMarginPct: marginPct
+  });
+
+  it("con margen 0% la ganancia es 0", () => {
+    const { result } = renderHook(() => useEstimate(), { wrapper });
+
+    act(() => {
+      result.current.loadEstimate(estimateWithMargin(0, 1700));
+    });
+
+    expect(result.current.estimate?.defaultMarginValue).toBe(0);
+  });
+
+  it("aplica la fórmula del backend con el margen configurado", () => {
+    const { result } = renderHook(() => useEstimate(), { wrapper });
+
+    act(() => {
+      result.current.loadEstimate(estimateWithMargin(30, 1000));
+    });
+
+    expect(result.current.estimate?.defaultMarginValue).toBeCloseTo((1000 * 0.3) / 0.7, 4);
+  });
+
+  it("no divide por cero cuando el margen es 100%", () => {
+    const { result } = renderHook(() => useEstimate(), { wrapper });
+
+    act(() => {
+      result.current.loadEstimate(estimateWithMargin(100, 1000));
+    });
+
+    expect(result.current.estimate?.defaultMarginValue).toBe(0);
+  });
+});
+
 describe("useEstimate - comisión en el margen", () => {
   const estimateWithWaste: ICostEstimate = {
     ...serverEstimate,

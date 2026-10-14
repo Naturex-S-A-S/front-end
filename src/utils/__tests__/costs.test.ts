@@ -6,8 +6,11 @@ import {
   createEmptySimulation,
   buildDummyMaterialsPayload,
   isDummyRowComplete,
-  applyCifOverride
+  applyCifOverride,
+  computeMarginValue
 } from "@/utils/costs";
+
+import { costConfigSchema } from "@/utils/schemas/costs";
 
 const config = { cifAveragingMonths: 3, defaultWastePct: 5, defaultMarginPct: 30 };
 
@@ -195,5 +198,40 @@ describe("applyCifOverride", () => {
     const twice = applyCifOverride(once, 80);
 
     expect(twice.totalCif).toBe(once.totalCif);
+  });
+});
+
+describe("computeMarginValue", () => {
+  it("devuelve 0 con margen 0%", () => {
+    expect(computeMarginValue(1700, 0)).toBe(0);
+  });
+
+  it("calcula el margen sobre precio con la fórmula del backend", () => {
+    expect(computeMarginValue(1000, 30)).toBeCloseTo((1000 * 0.3) / 0.7, 6);
+  });
+
+  it("devuelve 0 con margen >= 100% para no dividir por cero", () => {
+    expect(computeMarginValue(1000, 100)).toBe(0);
+    expect(computeMarginValue(1000, 150)).toBe(0);
+  });
+
+  it("no devuelve NaN con entradas inválidas", () => {
+    expect(computeMarginValue(Number.NaN, 30)).toBe(0);
+    expect(computeMarginValue(1000, Number.NaN)).toBe(0);
+  });
+});
+
+describe("costConfigSchema - defaultMarginPct", () => {
+  const valid = { cifAveragingMonths: 3, defaultWastePct: 5, defaultMarginPct: 30 };
+
+  it("rechaza un margen de 100% o superior", async () => {
+    await expect(costConfigSchema.validate({ ...valid, defaultMarginPct: 100 })).rejects.toThrow();
+    await expect(costConfigSchema.validate({ ...valid, defaultMarginPct: 150 })).rejects.toThrow();
+  });
+
+  it("acepta un margen menor a 100%", async () => {
+    const value = await costConfigSchema.validate({ ...valid, defaultMarginPct: 99.9 });
+
+    expect(value.defaultMarginPct).toBe(99.9);
   });
 });

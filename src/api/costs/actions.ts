@@ -21,6 +21,7 @@ export type RegisterPricePayload = {
   finalPrice: number;
   isDefinitive: boolean;
   notes: string;
+  cifValue: number;
   materials: {
     idMaterial: number;
     materialType: string;
