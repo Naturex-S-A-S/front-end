@@ -49,7 +49,7 @@ export const patchProduct = async (id: string, data: IUpdateProduct) => {
   return response.data;
 };
 
-export const getProductList = async (params: IParamsListProduct) => {
+export const getProductList = async (params?: IParamsListProduct) => {
   const response = await API().get("/product/list", { params });
 
   return response.data;
