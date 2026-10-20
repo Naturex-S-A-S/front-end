@@ -11,15 +11,19 @@ export const kardexFeedstockInputSchema = yup
       name: yup.string().required("El label es requerido")
     }),
     quantity: yup
-      .string()
-      .min(1, "La cantidad debe ser mayor o igual a 1")
+      .number()
       .typeError("La cantidad debe ser un número")
+      .positive("La cantidad debe ser mayor a 0")
       .required("La cantidad es requerida"),
     unit: yup.object().shape({
       value: yup.string().required("La unidad es requerida"),
       label: yup.string().required("El label es requerido")
     }),
-    charge: yup.string().typeError("El costo debe ser un número").required("El costo es requerido"),
+    charge: yup
+      .number()
+      .typeError("El valor debe ser un número")
+      .positive("El valor debe ser mayor a 0")
+      .required("El valor es requerido"),
     document: yup.string().optional(),
     batch: yup.string().required("El lote es requerido"),
     rack: yup.object().shape({ id: yup.string() }).optional(),
@@ -39,11 +43,16 @@ export const kardexPackagingInputSchema = yup
       name: yup.string().required("El label es requerido")
     }),
     quantity: yup
-      .string()
-      .min(1, "La cantidad debe ser mayor o igual a 1")
+      .number()
       .typeError("La cantidad debe ser un número")
+      .positive("La cantidad debe ser mayor a 0")
+      .integer("La cantidad debe ser un número entero")
       .required("La cantidad es requerida"),
-    charge: yup.string().typeError("El costo debe ser un número").required("El costo es requerido"),
+    charge: yup
+      .number()
+      .typeError("El valor debe ser un número")
+      .positive("El valor debe ser mayor a 0")
+      .required("El valor es requerido"),
     document: yup.string().optional(),
     batch: yup.string().required("El lote es requerido"),
     rack: yup.object().shape({ id: yup.string() }).optional()
@@ -58,9 +67,10 @@ export const kardexProductInputSchema = yup
     }),
     order: yup.number().typeError("La orden debe ser un número").required("El orden es requerido"),
     quantity: yup
-      .string()
-      .min(1, "La cantidad debe ser mayor o igual a 1")
+      .number()
       .typeError("La cantidad debe ser un número")
+      .positive("La cantidad debe ser mayor a 0")
+      .integer("La cantidad debe ser un número entero")
       .required("La cantidad es requerida"),
     batch: yup.string().required("El lote es requerido"),
     rack: yup
