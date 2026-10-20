@@ -18,7 +18,7 @@ export const costConfigSchema = yup
       .number()
       .typeError("Requerido")
       .min(0, "Mínimo 0%")
-      .max(1000, "Máximo 1000%")
+      .lessThan(100, "Debe ser menor a 100%")
       .required("Requerido")
   })
   .required();

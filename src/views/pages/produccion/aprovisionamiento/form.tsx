@@ -67,6 +67,7 @@ const Form: React.FC<Props> = ({
   isPendingOrderCalculate
 }) => {
   const [step, setStep] = useState<number>(0);
+  const [showCalcErrors, setShowCalcErrors] = useState(false);
 
   const { productList } = useGetProductList();
 
@@ -88,6 +89,12 @@ const Form: React.FC<Props> = ({
   const productsWatch = useWatch({ control, name: "products" });
   const calculatedData = useWatch({ control, name: "calculatedData" });
 
+  const presentationErrors = errors?.presentations;
+
+  const firstPresentationError = Array.isArray(presentationErrors)
+    ? presentationErrors.map((item: any) => item?.quantityG?.message).find(Boolean) ?? null
+    : null;
+
   const prevProductsRef = useRef<string>("");
 
   useEffect(() => {
@@ -95,6 +102,7 @@ const Form: React.FC<Props> = ({
 
     if (serialized === prevProductsRef.current) return;
     prevProductsRef.current = serialized;
+    setShowCalcErrors(false);
 
     if (productsWatch?.length > 0) {
       replace(productsWatch.map((product: Product) => ({ ...product, quantityG: "" })));
@@ -107,7 +115,10 @@ const Form: React.FC<Props> = ({
   }, [productsWatch, replace, reset]);
 
   const handleContinue = useCallback(async () => {
-    const result = await trigger("presentations");
+    const result = await trigger("presentations", { shouldFocus: true });
+
+    // QA-11: si la validación falla no se dispara el cálculo y se muestra el motivo.
+    setShowCalcErrors(!result);
 
     if (result) {
       const success = await orderCalculate();
@@ -176,10 +187,21 @@ const Form: React.FC<Props> = ({
                           label={`${presentation.fullName}`}
                           placeholder='Ingrese las unidades a producir'
                           error={!!errors?.presentations?.[index]?.quantityG}
+                          helperText={errors?.presentations?.[index]?.quantityG?.message as string}
                         />
                       ))}
 
-                      {(step === 1 || isChanged) && <CustomButton text='Calcular' onClick={handleContinue} />}
+                      {showCalcErrors && firstPresentationError && (
+                        <Alert severity='warning'>{firstPresentationError}</Alert>
+                      )}
+
+                      {(step === 1 || isChanged) && (
+                        <CustomButton
+                          text='Calcular'
+                          onClick={handleContinue}
+                          isLoading={isPendingOrderCalculate}
+                        />
+                      )}
 
                       {step === 2 && (
                         <>

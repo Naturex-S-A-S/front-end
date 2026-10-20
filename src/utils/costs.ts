@@ -1,9 +1,4 @@
-import type {
-  DummyMaterialsPayload,
-  ICostConfig,
-  ICostEstimate,
-  IDummySimulationRow
-} from "@/types/pages/costs";
+import type { DummyMaterialsPayload, ICostConfig, ICostEstimate, IDummySimulationRow } from "@/types/pages/costs";
 import type { RegisterPriceMaterialInput } from "@/utils/schemas/costs";
 
 export const mapMaterialsToPriceInput = (estimate: ICostEstimate): RegisterPriceMaterialInput[] =>
@@ -48,11 +43,23 @@ const toNumber = (value: number | string): number => {
   return Number.isFinite(n) ? n : 0;
 };
 
+// Misma fórmula del backend (ProductCostUseCase): el margen se calcula sobre el
+// precio final, por lo que se divide por (1 - margen). Un margen de 100% o más
+// divide por cero o da negativo, así que se sanea a 0.
+export const computeMarginValue = (totalCostWaste: number, marginPct: number): number => {
+  const pct = marginPct / 100;
+
+  if (!Number.isFinite(totalCostWaste) || !Number.isFinite(pct) || pct <= 0 || pct >= 1) return 0;
+
+  return (totalCostWaste * pct) / (1 - pct);
+};
+
 export const createEmptySimulation = (
   product: { id: string; isTestProduct?: boolean },
   config?: Partial<ICostConfig>
 ): ICostEstimate => {
   const now = new Date().toISOString();
+  const marginPct = config?.defaultMarginPct ?? 0;
 
   return {
     id: null,
@@ -108,8 +115,8 @@ export const createEmptySimulation = (
     totalCostWaste: 0,
     wasteValue: 0,
     taxValue: 0,
-    defaultMarginValue: 0,
-    defaultMarginPct: config?.defaultMarginPct ?? 0,
+    defaultMarginValue: computeMarginValue(0, marginPct),
+    defaultMarginPct: marginPct,
     costDifference: 0,
     utilityPct: 0
   };

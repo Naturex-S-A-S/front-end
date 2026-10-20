@@ -173,14 +173,13 @@ describe("CostBreakdown", () => {
         expect(screen.queryByRole("button", { name: /agregar material/i })).not.toBeInTheDocument();
       });
 
-      it("excluye los materiales ya agregados y muestra el precio de referencia", () => {
+      it("excluye los materiales ya agregados y muestra el id y nombre del disponible", () => {
         renderPicker();
 
         const listbox = within(openPicker());
 
         expect(listbox.queryByText(/Glicina/)).not.toBeInTheDocument();
-        expect(listbox.getByText(/Harina/)).toBeInTheDocument();
-        expect(listbox.getByText(/\$0,25\/g/)).toBeInTheDocument();
+        expect(listbox.getByText(/F-2 - Harina/)).toBeInTheDocument();
       });
 
       it("seleccionar agrega el material automáticamente", () => {

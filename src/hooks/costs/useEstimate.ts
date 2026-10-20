@@ -26,7 +26,8 @@ import {
   mapMaterialsToPriceInput,
   createEmptySimulation,
   buildDummyMaterialsPayload,
-  applyCifOverride
+  applyCifOverride,
+  computeMarginValue
 } from "@/utils/costs";
 import useGetProductList from "../product/useGetProductList";
 
@@ -70,7 +71,7 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
   const [unitGramsFinalProduct, setUnitGramsFinalProduct] = useState<number | string>(100);
 
   const isTestProduct = Boolean(selectedProduct?.isTestProduct);
-  const effectiveCif = cifOverride ?? estimate?.totalCif ?? 0;
+  const effectiveCif = cifOverride ?? estimate?.cifValue ?? estimate?.totalCif ?? 0;
 
   const methods = useForm<RegisterPriceFormValues>({
     defaultValues: {
@@ -186,9 +187,10 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
       finalPrice: Number(methods.getValues("finalPrice")) || 0,
       isDefinitive: false,
       notes: methods.getValues("priceNotes") || "",
-      materials: buildDummyMaterialsPayload(dummyRows)
+      materials: buildDummyMaterialsPayload(dummyRows),
+      cifValue: cifOverride
     });
-  }, [dummyRows, unitGramsFinalProduct, units, methods, runEstimate]);
+  }, [dummyRows, unitGramsFinalProduct, units, methods, runEstimate, cifOverride]);
 
   const handleAddRow = (materialType: "feedstock" | "packaging", option: IMaterialPriceOption) => {
     const price = rowPriceFor(materialType, option);
@@ -242,6 +244,7 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
       idFinalProduct: isSnapshotUpdate ? estimate.idFinalProduct : selectedProduct!.id,
       units: isSnapshotUpdate ? estimate.units : quantityKg,
       wastePct: values.wastePct,
+      cifValue: cifOverride,
       commissionPct: values.comissionPct,
       finalPrice: values.finalPrice,
       isDefinitive: values.isDefinitive,
@@ -312,7 +315,8 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
         finalPrice: values.finalPrice,
         isDefinitive: values.isDefinitive,
         notes: values.priceNotes,
-        materials
+        materials,
+        cifValue: cifOverride
       };
 
       startPriceTransition(async () => {
@@ -334,7 +338,7 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
 
   const derivedEstimate = useMemo(() => {
     const raw = isTestProduct ? dummyEstimate ?? estimate : estimate;
-    const base = raw ? applyCifOverride(raw, cifOverride) : null;
+    const base = raw ? applyCifOverride(raw, cifOverride ?? raw.cifValue ?? null) : null;
 
     if (!base) return null;
 
@@ -345,7 +349,7 @@ const useEstimate = ({ snapshotId = null, onSaved }: UseEstimateOptions = {}) =>
     const costDifference = price > 0 ? price - (base.totalCostWaste ?? totalCost) - safeCommission : 0;
     const utilityPct = price > 0 ? (costDifference / price) * 100 : 0;
     const wasteValue = totalCost * ((wastePct ?? base.wastePct) / 100);
-    const defaultMarginValue = (base.totalCostWaste * 0.4) / 0.6;
+    const defaultMarginValue = computeMarginValue(base.totalCostWaste ?? 0, base.defaultMarginPct ?? 0);
 
     return {
       ...base,

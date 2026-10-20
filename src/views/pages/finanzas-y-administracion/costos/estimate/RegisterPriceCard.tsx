@@ -106,7 +106,7 @@ const RegisterPriceCard = ({
               type='number'
               label='Total CIF'
               disabled={readonly}
-              value={cifOverride ?? estimate.totalCif}
+              value={cifOverride ?? estimate.cifValue ?? estimate.totalCif}
               onChange={e => {
                 const v = e.target.value === "" ? null : Number(e.target.value);
 
@@ -206,7 +206,7 @@ const RegisterPriceCard = ({
           label={`Utilidad`}
           variant='body1'
           value={estimate?.utilityPct?.toFixed(2) + "%"}
-          color={estimate?.utilityPct?.toFixed(2) >= estimate?.defaultMarginPct?.toFixed(2) ? "success.main" : "error"}
+          color={Number(estimate?.utilityPct?.toFixed(2)) >= Number(estimate?.defaultMarginPct?.toFixed(2)) ? "success.main" : "error"}
         />
         <Divider sx={{ my: 1.5 }} />
         <CustomTextField

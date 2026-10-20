@@ -21,6 +21,7 @@ export type RegisterPricePayload = {
   finalPrice: number;
   isDefinitive: boolean;
   notes: string;
+  cifValue: number;
   materials: {
     idMaterial: number;
     materialType: string;
@@ -61,6 +62,18 @@ export async function getProductSnapshotsAction(
 ): Promise<{ success: true; data: IProductInventorySummary[] } | { success: false; error: string }> {
   try {
     const data = await apiFetch<IProductInventorySummary[]>(`costs/products/${productId}/snapshots`);
+
+    return { success: true, data };
+  } catch (e: any) {
+    return { success: false, error: e.message };
+  }
+}
+
+export async function getCurrentSnapshotsAction(): Promise<
+  { success: true; data: IProductInventorySummary[] } | { success: false; error: string }
+> {
+  try {
+    const data = await apiFetch<IProductInventorySummary[]>("costs/products/current-snapshots");
 
     return { success: true, data };
   } catch (e: any) {

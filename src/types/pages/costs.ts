@@ -75,6 +75,7 @@ export interface ICostEstimate {
   periods: ICostEstimatePeriod[];
   cifDetails: ICostEstimateCifDetail[];
   totalCif: number;
+  cifValue?: number | null;
   price: IProductPrice;
   totalCost: number;
   totalCostTax: number;
@@ -175,6 +176,8 @@ export interface IProductInventorySummary {
   measurement: number;
   unit: string;
   productFullName: string;
+  snapshotType?: "estimation" | "order_close" | string | null;
+  status?: "draft" | "completed" | "transient" | string | null;
   inventoryUnits: number;
   totalCostWithWaste: number | null;
   wastePct: number | null;
@@ -182,12 +185,16 @@ export interface IProductInventorySummary {
   finalPrice: number | null;
   marginPct: number | null;
   marginAmount: number | null;
+  marginWarning?: boolean | null;
+  utilityPct?: number | null;
+  costDifference?: number | null;
   totalInventoryCost: number | null;
   totalInventoryCostWaste: number | null;
   totalInventoryFinalPrice: number | null;
   totalInventoryCostWithTax: number | null;
   totalInventoryMarginAmount: number | null;
   totalInventoryKgProduced: number;
+  dateSnapshot?: string | null;
   cifDetails: IProductInventorySummaryCifDetail[];
 }
 
@@ -225,4 +232,5 @@ export type DummyEstimatePayload = {
   isDefinitive: boolean;
   notes: string;
   materials: DummyMaterialsPayload;
+  cifValue?: number | null;
 };
