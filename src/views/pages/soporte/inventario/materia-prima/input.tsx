@@ -208,6 +208,8 @@ const Input = () => {
               <CustomTextField
                 {...register("quantity")}
                 fullWidth
+                type='number'
+                inputProps={{ min: 0, step: "any" }}
                 label='Cantidad'
                 placeholder='Ingrese la cantidad'
                 error={!!errors.quantity}
@@ -219,6 +221,8 @@ const Input = () => {
               <CustomTextField
                 {...register("charge")}
                 fullWidth
+                type='number'
+                inputProps={{ min: 0, step: "any" }}
                 label='Valor total'
                 placeholder='Ingrese el valor total'
                 error={!!errors.charge}

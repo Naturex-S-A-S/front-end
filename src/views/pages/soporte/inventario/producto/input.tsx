@@ -112,6 +112,8 @@ const Input = () => {
               <CustomTextField
                 {...register("quantity")}
                 fullWidth
+                type='number'
+                inputProps={{ min: 1, step: 1 }}
                 label='Cantidad'
                 placeholder='Ingrese la cantidad'
                 error={!!errors.quantity}
