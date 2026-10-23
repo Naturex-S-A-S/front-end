@@ -19,7 +19,8 @@ export const ABILITY_FIELDS = {
   FORMULATION: "Formulación",
   SUPPLIERS: "Proveedores",
   ORDERS: "Ordenes",
-  PROVISIONING: "Aprovisionamiento"
+  PROVISIONING: "Aprovisionamiento",
+  INFORMES: "Informes"
 };
 
 export const ABILITY_ACTIONS = {

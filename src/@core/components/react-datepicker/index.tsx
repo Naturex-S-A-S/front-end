@@ -21,7 +21,7 @@ interface Props {
 
 const CustomDatePicker: React.FC<Props> = ({ control, errors, minDate, label, name }) => {
   return (
-    <DatePickerWrapper>
+    <DatePickerWrapper style={{ width: "100%" }}>
       <Controller
         name={name}
         control={control}

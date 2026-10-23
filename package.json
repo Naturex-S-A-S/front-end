@@ -50,6 +50,7 @@
     "react-perfect-scrollbar": "1.5.8",
     "react-spinners": "^0.17.0",
     "react-use": "17.5.0",
+    "recharts": "^3.10.1",
     "server-only": "0.0.1",
     "styled-components": "^6.3.9",
     "sweetalert2": "^11.26.3",

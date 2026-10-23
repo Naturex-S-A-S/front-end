@@ -1,8 +1,9 @@
 "use client";
 
-import { Box, Chip, Grid, Stack, Typography } from "@mui/material";
+import { Alert, Box, Chip, Grid, Stack, Typography } from "@mui/material";
 
 import { Icon } from "@iconify/react";
+import moment from "moment";
 
 import CustomCard from "@/@core/components/mui/Card";
 import CustomBreadcrumbs from "@/@core/components/mui/Breadcrumbs";
@@ -41,6 +42,9 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
     );
   }
 
+  const isOpenPastPeriod =
+    period.status === "open" && moment(period.endDate).isBefore(moment().startOf("month"));
+
   return (
     <Stack direction='column' spacing={2}>
       <CustomBreadcrumbs
@@ -50,6 +54,9 @@ const PeriodDetail = ({ period, cifTypes }: { period: IPeriod | null; cifTypes: 
           { label: `#${period.id} - ${period.name} (${period.month}/${period.year})` }
         ]}
       />
+      {isOpenPastPeriod && (
+        <Alert severity='warning'>Cierre este período para que los informes incluyan costos indirectos.</Alert>
+      )}
     <CustomCard
       title={
         <div className='flex items-center gap-2'>

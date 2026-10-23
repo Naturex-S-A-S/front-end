@@ -49,20 +49,21 @@ pnpm doctor         # react-doctor: lint / a11y / bundle / architecture scan
 /inventario/ordenes-de-venta       → sale orders ([id])
 /finanzas-y-administracion/cif     → CIF costs ([periodId])
 /finanzas-y-administracion/costos  → product cost estimates
+/finanzas-y-administracion/informes → production & sales reports
 /soporte/usuarios | roles | parametros-generales | reportes
 /perfil
 ```
 
 ## API layer — three patterns
 
-| Pattern | File | Use for |
-|---------|------|---------|
-| **Server GET** | `src/api/<domain>/server.ts` | Server Components — `apiFetch` (fetch + `getServerSession` + 15s timeout + `next.tags`); catch → return `null`/fallback, never throw to UI |
-| **Client (axios)** | `src/api/instances.ts` | Client Components — `API()` with `getSession()` interceptor + `ngrok-skip-browser-warning: true` |
-| **Server Actions** | `src/api/<domain>/actions.ts` | Mutations — `"use server"` + `apiFetch` + `revalidateTag()`; return `{ success, error? }` |
+| Pattern            | File                          | Use for                                                                                                                                    |
+| ------------------ | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Server GET**     | `src/api/<domain>/server.ts`  | Server Components — `apiFetch` (fetch + `getServerSession` + 15s timeout + `next.tags`); catch → return `null`/fallback, never throw to UI |
+| **Client (axios)** | `src/api/instances.ts`        | Client Components — `API()` with `getSession()` interceptor + `ngrok-skip-browser-warning: true`                                           |
+| **Server Actions** | `src/api/<domain>/actions.ts` | Mutations — `"use server"` + `apiFetch` + `revalidateTag()`; return `{ success, error? }`                                                  |
 
 - There is NO `src/api/server.ts` and NO `ApiServer` export — shared server helper is only `src/api/apiFetch.ts`
-- Domains: `alert/ cif/ costs/ feedstock/ formulation/ general-parameters/ kardex/ metadata/ order/ packaging/ packing/ product/ providers/ role/ user/`
+- Domains: `alert/ cif/ costs/ feedstock/ formulation/ general-parameters/ kardex/ metadata/ order/ packaging/ packing/ product/ providers/ reports/ role/ user/`
 - Env (`API_BASE_URL` server-only, `NEXT_PUBLIC_API_BASE_URL` client, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `NEXT_PUBLIC_WS_URL`, `BASEPATH`); backend is an ngrok tunnel
 
 ## Data & mutations
@@ -103,6 +104,13 @@ src/
 ├── assets/iconify-icons/   # Generated icon bundle
 └── middleware.ts
 ```
+
+## Reports
+
+- UI: `src/views/pages/finanzas-y-administracion/informes/` (tabs, selector, filter bar, charts, shared cards, per-report views)
+- `src/utils/reports/registry.ts` is the source of truth for report keys, tabs, endpoints, allowed filters and defaults
+- Tab, report and filters live in the URL (`?tab=&report=&from=&to=...`); the filter bar writes with `router.replace()` inside `startTransition`
+- Recharts is loaded with `next/dynamic` + `ssr: false` (not ApexCharts); no mocks on the real route
 
 ## DataGrid columns
 
