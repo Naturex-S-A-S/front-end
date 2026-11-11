@@ -18,6 +18,12 @@ export const getOrderById = async (id: string) => {
   return response.data;
 };
 
+export const getOrderDetailLots = async (orderId: number, idMaterial: string) => {
+  const response = await API().get(`/orders/${orderId}/details/${idMaterial}/lots`);
+
+  return response.data;
+};
+
 export const getOrders = async (params: any) => {
   const response = await API().get("/orders", { params });
 

@@ -30,6 +30,18 @@ export const postKardexOutputAdjustment = async (data: any) => {
   return response.data;
 };
 
+export const postKardexOutputDiscard = async (data: any) => {
+  const response = await API().post("/packaging-kardex/output/discard", data);
+
+  return response.data;
+};
+
+export const getPackagingLots = async (params: { idPackaging: string; withStock?: boolean }) => {
+  const response = await API().get("/packaging-kardex/lots", { params });
+
+  return response.data;
+};
+
 export const getPackaging = async (params: any) => {
   const response = await API().get("/packaging", { params });
 

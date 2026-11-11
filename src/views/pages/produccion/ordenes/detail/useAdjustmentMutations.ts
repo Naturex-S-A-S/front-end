@@ -44,6 +44,7 @@ export const useAdjustmentMutations = ({
     onReset();
     onClose();
     queryClient.invalidateQueries({ queryKey: ["getOrderById", Number(orderId)] });
+    queryClient.invalidateQueries({ queryKey: ["orderDetailLots", Number(orderId)] });
     toast.success("Ajuste registrado correctamente");
     router.refresh();
   };
@@ -81,24 +82,20 @@ export const useAdjustmentMutations = ({
   const submitAdjustment = useCallback(
     (values: any) => {
       if (isCategoryMaterial || isCategoryPackaging) {
+        // El lote, el vencimiento y el costo los pone el backend: en la devolución salen del
+        // lote de origen elegido y en el consumo extra los decide FEFO/FIFO (QA-04).
         const payload = {
           idMaterial: values.material?.id,
           idPackaging: values.material?.id,
           idOrder: orderId,
           quantity: values.quantity,
-          batch: values.batch,
-          expirationDate1: isCategoryPackaging
-            ? null
-            : values.expiration_date_1
-              ? moment(values.expiration_date_1).format("YYYY-MM-DD")
-              : null,
           observation: values.observation,
           idRack: values.rack?.id,
           type: values.material?.type
         };
 
         if (values.type === "IN") {
-          mutateInput(payload);
+          mutateInput({ ...payload, idLot: values.lot?.idLot });
         } else if (values.type === "OUT") {
           mutateOutput(payload);
         }

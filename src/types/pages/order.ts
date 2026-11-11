@@ -140,3 +140,22 @@ export interface IOrderCreate {
     base?: boolean;
   }[];
 }
+
+/** Lote que la orden consumió de un material y que todavía se puede devolver (GET /orders/{id}/details/{idMaterial}/lots). */
+export interface IOrderDetailLot {
+  idLot: number;
+  batch: string;
+  expirationDate: string | null;
+  expired: boolean;
+  unitCost: number;
+  quantityConsumed: number;
+  quantityReturned: number;
+  quantityReturnable: number;
+}
+
+export interface IOrderDetailLots {
+  idOrderDetail: number;
+  idMaterial: string;
+  typeMaterial: string;
+  lots: IOrderDetailLot[];
+}

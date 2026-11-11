@@ -60,6 +60,18 @@ export const postKardexOutputAdjustment = async (data: any) => {
   return response.data;
 };
 
+export const postKardexOutputDiscard = async (data: any) => {
+  const response = await API().post("/kardex/feedstock/output/discard", data);
+
+  return response.data;
+};
+
+export const getFeedstockLots = async (params: { idFeedstock: string; expired?: boolean; withStock?: boolean }) => {
+  const response = await API().get("/kardex/feedstock/lots", { params });
+
+  return response.data;
+};
+
 export const getMovements = async (params: any) => {
   const response = await API().get("/kardex/feedstock/movements", {
     params: {

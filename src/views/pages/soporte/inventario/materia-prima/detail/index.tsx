@@ -32,9 +32,13 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
         label: "Gramo",
         value: "g"
       },
-      quantity: feedstock.quantityG,
-      charge: feedstock.chargeG,
-      total: feedstock.charge,
+
+      // Lo disponible son los lotes no vencidos; lo vencido se muestra aparte (D16).
+      quantity: feedstock.availableQuantityG,
+      charge: feedstock.availableChargeG,
+      total: feedstock.availableCharge,
+      expiredQuantity: feedstock.expiredQuantityG,
+      expiredTotal: feedstock.expiredCharge,
       minimumStandard: feedstock.minimumStandard,
       category:
         Array.isArray(feedstock.categories) && feedstock.categories.length > 0 ? feedstock.categories[0] : undefined,
@@ -81,26 +85,32 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
     if (measureUnitWatch) {
       switch (measureUnitWatch.value) {
         case "g":
-          setValue("quantity", feedstock.quantityG);
-          setValue("charge", feedstock.chargeG);
+          setValue("quantity", feedstock.availableQuantityG);
+          setValue("charge", feedstock.availableChargeG);
+          setValue("expiredQuantity", feedstock.expiredQuantityG);
           break;
         case "kg":
-          setValue("quantity", feedstock.quantityK);
-          setValue("charge", feedstock.chargeKg);
+          setValue("quantity", feedstock.availableQuantityK);
+          setValue("charge", feedstock.availableChargeKg);
+          setValue("expiredQuantity", feedstock.expiredQuantityK);
           break;
         case "t":
-          setValue("quantity", feedstock.quantityT);
-          setValue("charge", feedstock.chargeT);
+          setValue("quantity", feedstock.availableQuantityT);
+          setValue("charge", feedstock.availableChargeT);
+          setValue("expiredQuantity", feedstock.expiredQuantityT);
           break;
       }
     }
   }, [
-    feedstock.chargeG,
-    feedstock.chargeKg,
-    feedstock.chargeT,
-    feedstock.quantityG,
-    feedstock.quantityK,
-    feedstock.quantityT,
+    feedstock.availableChargeG,
+    feedstock.availableChargeKg,
+    feedstock.availableChargeT,
+    feedstock.availableQuantityG,
+    feedstock.availableQuantityK,
+    feedstock.availableQuantityT,
+    feedstock.expiredQuantityG,
+    feedstock.expiredQuantityK,
+    feedstock.expiredQuantityT,
     measureUnitWatch,
     setValue
   ]);
@@ -181,6 +191,26 @@ const Detail: React.FC<Props> = ({ feedstock }) => {
                     fullWidth
                     type='number'
                     label='Valor total'
+                    placeholder=''
+                  />
+                </Grid>
+                <Grid item xs={12} md={6} lg={3}>
+                  <CustomTextField
+                    {...register("expiredQuantity")}
+                    disabled
+                    fullWidth
+                    type='number'
+                    label='Cantidad vencida'
+                    placeholder=''
+                  />
+                </Grid>
+                <Grid item xs={12} md={6} lg={3}>
+                  <CustomTextField
+                    {...register("expiredTotal")}
+                    disabled
+                    fullWidth
+                    type='number'
+                    label='Valor vencido'
                     placeholder=''
                   />
                 </Grid>
