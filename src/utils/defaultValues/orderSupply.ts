@@ -5,6 +5,5 @@ export const orderSupplyDefaultValues = {
       quantityG: undefined
     }
   ],
-  batch: "",
-  expirationDate1: undefined
+  batch: ""
 };

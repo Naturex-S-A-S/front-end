@@ -64,4 +64,19 @@ describe("aprovisionamiento form - QA-11 feedback de Calcular", () => {
     await waitFor(() => expect(screen.getAllByText("La cantidad debe ser un número")).toHaveLength(2));
     expect(orderCalculate).not.toHaveBeenCalled();
   });
+
+  it("después de calcular permite generar sin pedir fecha de vencimiento", async () => {
+    const orderCalculate = vi.fn().mockResolvedValue(true);
+
+    render(<Harness orderCalculate={orderCalculate} />);
+
+    const quantity = await screen.findByPlaceholderText(/unidades a producir/i);
+
+    fireEvent.change(quantity, { target: { value: "10" } });
+    fireEvent.click(screen.getByRole("button", { name: /calcular/i }));
+
+    await waitFor(() => expect(screen.getByRole("button", { name: /generar aprovisionamiento/i })).toBeTruthy());
+    expect(orderCalculate).toHaveBeenCalled();
+    expect(screen.queryByText(/fecha de vencimiento/i)).toBeNull();
+  });
 });
