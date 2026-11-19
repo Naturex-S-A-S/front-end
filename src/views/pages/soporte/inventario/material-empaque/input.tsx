@@ -56,7 +56,7 @@ const Input = () => {
       quantity: Number(values.quantity),
       charge: Number(values.charge),
       document: values.document,
-      batch: values.batch,
+      internalLot: values.batch,
       idRack: values.rack?.id
     };
 
