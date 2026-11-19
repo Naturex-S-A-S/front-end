@@ -1,4 +1,4 @@
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 
 import { Grid } from "@mui/material";
 
@@ -21,6 +21,9 @@ import useGetFeedstockList from "@/hooks/feedstock/useGetFeedstockList";
 import useGetProvidersList from "@/hooks/provider/useGetProvidersList";
 import { formatDate } from "@/utils/format";
 import useGetWarehouseList from "@/hooks/warehouse/useGetWarehouse";
+import useGetOpenSupplyOrders from "@/hooks/order/useGetOpenSupplyOrders";
+import { toGrams } from "@/utils/supplyProgress";
+import SupplyOrderField from "../supply-order/SupplyOrderField";
 
 const Input = () => {
   const { mutateAsync, isPending } = useKardexInput();
@@ -41,6 +44,7 @@ const Input = () => {
       document: undefined,
       batch: undefined,
       rack: undefined,
+      supplyOrder: undefined,
       expirationDate1: undefined,
       expirationDate2: undefined
     },
@@ -53,8 +57,14 @@ const Input = () => {
     register,
     control,
     formState: { errors },
-    reset
+    reset,
+    setValue
   } = methods;
+
+  const [material, quantity, unit] = useWatch({ control, name: ["material", "quantity", "unit"] }) as any[];
+  const { openOrders, isLoading: isLoadingOpenOrders } = useGetOpenSupplyOrders(material?.id, "materia_prima");
+  const noOpenOrders = !!material?.id && !isLoadingOpenOrders && openOrders.length === 0;
+  const incomingGrams = Number(quantity) > 0 ? toGrams(Number(quantity), unit?.value) : 0;
 
   const onSubmit = (values: any) => {
     const req = {
@@ -66,6 +76,7 @@ const Input = () => {
       charge: Number(values.charge),
       document: values.document,
       idRack: values.rack?.id,
+      idSupplyOrder: values.supplyOrder?.orderId,
       expirationDate1: formatDate(values.expirationDate1),
       expirationDate2: formatDate(values.expirationDate2)
     };
@@ -90,6 +101,9 @@ const Input = () => {
                     options={feedstockList || []}
                     onChange={(e, value: any) => {
                       onChange(value);
+
+                      // La orden depende del material: se limpia cuando cambia.
+                      setValue("supplyOrder", undefined as any);
                     }}
                     renderInput={params => (
                       <CustomTextField
@@ -127,6 +141,18 @@ const Input = () => {
                     )}
                   />
                 )}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6} lg={4}>
+              <SupplyOrderField
+                control={control}
+                options={openOrders}
+                isLoading={isLoadingOpenOrders}
+                materialSelected={!!material?.id}
+                unitLabel='g'
+                incomingQuantity={incomingGrams}
+                errorMessage={(errors.supplyOrder as any)?.message || (errors.supplyOrder as any)?.orderId?.message}
               />
             </Grid>
 
@@ -257,6 +283,7 @@ const Input = () => {
                     <CustomButton
                       className='mr-2 px-4 py-2 text-white rounded d-flex align-middle'
                       isLoading={isPending}
+                      disabled={noOpenOrders}
                       type='submit'
                     >
                       Registrar

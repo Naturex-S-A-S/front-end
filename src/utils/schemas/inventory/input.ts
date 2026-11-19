@@ -1,5 +1,14 @@
 import * as yup from "yup";
 
+/** Orden de aprovisionamiento de una entrada normal de MP o ME (obligatoria). */
+const supplyOrderSchema = yup
+  .object()
+  .shape({
+    orderId: yup.number().required("La orden de aprovisionamiento es requerida")
+  })
+  .nullable()
+  .required("La orden de aprovisionamiento es requerida");
+
 export const kardexFeedstockInputSchema = yup
   .object({
     material: yup.object().shape({
@@ -27,6 +36,7 @@ export const kardexFeedstockInputSchema = yup
     document: yup.string().optional(),
     batch: yup.string().required("El lote es requerido"),
     rack: yup.object().shape({ id: yup.string() }).optional(),
+    supplyOrder: supplyOrderSchema,
     expirationDate1: yup.date().required("La fecha de expiración es requerida"),
     expirationDate2: yup.date().optional()
   })
@@ -55,7 +65,8 @@ export const kardexPackagingInputSchema = yup
       .required("El valor es requerido"),
     document: yup.string().optional(),
     batch: yup.string().required("El lote es requerido"),
-    rack: yup.object().shape({ id: yup.string() }).optional()
+    rack: yup.object().shape({ id: yup.string() }).optional(),
+    supplyOrder: supplyOrderSchema
   })
   .required();
 
