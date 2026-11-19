@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { Chip, Tooltip } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
 
@@ -26,6 +28,31 @@ const observationColumn: GridColDef = {
     ) : (
       ""
     )
+};
+
+const orderLinkCell = (id: number | null | undefined, basePath: string) =>
+  id ? (
+    <Link href={`${basePath}/${id}`} className='text-blue-500 hover:text-blue-400'>
+      {id}
+    </Link>
+  ) : (
+    ""
+  );
+
+/** Orden de aprovisionamiento de la entrada normal (solo la llenan las entradas de abastecimiento). */
+const supplyOrderColumn: GridColDef = {
+  field: "supplyOrderId",
+  headerName: "O. aprovisionamiento",
+  width: 160,
+  renderCell: params => orderLinkCell(params.row.supplyOrderId, "/produccion/aprovisionamiento")
+};
+
+/** Orden de producción del movimiento (salidas de producción, ajustes y devoluciones). */
+const productionOrderColumn: GridColDef = {
+  field: "orderId",
+  headerName: "O. producción",
+  width: 140,
+  renderCell: params => orderLinkCell(params.row.orderId, "/produccion/ordenes")
 };
 
 export const columns = ({ filters, type }: params): GridColDef[] => {
@@ -78,6 +105,8 @@ export const columns = ({ filters, type }: params): GridColDef[] => {
       { field: "providerName", headerName: "Proveedor", width: 150 },
       { field: "rack", headerName: "Ubicación", width: 150, renderCell: params => params.row.rack?.name },
       { field: "classification", headerName: "Clasificación", width: 150 },
+      supplyOrderColumn,
+      productionOrderColumn,
       {
         field: "dateCreated",
         headerName: "Fecha de creación",
@@ -136,6 +165,8 @@ export const columns = ({ filters, type }: params): GridColDef[] => {
     { field: "providerName", headerName: "Proveedor", width: 150 },
     { field: "rack", headerName: "Ubicación", width: 150, renderCell: params => params.row.rack?.name },
     { field: "classification", headerName: "Clasificación", width: 150 },
+    supplyOrderColumn,
+    productionOrderColumn,
     {
       field: "expirationDate1",
       headerName: "Fecha de vencimiento",

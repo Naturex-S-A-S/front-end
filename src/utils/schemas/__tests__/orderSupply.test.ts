@@ -4,8 +4,7 @@ import { orderSupplySchema } from "@/utils/schemas/orderSupply";
 
 describe("orderSupplySchema", () => {
   const valid = {
-    presentations: [{ id: "P-001", quantityG: 10 }],
-    expirationDate1: new Date("2026-12-31")
+    presentations: [{ id: "P-001", quantityG: 10 }]
   };
 
   it("rechaza cantidad vacía", async () => {

@@ -125,6 +125,7 @@ const Detail: React.FC<Props> = ({ orderSupply }) => {
                 items={orderSupply.materialsByProvider ?? []}
                 showActions={orderSupply.status === STATUS.en_proceso}
                 showCost
+                showReceived
                 onChangeProvider={handleChangeProvider}
               />
             </Grid>
