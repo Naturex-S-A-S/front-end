@@ -24,6 +24,7 @@ import useGetWarehouseList from "@/hooks/warehouse/useGetWarehouse";
 import useGetOpenSupplyOrders from "@/hooks/order/useGetOpenSupplyOrders";
 import { toGrams } from "@/utils/supplyProgress";
 import SupplyOrderField from "../supply-order/SupplyOrderField";
+import SupplyIncomingAlert, { supplyIncoming } from "../supply-order/SupplyIncomingAlert";
 
 const Input = () => {
   const { mutateAsync, isPending } = useKardexInput();
@@ -61,10 +62,15 @@ const Input = () => {
     setValue
   } = methods;
 
-  const [material, quantity, unit] = useWatch({ control, name: ["material", "quantity", "unit"] }) as any[];
+  const [material, quantity, unit, supplyOrder] = useWatch({
+    control,
+    name: ["material", "quantity", "unit", "supplyOrder"]
+  }) as any[];
+
   const { openOrders, isLoading: isLoadingOpenOrders } = useGetOpenSupplyOrders(material?.id, "materia_prima");
   const noOpenOrders = !!material?.id && !isLoadingOpenOrders && openOrders.length === 0;
   const incomingGrams = Number(quantity) > 0 ? toGrams(Number(quantity), unit?.value) : 0;
+  const incoming = supplyIncoming(supplyOrder, incomingGrams);
 
   const onSubmit = (values: any) => {
     const req = {
@@ -91,6 +97,12 @@ const Input = () => {
       <DatePickerWrapper>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={4}>
+            {incoming && (
+              <Grid item xs={12}>
+                <SupplyIncomingAlert incoming={incoming} unitLabel='g' />
+              </Grid>
+            )}
+
             <Grid item xs={12} md={6} lg={4}>
               <Controller
                 name='material'
@@ -151,7 +163,6 @@ const Input = () => {
                 isLoading={isLoadingOpenOrders}
                 materialSelected={!!material?.id}
                 unitLabel='g'
-                incomingQuantity={incomingGrams}
                 errorMessage={(errors.supplyOrder as any)?.message || (errors.supplyOrder as any)?.orderId?.message}
               />
             </Grid>

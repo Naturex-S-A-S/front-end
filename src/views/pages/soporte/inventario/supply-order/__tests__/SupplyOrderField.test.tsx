@@ -7,6 +7,7 @@ import { render, screen } from "@/utils/tests/test-utils";
 import type { IOpenSupplyOrder } from "@/types/pages/order";
 
 import SupplyOrderField, { supplyOrderOptionLabel, toSupplyOrderOptions } from "../SupplyOrderField";
+import SupplyIncomingAlert, { supplyIncoming } from "../SupplyIncomingAlert";
 
 const open: IOpenSupplyOrder = {
   orderId: 41,
@@ -21,11 +22,10 @@ type HarnessProps = {
   options: IOpenSupplyOrder[];
   materialSelected?: boolean;
   selected?: IOpenSupplyOrder;
-  incoming?: number;
   children?: ReactNode;
 };
 
-const Harness = ({ options, materialSelected = true, selected, incoming }: HarnessProps) => {
+const Harness = ({ options, materialSelected = true, selected }: HarnessProps) => {
   const { control } = useForm({
     defaultValues: { supplyOrder: selected ? toSupplyOrderOptions([selected])[0] : undefined }
   });
@@ -37,7 +37,6 @@ const Harness = ({ options, materialSelected = true, selected, incoming }: Harne
       isLoading={false}
       materialSelected={materialSelected}
       unitLabel='g'
-      incomingQuantity={incoming}
     />
   );
 };
@@ -68,15 +67,47 @@ describe("SupplyOrderField", () => {
     expect(screen.getByText("3.000 g")).toBeTruthy();
   });
 
-  it("una cantidad mayor a lo pendiente avisa la sobre-entrega sin bloquear", () => {
-    render(<Harness options={[open]} selected={open} incoming={3500} />);
+  it("no muestra el pendiente después de la entrada ni la sobre-entrega dentro del campo", () => {
+    render(<Harness options={[open]} selected={open} />);
 
-    expect(screen.getByText(/supera lo pendiente de la orden en 500 g/)).toBeTruthy();
+    expect(screen.queryByText(/Después de esta entrada/)).toBeNull();
+    expect(screen.queryByText(/supera lo pendiente/)).toBeNull();
+  });
+});
+
+describe("mensaje de la cantidad a ingresar", () => {
+  it("sin orden o sin cantidad no hay mensaje", () => {
+    expect(supplyIncoming(undefined, 10)).toBeNull();
+    expect(supplyIncoming(open, undefined)).toBeNull();
+    expect(supplyIncoming(open, 0)).toBeNull();
   });
 
-  it("una cantidad dentro de lo pendiente no avisa", () => {
-    render(<Harness options={[open]} selected={open} incoming={1000} />);
+  it("hasta lo pendiente calcula lo que quedará pendiente", () => {
+    expect(supplyIncoming(open, 1000)).toEqual({ kind: "pending", pendingAfter: 2000 });
+    expect(supplyIncoming(open, 3000)).toEqual({ kind: "pending", pendingAfter: 0 });
+  });
 
-    expect(screen.queryByText(/supera lo pendiente/)).toBeNull();
+  it("por encima de lo pendiente es sobre-entrega", () => {
+    expect(supplyIncoming(open, 3500)).toEqual({ kind: "overDelivery", excess: 500 });
+  });
+
+  it("muestra en verde lo que quedará pendiente", () => {
+    render(<SupplyIncomingAlert incoming={{ kind: "pending", pendingAfter: 1 }} unitLabel='und' />);
+
+    const alert = screen.getByRole("alert");
+
+    expect(alert.textContent).toContain("Después de esta entrada: 1 und pendiente");
+    expect(alert.className).toMatch(/Success/);
+  });
+
+  it("muestra en amarillo la sobre-entrega", () => {
+    render(<SupplyIncomingAlert incoming={{ kind: "overDelivery", excess: 1 }} unitLabel='und' />);
+
+    const alert = screen.getByRole("alert");
+
+    expect(alert.textContent).toContain(
+      "La cantidad supera lo pendiente de la orden en 1 und. Se registrará como sobre-entrega."
+    );
+    expect(alert.className).toMatch(/Warning/);
   });
 });

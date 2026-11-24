@@ -18,6 +18,7 @@ import GroupedAutocomplete from "@/@core/components/mui/GroupedAutocomplete";
 import useGetWarehouseList from "@/hooks/warehouse/useGetWarehouse";
 import useGetOpenSupplyOrders from "@/hooks/order/useGetOpenSupplyOrders";
 import SupplyOrderField from "../supply-order/SupplyOrderField";
+import SupplyIncomingAlert, { supplyIncoming } from "../supply-order/SupplyIncomingAlert";
 
 const Input = () => {
   const { mutateAsync, isPending } = useKardexInput();
@@ -53,9 +54,15 @@ const Input = () => {
     setValue
   } = methods;
 
-  const [material, quantity] = useWatch({ control, name: ["material", "quantity"] }) as any[];
+  const [material, quantity, supplyOrder] = useWatch({
+    control,
+    name: ["material", "quantity", "supplyOrder"]
+  }) as any[];
+
   const { openOrders, isLoading: isLoadingOpenOrders } = useGetOpenSupplyOrders(material?.id, "packaging");
   const noOpenOrders = !!material?.id && !isLoadingOpenOrders && openOrders.length === 0;
+  const incomingUnits = Number(quantity) > 0 ? Number(quantity) : 0;
+  const incoming = supplyIncoming(supplyOrder, incomingUnits);
 
   const onSubmit = (values: any) => {
     const req = {
@@ -79,6 +86,12 @@ const Input = () => {
       <DatePickerWrapper>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={4}>
+            {incoming && (
+              <Grid item xs={12}>
+                <SupplyIncomingAlert incoming={incoming} unitLabel='und' />
+              </Grid>
+            )}
+
             <Grid item xs={12} md={6} lg={4}>
               <Controller
                 name='material'
@@ -139,7 +152,6 @@ const Input = () => {
                 isLoading={isLoadingOpenOrders}
                 materialSelected={!!material?.id}
                 unitLabel='und'
-                incomingQuantity={Number(quantity) > 0 ? Number(quantity) : 0}
                 errorMessage={(errors.supplyOrder as any)?.message || (errors.supplyOrder as any)?.orderId?.message}
               />
             </Grid>

@@ -3,13 +3,12 @@
 import type { Control } from "react-hook-form";
 import { Controller } from "react-hook-form";
 
-import { Alert, Box, Chip, Typography } from "@mui/material";
+import { Alert, Box, Typography } from "@mui/material";
 
 import CustomAutocomplete from "@/@core/components/mui/Autocomplete";
 import CustomTextField from "@/@core/components/mui/TextField";
 import type { IOpenSupplyOrder } from "@/types/pages/order";
 import { formatDate } from "@/utils/format";
-import { supplyPending } from "@/utils/supplyProgress";
 
 export type SupplyOrderOption = IOpenSupplyOrder & { id: number };
 
@@ -23,9 +22,6 @@ interface Props {
 
   /** Unidad de las cantidades del aprovisionamiento: "g" para MP y "und" para ME. */
   unitLabel: string;
-
-  /** Cantidad de esta entrada en la unidad del aprovisionamiento, para el aviso de sobre-entrega. */
-  incomingQuantity?: number;
   errorMessage?: string;
 }
 
@@ -45,18 +41,11 @@ export const toSupplyOrderOptions = (orders: IOpenSupplyOrder[]): SupplyOrderOpt
   orders.map(order => ({ ...order, id: order.orderId }));
 
 /**
- * Selector obligatorio de la orden de aprovisionamiento de una entrada normal de MP o ME, con el avance de la
- * orden elegida y el aviso (que no bloquea) de sobre-entrega.
+ * Selector obligatorio de la orden de aprovisionamiento de una entrada normal de MP o ME, con el total, lo
+ * ingresado y lo pendiente de la orden elegida. El efecto de la cantidad que se está ingresando (pendiente después
+ * de la entrada o sobre-entrega) va aparte, arriba del formulario (SupplyIncomingAlert).
  */
-const SupplyOrderField = ({
-  control,
-  options,
-  isLoading,
-  materialSelected,
-  unitLabel,
-  incomingQuantity,
-  errorMessage
-}: Props) => {
+const SupplyOrderField = ({ control, options, isLoading, materialSelected, unitLabel, errorMessage }: Props) => {
   const noOpenOrders = materialSelected && !isLoading && options.length === 0;
 
   return (
@@ -65,8 +54,6 @@ const SupplyOrderField = ({
       control={control}
       render={({ field: { value, onChange } }) => {
         const selected = value as SupplyOrderOption | undefined;
-        const incoming = incomingQuantity && incomingQuantity > 0 ? incomingQuantity : 0;
-        const excess = selected ? incoming - selected.quantityPending : 0;
 
         return (
           <Box className='flex flex-col gap-2'>
@@ -104,25 +91,7 @@ const SupplyOrderField = ({
                 <Typography variant='body2'>
                   Pendiente: <strong>{formatQuantity(selected.quantityPending, unitLabel)}</strong>
                 </Typography>
-                {incoming > 0 && (
-                  <Chip
-                    size='small'
-                    variant='tonal'
-                    color='primary'
-                    label={`Después de esta entrada: ${formatQuantity(
-                      supplyPending(selected.quantityTotal, selected.quantityReceived + incoming),
-                      unitLabel
-                    )} pendiente`}
-                  />
-                )}
               </Box>
-            )}
-
-            {selected && excess > 1e-6 && (
-              <Alert severity='warning'>
-                La cantidad supera lo pendiente de la orden en {formatQuantity(excess, unitLabel)}. Se registrará como
-                sobre-entrega.
-              </Alert>
             )}
           </Box>
         );
