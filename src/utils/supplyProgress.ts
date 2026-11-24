@@ -38,8 +38,6 @@ export const supplyStatus = (total: number, received: number): SupplyStatus => {
 
 /** Definición de cada columna de la tabla de materiales, para los tooltips de los encabezados. */
 export const SUPPLY_COLUMN_HELP = {
-  code: "Código del material: materia prima o material de empaque.",
-  name: "Nombre del material.",
   available: "Lo que había en inventario de este material cuando se creó el aprovisionamiento. No cambia con las entradas.",
   missing: "Lo que faltaba en inventario para cubrir el total pedido cuando se creó el aprovisionamiento. No cambia con las entradas.",
   total: "Cantidad que requieren los productos seleccionados. Materia prima en gramos y empaque en unidades.",

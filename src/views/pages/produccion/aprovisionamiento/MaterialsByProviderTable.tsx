@@ -39,7 +39,7 @@ interface Props {
 }
 
 const HeaderCell = ({ label, help, align }: { label: string; help: string; align?: "right" }) => (
-  <TableCell align={align}>
+  <TableCell align={align} sx={{ whiteSpace: "nowrap" }}>
     <Tooltip title={help} arrow>
       <span className='inline-flex items-center gap-1 cursor-help'>
         {label}
@@ -94,7 +94,8 @@ const MaterialsByProviderTable: React.FC<Props> = ({
 
   return (
     <CustomCard>
-      <Table size='small'>
+      {/* Ancho fijo: la tabla de proveedores no crece con la de materiales, que hace scroll horizontal adentro. */}
+      <Table size='small' sx={{ tableLayout: "fixed" }}>
         <TableHead>
           <TableRow>
             <TableCell sx={{ width: 48 }} />
@@ -112,9 +113,9 @@ const MaterialsByProviderTable: React.FC<Props> = ({
                     <Icon icon={openRows.has(item.providerId) ? "mdi:chevron-up" : "mdi:chevron-down"} />
                   </IconButton>
                 </TableCell>
-                <TableCell className='font-bold'>{item.providerName || "-"}</TableCell>
-                <TableCell className='font-bold'>{item.providerAddress || "-"}</TableCell>
-                <TableCell className='font-bold'>{item.providerPhone || "-"}</TableCell>
+                <TableCell className='font-bold' sx={{ overflowWrap: "anywhere" }}>{item.providerName || "-"}</TableCell>
+                <TableCell className='font-bold' sx={{ overflowWrap: "anywhere" }}>{item.providerAddress || "-"}</TableCell>
+                <TableCell className='font-bold' sx={{ overflowWrap: "anywhere" }}>{item.providerPhone || "-"}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell colSpan={6} sx={{ py: 0 }}>
@@ -124,8 +125,8 @@ const MaterialsByProviderTable: React.FC<Props> = ({
                         <TableHead>
                           <TableRow>
                             {showActions && <TableCell align='right'>Acciones</TableCell>}
-                            <HeaderCell label='Código' help={SUPPLY_COLUMN_HELP.code} />
-                            <HeaderCell label='Nombre' help={SUPPLY_COLUMN_HELP.name} />
+                            <TableCell sx={{ whiteSpace: "nowrap" }}>Código</TableCell>
+                            <TableCell sx={{ minWidth: 180 }}>Nombre</TableCell>
                             <HeaderCell label='Cant. Disponible' help={SUPPLY_COLUMN_HELP.available} align='right' />
                             <HeaderCell label='Cant. Faltante' help={SUPPLY_COLUMN_HELP.missing} align='right' />
                             <HeaderCell label='Cant. Total Pedido' help={SUPPLY_COLUMN_HELP.total} align='right' />
@@ -174,7 +175,9 @@ const MaterialsByProviderTable: React.FC<Props> = ({
                                       </Tooltip>
                                     </TableCell>
                                   )}
-                                  <TableCell className='font-medium'>{material.id}</TableCell>
+                                  <TableCell className='font-medium' sx={{ whiteSpace: "nowrap" }}>
+                                    {material.id}
+                                  </TableCell>
                                   <TableCell>{material.name}</TableCell>
                                   <TableCell align='right'>{material.quantityAvailable}</TableCell>
                                   <TableCell align='right'>{material.quantityMissing}</TableCell>
