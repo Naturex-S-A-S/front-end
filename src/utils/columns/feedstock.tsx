@@ -17,6 +17,13 @@ type params = {
   isPending: boolean;
 };
 
+/** Cantidad de un campo (prefijo + G/K/T) según la unidad del filtro. */
+const formatByUnit = (row: any, prefix: "availableQuantity" | "expiredQuantity", unit?: string) => {
+  const suffix = unit === "t" ? "T" : unit === "kg" ? "K" : "G";
+
+  return Number(row[`${prefix}${suffix}`] ?? 0).toFixed(2);
+};
+
 export const useColumns = ({ handleActive, filters, isPending }: params): GridColDef[] => {
   const ability = useAbility();
   const router = useRouter();
@@ -43,46 +50,39 @@ export const useColumns = ({ handleActive, filters, isPending }: params): GridCo
     },
     { field: "id", headerName: "Código", width: 100 },
     { field: "name", headerName: "Nombre", width: 150 },
+    // Cantidad y valores solo de lo disponible (lotes no vencidos); lo vencido va aparte (D15/D16).
     {
-      field: "quantityG",
+      field: "availableQuantityG",
       headerName: `Cantidad (${filters?.measureUnit?.value})`,
-      width: 100,
-      renderCell: params => {
-        switch (filters?.measureUnit?.value) {
-          case "t":
-            return Number(params.row.quantityT).toFixed(2);
-          case "kg":
-            return Number(params.row.quantityK).toFixed(2);
-          case "g":
-            return Number(params.row.quantityG).toFixed(2);
-          default:
-            return Number(params.row.quantityG).toFixed(2);
-        }
-      }
+      description: "Solo lotes no vencidos.",
+      width: 110,
+      renderCell: params => formatByUnit(params.row, "availableQuantity", filters?.measureUnit?.value)
     },
     {
-      field: "chargeG",
+      field: "availableChargeG",
       headerName: "Valor unitario",
       width: 150,
       minWidth: 150,
       renderCell: params => {
-        switch (filters?.measureUnit?.value) {
-          case "t":
-            return Number(params.row.chargeT).toFixed(2);
-          case "kg":
-            return Number(params.row.chargeKg).toFixed(2);
-          case "g":
-            return Number(params.row.chargeG).toFixed(2);
-          default:
-            return Number(params.row.chargeG).toFixed(2);
-        }
+        const unit = filters?.measureUnit?.value;
+        const value = unit === "t" ? params.row.availableChargeT : unit === "kg" ? params.row.availableChargeKg : params.row.availableChargeG;
+
+        return value == null ? "—" : Number(value).toFixed(2);
       }
     },
     {
-      field: "charge",
+      field: "availableCharge",
       headerName: "Valor total",
-      width: 100,
-      renderCell: params => Number(params.row.charge).toFixed(2)
+      description: "Valor solo de la cantidad disponible. No incluye lo vencido.",
+      width: 110,
+      renderCell: params => Number(params.row.availableCharge ?? 0).toFixed(2)
+    },
+    {
+      field: "expiredQuantityG",
+      headerName: `Cantidad vencida (${filters?.measureUnit?.value})`,
+      width: 150,
+      minWidth: 150,
+      renderCell: params => formatByUnit(params.row, "expiredQuantity", filters?.measureUnit?.value)
     },
     {
       field: "allergen",

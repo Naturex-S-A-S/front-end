@@ -234,7 +234,7 @@ const Input = () => {
               <CustomDatePicker
                 control={control}
                 errors={errors.expirationDate1}
-                minDate={moment().add(1, "day").toDate()}
+                minDate={moment().toDate()}
                 name='expirationDate1'
                 label='Fecha de vencimiento 1'
               />
@@ -244,7 +244,7 @@ const Input = () => {
               <CustomDatePicker
                 control={control}
                 errors={errors.expirationDate2}
-                minDate={moment().add(1, "day").toDate()}
+                minDate={moment().toDate()}
                 name='expirationDate2'
                 label='Fecha de vencimiento 2'
               />

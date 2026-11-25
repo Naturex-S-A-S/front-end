@@ -13,9 +13,25 @@ type params = {
   type: MaterialTypeKey.PACKAGING | "feedStock";
 };
 
+/** Última columna: la observación cortada con "…" y completa en un tooltip. */
+const observationColumn: GridColDef = {
+  field: "observation",
+  headerName: "Observación",
+  width: 220,
+  renderCell: params =>
+    params.row.observation ? (
+      <Tooltip title={params.row.observation}>
+        <span className='block overflow-hidden text-ellipsis whitespace-nowrap'>{params.row.observation}</span>
+      </Tooltip>
+    ) : (
+      ""
+    )
+};
+
 export const columns = ({ filters, type }: params): GridColDef[] => {
   if (type === "packaging") {
     return [
+      { field: "materialId", headerName: "Código", width: 100 },
       { field: "batch", headerName: "Lote", width: 100 },
       { field: "materialName", headerName: "Material", width: 150 },
       {
@@ -67,11 +83,13 @@ export const columns = ({ filters, type }: params): GridColDef[] => {
         headerName: "Fecha de creación",
         width: 150,
         renderCell: params => formatDate(params.row.dateCreated)
-      }
+      },
+      observationColumn
     ];
   }
 
   return [
+    { field: "materialId", headerName: "Código", width: 100 },
     { field: "batch", headerName: "Lote", width: 100 },
     { field: "materialName", headerName: "Material", width: 150 },
     {
@@ -128,6 +146,7 @@ export const columns = ({ filters, type }: params): GridColDef[] => {
       headerName: "Fecha de creación",
       width: 150,
       renderCell: params => formatDate(params.row.dateCreated)
-    }
+    },
+    observationColumn
   ];
 };

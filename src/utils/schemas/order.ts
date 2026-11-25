@@ -32,24 +32,44 @@ export const categoryOnlySchema = yup.object({
     .required("Seleccione una categoría")
 });
 
+/**
+ * Campos comunes del ajuste de MP y ME. En la entrada (devolución) se elige el lote que la
+ * orden consumió y la cantidad no puede superar lo devolvible de ese lote; en la salida el
+ * lote lo decide el sistema (FEFO en MP, FIFO en ME).
+ */
+const materialAdjustmentFields = {
+  material: yup.object().nullable().required("Seleccione un material"),
+  type: yup.string().nullable().oneOf(["IN", "OUT"]).required("Seleccione entrada o salida"),
+  lot: yup
+    .object()
+    .nullable()
+    .when("type", {
+      is: "IN",
+      then: schema => schema.required("Seleccione el lote al que se devuelve el material"),
+      otherwise: schema => schema.notRequired()
+    }),
+  quantity: yup
+    .number()
+    .typeError("Debe ser un número")
+    .integer("Debe ser un entero")
+    .min(1, "Cantidad mínima 1")
+    .required("Ingrese la cantidad")
+    .test("returnable", "La cantidad supera lo que se puede devolver de este lote", function (value) {
+      const { type, lot } = this.parent;
+
+      return type !== "IN" || !lot || value == null || value <= lot.quantityReturnable;
+    }),
+  observation: yup.string().nullable().required("Ingrese una observación"),
+  rack: yup.object().nullable().required("Seleccione una estantería")
+};
+
 export const adjustmentPackagingSchema = yup.object({
   category: baseCategory.test(
     "is-packaging",
     "La categoría debe ser material",
     (val: any) => val?.id === 1
   ),
-  material: yup.object().nullable().required("Seleccione un material"),
-  type: yup.string().nullable().oneOf(["IN", "OUT"]).required("Seleccione entrada o salida"),
-  quantity: yup
-    .number()
-    .typeError("Debe ser un número")
-    .integer("Debe ser un entero")
-    .min(1, "Cantidad mínima 1")
-    .required("Ingrese la cantidad"),
-  batch: yup.string().nullable().required("Ingrese el batch"),
-  observation: yup.string().nullable().required("Ingrese una observación"),
-  expiration_date_1: yup.string().nullable().notRequired(),
-  rack: yup.object().nullable().required("Seleccione una estantería")
+  ...materialAdjustmentFields
 });
 
 export const adjustmentFeedstockSchema = yup.object({
@@ -58,18 +78,7 @@ export const adjustmentFeedstockSchema = yup.object({
     "La categoría debe ser material",
     (val: any) => val?.id === 2
   ),
-  material: yup.object().nullable().required("Seleccione un material"),
-  type: yup.string().nullable().oneOf(["IN", "OUT"]).required("Seleccione entrada o salida"),
-  quantity: yup
-    .number()
-    .typeError("Debe ser un número")
-    .integer("Debe ser un entero")
-    .min(1, "Cantidad mínima 1")
-    .required("Ingrese la cantidad"),
-  batch: yup.string().nullable().required("Ingrese el batch"),
-  observation: yup.string().nullable().required("Ingrese una observación"),
-  expiration_date_1: yup.string().nullable().required("Ingrese la fecha de expiración"),
-  rack: yup.object().nullable().required("Seleccione una estantería")
+  ...materialAdjustmentFields
 });
 
 // Alias legacy: empaque (sin fecha requerida). Preferir los schemas específicos.
