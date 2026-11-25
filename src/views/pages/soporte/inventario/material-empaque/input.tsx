@@ -1,4 +1,4 @@
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 
 import { Grid } from "@mui/material";
 
@@ -16,6 +16,9 @@ import useGetPackagingList from "@/hooks/packaging/useGetPackagingList";
 import useGetProvidersList from "@/hooks/provider/useGetProvidersList";
 import GroupedAutocomplete from "@/@core/components/mui/GroupedAutocomplete";
 import useGetWarehouseList from "@/hooks/warehouse/useGetWarehouse";
+import useGetOpenSupplyOrders from "@/hooks/order/useGetOpenSupplyOrders";
+import SupplyOrderField from "../supply-order/SupplyOrderField";
+import SupplyIncomingAlert, { supplyIncoming } from "../supply-order/SupplyIncomingAlert";
 
 const Input = () => {
   const { mutateAsync, isPending } = useKardexInput();
@@ -35,7 +38,8 @@ const Input = () => {
       charge: undefined,
       document: undefined,
       batch: undefined,
-      rack: undefined
+      rack: undefined,
+      supplyOrder: undefined
     },
     mode: "onBlur",
     resolver: yupResolver(kardexPackagingInputSchema)
@@ -46,8 +50,19 @@ const Input = () => {
     register,
     control,
     formState: { errors },
-    reset
+    reset,
+    setValue
   } = methods;
+
+  const [material, quantity, supplyOrder] = useWatch({
+    control,
+    name: ["material", "quantity", "supplyOrder"]
+  }) as any[];
+
+  const { openOrders, isLoading: isLoadingOpenOrders } = useGetOpenSupplyOrders(material?.id, "packaging");
+  const noOpenOrders = !!material?.id && !isLoadingOpenOrders && openOrders.length === 0;
+  const incomingUnits = Number(quantity) > 0 ? Number(quantity) : 0;
+  const incoming = supplyIncoming(supplyOrder, incomingUnits);
 
   const onSubmit = (values: any) => {
     const req = {
@@ -57,7 +72,8 @@ const Input = () => {
       charge: Number(values.charge),
       document: values.document,
       internalLot: values.batch,
-      idRack: values.rack?.id
+      idRack: values.rack?.id,
+      idSupplyOrder: values.supplyOrder?.orderId
     };
 
     mutateAsync(req).then(() => {
@@ -70,6 +86,12 @@ const Input = () => {
       <DatePickerWrapper>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={4}>
+            {incoming && (
+              <Grid item xs={12}>
+                <SupplyIncomingAlert incoming={incoming} unitLabel='und' />
+              </Grid>
+            )}
+
             <Grid item xs={12} md={6} lg={4}>
               <Controller
                 name='material'
@@ -80,6 +102,9 @@ const Input = () => {
                     options={packagingList || []}
                     onChange={(e, value: any) => {
                       onChange(value);
+
+                      // La orden depende del material: se limpia cuando cambia.
+                      setValue("supplyOrder", undefined as any);
                     }}
                     renderInput={params => (
                       <CustomTextField
@@ -117,6 +142,17 @@ const Input = () => {
                     )}
                   />
                 )}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6} lg={4}>
+              <SupplyOrderField
+                control={control}
+                options={openOrders}
+                isLoading={isLoadingOpenOrders}
+                materialSelected={!!material?.id}
+                unitLabel='und'
+                errorMessage={(errors.supplyOrder as any)?.message || (errors.supplyOrder as any)?.orderId?.message}
               />
             </Grid>
 
@@ -206,6 +242,7 @@ const Input = () => {
                     <CustomButton
                       className='mr-2 px-4 py-2 text-white rounded d-flex align-middle'
                       isLoading={isPending}
+                      disabled={noOpenOrders}
                       type='submit'
                     >
                       Registrar

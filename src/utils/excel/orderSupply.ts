@@ -3,6 +3,7 @@ import type { CellStyle, WorkSheet } from "xlsx-js-style";
 
 import type { IOrderSupply } from "@/types/pages/order";
 import { formatDate } from "@/utils/format";
+import { supplyPending } from "@/utils/supplyProgress";
 
 const HEADER_STYLE: CellStyle = {
   font: { bold: true, color: { rgb: "FFFFFFFF" } },
@@ -62,7 +63,15 @@ export const exportOrderSupplyToExcel = (orderSupply: IOrderSupply) => {
 
   XLSX.utils.book_append_sheet(workbook, productsSheet, "Productos");
 
-  const materialHeaders = ["Material", "Cantidad disponible", "Cantidad faltante", "Cantidad total orden"];
+  const materialHeaders = [
+    "Código",
+    "Material",
+    "Cantidad disponible",
+    "Cantidad faltante",
+    "Cantidad total orden",
+    "Cantidad ingresada",
+    "Cantidad pendiente"
+  ];
 
   const materialsSheetData: (string | number)[][] = [];
   const providerRows: number[] = [];
@@ -89,11 +98,16 @@ export const exportOrderSupplyToExcel = (orderSupply: IOrderSupply) => {
     headerRows.push(headerRowIndex);
 
     (provider.materials ?? []).forEach(material => {
+      const received = material.quantityReceived ?? 0;
+
       materialsSheetData.push([
+        material.id,
         material.name,
         material.quantityAvailable,
         material.quantityMissing,
-        material.quantityTotalOrder
+        material.quantityTotalOrder,
+        received,
+        material.quantityPending ?? supplyPending(material.quantityTotalOrder, received)
       ]);
     });
   });

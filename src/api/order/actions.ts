@@ -52,6 +52,14 @@ export async function updateOrderSupplyStatus(orderSupplyId: number, status: str
   }
 }
 
+/**
+ * Las entradas de MP y ME se registran desde el cliente con axios; esto invalida el detalle del
+ * aprovisionamiento (cacheado en el servidor con el tag orders-supply) para que muestre lo ingresado.
+ */
+export async function revalidateOrdersSupply() {
+  revalidateTag("orders-supply");
+}
+
 export async function createOrderSupply(data: any) {
   try {
     const result = await apiFetch<any>("orders/supply", {
