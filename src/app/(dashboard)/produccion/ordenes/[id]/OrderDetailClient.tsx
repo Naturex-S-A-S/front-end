@@ -54,7 +54,7 @@ const OrderDetailClient = ({ order }: Props) => {
       icon: "warning",
       confirmButtonText: "Sí, cancelar",
       cancelButtonText: "No",
-      text: "Esta acción no se puede deshacer"
+      text: "Los materiales consumidos por la orden (materia prima y material de empaque) serán devueltos al stock del inventario. Esta acción no se puede deshacer."
     }).then(result => {
       if (result.isConfirmed) {
         startTransition(async () => {

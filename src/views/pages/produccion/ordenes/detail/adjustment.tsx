@@ -34,6 +34,9 @@ export interface AdjustmentFormValues {
   observation?: string | null;
   classification?: string | null;
   batch?: string | null;
+
+  /** Lote de origen elegido en una devolución de MP o ME (QA-04). */
+  lot?: { idLot: number; quantityReturnable: number } | null;
   rack?: { id: string } | null;
   expiration_date_1?: string | null;
   expiration_date_2?: string | null;
@@ -58,6 +61,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
     handleSubmit,
     watch,
     reset,
+    setValue,
     formState: { errors }
   } = useForm<AdjustmentFormValues>({
     defaultValues: {
@@ -70,6 +74,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
       observation: "",
       classification: "",
       batch: "",
+      lot: null,
       rack: null,
       expiration_date_1: "",
       expiration_date_2: ""
@@ -89,6 +94,13 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
   };
 
   const categoryWatch: any = watch("category");
+  const materialWatch: any = watch("material");
+  const typeWatch = watch("type");
+
+  // El lote de origen depende del material y del tipo: se limpia si cambian.
+  useEffect(() => {
+    setValue("lot", null);
+  }, [materialWatch?.id, typeWatch, setValue]);
 
   const isCategoryProduct = categoryWatch?.id === 3;
   const isCategoryMaterial = (categoryWatch?.id === 2);
@@ -119,6 +131,7 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
         observation: "",
         classification: "",
         batch,
+        lot: null,
         rack: null,
         expiration_date_1: "",
         expiration_date_2: ""
@@ -185,10 +198,10 @@ const Adjustment: FC<IProps> = ({ materials, products, kardex, batch, orderId, c
             {(isCategoryMaterial || isCategoryPackaging) && (
               <MaterialFormFields
                 control={control}
-                errors={errors}
                 materialOptions={materialOptions}
                 warehouseList={warehouseList}
                 isPackaging={isCategoryPackaging}
+                orderId={orderId}
               />
             )}
 

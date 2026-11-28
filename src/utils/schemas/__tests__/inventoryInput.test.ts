@@ -11,13 +11,15 @@ const feedstockBase = {
   provider: { id: "1", name: "Proveedor" },
   unit: { value: "kg", label: "Kilogramos" },
   batch: "LOTE-1",
+  supplyOrder: { orderId: 3 },
   expirationDate1: new Date("2027-01-01")
 };
 
 const packagingBase = {
   material: { id: "ME-1", name: "Frasco" },
   provider: { id: "1", name: "Proveedor" },
-  batch: "LOTE-1"
+  batch: "LOTE-1",
+  supplyOrder: { orderId: 3 }
 };
 
 const productBase = {
@@ -78,6 +80,26 @@ describe("kardexPackagingInputSchema", () => {
     await expect(
       kardexPackagingInputSchema.validate({ ...packagingBase, quantity: "10", charge: "100" })
     ).resolves.toBeTruthy();
+  });
+});
+
+describe("orden de aprovisionamiento en las entradas de MP y ME", () => {
+  it.each([undefined, null])("MP la exige (%s)", async supplyOrder => {
+    await expect(
+      kardexFeedstockInputSchema.validate({ ...feedstockBase, quantity: "1", charge: "1000", supplyOrder })
+    ).rejects.toThrow("La orden de aprovisionamiento es requerida");
+  });
+
+  it.each([undefined, null])("ME la exige (%s)", async supplyOrder => {
+    await expect(
+      kardexPackagingInputSchema.validate({ ...packagingBase, quantity: "10", charge: "100", supplyOrder })
+    ).rejects.toThrow("La orden de aprovisionamiento es requerida");
+  });
+
+  it("rechaza una opción sin id de orden", async () => {
+    await expect(
+      kardexPackagingInputSchema.validate({ ...packagingBase, quantity: "10", charge: "100", supplyOrder: {} })
+    ).rejects.toThrow("La orden de aprovisionamiento es requerida");
   });
 });
 

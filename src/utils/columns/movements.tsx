@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { Chip, Tooltip } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
 
@@ -13,9 +15,50 @@ type params = {
   type: MaterialTypeKey.PACKAGING | "feedStock";
 };
 
+/** Última columna: la observación cortada con "…" y completa en un tooltip. */
+const observationColumn: GridColDef = {
+  field: "observation",
+  headerName: "Observación",
+  width: 220,
+  renderCell: params =>
+    params.row.observation ? (
+      <Tooltip title={params.row.observation}>
+        <span className='block overflow-hidden text-ellipsis whitespace-nowrap'>{params.row.observation}</span>
+      </Tooltip>
+    ) : (
+      ""
+    )
+};
+
+const orderLinkCell = (id: number | null | undefined, basePath: string) =>
+  id ? (
+    <Link href={`${basePath}/${id}`} className='text-blue-500 hover:text-blue-400'>
+      {id}
+    </Link>
+  ) : (
+    ""
+  );
+
+/** Orden de aprovisionamiento de la entrada normal (solo la llenan las entradas de abastecimiento). */
+const supplyOrderColumn: GridColDef = {
+  field: "supplyOrderId",
+  headerName: "O. aprovisionamiento",
+  width: 160,
+  renderCell: params => orderLinkCell(params.row.supplyOrderId, "/produccion/aprovisionamiento")
+};
+
+/** Orden de producción del movimiento (salidas de producción, ajustes y devoluciones). */
+const productionOrderColumn: GridColDef = {
+  field: "orderId",
+  headerName: "O. producción",
+  width: 140,
+  renderCell: params => orderLinkCell(params.row.orderId, "/produccion/ordenes")
+};
+
 export const columns = ({ filters, type }: params): GridColDef[] => {
   if (type === "packaging") {
     return [
+      { field: "materialId", headerName: "Código", width: 100 },
       { field: "batch", headerName: "Lote", width: 100 },
       { field: "materialName", headerName: "Material", width: 150 },
       {
@@ -62,16 +105,20 @@ export const columns = ({ filters, type }: params): GridColDef[] => {
       { field: "providerName", headerName: "Proveedor", width: 150 },
       { field: "rack", headerName: "Ubicación", width: 150, renderCell: params => params.row.rack?.name },
       { field: "classification", headerName: "Clasificación", width: 150 },
+      supplyOrderColumn,
+      productionOrderColumn,
       {
         field: "dateCreated",
         headerName: "Fecha de creación",
         width: 150,
         renderCell: params => formatDate(params.row.dateCreated)
-      }
+      },
+      observationColumn
     ];
   }
 
   return [
+    { field: "materialId", headerName: "Código", width: 100 },
     { field: "batch", headerName: "Lote", width: 100 },
     { field: "materialName", headerName: "Material", width: 150 },
     {
@@ -118,6 +165,8 @@ export const columns = ({ filters, type }: params): GridColDef[] => {
     { field: "providerName", headerName: "Proveedor", width: 150 },
     { field: "rack", headerName: "Ubicación", width: 150, renderCell: params => params.row.rack?.name },
     { field: "classification", headerName: "Clasificación", width: 150 },
+    supplyOrderColumn,
+    productionOrderColumn,
     {
       field: "expirationDate1",
       headerName: "Fecha de vencimiento",
@@ -128,6 +177,7 @@ export const columns = ({ filters, type }: params): GridColDef[] => {
       headerName: "Fecha de creación",
       width: 150,
       renderCell: params => formatDate(params.row.dateCreated)
-    }
+    },
+    observationColumn
   ];
 };

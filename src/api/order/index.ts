@@ -18,6 +18,19 @@ export const getOrderById = async (id: string) => {
   return response.data;
 };
 
+export const getOrderDetailLots = async (orderId: number, idMaterial: string) => {
+  const response = await API().get(`/orders/${orderId}/details/${idMaterial}/lots`);
+
+  return response.data;
+};
+
+/** Aprovisionamientos en proceso que piden el material: opciones del selector de la entrada. */
+export const getOpenSupplyOrders = async (materialId: string, type: "materia_prima" | "packaging") => {
+  const response = await API().get("/orders/supply/open", { params: { materialId, type } });
+
+  return response.data;
+};
+
 export const getOrders = async (params: any) => {
   const response = await API().get("/orders", { params });
 

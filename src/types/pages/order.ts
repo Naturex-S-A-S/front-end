@@ -102,6 +102,22 @@ export interface IOrderSupplyMaterial {
   quantityMissing: number;
   quantityTotalOrder: number;
   totalCost: number;
+
+  /** Suma de las entradas normales vinculadas a la orden. Solo viene en el detalle. */
+  quantityReceived?: number;
+
+  /** max(0, quantityTotalOrder - quantityReceived). Solo viene en el detalle. */
+  quantityPending?: number;
+}
+
+/** Aprovisionamiento en proceso que pide un material (GET /orders/supply/open). */
+export interface IOpenSupplyOrder {
+  orderId: number;
+  batch: string;
+  dateCreated: string;
+  quantityTotal: number;
+  quantityReceived: number;
+  quantityPending: number;
 }
 
 export interface IOrderSupplyMaterialsByProvider {
@@ -139,4 +155,23 @@ export interface IOrderCreate {
     quantity: number;
     base?: boolean;
   }[];
+}
+
+/** Lote que la orden consumió de un material y que todavía se puede devolver (GET /orders/{id}/details/{idMaterial}/lots). */
+export interface IOrderDetailLot {
+  idLot: number;
+  batch: string;
+  expirationDate: string | null;
+  expired: boolean;
+  unitCost: number;
+  quantityConsumed: number;
+  quantityReturned: number;
+  quantityReturnable: number;
+}
+
+export interface IOrderDetailLots {
+  idOrderDetail: number;
+  idMaterial: string;
+  typeMaterial: string;
+  lots: IOrderDetailLot[];
 }
