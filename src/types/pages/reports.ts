@@ -7,7 +7,9 @@ export type ReportKey =
   | "production-comparison"
   | "production-mass-balance"
   | "production-cost-per-kg"
-  | "top-products";
+  | "top-products"
+  | "profitability"
+  | "profit-pareto";
 
 export type ReportFilterKey =
   | "dateRange"
@@ -27,7 +29,9 @@ export type ReportFilterKey =
   | "origin"
   | "metric"
   | "top"
-  | "ivaPct";
+  | "ivaPct"
+  | "marginType"
+  | "sort";
 
 export type ReportUnit = "kg" | "ton" | "units";
 
@@ -40,6 +44,10 @@ export type VolumeGroupBy = "line" | "category";
 export type SalesMetric = "cop" | "kg" | "units";
 
 export type SalesOrigin = "siigo" | "remision";
+
+export type SalesMarginType = "gross" | "net";
+
+export type SalesSortOrder = "desc" | "asc";
 
 export interface IReportOption {
   id: string | number;
@@ -71,6 +79,8 @@ export interface IReportFilters {
   metric?: SalesMetric;
   top?: number;
   ivaPct?: number;
+  marginType?: SalesMarginType;
+  sort?: SalesSortOrder;
 }
 
 export interface IReportFiltersCatalog {
@@ -229,5 +239,55 @@ export interface ITopProductTotals {
   units: number;
   kg: number;
   netSales: number;
+  products: number;
+}
+
+export interface IProfitabilityRow {
+  productId: string;
+  productName: string;
+  lineId: string | null;
+  lineName: string;
+  categoryId: string | null;
+  categoryName: string;
+  units: number;
+  kg: number;
+  netSales: number;
+  materialCost: number;
+  cifCost: number;
+  commission: number;
+  grossProfit: number;
+  netProfit: number;
+  grossMarginPct: number | null;
+  netMarginPct: number | null;
+  linesWithoutCost: number;
+}
+
+export interface IProfitabilityTotals {
+  netSales: number;
+  materialCost: number;
+  cifCost: number;
+  commission: number;
+  grossProfit: number;
+  netProfit: number;
+  grossMarginPct: number | null;
+  netMarginPct: number | null;
+  products: number;
+}
+
+export interface IParetoRow {
+  productId: string;
+  productName: string;
+  lineId: string | null;
+  lineName: string;
+  netSales: number;
+  netProfit: number;
+  paretoCumulativePct: number | null;
+}
+
+export interface IParetoTotals {
+  netSales: number;
+  netProfit: number;
+  positiveNetProfit: number;
+  productsTo80Pct: number;
   products: number;
 }
