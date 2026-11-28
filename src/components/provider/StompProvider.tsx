@@ -13,7 +13,7 @@ import { revalidateAlerts } from "@/api/alert/actions";
 import type { IAlert } from "@/types/alert";
 import { STOMP_DESTINATIONS, getToastSeverity, type StompConnectionStatus } from "@/lib/stomp";
 
-const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "wss://protozoal-unappeasingly-ronny.ngrok-free.dev/ws";
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "wss://naturex-dev-api.up.railway.app/ws";
 const INITIAL_RECONNECT_DELAY = 1000;
 const MAX_RECONNECT_DELAY = 30000;
 
