@@ -72,8 +72,29 @@ export const REPORTS = {
     label: "Top de productos vendidos",
     endpoint: "sales/top-products",
     dateLabel: "Fecha de carga del archivo",
+    disabled: true,
     filters: ["dateRange", "productIds", "lineIds", "categoryIds", "origin", "metric", "top", "ivaPct"],
     defaults: { metric: "cop", top: 10, ivaPct: 0 },
+    exportable: true
+  },
+  profitability: {
+    key: "profitability",
+    tab: "ventas",
+    label: "Más y menos rentables",
+    endpoint: "sales/profitability",
+    dateLabel: "Fecha de carga del archivo",
+    filters: ["dateRange", "productIds", "lineIds", "categoryIds", "origin", "top", "marginType", "sort"],
+    defaults: { marginType: "net", sort: "desc", top: 10 },
+    exportable: true
+  },
+  "profit-pareto": {
+    key: "profit-pareto",
+    tab: "ventas",
+    label: "Utilidad y Pareto",
+    endpoint: "sales/profit-pareto",
+    dateLabel: "Fecha de carga del archivo",
+    filters: ["dateRange", "productIds", "lineIds", "categoryIds", "origin"],
+    defaults: {},
     exportable: true
   }
 } satisfies Record<ReportKey, ReportEntry>;
@@ -85,10 +106,11 @@ export const REPORTS_BY_TAB: Record<ReportTab, ReportEntry[]> = {
     REPORTS["production-mass-balance"],
     REPORTS["production-cost-per-kg"]
   ],
-  ventas: [REPORTS["top-products"]]
+  ventas: [REPORTS.profitability, REPORTS["profit-pareto"], REPORTS["top-products"]]
 };
 
 export const getReportEntry = (key?: string | null): ReportEntry | null =>
   key && key in REPORTS ? REPORTS[key as ReportKey] : null;
 
-export const getDefaultReportForTab = (tab: ReportTab): ReportEntry => REPORTS_BY_TAB[tab][0];
+export const getDefaultReportForTab = (tab: ReportTab): ReportEntry =>
+  REPORTS_BY_TAB[tab].find(entry => !entry.disabled) ?? REPORTS_BY_TAB[tab][0];

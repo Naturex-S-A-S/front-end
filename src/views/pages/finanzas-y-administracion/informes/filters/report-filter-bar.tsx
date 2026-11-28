@@ -40,7 +40,8 @@ import ActiveFilterChips from "./active-filter-chips";
 import DateRangeFilter from "./date-range-filter";
 import MultiSelectFilter from "./multi-select-filter";
 import type { FilterFormValues } from "./types";
-import UncategorizedNotice from "./uncategorized-notice";
+
+// import UncategorizedNotice from "./uncategorized-notice";
 
 interface Props {
   report: ReportEntry;
@@ -549,7 +550,8 @@ export default function ReportFilterBar({ report, filters, catalog, catalogError
         ) : (
           <CustomCard title='Filtros'>{content}</CustomCard>
         )}
-        {!catalogError && <UncategorizedNotice uncategorized={catalog.uncategorized} />}
+        {/* TODO: oculto mientras se implementa el destino de "Revisar" (hoy lleva a un 404). */}
+        {/* {!catalogError && <UncategorizedNotice uncategorized={catalog.uncategorized} />} */}
         <ActiveFilterChips filters={filters} catalog={catalog} onDelete={update} />
       </Stack>
     </FormProvider>

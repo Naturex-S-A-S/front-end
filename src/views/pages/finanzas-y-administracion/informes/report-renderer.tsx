@@ -5,10 +5,14 @@ import type {
   ICostPerKgTotals,
   IMassBalanceRow,
   IMassBalanceTotals,
+  IParetoRow,
+  IParetoTotals,
   IProductionComparisonRow,
   IProductionComparisonTotals,
   IProductionVolumeRow,
   IProductionVolumeTotals,
+  IProfitabilityRow,
+  IProfitabilityTotals,
   IReportFilters,
   IReportResult,
   ITopProductRow,
@@ -20,6 +24,8 @@ import ComparisonReport from "./produccion/comparison-report";
 import CostPerKgReport from "./produccion/cost-per-kg-report";
 import MassBalanceReport from "./produccion/mass-balance-report";
 import VolumeReport from "./produccion/volume-report";
+import ProfitParetoReport from "./ventas/profit-pareto-report";
+import ProfitabilityReport from "./ventas/profitability-report";
 import TopProductsReport from "./ventas/top-products-report";
 
 interface Props {
@@ -54,6 +60,15 @@ export default function ReportRenderer({ report, result, filters }: Props) {
       return (
         <TopProductsReport result={result as IReportResult<ITopProductRow, ITopProductTotals>} filters={filters} />
       );
+    case "profitability":
+      return (
+        <ProfitabilityReport
+          result={result as IReportResult<IProfitabilityRow, IProfitabilityTotals>}
+          filters={filters}
+        />
+      );
+    case "profit-pareto":
+      return <ProfitParetoReport result={result as IReportResult<IParetoRow, IParetoTotals>} filters={filters} />;
     default:
       return null;
   }
