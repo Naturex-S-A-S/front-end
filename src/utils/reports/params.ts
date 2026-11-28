@@ -5,8 +5,10 @@ import type {
   ReportGranularity,
   ReportTab,
   ReportUnit,
+  SalesMarginType,
   SalesMetric,
   SalesOrigin,
+  SalesSortOrder,
   VolumeGroupBy,
   VolumeSubject
 } from "@/types/pages/reports";
@@ -82,6 +84,11 @@ const isSalesMetric = (value: string | undefined): value is SalesMetric =>
   value === "cop" || value === "kg" || value === "units";
 
 const isSalesOrigin = (value: string | undefined): value is SalesOrigin => value === "siigo" || value === "remision";
+
+const isSalesMarginType = (value: string | undefined): value is SalesMarginType =>
+  value === "gross" || value === "net";
+
+const isSalesSortOrder = (value: string | undefined): value is SalesSortOrder => value === "desc" || value === "asc";
 
 export const getDefaultDateRange = (now: Date = new Date()): Pick<IReportFilters, "from" | "to"> => ({
   from: format(startOfMonth(now), "yyyy-MM-dd"),
@@ -215,6 +222,18 @@ const parseFilters = (report: ReportEntry, searchParams: SearchParams, now: Date
     filters.top = top !== undefined ? top : defaults.top ?? 10;
   }
 
+  if (allowed.has("marginType")) {
+    const marginType = readScalar(searchParams.marginType);
+
+    filters.marginType = isSalesMarginType(marginType) ? marginType : defaults.marginType ?? "net";
+  }
+
+  if (allowed.has("sort")) {
+    const sort = readScalar(searchParams.sort);
+
+    filters.sort = isSalesSortOrder(sort) ? sort : defaults.sort ?? "desc";
+  }
+
   if (report.key === "top-products") filters.ivaPct = 0;
 
   return filters;
@@ -300,6 +319,8 @@ export const toApiParams = (filters: IReportFilters): Record<string, string | nu
   if (filters.metric) params.metric = filters.metric;
   if (filters.top !== undefined) params.top = filters.top;
   if (filters.ivaPct !== undefined) params.ivaPct = filters.ivaPct;
+  if (filters.marginType) params.marginType = filters.marginType;
+  if (filters.sort) params.sort = filters.sort;
 
   return params;
 };
@@ -329,6 +350,8 @@ export const buildReportSearchParams = (selection: Omit<ReportSelection, "error"
   if (selection.filters.metric) params.set("metric", selection.filters.metric);
   if (selection.filters.top !== undefined) params.set("top", String(selection.filters.top));
   if (selection.filters.ivaPct !== undefined) params.set("ivaPct", String(selection.filters.ivaPct));
+  if (selection.filters.marginType) params.set("marginType", selection.filters.marginType);
+  if (selection.filters.sort) params.set("sort", selection.filters.sort);
 
   return params;
 };

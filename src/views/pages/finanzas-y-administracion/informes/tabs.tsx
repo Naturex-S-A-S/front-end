@@ -40,7 +40,7 @@ export default function ReportTabs({ tab, filters }: Props) {
       aria-label='Informes de producción y ventas'
     >
       <Tab label='Producción' value='produccion' />
-      <Tab label='Ventas' value='ventas' disabled />
+      <Tab label='Ventas' value='ventas' />
     </Tabs>
   );
 }

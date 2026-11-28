@@ -8,23 +8,31 @@ import { formatCompact } from "@/utils/reports/format";
 interface Props {
   data: Array<{ name: string; value: number; color: string }>;
   valueFormatter: (value: number) => string;
+  axisFormatter?: (value: number) => string;
   height?: number;
+  ariaLabel?: string;
 }
 
 const truncate = (value: string): string => (value.length > 28 ? `${value.slice(0, 27)}…` : value);
 
-export default function HorizontalBarChart({ data, valueFormatter, height = 360 }: Props) {
+export default function HorizontalBarChart({
+  data,
+  valueFormatter,
+  axisFormatter = formatCompact,
+  height = 360,
+  ariaLabel = "Top de productos vendidos"
+}: Props) {
   const theme = useTheme();
 
   return (
-    <div role='img' aria-label='Top de productos vendidos' style={{ width: "100%", height }}>
+    <div role='img' aria-label={ariaLabel} style={{ width: "100%", height }}>
       <ResponsiveContainer width='100%' height='100%'>
         <BarChart data={data} layout='vertical' margin={{ top: 8, right: 20, left: 8, bottom: 8 }}>
           <CartesianGrid stroke={theme.palette.divider} strokeDasharray='3 3' horizontal={false} />
           <XAxis
             type='number'
             tick={{ fill: theme.palette.text.secondary, fontSize: 12 }}
-            tickFormatter={formatCompact}
+            tickFormatter={axisFormatter}
             tickLine={false}
             axisLine={false}
           />

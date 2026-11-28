@@ -5,10 +5,14 @@ import type {
   ICostPerKgTotals,
   IMassBalanceRow,
   IMassBalanceTotals,
+  IParetoRow,
+  IParetoTotals,
   IProductionComparisonRow,
   IProductionComparisonTotals,
   IProductionVolumeRow,
   IProductionVolumeTotals,
+  IProfitabilityRow,
+  IProfitabilityTotals,
   ITopProductRow,
   ITopProductTotals,
   ReportColumn,
@@ -338,5 +342,136 @@ export const topProductsColumns = (): ReportColumn<ITopProductRow, ITopProductTo
     align: "right",
     render: row => row.valuedRemissionLines,
     sortValue: row => row.valuedRemissionLines
+  }
+];
+
+export const profitabilityColumns = (): ReportColumn<IProfitabilityRow, IProfitabilityTotals>[] => [
+  {
+    key: "productName",
+    label: "Producto",
+    render: row => (
+      <Stack direction='row' spacing={1} alignItems='center' useFlexGap flexWrap='wrap'>
+        <span>{row.productName}</span>
+        {row.linesWithoutCost > 0 && (
+          <Chip size='small' color='warning' variant='outlined' label={`Sin costo (${row.linesWithoutCost})`} />
+        )}
+      </Stack>
+    ),
+    sortValue: row => row.productName
+  },
+  {
+    key: "lineName",
+    label: "Línea",
+    render: row => row.lineName || "—",
+    sortValue: row => row.lineName
+  },
+  {
+    key: "units",
+    label: "Unidades",
+    align: "right",
+    render: row => formatUnits(row.units),
+    sortValue: row => row.units
+  },
+  {
+    key: "netSales",
+    label: "Venta neta",
+    align: "right",
+    render: row => formatCop(row.netSales),
+    sortValue: row => row.netSales,
+    renderTotal: totals => formatCop(totals.netSales)
+  },
+  {
+    key: "materialCost",
+    label: "Materiales",
+    align: "right",
+    render: row => formatCop(row.materialCost),
+    sortValue: row => row.materialCost,
+    renderTotal: totals => formatCop(totals.materialCost)
+  },
+  {
+    key: "cifCost",
+    label: "CIF",
+    align: "right",
+    render: row => formatCop(row.cifCost),
+    sortValue: row => row.cifCost,
+    renderTotal: totals => formatCop(totals.cifCost)
+  },
+  {
+    key: "commission",
+    label: "Comisión",
+    align: "right",
+    render: row => formatCop(row.commission),
+    sortValue: row => row.commission,
+    renderTotal: totals => formatCop(totals.commission)
+  },
+  {
+    key: "grossProfit",
+    label: "Utilidad bruta",
+    align: "right",
+    render: row => formatCop(row.grossProfit),
+    sortValue: row => row.grossProfit,
+    renderTotal: totals => formatCop(totals.grossProfit)
+  },
+  {
+    key: "netProfit",
+    label: "Utilidad neta",
+    align: "right",
+    render: row => formatCop(row.netProfit),
+    sortValue: row => row.netProfit,
+    renderTotal: totals => formatCop(totals.netProfit)
+  },
+  {
+    key: "grossMarginPct",
+    label: "Margen bruto",
+    align: "right",
+    render: row => formatPct(row.grossMarginPct),
+    sortValue: row => row.grossMarginPct,
+    renderTotal: totals => formatPct(totals.grossMarginPct)
+  },
+  {
+    key: "netMarginPct",
+    label: "Margen neto",
+    align: "right",
+    render: row => formatPct(row.netMarginPct),
+    sortValue: row => row.netMarginPct,
+    renderTotal: totals => formatPct(totals.netMarginPct)
+  }
+];
+
+export const paretoColumns = (): ReportColumn<IParetoRow, IParetoTotals>[] => [
+  {
+    key: "productName",
+    label: "Producto",
+    render: row => row.productName,
+    sortValue: row => row.productName
+  },
+  {
+    key: "lineName",
+    label: "Línea",
+    render: row => row.lineName || "—",
+    sortValue: row => row.lineName
+  },
+  {
+    key: "netSales",
+    label: "Venta neta",
+    align: "right",
+    render: row => formatCop(row.netSales),
+    sortValue: row => row.netSales,
+    renderTotal: totals => formatCop(totals.netSales)
+  },
+  {
+    key: "netProfit",
+    label: "Utilidad neta",
+    align: "right",
+    render: row => formatCop(row.netProfit),
+    sortValue: row => row.netProfit,
+    renderTotal: totals => formatCop(totals.netProfit)
+  },
+  {
+    key: "paretoCumulativePct",
+    label: "% acumulado",
+    align: "right",
+    render: row => formatPct(row.paretoCumulativePct),
+    sortValue: row => row.paretoCumulativePct
   }
 ];

@@ -33,7 +33,11 @@ const labels: Record<string, string> = {
   units: "Unidades",
   cop: "COP",
   siigo: "Siigo",
-  remision: "Remisión"
+  remision: "Remisión",
+  gross: "Bruto",
+  net: "Neto",
+  desc: "Más rentables",
+  asc: "Menos rentables"
 };
 
 export default function ActiveFilterChips({ filters, catalog, onDelete }: Props) {
@@ -141,6 +145,14 @@ export default function ActiveFilterChips({ filters, catalog, onDelete }: Props)
 
   if (filters.top !== undefined) {
     chips.push({ key: "top", label: `Top: ${filters.top}`, patch: { top: undefined } });
+  }
+
+  if (filters.marginType) {
+    chips.push({ key: "marginType", label: `Margen: ${labels[filters.marginType]}`, patch: { marginType: undefined } });
+  }
+
+  if (filters.sort) {
+    chips.push({ key: "sort", label: `Orden: ${labels[filters.sort]}`, patch: { sort: undefined } });
   }
 
   return (
