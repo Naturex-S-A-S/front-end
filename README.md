@@ -55,6 +55,7 @@ Crea un archivo `.env` en la raíz:
 | `NEXTAUTH_URL` | URL base de la app (`http://localhost:3000/`) |
 | `NEXT_PUBLIC_API_BASE_URL` | URL del backend (expuesta al navegador) |
 | `API_BASE_URL` | URL del backend solo server-side |
+| `NEXT_PUBLIC_WS_URL` | URL del WebSocket de alertas (`wss://.../ws`) |
 | `BASEPATH` | BasePath de Next.js (vacío en dev) |
 
 ## Scripts

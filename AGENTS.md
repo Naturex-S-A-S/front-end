@@ -64,7 +64,7 @@ pnpm doctor         # react-doctor: lint / a11y / bundle / architecture scan
 
 - There is NO `src/api/server.ts` and NO `ApiServer` export — shared server helper is only `src/api/apiFetch.ts`
 - Domains: `alert/ cif/ costs/ feedstock/ formulation/ general-parameters/ kardex/ metadata/ order/ packaging/ packing/ product/ providers/ reports/ role/ user/`
-- Env (`API_BASE_URL` server-only, `NEXT_PUBLIC_API_BASE_URL` client, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `NEXT_PUBLIC_WS_URL`, `BASEPATH`); backend is an ngrok tunnel
+- Env (`API_BASE_URL` server-only, `NEXT_PUBLIC_API_BASE_URL` client, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `NEXT_PUBLIC_WS_URL`, `BASEPATH`); dev backend runs on Railway (`https://naturex-dev-api.up.railway.app/api/`)
 
 ## Data & mutations
 
